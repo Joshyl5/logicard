@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Admin</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="login-page">
+
+  <canvas id="stars"></canvas>
+
+  <div class="login-wrap">
+
+    <a href="/" class="login-logo-link">
+      <img src="logicard-logo.png" alt="Logicard" class="login-logo-img" />
+    </a>
+
+    <div class="login-card">
+      <div class="admin-badge">Admin Access</div>
+      <h1 class="login-title">Admin Sign In</h1>
+      <p class="login-subtitle">Enter your admin password to continue</p>
+
+      <form id="adminLoginForm" class="login-form" novalidate>
+
+        <div class="lfield">
+          <label for="password">Admin Password</label>
+          <div class="pw-wrap">
+            <input id="password" name="password" type="password" placeholder="Admin password" autocomplete="current-password" required />
+            <button type="button" class="pw-toggle" id="pwToggle" aria-label="Show password">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="loginError" class="form-error" role="alert" aria-live="polite"></div>
+
+        <button type="submit" class="login-submit-btn" id="loginBtn">
+          <span id="loginLabel">Sign In to Admin</span>
+          <svg id="loginSpinner" class="spinner" viewBox="0 0 24 24" fill="none" style="display:none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="40" stroke-dashoffset="10"/>
+          </svg>
+        </button>
+
+      </form>
+
+      <p class="login-footer-text">
+        <a href="/" class="inline-link">Back to home</a>
+      </p>
+    </div>
+
+  </div>
+
+  <script src="stars.js"></script>
+  <script>
+    document.getElementById('pwToggle').addEventListener('click', () => {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    });
+
+    const form       = document.getElementById('adminLoginForm');
+    const btn        = document.getElementById('loginBtn');
+    const btnLabel   = document.getElementById('loginLabel');
+    const spinner    = document.getElementById('loginSpinner');
+    const errorEl    = document.getElementById('loginError');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errorEl.classList.remove('visible');
+      btn.disabled = true;
+      btnLabel.style.display = 'none';
+      spinner.style.display = 'block';
+
+      const password = document.getElementById('password').value;
+      try {
+        const res  = await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password }) });
+        const json = await res.json();
+        if (!res.ok) {
+          errorEl.textContent = json.error || 'Incorrect password.';
+          errorEl.classList.add('visible');
+          btn.disabled = false; btnLabel.style.display = 'inline'; spinner.style.display = 'none';
+          return;
+        }
+        window.location.href = '/admin';
+      } catch {
+        errorEl.textContent = 'Network error. Please try again.';
+        errorEl.classList.add('visible');
+        btn.disabled = false; btnLabel.style.display = 'inline'; spinner.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

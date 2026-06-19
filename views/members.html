@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Member Offers</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="members-page">
+
+  <!-- ── HEADER ──────────────────────────────────────────────── -->
+  <header class="members-header">
+    <div class="mh-inner">
+
+      <a href="/" class="mh-logo">
+        <svg class="mh-truck" viewBox="0 0 220 130" fill="none"
+             stroke="white" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="22" width="118" height="68" rx="5" stroke-width="3.5"/>
+          <line x1="42" y1="22" x2="42" y2="90" stroke-width="2" stroke-opacity="0.5"/>
+          <path d="M122 52 L122 90 L210 90 L210 52 L192 24 L122 24 Z" stroke-width="3.5"/>
+          <path d="M128 52 L148 27 L192 27 L192 52 Z" stroke-width="2.5"/>
+          <line x1="204" y1="24" x2="204" y2="8" stroke-width="3.5"/>
+          <circle cx="32" cy="94" r="14" stroke-width="3.5"/>
+          <circle cx="32" cy="94" r="5"  stroke-width="2"/>
+          <circle cx="70" cy="94" r="14" stroke-width="3.5"/>
+          <circle cx="70" cy="94" r="5"  stroke-width="2"/>
+          <circle cx="182" cy="94" r="14" stroke-width="3.5"/>
+          <circle cx="182" cy="94" r="5"  stroke-width="2"/>
+        </svg>
+        <span class="mh-brand">logicard</span>
+      </a>
+
+      <nav class="cat-nav" id="catNav">
+        <button class="cat-btn active" data-cat="all">All Deals</button>
+        <button class="cat-btn" data-cat="fuel">Fuel &amp; Fleet</button>
+        <button class="cat-btn" data-cat="hotels">Hotels</button>
+        <button class="cat-btn" data-cat="dining">Dining</button>
+        <button class="cat-btn" data-cat="technology">Technology</button>
+        <button class="cat-btn" data-cat="maintenance">Maintenance</button>
+        <button class="cat-btn" data-cat="shopping">Shopping</button>
+        <button class="cat-btn" data-cat="travel">Travel</button>
+        <button class="cat-btn" data-cat="finance">Finance</button>
+      </nav>
+
+      <div class="mh-user">
+        <div class="mh-user-info">
+          <span class="mh-welcome">Welcome, <strong id="userName">...</strong></span>
+          <span class="mh-badge" id="memberBadge">#...</span>
+        </div>
+        <button class="signout-btn" id="signoutBtn">Sign Out</button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ── HERO STRIP ──────────────────────────────────────────── -->
+  <div class="offers-hero">
+    <div class="oh-inner">
+      <h1>Your Exclusive Member Offers</h1>
+      <p>Special deals available only to verified Logicard members</p>
+    </div>
+  </div>
+
+  <!-- ── OFFERS ──────────────────────────────────────────────── -->
+  <main class="offers-main">
+    <div class="offers-container">
+
+      <!-- Featured deal -->
+      <div id="featuredSlot"></div>
+
+      <!-- No results message -->
+      <div id="noResults" class="no-results" style="display:none">
+        <p>No offers found in this category.</p>
+      </div>
+
+      <!-- Offer grid -->
+      <div id="offersGrid" class="offers-grid"></div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Logicard. All rights reserved. &nbsp;|&nbsp; <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></p>
+  </footer>
+
+  <script src="/members.js"></script>
+</body>
+</html>

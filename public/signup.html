@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Free Membership</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="signup-page">
+
+  <header class="signup-nav">
+    <a href="/" class="logo">
+      <svg class="logo-truck" viewBox="0 0 220 130" fill="none" xmlns="http://www.w3.org/2000/svg"
+           stroke="white" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="22" width="118" height="68" rx="5" stroke-width="3.5"/>
+        <line x1="80" y1="22" x2="80" y2="90" stroke-width="2" stroke-opacity="0.5"/>
+        <line x1="42" y1="22" x2="42" y2="90" stroke-width="2" stroke-opacity="0.5"/>
+        <path d="M122 52 L122 90 L210 90 L210 52 L192 24 L122 24 Z" stroke-width="3.5"/>
+        <path d="M128 52 L148 27 L192 27 L192 52 Z" stroke-width="2.5"/>
+        <rect x="128" y="56" width="24" height="20" rx="2" stroke-width="2"/>
+        <line x1="160" y1="52" x2="160" y2="90" stroke-width="2" stroke-opacity="0.5"/>
+        <line x1="204" y1="24" x2="204" y2="8" stroke-width="3.5"/>
+        <path d="M200 8 Q204 4 208 8" stroke-width="2.5" fill="none"/>
+        <circle cx="32" cy="94" r="14" stroke-width="3.5"/>
+        <circle cx="32" cy="94" r="5" stroke-width="2"/>
+        <circle cx="70" cy="94" r="14" stroke-width="3.5"/>
+        <circle cx="70" cy="94" r="5" stroke-width="2"/>
+        <circle cx="182" cy="94" r="14" stroke-width="3.5"/>
+        <circle cx="182" cy="94" r="5" stroke-width="2"/>
+      </svg>
+      <span class="logo-name">logicard</span>
+    </a>
+    <a href="/" class="back-link">
+      <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+        <path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back
+    </a>
+  </header>
+
+  <main class="signup-main">
+    <div class="signup-inner">
+
+      <div class="signup-header">
+        <h2>Claim Your Free Membership</h2>
+        <p>Be among the first to know when we launch. Complete your details below to secure your exclusive membership number — no payment ever required.</p>
+      </div>
+
+      <div id="formWrapper">
+        <form id="signupForm" class="form" novalidate>
+
+          <fieldset class="fieldset">
+            <legend>Business Details</legend>
+            <div class="row">
+              <div class="field">
+                <label for="companyName">Company Name <span class="req">*</span></label>
+                <input id="companyName" name="companyName" type="text" placeholder="Your company name" autocomplete="organization" required />
+              </div>
+              <div class="field">
+                <label for="role">Job Title / Role <span class="req">*</span></label>
+                <input id="role" name="role" type="text" placeholder="e.g. Operations Manager" autocomplete="organization-title" required />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Personal Details</legend>
+            <div class="row">
+              <div class="field">
+                <label for="firstName">First Name <span class="req">*</span></label>
+                <input id="firstName" name="firstName" type="text" placeholder="First name" autocomplete="given-name" required />
+              </div>
+              <div class="field">
+                <label for="lastName">Last Name <span class="req">*</span></label>
+                <input id="lastName" name="lastName" type="text" placeholder="Last name" autocomplete="family-name" required />
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="email">Email Address <span class="req">*</span></label>
+                <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+              </div>
+              <div class="field">
+                <label for="phone">Phone Number <span class="req">*</span></label>
+                <input id="phone" name="phone" type="tel" placeholder="+44 7700 900000" autocomplete="tel" required />
+              </div>
+            </div>
+            <div class="row row--half">
+              <div class="field">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input id="dateOfBirth" name="dateOfBirth" type="date" autocomplete="bday" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Address</legend>
+            <div class="field field--full">
+              <label for="addressLine1">Address Line 1 <span class="req">*</span></label>
+              <input id="addressLine1" name="addressLine1" type="text" placeholder="Street address" autocomplete="address-line1" required />
+            </div>
+            <div class="field field--full">
+              <label for="addressLine2">Address Line 2</label>
+              <input id="addressLine2" name="addressLine2" type="text" placeholder="Apartment, suite, unit, etc." autocomplete="address-line2" />
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="city">City <span class="req">*</span></label>
+                <input id="city" name="city" type="text" placeholder="City" autocomplete="address-level2" required />
+              </div>
+              <div class="field">
+                <label for="county">County</label>
+                <input id="county" name="county" type="text" placeholder="County" autocomplete="address-level1" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="postcode">Postcode <span class="req">*</span></label>
+                <input id="postcode" name="postcode" type="text" placeholder="SW1A 1AA" autocomplete="postal-code" required />
+              </div>
+              <div class="field">
+                <label for="country">Country <span class="req">*</span></label>
+                <select id="country" name="country" autocomplete="country" required>
+                  <option value="">Select country</option>
+                  <option value="GB" selected>United Kingdom</option>
+                  <option value="IE">Ireland</option>
+                  <option value="US">United States</option>
+                  <option value="AU">Australia</option>
+                  <option value="CA">Canada</option>
+                  <option value="NZ">New Zealand</option>
+                  <option value="FR">France</option>
+                  <option value="DE">Germany</option>
+                  <option value="ES">Spain</option>
+                  <option value="IT">Italy</option>
+                  <option value="NL">Netherlands</option>
+                  <option value="OTHER">Other</option>
+                </select>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Set Your Password</legend>
+            <div class="row">
+              <div class="field">
+                <label for="password">Password <span class="req">*</span></label>
+                <div class="pw-wrap">
+                  <input id="password" name="password" type="password" placeholder="Min. 8 characters" autocomplete="new-password" required />
+                  <button type="button" class="pw-toggle" id="pwToggle1" aria-label="Show password">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="confirmPassword">Confirm Password <span class="req">*</span></label>
+                <div class="pw-wrap">
+                  <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Repeat password" autocomplete="new-password" required />
+                  <button type="button" class="pw-toggle" id="pwToggle2" aria-label="Show password">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                      <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset fieldset--gdpr">
+            <legend>Your Consent</legend>
+            <label class="check-label">
+              <input id="gdprConsent" name="gdprConsent" type="checkbox" required />
+              <span class="check-box"></span>
+              <span class="check-text">
+                I agree to the processing of my personal data in accordance with the
+                <a href="#" class="inline-link">Privacy Policy</a> and
+                <a href="#" class="inline-link">Terms of Service</a>.
+                I understand my data will be used for membership management and Logicard launch updates.
+                <span class="req">*</span>
+              </span>
+            </label>
+          </fieldset>
+
+          <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span id="btnLabel">Create My Free Membership</span>
+            <svg id="btnSpinner" class="spinner" viewBox="0 0 24 24" fill="none" style="display:none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="40" stroke-dashoffset="10"/>
+            </svg>
+          </button>
+
+          <p class="form-note">* Required fields. Your data is stored securely and never sold to third parties.</p>
+        </form>
+      </div>
+
+      <div id="successPanel" class="success-panel" style="display:none" aria-live="polite">
+        <div class="success-icon">
+          <svg viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="26" r="25" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M15 27l8 8 14-16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2>Welcome to Logicard!</h2>
+        <p>Your exclusive membership has been registered.</p>
+        <div class="membership-card">
+          <span class="mc-label">Your Membership Number</span>
+          <span class="mc-number" id="membershipNumber">—</span>
+        </div>
+        <p class="success-note">
+          Please keep this number safe — you'll need it when we launch.<br />
+          We'll be in touch at the email address you provided.
+        </p>
+        <a href="/" class="cta-btn" style="margin-top:28px; display:inline-block;">Back to Home</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Logicard. All rights reserved. &nbsp;|&nbsp; <a href="#">Privacy Policy</a> &nbsp;|&nbsp; <a href="#">Terms of Service</a></p>
+  </footer>
+
+  <script src="signup.js"></script>
+  <script>
+    document.getElementById('pwToggle1').addEventListener('click', () => {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    });
+    document.getElementById('pwToggle2').addEventListener('click', () => {
+      const p = document.getElementById('confirmPassword');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    });
+  </script>
+</body>
+</html>
