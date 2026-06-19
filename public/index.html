@@ -550,23 +550,33 @@
 
     /* ── Sign Up CTA Section ── */
     .cta-section {
-      background: var(--black);
+      background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, var(--navy-mid) 100%);
       text-align: center;
-      padding: 88px 48px;
+      padding: 100px 48px;
     }
     .cta-section .section-heading.light {
       font-size: clamp(30px, 4vw, 52px);
       margin-bottom: 16px;
     }
     .cta-section .section-sub.light {
-      margin: 0 auto 48px;
+      margin: 0 auto 52px;
       text-align: center;
     }
     .cta-btns {
       display: flex;
-      gap: 16px;
+      gap: 20px;
       justify-content: center;
       flex-wrap: wrap;
+    }
+    .cta-section .btn-primary {
+      padding: 22px 56px;
+      font-size: 18px;
+      letter-spacing: 0.5px;
+      box-shadow: 0 6px 32px rgba(255,179,0,0.4);
+    }
+    .cta-section .btn-secondary {
+      padding: 22px 44px;
+      font-size: 18px;
     }
 
     /* ── Contact Section ── */
