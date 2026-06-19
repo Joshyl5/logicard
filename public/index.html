@@ -305,134 +305,97 @@
     .section-eyebrow.light { color: rgba(255,184,0,0.9); }
 
     /* ── How It Works ── */
-    .how-section { background: var(--white); }
-    .how-layout {
-      display: flex;
-      gap: 56px;
-      align-items: center;
-    }
-    .how-steps {
-      flex: 1;
+    .how-section { background: #f0f2f7; }
+    .how-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 52px;
     }
-    .how-step {
-      padding: 0 28px 0 0;
-      border-right: 1px solid var(--gray-mid);
-      margin-right: 28px;
+    .how-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 48px 40px 40px;
+      border: 1px solid rgba(7,29,64,0.07);
+      box-shadow: 0 4px 28px rgba(7,29,64,0.07);
       display: flex;
       flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.22s, box-shadow 0.22s;
     }
-    .how-step:last-child {
-      border-right: none;
-      padding-right: 0;
-      margin-right: 0;
+    .how-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 52px rgba(7,29,64,0.13);
     }
-    .step-icon-wrap {
-      width: 52px;
-      height: 52px;
-      flex-shrink: 0;
+    .how-card--featured {
+      background: var(--navy);
+      border-color: transparent;
+      box-shadow: 0 8px 40px rgba(7,29,64,0.35);
+    }
+    .how-card--featured:hover {
+      box-shadow: 0 24px 60px rgba(7,29,64,0.45);
+    }
+    .how-card-num {
+      position: absolute;
+      top: 20px;
+      right: 28px;
+      font-size: 80px;
+      font-weight: 900;
+      line-height: 1;
+      color: rgba(7,29,64,0.055);
+      pointer-events: none;
+      letter-spacing: -2px;
+    }
+    .how-card--featured .how-card-num { color: rgba(255,255,255,0.07); }
+    .how-card-icon {
+      width: 68px;
+      height: 68px;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+      border-radius: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 18px;
-      color: var(--navy);
+      margin-bottom: 28px;
+      flex-shrink: 0;
     }
-    .step-icon-wrap svg {
-      width: 40px;
-      height: 40px;
+    .how-card--featured .how-card-icon {
+      background: rgba(255,140,0,0.18);
+      border: 1px solid rgba(255,140,0,0.35);
     }
-    .how-step h3 {
-      font-size: 18px;
+    .how-card-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: white;
+    }
+    .how-card--featured .how-card-icon svg { stroke: var(--orange); }
+    .how-card h3 {
+      font-size: 22px;
       font-weight: 800;
       color: var(--navy);
-      margin-bottom: 10px;
-      min-height: 2.2em;
-      display: flex;
-      align-items: flex-start;
+      margin-bottom: 14px;
+      letter-spacing: -0.3px;
     }
-    .how-step p {
-      font-size: 14px;
+    .how-card--featured h3 { color: #ffffff; }
+    .how-card p {
+      font-size: 15px;
       color: var(--text-muted);
-      line-height: 1.65;
+      line-height: 1.7;
+      flex: 1;
     }
-    .how-visual {
-      width: 280px;
-      flex-shrink: 0;
-      background: linear-gradient(140deg, #071d40, #0d3b80);
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 20px 60px rgba(7,29,64,0.35);
-    }
-    .phone-screen-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-    }
-    .phone-screen-top span {
-      font-size: 12px;
-      color: rgba(255,255,255,0.6);
-      font-weight: 600;
-    }
-    .phone-logo { height: 34px; }
-    .phone-search {
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-size: 12px;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .phone-offer {
-      background: rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .phone-offer-badge {
-      background: var(--orange);
-      color: var(--white);
-      font-size: 10px;
-      font-weight: 900;
-      padding: 4px 7px;
-      border-radius: 4px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .phone-offer-text { flex: 1; }
-    .phone-offer-text .pot {
-      font-size: 12px;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 2px;
-    }
-    .phone-offer-text .pot-sub {
-      font-size: 10px;
-      color: rgba(255,255,255,0.5);
-    }
-    .phone-category {
-      display: flex;
-      gap: 8px;
-      margin-top: 12px;
-      flex-wrap: wrap;
-    }
-    .phone-cat-pill {
-      background: rgba(255,140,0,0.15);
-      border: 1px solid rgba(255,140,0,0.3);
+    .how-card--featured p { color: rgba(255,255,255,0.62); }
+    .how-card-cta {
+      margin-top: 32px;
       color: var(--orange);
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 100px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.2px;
     }
+    .how-card-cta:hover { gap: 10px; }
 
     /* ── Deals Section ── */
     .deals-section { background: var(--dark-bg); }
@@ -747,12 +710,8 @@
       .hero { padding: 80px 28px 60px; min-height: auto; }
       .hero-logo-wrap { display: none; }
       .hero-stats { flex-wrap: wrap; gap: 24px; }
-      .how-layout { flex-direction: column-reverse; }
-      .how-visual { width: 100%; max-width: 340px; }
-      .how-steps { grid-template-columns: 1fr; }
-      .how-step { border-right: none; border-bottom: 1px solid var(--gray-mid); padding: 0 0 24px; margin: 0 0 24px; }
-      .how-step:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-      .how-step h3 { min-height: unset; }
+      .how-cards { grid-template-columns: 1fr; }
+      .how-card { padding: 36px 28px 32px; }
       .deals-grid, .support-grid { grid-template-columns: 1fr; }
       .benefits-grid { grid-template-columns: 1fr 1fr; }
       .contact-layout { flex-direction: column; }
@@ -834,82 +793,52 @@
     <div class="lc-inner">
       <p class="section-eyebrow">Getting started</p>
       <h2 class="section-heading">How it works</h2>
-      <p class="section-sub">We work with 100s of brands to bring you the best deals. Based on your line of work and location we give you the most relevant deals every day so you can save money.</p>
-      <div class="how-layout">
-        <div class="how-steps">
-          <div class="how-step">
-            <div class="step-icon-wrap">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
-                <polyline points="17 21 12 16 7 21"/>
-                <line x1="12" y1="16" x2="12" y2="8"/>
-                <polyline points="8 12 12 8 16 12"/>
-              </svg>
-            </div>
-            <h3>Sign up</h3>
-            <p>Create your free Logicard account in under 2 minutes. No payment details required.</p>
+      <p class="section-sub">Join thousands of logistics workers already saving money on fuel, hotels, dining and more. It takes under 2 minutes to sign up — completely free, no card required.</p>
+      <div class="how-cards">
+
+        <div class="how-card">
+          <div class="how-card-num">01</div>
+          <div class="how-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+              <polyline points="17 21 12 16 7 21"/>
+              <line x1="12" y1="16" x2="12" y2="8"/>
+              <polyline points="8 12 12 8 16 12"/>
+            </svg>
           </div>
-          <div class="how-step">
-            <div class="step-icon-wrap">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="7" width="20" height="14" rx="2"/>
-                <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
-                <line x1="12" y1="12" x2="12" y2="16"/>
-                <line x1="10" y1="14" x2="14" y2="14"/>
-              </svg>
-            </div>
-            <h3>Browse your deals</h3>
-            <p>Explore hundreds of exclusive offers across fuel, hotels, food, tech, fleet maintenance and more.</p>
-          </div>
-          <div class="how-step">
-            <div class="step-icon-wrap">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
-              </svg>
-            </div>
-            <h3>Start saving</h3>
-            <p>Redeem deals instantly with your unique membership number. Save on every journey, every day.</p>
-          </div>
+          <h3>Sign up free</h3>
+          <p>Create your Logicard account in under 2 minutes. No payment details required — ever. Just confirm your employer to verify you work in logistics.</p>
+          <a href="/signup.html" class="how-card-cta">Create account →</a>
         </div>
-        <!-- Visual: mini app preview -->
-        <div class="how-visual">
-          <div class="phone-screen-top">
-            <span>Logicard</span>
-            <img src="logicard-logo.png" alt="" class="phone-logo" />
+
+        <div class="how-card how-card--featured">
+          <div class="how-card-num">02</div>
+          <div class="how-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/>
+              <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+              <line x1="12" y1="12" x2="12" y2="16"/>
+              <line x1="10" y1="14" x2="14" y2="14"/>
+            </svg>
           </div>
-          <div class="phone-search">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            Search deals, brands…
-          </div>
-          <div class="phone-offer">
-            <div class="phone-offer-text">
-              <div class="pot">Fuel &amp; Fleet</div>
-              <div class="pot-sub">3,200+ forecourts nationwide</div>
-            </div>
-            <span class="phone-offer-badge">20% OFF</span>
-          </div>
-          <div class="phone-offer">
-            <div class="phone-offer-text">
-              <div class="pot">UK Business Hotels</div>
-              <div class="pot-sub">800+ locations</div>
-            </div>
-            <span class="phone-offer-badge">FREE</span>
-          </div>
-          <div class="phone-offer">
-            <div class="phone-offer-text">
-              <div class="pot">Airport Lounge Access</div>
-              <div class="pot-sub">30+ UK airports</div>
-            </div>
-            <span class="phone-offer-badge">FREE</span>
-          </div>
-          <div class="phone-category">
-            <span class="phone-cat-pill">Fuel</span>
-            <span class="phone-cat-pill">Hotels</span>
-            <span class="phone-cat-pill">Dining</span>
-            <span class="phone-cat-pill">Fleet</span>
-          </div>
+          <h3>Browse your deals</h3>
+          <p>Explore hundreds of exclusive offers across fuel, hotels, food, tech, fleet maintenance and more — all in one place, updated daily for Logicard members.</p>
+          <a href="#deals" class="how-card-cta">See deals →</a>
         </div>
+
+        <div class="how-card">
+          <div class="how-card-num">03</div>
+          <div class="how-card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
+            </svg>
+          </div>
+          <h3>Start saving</h3>
+          <p>Redeem deals instantly using your unique Logicard membership number. Save on every journey, every fill-up and every stay — every single day.</p>
+          <a href="/signup.html" class="how-card-cta">Join today →</a>
+        </div>
+
       </div>
     </div>
   </section>
