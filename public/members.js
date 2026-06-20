@@ -111,16 +111,32 @@ let activeCategory = 'all';
 
 async function init() {
   // Check auth
+  let me;
   try {
     const meRes  = await fetch('/api/me');
     if (!meRes.ok) { window.location.href = '/login.html'; return; }
-    const me = await meRes.json();
-    document.getElementById('userName').textContent  = me.firstName;
+    me = await meRes.json();
+    document.getElementById('userName').textContent    = me.firstName;
     document.getElementById('memberBadge').textContent = '#' + me.membershipNumber;
   } catch {
     window.location.href = '/login.html';
     return;
   }
+
+  // Referral banner
+  const referralLink = `${window.location.origin}/signup.html?ref=${me.membershipNumber}`;
+  document.getElementById('referralLinkInput').value = referralLink;
+  document.getElementById('totalReferrals').textContent  = me.totalReferrals  || 0;
+  document.getElementById('monthlyEntries').textContent  = me.monthlyEntries  || 0;
+
+  document.getElementById('referralCopyBtn').addEventListener('click', () => {
+    navigator.clipboard.writeText(referralLink).then(() => {
+      const btn = document.getElementById('referralCopyBtn');
+      btn.textContent = '✓ Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy link'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
 
   // Fetch offers
   try {

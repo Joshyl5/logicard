@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Report an Issue</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .report-page { background: #060d1c; min-height: 100vh; }
+    .report-header {
+      background: #071628;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .report-header-logo {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #fff;
+      text-decoration: none;
+    }
+    .report-header-logo span { color: #FFB300; }
+    .report-main { max-width: 640px; margin: 0 auto; padding: 48px 24px 80px; }
+    .report-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: #7ba3d4;
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.15s;
+    }
+    .report-back:hover { color: #fff; }
+    .report-card {
+      background: #0b1a33;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 40px 36px;
+    }
+    .report-card h1 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .report-card p.subtitle {
+      font-size: 0.9rem;
+      color: #7ba3d4;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .report-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+    .report-field label { font-size: 0.83rem; font-weight: 600; color: #d0dff5; }
+    .report-field select,
+    .report-field textarea {
+      background: rgba(4,14,34,0.8);
+      border: 1px solid rgba(79,163,247,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      padding: 11px 13px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+    .report-field select:focus,
+    .report-field textarea:focus { border-color: #4fa3f7; box-shadow: 0 0 0 3px rgba(79,163,247,0.12); }
+    .report-field select option { background: #071d40; }
+    .report-field textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
+    .report-member-info {
+      background: rgba(79,163,247,0.07);
+      border: 1px solid rgba(79,163,247,0.18);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      font-size: 0.84rem;
+      color: #7ba3d4;
+    }
+    .report-member-info strong { color: #4fa3f7; }
+    .report-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #1a6cc8, #4fa3f7);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 14px 0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+    .report-submit:hover:not(:disabled) { opacity: 0.9; }
+    .report-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+    .report-error {
+      display: none;
+      font-size: 0.86rem;
+      color: #ff7070;
+      background: rgba(255,80,80,0.08);
+      border: 1px solid rgba(255,80,80,0.22);
+      border-radius: 8px;
+      padding: 11px 14px;
+      margin-bottom: 16px;
+    }
+    .report-success {
+      text-align: center;
+      padding: 48px 24px;
+    }
+    .report-success h2 { font-family: 'Raleway', sans-serif; font-size: 1.5rem; font-weight: 800; color: #fff; margin-bottom: 12px; }
+    .report-success p { color: #7ba3d4; font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px; }
+    @media (max-width: 600px) {
+      .report-card { padding: 28px 20px; }
+    }
+  </style>
+</head>
+<body class="report-page">
+
+  <header class="report-header">
+    <a href="/members" class="report-header-logo"><span>Logi</span>card</a>
+    <button class="signout-btn" id="signoutBtn">Sign Out</button>
+  </header>
+
+  <main class="report-main">
+    <a href="/members" class="report-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to offers
+    </a>
+
+    <div class="report-card">
+
+      <div id="reportForm">
+        <h1>Report an Issue</h1>
+        <p class="subtitle">Found a bug, have a concern, or want to leave feedback? Let us know below and we'll look into it.</p>
+
+        <div class="report-member-info" id="memberInfo">
+          Submitting as member <strong id="memberDisplay">...</strong>
+        </div>
+
+        <form id="issueForm" novalidate>
+          <div class="report-field">
+            <label for="issueType">Type of report</label>
+            <select id="issueType" required>
+              <option value="">— Select a category —</option>
+              <option value="Bug">Bug — something isn't working correctly</option>
+              <option value="Concern">Concern — something doesn't seem right</option>
+              <option value="Feedback">Feedback — a suggestion or improvement</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="report-field">
+            <label for="issueTitle">Brief title</label>
+            <input id="issueTitle" type="text" style="background:rgba(4,14,34,0.8);border:1px solid rgba(79,163,247,0.2);border-radius:8px;color:#fff;font-family:Inter,sans-serif;font-size:0.92rem;padding:11px 13px;outline:none;width:100%;transition:border-color 0.2s" placeholder="e.g. Login page not loading" />
+          </div>
+
+          <div class="report-field">
+            <label for="issueDesc">Description <span style="color:#4fa3f7">*</span></label>
+            <textarea id="issueDesc" placeholder="Please describe the issue in as much detail as possible..." required></textarea>
+          </div>
+
+          <div id="reportError" class="report-error"></div>
+
+          <button type="submit" class="report-submit" id="submitBtn">
+            <span id="submitLabel">Submit Report</span>
+          </button>
+        </form>
+      </div>
+
+      <div id="reportSuccess" class="report-success" style="display:none">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.8" stroke-linecap="round" style="margin:0 auto 20px;display:block"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11 14 15 10"/></svg>
+        <h2>Report submitted</h2>
+        <p>Thank you — we've received your report and will look into it shortly. Your membership number has been logged with this report.</p>
+        <a href="/members" class="report-submit" style="display:inline-block;text-decoration:none;width:auto;padding:13px 32px;margin-top:8px">Back to offers</a>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="/report.js"></script>
+</body>
+</html>

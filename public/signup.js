@@ -30,6 +30,8 @@ form.addEventListener('submit', async e => {
 
   const data = Object.fromEntries(new FormData(form).entries());
   data.gdprConsent = document.getElementById('gdprConsent').checked;
+  const ref = new URLSearchParams(window.location.search).get('ref');
+  if (ref) data.ref = ref;
 
   const required = [
     ['companyName',  'Company Name'],

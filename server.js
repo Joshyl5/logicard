@@ -10,6 +10,7 @@ const {
   createMember, emailExists, findMemberByEmail,
   getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
+  resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
 } = require('./database');
 
 const app    = express();
@@ -158,6 +159,10 @@ app.get('/members', requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'members.html'));
 });
 
+app.get('/report', requireAuth, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'report.html'));
+});
+
 // ── Admin pages ────────────────────────────────────────────────
 app.get('/admin', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-dashboard.html'));
@@ -185,7 +190,7 @@ app.post('/api/logout', (req, res) => {
 app.get('/api/me', requireAuth, (req, res) => {
   const member = getMemberByNumber(req.session.membershipNumber);
   if (!member) return res.status(404).json({ error: 'Member not found' });
-  res.json({ membershipNumber: member.membershipNumber, firstName: member.firstName, lastName: member.lastName, companyName: member.companyName });
+  res.json({ membershipNumber: member.membershipNumber, firstName: member.firstName, lastName: member.lastName, companyName: member.companyName, totalReferrals: member.totalReferrals || 0, monthlyEntries: member.monthlyEntries || 0 });
 });
 
 // ── Admin auth ─────────────────────────────────────────────────
@@ -221,6 +226,161 @@ app.get('/api/admin/export.csv', requireAdmin, (_req, res) => {
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   res.send(csv);
+});
+
+// ── Giveaway admin routes ──────────────────────────────────────
+app.get('/api/admin/giveaway', requireAdmin, (_req, res) => {
+  const members = getAllMembers()
+    .filter(m => (m.monthlyEntries || 0) > 0)
+    .map(({ passwordHash, resetToken, resetTokenExpiry, ...safe }) => safe)
+    .sort((a, b) => (b.monthlyEntries || 0) - (a.monthlyEntries || 0));
+  res.json({ entries: members, history: getGiveawayHistory() });
+});
+
+app.post('/api/admin/giveaway/draw', requireAdmin, async (req, res) => {
+  const members = getAllMembers().filter(m => (m.monthlyEntries || 0) > 0);
+  if (!members.length) return res.status(400).json({ error: 'No entries for this month.' });
+
+  // Weighted random draw — more entries = better odds
+  const pool = members.flatMap(m => Array(m.monthlyEntries).fill(m));
+  const winner = pool[Math.floor(Math.random() * pool.length)];
+
+  recordGiveawayWinner(winner);
+
+  // Email the winner
+  if (resend) {
+    const html = `
+    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
+      <div style="background:linear-gradient(135deg,#04040d 0%,#071d40 50%,#0d3b80 100%);padding:40px 36px;text-align:center">
+        <h1 style="color:#FFB300;margin:0;font-size:32px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+        <p style="color:rgba(255,255,255,0.6);margin:8px 0 0;font-size:14px">Monthly Giveaway</p>
+      </div>
+      <div style="padding:40px 36px;background:#fff;text-align:center">
+        <div style="font-size:52px;margin-bottom:16px">🎉</div>
+        <h2 style="color:#071d40;margin:0 0 12px;font-size:24px;font-weight:900">Congratulations, ${winner.firstName}!</h2>
+        <p style="color:#5f6d82;font-size:15px;line-height:1.6;margin:0 0 28px">You've won the Logicard monthly giveaway! You are entitled to a <strong>free hotel night stay</strong> — we will be in touch shortly with details on how to claim your prize.</p>
+        <div style="background:linear-gradient(135deg,#071d40,#0d3b80);border-radius:12px;padding:24px;margin-bottom:28px">
+          <p style="color:rgba(255,255,255,0.6);margin:0 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:1px">Your Membership Number</p>
+          <p style="color:#FFB300;margin:0;font-size:32px;font-weight:900">#${winner.membershipNumber}</p>
+        </div>
+        <p style="color:#5f6d82;font-size:13px;line-height:1.6">Keep referring friends to earn more entries into next month's giveaway!</p>
+      </div>
+      <div style="padding:20px 36px;text-align:center;background:#f0f2f7;border-top:1px solid #e2e6ee">
+        <p style="margin:0;font-size:11px;color:#aaa">Please do not reply to this email — this mailbox is not monitored.</p>
+        <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard · <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none">logicard.co.uk</a></p>
+      </div>
+    </div>`;
+
+    try {
+      await resend.emails.send({
+        from:     'Logicard <welcome@logicard.co.uk>',
+        to:       winner.email,
+        subject:  `🎉 You've won the Logicard monthly giveaway!`,
+        reply_to: 'noreply@logicard.co.uk',
+        html,
+      });
+    } catch (err) {
+      console.error('Winner email failed:', err.message);
+    }
+  }
+
+  res.json({ success: true, winner: { name: `${winner.firstName} ${winner.lastName}`, membershipNumber: winner.membershipNumber, email: winner.email, entries: winner.monthlyEntries } });
+});
+
+app.post('/api/admin/giveaway/reset', requireAdmin, (_req, res) => {
+  resetMonthlyEntries();
+  res.json({ success: true });
+});
+
+// ── Report an issue ────────────────────────────────────────────
+app.post('/api/report', requireAuth, async (req, res) => {
+  const { issueType, issueTitle, issueDesc } = req.body;
+  if (!issueType || !issueDesc) return res.status(400).json({ error: 'Please fill in all required fields.' });
+
+  const membershipNumber = req.session.membershipNumber;
+  const member = getMemberByNumber(membershipNumber);
+  const memberName = member ? `${member.firstName} ${member.lastName}` : 'Unknown';
+
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
+      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">Member Issue Report</p>
+    </div>
+    <div style="padding:32px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 20px;font-size:18px">A member has submitted a report</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Member</td><td style="padding:10px 14px;color:#333">${memberName}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Membership #</td><td style="padding:10px 14px;color:#1a6cc8;font-weight:700">#${membershipNumber}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#333">${member ? member.email : '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Type</td><td style="padding:10px 14px;color:#333">${issueType}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Title</td><td style="padding:10px 14px;color:#333">${issueTitle || '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40;vertical-align:top">Description</td><td style="padding:10px 14px;color:#333;line-height:1.6">${issueDesc.replace(/\n/g, '<br/>')}</td></tr>
+      </table>
+    </div>
+    <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
+      <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — member report submitted via logicard.co.uk</p>
+    </div>
+  </div>`;
+
+  try {
+    if (resend) {
+      await resend.emails.send({
+        from:    'Logicard <welcome@logicard.co.uk>',
+        to:      process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
+        subject: `[${issueType}] Report from member #${membershipNumber} — ${memberName}`,
+        html,
+      });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Report email failed:', err.message);
+    res.status(500).json({ error: 'Failed to submit report. Please try again.' });
+  }
+});
+
+// ── Contact form ───────────────────────────────────────────────
+app.post('/api/contact', async (req, res) => {
+  const { name, email, title, company, phone, newsletterOptIn } = req.body;
+  if (!name || !email) return res.status(400).json({ error: 'Name and email are required.' });
+
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
+      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">New Contact Form Submission</p>
+    </div>
+    <div style="padding:32px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 20px;font-size:18px">Someone got in touch via logicard.co.uk</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Full Name</td><td style="padding:10px 14px;color:#333">${name}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#1a6cc8">${email}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px;color:#333">${title || '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px;color:#333">${company || '—'}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px;color:#333">${phone || '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Newsletter</td><td style="padding:10px 14px;color:#333">${newsletterOptIn ? '✅ Yes' : 'No'}</td></tr>
+      </table>
+    </div>
+    <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
+      <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — contact form submission from logicard.co.uk</p>
+    </div>
+  </div>`;
+
+  try {
+    if (resend) {
+      await resend.emails.send({
+        from:     'Logicard <welcome@logicard.co.uk>',
+        to:       process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
+        reply_to: email,
+        subject:  `New contact from ${name}${company ? ` — ${company}` : ''}`,
+        html,
+      });
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Contact form email failed:', err.message);
+    res.status(500).json({ error: 'Failed to send message. Please try again.' });
+  }
 });
 
 // ── Password reset ─────────────────────────────────────────────
@@ -296,7 +456,7 @@ app.get('/api/offers', requireAuth, (_req, res) => res.json(OFFERS));
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', async (req, res) => {
   const { companyName, role, firstName, lastName, email, phone, dateOfBirth,
-          addressLine1, addressLine2, city, county, postcode, country, password, gdprConsent } = req.body;
+          addressLine1, addressLine2, city, county, postcode, country, password, gdprConsent, ref } = req.body;
 
   const required = { companyName, role, firstName, lastName, email, phone, addressLine1, city, postcode, country };
   for (const [field, value] of Object.entries(required)) {
@@ -318,6 +478,7 @@ app.post('/api/signup', async (req, res) => {
       city: city.trim(), county: county ? county.trim() : null,
       postcode: postcode.trim().toUpperCase(), country: country.trim(),
       password, gdprConsent,
+      referredBy: ref || null,
     });
 
     res.json({ success: true, membershipNumber });

@@ -28,7 +28,7 @@ function createMember(data) {
     : MEMBERSHIP_START - 1;
 
   const membershipNumber = lastNumber + 1;
-  const { password, ...rest } = data;
+  const { password, referredBy, ...rest } = data;
   const passwordHash = password ? bcrypt.hashSync(password, 10) : null;
 
   const member = {
@@ -38,9 +38,22 @@ function createMember(data) {
     passwordHash,
     verified: true,
     createdAt: new Date().toISOString(),
+    referredBy: referredBy || null,
+    totalReferrals: 0,
+    monthlyEntries: 0,
   };
 
   db.members.push(member);
+
+  // Credit the referrer with one giveaway entry
+  if (referredBy) {
+    const referrer = db.members.find(m => m.membershipNumber === Number(referredBy));
+    if (referrer) {
+      referrer.totalReferrals = (referrer.totalReferrals || 0) + 1;
+      referrer.monthlyEntries = (referrer.monthlyEntries || 0) + 1;
+    }
+  }
+
   saveDb(db);
   return { membershipNumber };
 }
@@ -85,7 +98,33 @@ function clearResetToken(email, newPasswordHash) {
   return true;
 }
 
+function resetMonthlyEntries() {
+  const db = loadDb();
+  db.members.forEach(m => { m.monthlyEntries = 0; });
+  if (!db.giveawayHistory) db.giveawayHistory = [];
+  saveDb(db);
+}
+
+function recordGiveawayWinner(winner) {
+  const db = loadDb();
+  if (!db.giveawayHistory) db.giveawayHistory = [];
+  db.giveawayHistory.unshift({
+    membershipNumber: winner.membershipNumber,
+    name: `${winner.firstName} ${winner.lastName}`,
+    email: winner.email,
+    entries: winner.monthlyEntries,
+    drawnAt: new Date().toISOString(),
+  });
+  saveDb(db);
+}
+
+function getGiveawayHistory() {
+  const db = loadDb();
+  return db.giveawayHistory || [];
+}
+
 module.exports = {
   createMember, emailExists, findMemberByEmail, getMemberByNumber,
   getAllMembers, setResetToken, findMemberByResetToken, clearResetToken,
+  resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
 };

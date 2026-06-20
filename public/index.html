@@ -1050,20 +1050,24 @@
       <p class="section-sub">To find out more about Logicard, or to get your brand on board, fill out the form below.</p>
       <div class="contact-layout">
         <div class="contact-form-wrap">
-          <input type="text" class="contact-input" placeholder="Full name" />
-          <input type="email" class="contact-input" placeholder="Your email" />
-          <input type="text" class="contact-input" placeholder="Your job title" />
-          <input type="text" class="contact-input" placeholder="Your company / organisation" />
-          <input type="tel" class="contact-input" placeholder="Contact number (optional)" />
-          <div class="contact-toggle-row">
-            <div class="toggle-switch"></div>
-            <label>Click here if you would like to hear from us about news and updates.</label>
-          </div>
-          <button type="submit" class="contact-submit">SUBMIT FORM</button>
-          <p class="contact-privacy">
-            Data submitted is handled in accordance with our <a href="#">Privacy Policy</a>.
-            This site is protected by our terms of service — see <a href="#">Terms &amp; Conditions</a>.
-          </p>
+          <form id="contactForm" novalidate>
+            <input id="contactName"    type="text"  class="contact-input" placeholder="Full name *" required />
+            <input id="contactEmail"   type="email" class="contact-input" placeholder="Your email *" required />
+            <input id="contactTitle"   type="text"  class="contact-input" placeholder="Your job title" />
+            <input id="contactCompany" type="text"  class="contact-input" placeholder="Your company / organisation" />
+            <input id="contactPhone"   type="tel"   class="contact-input" placeholder="Contact number (optional)" />
+            <div class="contact-toggle-row">
+              <div class="toggle-switch" id="newsletterToggle"></div>
+              <label for="newsletterToggle">Click here if you would like to hear from us about news and updates.</label>
+            </div>
+            <div id="contactError"   style="display:none;color:#ff7070;font-size:13px;margin-bottom:12px;padding:10px 14px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.22);border-radius:6px"></div>
+            <div id="contactSuccess" style="display:none;color:#2f855a;font-size:13px;margin-bottom:12px;padding:10px 14px;background:rgba(47,133,90,0.12);border:1px solid rgba(47,133,90,0.3);border-radius:6px"></div>
+            <button type="submit" class="contact-submit" id="contactBtn">SUBMIT FORM</button>
+            <p class="contact-privacy">
+              Data submitted is handled in accordance with our <a href="#">Privacy Policy</a>.
+              This site is protected by our terms of service — see <a href="#">Terms &amp; Conditions</a>.
+            </p>
+          </form>
         </div>
         <div class="contact-illustration">
           <div class="envelope-graphic">
@@ -1094,5 +1098,6 @@
   </footer>
 
   <script src="stars.js"></script>
+  <script src="contact.js"></script>
 </body>
 </html>
