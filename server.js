@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express   = require('express');
+const helmet    = require('helmet');
 const session   = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const rateLimit = require('express-rate-limit');
@@ -18,6 +19,12 @@ const {
 const app    = express();
 const PORT   = process.env.PORT || 3000;
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+// Trust Railway's reverse proxy so rate limiters see real client IPs
+app.set('trust proxy', 1);
+
+// Remove Express fingerprint header
+app.disable('x-powered-by');
 
 // ── Welcome email to new member ────────────────────────────────
 async function sendWelcomeEmail(member) {
@@ -79,6 +86,14 @@ async function sendWelcomeEmail(member) {
 
 
 // ── Rate limiters ──────────────────────────────────────────────
+const contactLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many messages sent. Please try again in an hour.' },
+});
+
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5,
@@ -104,7 +119,11 @@ const resetLimiter = rateLimit({
 });
 
 // ── Middleware ─────────────────────────────────────────────────
-app.use(express.json());
+app.use(helmet({
+  contentSecurityPolicy: false, // disabled — site uses inline scripts/styles
+  crossOriginEmbedderPolicy: false,
+}));
+app.use(express.json({ limit: '50kb' }));
 app.use(session({
   store: new pgSession({
     conString: process.env.DATABASE_URL,
@@ -117,6 +136,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     secure: !!process.env.DATABASE_URL, // true on Railway (HTTPS), false locally
+    sameSite: 'lax',
     maxAge: 8 * 60 * 60 * 1000,
   },
 }));
@@ -222,8 +242,8 @@ app.post('/api/admin/login', adminLimiter, async (req, res) => {
     return res.status(401).json({ error: 'Incorrect admin password.' });
   }
 
-  // Generate 6-digit OTP
-  const otp    = Math.floor(100000 + Math.random() * 900000).toString();
+  // Generate cryptographically secure 6-digit OTP
+  const otp    = crypto.randomInt(100000, 999999).toString();
   const expiry = Date.now() + 10 * 60 * 1000; // 10 minutes
   req.session.pendingAdminOtp       = otp;
   req.session.pendingAdminOtpExpiry = expiry;
@@ -252,7 +272,7 @@ app.post('/api/admin/login', adminLimiter, async (req, res) => {
     if (resend) {
       await resend.emails.send({
         from:    'Logicard <accounts@logicard.co.uk>',
-        to:      process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
+        to:      process.env.ADMIN_EMAIL,
         subject: `${otp} — Logicard admin verification code`,
         html,
       });
@@ -408,7 +428,7 @@ app.post('/api/report', requireAuth, async (req, res) => {
     if (resend) {
       await resend.emails.send({
         from:    'Logicard <welcome@logicard.co.uk>',
-        to:      process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
+        to:      process.env.ADMIN_EMAIL,
         subject: `[${issueType}] Report from member #${membershipNumber} — ${memberName}`,
         html,
       });
@@ -421,7 +441,7 @@ app.post('/api/report', requireAuth, async (req, res) => {
 });
 
 // ── Contact form ───────────────────────────────────────────────
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', contactLimiter, async (req, res) => {
   const { name, email, title, company, phone, newsletterOptIn } = req.body;
   if (!name || !email) return res.status(400).json({ error: 'Name and email are required.' });
 
@@ -577,5 +597,8 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Logicard running at http://localhost:${PORT}`);
-  if (!resend) console.log('  > RESEND_API_KEY not set — emails disabled.');
+  if (!resend)                          console.warn('  > RESEND_API_KEY not set — emails disabled.');
+  if (!process.env.SESSION_SECRET)      console.warn('  > SESSION_SECRET not set — using insecure default. Set this in Railway Variables.');
+  if (!process.env.ADMIN_EMAIL)         console.warn('  > ADMIN_EMAIL not set — admin OTP and member reports will not be delivered.');
+  if (!process.env.ADMIN_PASSWORD)      console.warn('  > ADMIN_PASSWORD not set — admin panel is inaccessible.');
 });
