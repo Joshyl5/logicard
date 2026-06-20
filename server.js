@@ -451,7 +451,7 @@ app.post('/api/contact', async (req, res) => {
     if (resend) {
       await resend.emails.send({
         from:     'Logicard <welcome@logicard.co.uk>',
-        to:       process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
+        to:       'info@logicard.co.uk',
         reply_to: email,
         subject:  `New contact from ${name}${company ? ` — ${company}` : ''}`,
         html,
