@@ -3,11 +3,13 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const bcrypt  = require('bcryptjs');
+const crypto  = require('crypto');
 const path    = require('path');
 const { Resend } = require('resend');
 const {
   createMember, emailExists, findMemberByEmail,
   getMemberByNumber, getAllMembers,
+  setResetToken, findMemberByResetToken, clearResetToken,
 } = require('./database');
 
 const app    = express();
@@ -219,6 +221,73 @@ app.get('/api/admin/export.csv', requireAdmin, (_req, res) => {
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
   res.send(csv);
+});
+
+// ── Password reset ─────────────────────────────────────────────
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+  const member = findMemberByEmail(email.trim().toLowerCase());
+  // Always return success to prevent email enumeration
+  if (!member) return res.json({ success: true });
+
+  const token  = crypto.randomBytes(32).toString('hex');
+  const expiry = Date.now() + 60 * 60 * 1000; // 1 hour
+  setResetToken(member.email, token, expiry);
+
+  const resetLink = `https://logicard.co.uk/reset-password.html?token=${token}`;
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d 0%,#071d40 50%,#0d3b80 100%);padding:40px 36px;text-align:center">
+      <h1 style="color:#FFB300;margin:0;font-size:32px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.6);margin:8px 0 0;font-size:14px">Password Reset Request</p>
+    </div>
+    <div style="padding:40px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 8px;font-size:22px">Reset your password</h2>
+      <p style="color:#5f6d82;margin:0 0 28px;font-size:15px;line-height:1.6">Hi ${member.firstName}, we received a request to reset your Logicard password. Click the button below to choose a new one.</p>
+      <div style="text-align:center;margin-bottom:32px">
+        <a href="${resetLink}" style="background:#FFB300;color:#071d40;padding:16px 40px;text-decoration:none;border-radius:6px;font-weight:900;font-size:16px;display:inline-block">Reset My Password →</a>
+      </div>
+      <p style="color:#5f6d82;font-size:13px;line-height:1.6;margin:0 0 8px">This link will expire in <strong>1 hour</strong>. If you did not request a password reset, you can safely ignore this email — your password will not change.</p>
+      <p style="color:#aaa;font-size:12px;margin:0">If the button doesn't work, copy and paste this link into your browser:<br/><span style="color:#1a6cc8;word-break:break-all">${resetLink}</span></p>
+    </div>
+    <div style="padding:20px 36px;text-align:center;background:#f0f2f7;border-top:1px solid #e2e6ee">
+      <p style="margin:0;font-size:11px;color:#aaa">Please do not reply to this email — this mailbox is not monitored.</p>
+      <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard · <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none">logicard.co.uk</a></p>
+    </div>
+  </div>`;
+
+  try {
+    if (resend) {
+      await resend.emails.send({
+        from:     'Logicard <accounts@logicard.co.uk>',
+        to:       member.email,
+        subject:  'Reset your Logicard password',
+        reply_to: 'noreply@logicard.co.uk',
+        html,
+      });
+    }
+  } catch (err) {
+    console.error('Password reset email failed:', err.message);
+  }
+
+  res.json({ success: true });
+});
+
+app.post('/api/reset-password', async (req, res) => {
+  const { token, password } = req.body;
+  if (!token || !password) return res.status(400).json({ error: 'Invalid request.' });
+  if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+
+  const member = findMemberByResetToken(token);
+  if (!member) return res.status(400).json({ error: 'This reset link is invalid or has expired.' });
+  if (Date.now() > member.resetTokenExpiry) return res.status(400).json({ error: 'This reset link has expired. Please request a new one.' });
+
+  const newHash = bcrypt.hashSync(password, 10);
+  clearResetToken(member.email, newHash);
+
+  res.json({ success: true });
 });
 
 // ── Offers ─────────────────────────────────────────────────────

@@ -406,6 +406,15 @@ select option { background: #071d40; color: var(--white); }
 
 .form-error.visible { display: block; }
 
+.form-success {
+  font-size: 0.88rem;
+  color: #2f855a;
+  background: rgba(47,133,90,0.08);
+  border: 1px solid rgba(47,133,90,0.22);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+}
+
 /* Submit */
 .submit-btn {
   align-self: center;

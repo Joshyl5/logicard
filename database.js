@@ -59,4 +59,33 @@ function getAllMembers() {
   return loadDb().members;
 }
 
-module.exports = { createMember, emailExists, findMemberByEmail, getMemberByNumber, getAllMembers };
+function setResetToken(email, token, expiry) {
+  const db = loadDb();
+  const member = db.members.find(m => m.email === email.toLowerCase());
+  if (!member) return false;
+  member.resetToken       = token;
+  member.resetTokenExpiry = expiry;
+  saveDb(db);
+  return true;
+}
+
+function findMemberByResetToken(token) {
+  const { members } = loadDb();
+  return members.find(m => m.resetToken === token) || null;
+}
+
+function clearResetToken(email, newPasswordHash) {
+  const db = loadDb();
+  const member = db.members.find(m => m.email === email.toLowerCase());
+  if (!member) return false;
+  member.passwordHash        = newPasswordHash;
+  member.resetToken          = null;
+  member.resetTokenExpiry    = null;
+  saveDb(db);
+  return true;
+}
+
+module.exports = {
+  createMember, emailExists, findMemberByEmail, getMemberByNumber,
+  getAllMembers, setResetToken, findMemberByResetToken, clearResetToken,
+};
