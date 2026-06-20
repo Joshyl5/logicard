@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin-login.html
+Disallow: /admin-verify.html
+Disallow: /members
+Disallow: /report
+Disallow: /api/
+
+Sitemap: https://logicard.co.uk/sitemap.xml
