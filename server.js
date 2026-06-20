@@ -119,19 +119,6 @@ async function sendAdminNotificationEmail(member) {
   }
 }
 
-// ── Offers data ────────────────────────────────────────────────
-const OFFERS = [
-  { id:1, category:'Fuel & Fleet', categoryKey:'fuel', colors:['#f59e0b','#d97706'], title:'15% Off All Fuel Purchases', description:'Save on every fill-up at over 3,200 participating UK forecourts nationwide. Valid on all fuel grades including diesel, petrol and AdBlue. Simply show your Logicard membership number when you pay.', saving:'15%', originalPrice:null, price:null, priceLabel:'ongoing member saving', tag:'Most Popular', featured:true, expires:'2026-12-31' },
-  { id:2, category:'Hotels', categoryKey:'hotels', colors:['#6366f1','#4338ca'], title:'20% Off UK Business Hotels', description:'Exclusive member rates at 800+ UK hotels. Ideal for overnight driver stays and business travel. Free cancellation available on most bookings.', saving:'20%', originalPrice:89, price:71.20, priceLabel:'per night from', tag:null, featured:false, expires:'2026-09-30' },
-  { id:3, category:'Dining', categoryKey:'dining', colors:['#ef4444','#dc2626'], title:'2-for-1 Meals at Motorway Services', description:'Show your Logicard membership at participating motorway service restaurants for a complimentary second meal with every purchase.', saving:'50%', originalPrice:12.99, price:6.50, priceLabel:'per person from', tag:'Driver Favourite', featured:false, expires:'2026-08-31' },
-  { id:4, category:'Technology', categoryKey:'technology', colors:['#06b6d4','#0891b2'], title:'3 Months Free Fleet Tracking', description:"Claim 3 months free on our partner's professional GPS fleet management platform. Track vehicles, manage routes and cut fuel costs from day one.", saving:'FREE', originalPrice:149, price:0, priceLabel:'worth', tag:'Limited Time', featured:false, expires:'2026-07-31' },
-  { id:5, category:'Maintenance', categoryKey:'maintenance', colors:['#8b5cf6','#7c3aed'], title:'25% Off Tyre Fitting & Balancing', description:'Member-exclusive pricing at 500+ approved tyre fitting centres across the UK. All major brands in stock, same-day fitting at most locations.', saving:'25%', originalPrice:80, price:60, priceLabel:'per tyre fitted from', tag:null, featured:false, expires:'2026-10-31' },
-  { id:6, category:'Shopping', categoryKey:'shopping', colors:['#10b981','#059669'], title:'£50 Off at Halfords Business', description:'Exclusive £50 voucher for Logicard members at Halfords Business. Redeemable on tools, accessories, safety equipment and vehicle care products.', saving:'£50', originalPrice:null, price:null, priceLabel:'off your next order', tag:'New Offer', featured:false, expires:'2026-08-15' },
-  { id:7, category:'Travel', categoryKey:'travel', colors:['#0ea5e9','#0284c7'], title:'Complimentary Airport Lounge Access', description:'Enjoy free airport lounge access at 30+ UK airports. Relax with complimentary Wi-Fi, refreshments and a quiet workspace before you fly.', saving:'FREE', originalPrice:35, price:0, priceLabel:'per visit worth', tag:null, featured:false, expires:'2026-12-31' },
-  { id:8, category:'Finance', categoryKey:'finance', colors:['#84cc16','#65a30d'], title:'Exclusive Fleet Insurance Rates', description:'Access preferred fleet and commercial vehicle insurance rates from leading UK providers. Available for fleets from 1 to 500+ vehicles.', saving:'Up to 30%', originalPrice:null, price:null, priceLabel:'potential saving', tag:'Members Only', featured:false, expires:'2026-12-31' },
-  { id:9, category:'Dining', categoryKey:'dining', colors:['#f97316','#ea580c'], title:'15% Off Deliveroo Business', description:'Save 15% on all Deliveroo Business orders for team meals and driver refreshments. Valid on orders over £30 at participating restaurants.', saving:'15%', originalPrice:null, price:null, priceLabel:'off every order', tag:null, featured:false, expires:'2026-09-30' },
-];
-
 // ── Middleware ─────────────────────────────────────────────────
 app.use(express.json());
 app.use(session({
@@ -169,11 +156,11 @@ app.get('/admin', requireAdmin, (_req, res) => {
 });
 
 // ── Member auth ────────────────────────────────────────────────
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
 
-  const member = findMemberByEmail(email);
+  const member = await findMemberByEmail(email);
   if (!member || !member.passwordHash) return res.status(401).json({ error: 'Invalid email or password.' });
   if (!bcrypt.compareSync(password, member.passwordHash)) return res.status(401).json({ error: 'Invalid email or password.' });
   if (!member.verified) return res.status(403).json({ error: 'Your account is pending verification.' });
@@ -187,10 +174,17 @@ app.post('/api/logout', (req, res) => {
   req.session.destroy(() => res.json({ success: true }));
 });
 
-app.get('/api/me', requireAuth, (req, res) => {
-  const member = getMemberByNumber(req.session.membershipNumber);
+app.get('/api/me', requireAuth, async (req, res) => {
+  const member = await getMemberByNumber(req.session.membershipNumber);
   if (!member) return res.status(404).json({ error: 'Member not found' });
-  res.json({ membershipNumber: member.membershipNumber, firstName: member.firstName, lastName: member.lastName, companyName: member.companyName, totalReferrals: member.totalReferrals || 0, monthlyEntries: member.monthlyEntries || 0 });
+  res.json({
+    membershipNumber: member.membershipNumber,
+    firstName:        member.firstName,
+    lastName:         member.lastName,
+    companyName:      member.companyName,
+    totalReferrals:   member.totalReferrals  || 0,
+    monthlyEntries:   member.monthlyEntries  || 0,
+  });
 });
 
 // ── Admin auth ─────────────────────────────────────────────────
@@ -209,13 +203,13 @@ app.post('/api/admin/logout', (req, res) => {
 });
 
 // ── Admin API ──────────────────────────────────────────────────
-app.get('/api/admin/members', requireAdmin, (_req, res) => {
-  const members = getAllMembers().map(({ passwordHash, ...safe }) => safe);
+app.get('/api/admin/members', requireAdmin, async (_req, res) => {
+  const members = (await getAllMembers()).map(({ passwordHash, resetToken, resetTokenExpiry, ...safe }) => safe);
   res.json(members);
 });
 
-app.get('/api/admin/export.csv', requireAdmin, (_req, res) => {
-  const members = getAllMembers();
+app.get('/api/admin/export.csv', requireAdmin, async (_req, res) => {
+  const members = await getAllMembers();
   const headers = ['Membership #','First Name','Last Name','Email','Phone','Date of Birth','Company','Role','Address 1','Address 2','City','County','Postcode','Country','Registered','Marketing Consent','Consent Date'];
   const keys    = ['membershipNumber','firstName','lastName','email','phone','dateOfBirth','companyName','role','addressLine1','addressLine2','city','county','postcode','country','createdAt','marketingConsent','marketingConsentAt'];
   const escape  = v => `"${(v == null ? '' : String(v)).replace(/"/g, '""')}"`;
@@ -229,25 +223,27 @@ app.get('/api/admin/export.csv', requireAdmin, (_req, res) => {
 });
 
 // ── Giveaway admin routes ──────────────────────────────────────
-app.get('/api/admin/giveaway', requireAdmin, (_req, res) => {
-  const members = getAllMembers()
+app.get('/api/admin/giveaway', requireAdmin, async (_req, res) => {
+  const allMembers = await getAllMembers();
+  const members = allMembers
     .filter(m => (m.monthlyEntries || 0) > 0)
     .map(({ passwordHash, resetToken, resetTokenExpiry, ...safe }) => safe)
     .sort((a, b) => (b.monthlyEntries || 0) - (a.monthlyEntries || 0));
-  res.json({ entries: members, history: getGiveawayHistory() });
+  const history = await getGiveawayHistory();
+  res.json({ entries: members, history });
 });
 
 app.post('/api/admin/giveaway/draw', requireAdmin, async (req, res) => {
-  const members = getAllMembers().filter(m => (m.monthlyEntries || 0) > 0);
-  if (!members.length) return res.status(400).json({ error: 'No entries for this month.' });
+  const allMembers = await getAllMembers();
+  const eligible = allMembers.filter(m => (m.monthlyEntries || 0) > 0);
+  if (!eligible.length) return res.status(400).json({ error: 'No entries for this month.' });
 
   // Weighted random draw — more entries = better odds
-  const pool = members.flatMap(m => Array(m.monthlyEntries).fill(m));
-  const winner = pool[Math.floor(Math.random() * pool.length)];
+  const entryPool = eligible.flatMap(m => Array(m.monthlyEntries).fill(m));
+  const winner    = entryPool[Math.floor(Math.random() * entryPool.length)];
 
-  recordGiveawayWinner(winner);
+  await recordGiveawayWinner(winner);
 
-  // Email the winner
   if (resend) {
     const html = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
@@ -270,7 +266,6 @@ app.post('/api/admin/giveaway/draw', requireAdmin, async (req, res) => {
         <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard · <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none">logicard.co.uk</a></p>
       </div>
     </div>`;
-
     try {
       await resend.emails.send({
         from:     'Logicard <welcome@logicard.co.uk>',
@@ -287,8 +282,8 @@ app.post('/api/admin/giveaway/draw', requireAdmin, async (req, res) => {
   res.json({ success: true, winner: { name: `${winner.firstName} ${winner.lastName}`, membershipNumber: winner.membershipNumber, email: winner.email, entries: winner.monthlyEntries } });
 });
 
-app.post('/api/admin/giveaway/reset', requireAdmin, (_req, res) => {
-  resetMonthlyEntries();
+app.post('/api/admin/giveaway/reset', requireAdmin, async (_req, res) => {
+  await resetMonthlyEntries();
   res.json({ success: true });
 });
 
@@ -298,7 +293,7 @@ app.post('/api/report', requireAuth, async (req, res) => {
   if (!issueType || !issueDesc) return res.status(400).json({ error: 'Please fill in all required fields.' });
 
   const membershipNumber = req.session.membershipNumber;
-  const member = getMemberByNumber(membershipNumber);
+  const member    = await getMemberByNumber(membershipNumber);
   const memberName = member ? `${member.firstName} ${member.lastName}` : 'Unknown';
 
   const html = `
@@ -388,13 +383,12 @@ app.post('/api/forgot-password', async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required.' });
 
-  const member = findMemberByEmail(email.trim().toLowerCase());
-  // Always return success to prevent email enumeration
-  if (!member) return res.json({ success: true });
+  const member = await findMemberByEmail(email.trim().toLowerCase());
+  if (!member) return res.json({ success: true }); // prevent email enumeration
 
   const token  = crypto.randomBytes(32).toString('hex');
-  const expiry = Date.now() + 60 * 60 * 1000; // 1 hour
-  setResetToken(member.email, token, expiry);
+  const expiry = Date.now() + 60 * 60 * 1000;
+  await setResetToken(member.email, token, expiry);
 
   const resetLink = `https://logicard.co.uk/reset-password.html?token=${token}`;
   const html = `
@@ -440,23 +434,24 @@ app.post('/api/reset-password', async (req, res) => {
   if (!token || !password) return res.status(400).json({ error: 'Invalid request.' });
   if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
 
-  const member = findMemberByResetToken(token);
+  const member = await findMemberByResetToken(token);
   if (!member) return res.status(400).json({ error: 'This reset link is invalid or has expired.' });
   if (Date.now() > member.resetTokenExpiry) return res.status(400).json({ error: 'This reset link has expired. Please request a new one.' });
 
   const newHash = bcrypt.hashSync(password, 10);
-  clearResetToken(member.email, newHash);
+  await clearResetToken(member.email, newHash);
 
   res.json({ success: true });
 });
 
 // ── Offers ─────────────────────────────────────────────────────
-app.get('/api/offers', requireAuth, (_req, res) => res.json(OFFERS));
+app.get('/api/offers', requireAuth, (_req, res) => res.json([]));
 
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', async (req, res) => {
   const { companyName, role, firstName, lastName, email, phone, dateOfBirth,
-          addressLine1, addressLine2, city, county, postcode, country, password, gdprConsent, marketingConsent, ref } = req.body;
+          addressLine1, addressLine2, city, county, postcode, country,
+          password, gdprConsent, marketingConsent, ref } = req.body;
 
   const required = { companyName, role, firstName, lastName, email, phone, addressLine1, city, postcode, country };
   for (const [field, value] of Object.entries(required)) {
@@ -465,12 +460,12 @@ app.post('/api/signup', async (req, res) => {
   if (!password || password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
   if (!gdprConsent) return res.status(400).json({ error: 'You must accept the privacy policy to continue.' });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Please enter a valid email address.' });
-  if (emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
+  if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
 
   try {
-    const { membershipNumber } = createMember({
+    const { membershipNumber } = await createMember({
       companyName: companyName.trim(), role: role.trim(),
-      firstName: firstName.trim(),    lastName: lastName.trim(),
+      firstName: firstName.trim(),     lastName: lastName.trim(),
       email: email.trim().toLowerCase(), phone: phone.trim(),
       dateOfBirth: dateOfBirth || null,
       addressLine1: addressLine1.trim(),
@@ -484,9 +479,8 @@ app.post('/api/signup', async (req, res) => {
 
     res.json({ success: true, membershipNumber });
 
-    // Send email notification asynchronously (don't block response)
-    const { findMemberByEmail: lookup } = require('./database');
-    const saved = lookup(email.trim().toLowerCase());
+    // Send emails asynchronously (don't block the response)
+    const saved = await findMemberByEmail(email.trim().toLowerCase());
     if (saved) {
       sendWelcomeEmail(saved);
       sendAdminNotificationEmail(saved);
