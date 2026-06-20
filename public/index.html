@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Logicard | Discount Card for All Workers Linked to the Logistics Industry</title>
-  <meta name="description" content="Created by logistics professionals to reward the hardest-working people in the UK. Free membership — exclusive discounts on fuel, hotels, dining, fleet and more for drivers and logistics workers." />
-  <meta name="keywords" content="logistics discount card, truck driver discounts, delivery driver benefits, haulage worker perks, UK logistics membership, free driver discount card" />
+  <meta name="description" content="Free UK discount membership card for logistics workers — HGV drivers, warehouse operatives, freight forwarders, couriers, supply chain managers, customs brokers and more. Exclusive deals on fuel, hotels, dining and fleet." />
+  <meta name="keywords" content="logistics discount card UK, HGV driver discounts, warehouse operative benefits, freight forwarder membership, courier discount card, supply chain manager perks, customs broker benefits, delivery driver discounts, logistics worker membership, road transport discounts, air freight benefits, ocean freight logistics, rail freight UK, last mile delivery, cold chain logistics, e-commerce fulfilment, procurement discounts, inventory management, logistics operations, free membership card UK" />
   <meta property="og:title" content="Logicard | Discount Card for All Workers Linked to the Logistics Industry" />
-  <meta property="og:description" content="Created by logistics professionals to reward arguably the hardest-working industry in the UK. Join free and unlock 150+ exclusive deals." />
+  <meta property="og:description" content="Free discount membership card for UK logistics workers — HGV drivers, warehouse operatives, freight forwarders, couriers, supply chain managers and more. Join free and unlock exclusive deals on fuel, hotels, dining and fleet." />
   <meta property="og:url" content="https://logicard.co.uk" />
   <meta property="og:type" content="website" />
   <link rel="canonical" href="https://logicard.co.uk/" />
@@ -800,7 +800,7 @@
       .footer-links { gap: 16px; }
       .footer-copy { font-size: 12px; }
     }
-    /* ── Who Qualifies Globe Section ── */
+    /* ── Who Qualifies Section ── */
     .qualify-section {
       background: linear-gradient(168deg, #020714 0%, #071d40 52%, #020714 100%);
       padding: 104px 48px 112px;
@@ -812,13 +812,13 @@
       position: absolute;
       left: 50%; top: 40%;
       transform: translate(-50%, -50%);
-      width: 700px; height: 700px;
-      background: radial-gradient(circle, rgba(26,108,200,0.22) 0%, rgba(26,108,200,0.06) 50%, transparent 75%);
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(26,108,200,0.18) 0%, rgba(26,108,200,0.05) 50%, transparent 75%);
       border-radius: 50%;
       pointer-events: none;
     }
-    .qualify-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
-    .qualify-head { text-align: center; max-width: 740px; margin: 0 auto 72px; }
+    .qualify-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+    .qualify-head { text-align: center; max-width: 740px; margin: 0 auto 64px; }
     .qualify-eyebrow {
       display: block; font-size: 12px; font-weight: 800; letter-spacing: 3px;
       text-transform: uppercase; color: var(--orange); margin-bottom: 16px;
@@ -830,94 +830,105 @@
     .qualify-gold { color: var(--orange); }
     .qualify-sub { font-size: 17px; color: rgba(255,255,255,0.58); line-height: 1.75; }
 
-    /* Desktop scene */
-    .qualify-scene {
-      position: relative; width: 920px; height: 620px; margin: 0 auto;
+    /* Sector cards grid */
+    .sectors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 64px;
     }
-    .qualify-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-    #qualifyMap {
-      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-      filter: drop-shadow(0 0 40px rgba(30,100,220,0.65)) drop-shadow(0 0 18px rgba(255,179,0,0.2));
-      overflow: visible; z-index: 2;
+    .sector-card {
+      background: rgba(255,255,255,0.038);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 28px 24px 26px;
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      cursor: default;
     }
-    .map-land {
-      transition: filter 0.3s;
+    .sector-card:hover {
+      background: rgba(255,179,0,0.07);
+      border-color: rgba(255,179,0,0.38);
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,179,0,0.12);
     }
-    .map-halo {
-      animation: mapBreath 4s ease-in-out infinite alternate;
+    .sector-icon-wrap {
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, rgba(255,179,0,0.16) 0%, rgba(26,108,200,0.16) 100%);
+      border: 1px solid rgba(255,179,0,0.2);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+      transition: background 0.25s, border-color 0.25s;
     }
-    @keyframes mapBreath { from { opacity: 0.55; } to { opacity: 1; } }
-    .city-dot {
-      fill: #FFB300;
-      animation: cityBlink 2.4s ease-in-out infinite;
+    .sector-card:hover .sector-icon-wrap {
+      background: linear-gradient(135deg, rgba(255,179,0,0.28) 0%, rgba(26,108,200,0.22) 100%);
+      border-color: rgba(255,179,0,0.45);
     }
-    @keyframes cityBlink { 0%,100%{opacity:1;r:3} 50%{opacity:0.4;r:2} }
-    .globe-pulse {
-      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-      width: 280px; height: 380px; border-radius: 40%; pointer-events: none; z-index: 1;
+    .sector-icon-wrap svg {
+      width: 24px; height: 24px;
+      stroke: #FFB300; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
-    .globe-pulse::before, .globe-pulse::after {
-      content: ''; position: absolute; border-radius: 42%;
-      border: 1px solid rgba(30,108,220,0.35);
-      animation: qPulse 3.5s ease-out infinite;
+    .sector-name {
+      font-size: 14.5px; font-weight: 800; color: #fff;
+      margin: 0 0 14px; letter-spacing: -0.2px; line-height: 1.3;
     }
-    .globe-pulse::before { inset: -28px; }
-    .globe-pulse::after  { inset: -58px; border-color: rgba(30,108,220,0.18); animation-delay: 1.75s; }
-    @keyframes qPulse { 0%{opacity:.65;transform:scale(.93)} 100%{opacity:0;transform:scale(1.12)} }
+    .sector-roles {
+      display: flex; flex-wrap: wrap; gap: 6px;
+    }
+    .sector-role {
+      font-size: 11px; font-weight: 600;
+      color: rgba(255,255,255,0.55);
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 100px;
+      padding: 4px 10px;
+      line-height: 1.4;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .sector-card:hover .sector-role {
+      color: rgba(255,215,100,0.82);
+      border-color: rgba(255,179,0,0.22);
+      background: rgba(255,179,0,0.07);
+    }
 
-    /* Role pills */
-    .qrole {
-      position: absolute; display: flex; align-items: center; gap: 8px;
-      background: rgba(255,255,255,0.055); border: 1px solid rgba(255,255,255,0.13);
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      color: rgba(255,255,255,0.88); font-size: 12.5px; font-weight: 600;
-      padding: 8px 14px 8px 10px; border-radius: 100px; white-space: nowrap;
-      cursor: default; z-index: 3;
-      transition: background .22s, border-color .22s, color .22s, box-shadow .22s;
+    .sector-cta {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: rgba(255,179,0,0.55);
+      text-decoration: none;
+      letter-spacing: 0.3px;
+      transition: color 0.2s;
     }
-    .qrole-dot {
-      width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
-      box-shadow: 0 0 8px rgba(255,179,0,0.9); flex-shrink: 0;
-    }
-    .qrole:hover {
-      background: rgba(255,179,0,0.14); border-color: rgba(255,179,0,0.55);
-      color: #FFD060; box-shadow: 0 0 28px rgba(255,179,0,0.22), 0 4px 18px rgba(0,0,0,0.35);
-    }
-
-    /* Float keyframes */
-    @keyframes qf0 { 0%,100%{transform:translate(-50%,-50%) translateY(0px)}   50%{transform:translate(-50%,-50%) translateY(-8px)} }
-    @keyframes qf1 { 0%,100%{transform:translate(-50%,-50%) translateY(-4px)}  50%{transform:translate(-50%,-50%) translateY(5px)}  }
-    @keyframes qf2 { 0%,100%{transform:translate(-50%,-50%) translateY(3px)}   50%{transform:translate(-50%,-50%) translateY(-7px)} }
-    @keyframes qf3 { 0%,100%{transform:translate(-50%,-50%) translateY(-5px)}  50%{transform:translate(-50%,-50%) translateY(3px)}  }
-
-    /* Mobile pill grid */
-    .qualify-grid {
-      display: none; flex-wrap: wrap; gap: 10px; justify-content: center;
-      max-width: 680px; margin: 0 auto;
-    }
-    .qualify-grid .qrole {
-      position: static !important; transform: none !important;
-      animation: none !important; margin: 0;
-    }
+    .sector-card:hover .sector-cta { color: #FFB300; }
 
     /* CTA */
-    .qualify-cta { text-align: center; margin-top: 60px; }
+    .qualify-cta { text-align: center; margin-top: 20px; }
     .qualify-cta-note { color: rgba(255,255,255,0.35); font-size: 13px; margin-top: 14px; }
 
     /* Responsive */
-    @media (max-width: 920px) {
+    @media (max-width: 960px) {
       .qualify-section { padding: 72px 32px 80px; }
-      .qualify-scene { display: none; }
-      .qualify-grid { display: flex; }
+      .sectors-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
       .qualify-head { margin-bottom: 44px; }
-      .qualify-cta { margin-top: 40px; }
     }
     @media (max-width: 600px) {
       .qualify-section { padding: 60px 20px 68px; }
       .qualify-title { font-size: clamp(28px, 7vw, 38px); }
       .qualify-sub { font-size: 15px; }
       .qualify-head { margin-bottom: 32px; }
-      .qrole { font-size: 12px; padding: 7px 12px 7px 9px; }
+      .sectors-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .sector-card { padding: 20px 16px 18px; border-radius: 14px; }
+      .sector-icon-wrap { width: 42px; height: 42px; border-radius: 11px; margin-bottom: 12px; }
+      .sector-icon-wrap svg { width: 20px; height: 20px; }
+      .sector-name { font-size: 12.5px; margin-bottom: 10px; }
+      .sector-role { font-size: 10px; padding: 3px 8px; }
+      .qualify-cta { margin-top: 12px; }
+    }
+    @media (max-width: 380px) {
+      .sectors-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -982,158 +993,6 @@
     </div>
   </section>
 
-  <!-- Who Qualifies Globe -->
-  <section class="qualify-section" id="who-qualifies">
-    <div class="qualify-inner">
-
-      <div class="qualify-head">
-        <span class="qualify-eyebrow">Who Qualifies?</span>
-        <h2 class="qualify-title">If your career touches logistics,<br/><span class="qualify-gold">you belong here.</span></h2>
-        <p class="qualify-sub">Logicard was built by logistics professionals to reward the people who keep the UK moving. Whether you're behind the wheel, in the warehouse, planning routes or answering the phones — if your role is linked to the supply chain, your membership is waiting.</p>
-      </div>
-
-      <!-- Desktop: spinning globe with orbiting role pills -->
-      <div class="qualify-scene" id="qualifyScene" aria-hidden="true">
-        <svg class="qualify-lines" id="qualifyLines" viewBox="0 0 920 620" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
-        <div class="globe-pulse"></div>
-
-        <!-- UK & Ireland SVG map -->
-        <svg id="qualifyMap" viewBox="0 0 260 330" width="260" height="330" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <defs>
-            <radialGradient id="landFill" cx="55%" cy="45%" r="60%">
-              <stop offset="0%"   stop-color="#1a5bb8"/>
-              <stop offset="45%"  stop-color="#0d3b80"/>
-              <stop offset="100%" stop-color="#020c1e"/>
-            </radialGradient>
-            <radialGradient id="haloGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"   stop-color="rgba(30,100,220,0.35)"/>
-              <stop offset="60%"  stop-color="rgba(30,100,220,0.1)"/>
-              <stop offset="100%" stop-color="rgba(30,100,220,0)"/>
-            </radialGradient>
-            <filter id="landGlow" x="-25%" y="-25%" width="150%" height="150%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-            <filter id="dotGlow" x="-200%" y="-200%" width="500%" height="500%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-            </filter>
-          </defs>
-
-          <!-- Atmosphere halo -->
-          <ellipse class="map-halo" cx="145" cy="180" rx="145" ry="175" fill="url(#haloGrad)"/>
-
-          <!-- Grid lines (lat/lon) -->
-          <g stroke="rgba(80,140,255,0.12)" stroke-width="0.5" fill="none">
-            <line x1="0" y1="55"  x2="260" y2="55"/>
-            <line x1="0" y1="105" x2="260" y2="105"/>
-            <line x1="0" y1="155" x2="260" y2="155"/>
-            <line x1="0" y1="205" x2="260" y2="205"/>
-            <line x1="0" y1="255" x2="260" y2="255"/>
-            <line x1="0" y1="305" x2="260" y2="305"/>
-            <line x1="40"  y1="0" x2="40"  y2="330"/>
-            <line x1="90"  y1="0" x2="90"  y2="330"/>
-            <line x1="140" y1="0" x2="140" y2="330"/>
-            <line x1="190" y1="0" x2="190" y2="330"/>
-            <line x1="240" y1="0" x2="240" y2="330"/>
-          </g>
-
-          <!-- Ireland (Republic + Northern Ireland) -->
-          <path class="map-land" filter="url(#landGlow)"
-            fill="url(#landFill)" stroke="rgba(80,145,255,0.55)" stroke-width="1.2" stroke-linejoin="round"
-            d="M 62,164 L 87,168 L 97,182 L 97,188 L 88,195 L 83,199
-               L 85,208 L 85,215 L 83,228 L 81,240 L 75,244 L 71,245
-               L 60,250 L 44,252 L 30,258 L 14,262 L 8,252 L 5,240
-               L 5,230 L 8,218 L 11,208 L 11,200 L 10,193
-               L 22,192 L 34,189 L 41,184 L 44,176 L 44,169 Z"/>
-
-          <!-- Great Britain -->
-          <path class="map-land" filter="url(#landGlow)"
-            fill="url(#landFill)" stroke="rgba(80,145,255,0.55)" stroke-width="1.2" stroke-linejoin="round"
-            d="M 106,298 L 100,293 L 96,287 L 96,295
-               L 105,280 L 113,272 L 119,271
-               L 126,264 L 130,258 L 130,257
-               L 122,252 L 116,248 L 116,244
-               L 120,237 L 125,230 L 129,227
-               L 126,222 L 125,218
-               L 129,215 L 133,213
-               L 142,211 L 149,210
-               L 151,202 L 153,194
-               L 149,194 L 145,193
-               L 141,187 L 138,182
-               L 140,178 L 144,174
-               L 147,172 L 149,171
-               L 138,175 L 128,179 L 113,181
-               L 115,171 L 118,161
-               L 109,163 L 101,165 L 95,166
-               L 98,158 L 101,152
-               L 101,145 L 101,138
-               L 94,134 L 86,131
-               L 89,124 L 96,117
-               L 98,112 L 100,106
-               L 104,95 L 108,88 L 110,83
-               L 125,82 L 135,82 L 143,82
-               L 146,83 L 149,83
-               L 143,90 L 138,97 L 134,103
-               L 145,106 L 157,108 L 170,108
-               L 169,115 L 168,121
-               L 165,126 L 161,132
-               L 157,135 L 153,138 L 151,139
-               L 153,143 L 156,146 L 158,146
-               L 154,149 L 150,151 L 146,152
-               L 155,154 L 163,155 L 170,156
-               L 173,162 L 176,168 L 178,174
-               L 186,180 L 196,188 L 208,196
-               L 209,202 L 212,208
-               L 213,215 L 216,222 L 218,223
-               L 226,224 L 233,225 L 236,225
-               L 240,231 L 245,237
-               L 243,241 L 241,246
-               L 235,253 L 229,259 L 227,261
-               L 231,265 L 234,268 L 236,270
-               L 227,275 L 221,278 L 215,280
-               L 204,280 L 194,280
-               L 183,281 L 171,281
-               L 165,283 L 161,285
-               L 151,285 L 140,285
-               L 133,287 L 127,289
-               L 122,290 L 117,290
-               L 112,293 L 106,298 Z"/>
-
-          <!-- City dots: major logistics hubs -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="208" cy="261" r="3.5"/> <!-- London -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="165" cy="211" r="3" style="animation-delay:0.4s"/> <!-- Manchester -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="172" cy="236" r="3" style="animation-delay:0.8s"/> <!-- Birmingham -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="179" cy="203" r="3" style="animation-delay:1.2s"/> <!-- Leeds -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="150" cy="212" r="3" style="animation-delay:1.6s"/> <!-- Liverpool -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="158" cy="261" r="2.5" style="animation-delay:2.0s"/> <!-- Bristol -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="125" cy="153" r="2.5" style="animation-delay:0.6s"/> <!-- Glasgow -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="146" cy="151" r="2.5" style="animation-delay:1.0s"/> <!-- Edinburgh -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="91"  cy="182" r="2.5" style="animation-delay:1.4s"/> <!-- Belfast -->
-          <circle class="city-dot" filter="url(#dotGlow)" cx="85"  cy="215" r="2.5" style="animation-delay:1.8s"/> <!-- Dublin -->
-
-          <!-- "UNITED KINGDOM & IRELAND" subtle label -->
-          <text x="130" y="320" text-anchor="middle" font-size="7" font-family="Inter,sans-serif"
-                fill="rgba(255,179,0,0.45)" letter-spacing="2" font-weight="700">UK &amp; IRELAND</text>
-        </svg>
-
-        <!-- role pills injected by JS -->
-      </div>
-
-      <!-- Mobile: pill grid -->
-      <div class="qualify-grid" id="qualifyGrid" aria-label="Qualifying roles"></div>
-
-      <div class="qualify-cta">
-        <a href="/signup.html" class="btn-primary" style="font-size:16px;padding:18px 52px;box-shadow:0 6px 36px rgba(255,179,0,0.4);">
-          Claim Your Free Membership
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <p class="qualify-cta-note">Takes under 2 minutes — no payment ever required</p>
-      </div>
-
-    </div>
-  </section>
-
   <!-- How It Works -->
   <section class="lc-section how-section" id="how-it-works">
     <div class="lc-inner">
@@ -1186,6 +1045,248 @@
         </div>
 
       </div>
+    </div>
+  </section>
+
+  <!-- Who Qualifies -->
+  <section class="qualify-section" id="who-qualifies">
+    <div class="qualify-inner">
+
+      <div class="qualify-head">
+        <span class="qualify-eyebrow">Who Qualifies?</span>
+        <h2 class="qualify-title">If your career touches logistics,<br/><span class="qualify-gold">you belong here.</span></h2>
+        <p class="qualify-sub">Logicard was created by logistics professionals to reward the people who keep the UK moving. From HGV drivers and warehouse operatives to freight forwarders, supply chain managers, customs brokers and couriers — every sector of the industry qualifies. Click your sector to claim your free membership.</p>
+      </div>
+
+      <div class="sectors-grid">
+
+        <!-- Warehouse & Distribution -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><path d="M2 20h20M4 20V8l8-6 8 6v12"/><path d="M9 20v-6h6v6"/></svg></div>
+          <h3 class="sector-name">Warehouse &amp; Distribution</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Warehouse Operative</span>
+            <span class="sector-role">FLT Operator</span>
+            <span class="sector-role">Picker &amp; Packer</span>
+            <span class="sector-role">Goods In/Out</span>
+            <span class="sector-role">Stock Controller</span>
+            <span class="sector-role">Reach Truck Driver</span>
+            <span class="sector-role">Warehouse Manager</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Road Transport & Trucking -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+          <h3 class="sector-name">Road Transport &amp; Trucking</h3>
+          <div class="sector-roles">
+            <span class="sector-role">HGV Class 1 Driver</span>
+            <span class="sector-role">HGV Class 2 Driver</span>
+            <span class="sector-role">LGV Driver</span>
+            <span class="sector-role">Van Driver</span>
+            <span class="sector-role">Tanker Driver</span>
+            <span class="sector-role">Transport Manager</span>
+            <span class="sector-role">Fleet Controller</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Air Freight & Aviation -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></div>
+          <h3 class="sector-name">Air Freight &amp; Aviation</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Air Freight Coordinator</span>
+            <span class="sector-role">Cargo Handler</span>
+            <span class="sector-role">Ramp Agent</span>
+            <span class="sector-role">Air Import/Export Clerk</span>
+            <span class="sector-role">Ground Handling Agent</span>
+            <span class="sector-role">Aviation Logistics Manager</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Ocean Freight & Maritime -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0020 0h-3"/></svg></div>
+          <h3 class="sector-name">Ocean Freight &amp; Maritime</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Shipping Coordinator</span>
+            <span class="sector-role">Port Operative</span>
+            <span class="sector-role">Ocean Freight Broker</span>
+            <span class="sector-role">Seafarer</span>
+            <span class="sector-role">Port Agent</span>
+            <span class="sector-role">Maritime Logistics Manager</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Rail Freight -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="14" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="M8 19l-2 2"/><path d="M18 21l-2-2"/><path d="M6 17l12 0"/></svg></div>
+          <h3 class="sector-name">Rail Freight</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Rail Freight Coordinator</span>
+            <span class="sector-role">Train Operator</span>
+            <span class="sector-role">Shunter</span>
+            <span class="sector-role">Terminal Operative</span>
+            <span class="sector-role">Rail Logistics Manager</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Freight Forwarding -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+          <h3 class="sector-name">Freight Forwarding</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Freight Forwarder</span>
+            <span class="sector-role">Import Clerk</span>
+            <span class="sector-role">Export Clerk</span>
+            <span class="sector-role">Operations Coordinator</span>
+            <span class="sector-role">Account Manager</span>
+            <span class="sector-role">Sales Executive</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Customs & Trade Compliance -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <h3 class="sector-name">Customs &amp; Trade Compliance</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Customs Broker</span>
+            <span class="sector-role">Customs Clearance Agent</span>
+            <span class="sector-role">Trade Compliance Officer</span>
+            <span class="sector-role">Import/Export Coordinator</span>
+            <span class="sector-role">Tariff Classifier</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Supply Chain Management -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></div>
+          <h3 class="sector-name">Supply Chain Management</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Supply Chain Manager</span>
+            <span class="sector-role">Supply Chain Analyst</span>
+            <span class="sector-role">Demand Planner</span>
+            <span class="sector-role">S&amp;OP Manager</span>
+            <span class="sector-role">Supply Chain Director</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Procurement & Purchasing -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></div>
+          <h3 class="sector-name">Procurement &amp; Purchasing</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Procurement Manager</span>
+            <span class="sector-role">Buyer</span>
+            <span class="sector-role">Purchasing Officer</span>
+            <span class="sector-role">Category Manager</span>
+            <span class="sector-role">Sourcing Specialist</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Inventory Management -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg></div>
+          <h3 class="sector-name">Inventory Management</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Inventory Controller</span>
+            <span class="sector-role">Stock Manager</span>
+            <span class="sector-role">Replenishment Planner</span>
+            <span class="sector-role">Materials Manager</span>
+            <span class="sector-role">Asset Manager</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Logistics Operations -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+          <h3 class="sector-name">Logistics Operations</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Operations Manager</span>
+            <span class="sector-role">Logistics Coordinator</span>
+            <span class="sector-role">Logistics Planner</span>
+            <span class="sector-role">Control Tower Analyst</span>
+            <span class="sector-role">Network Planner</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- E-Commerce & Fulfilment -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+          <h3 class="sector-name">E-Commerce &amp; Fulfilment</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Fulfilment Operative</span>
+            <span class="sector-role">Returns Handler</span>
+            <span class="sector-role">E-Commerce Logistics Manager</span>
+            <span class="sector-role">Marketplace Coordinator</span>
+            <span class="sector-role">Last-Mile Planner</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Courier Services -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+          <h3 class="sector-name">Courier Services</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Courier Driver</span>
+            <span class="sector-role">Self-Employed Courier</span>
+            <span class="sector-role">Motorcycle Courier</span>
+            <span class="sector-role">Parcel Deliverer</span>
+            <span class="sector-role">Collection &amp; Delivery Driver</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Last-Mile Delivery -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <h3 class="sector-name">Last-Mile Delivery</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Delivery Driver</span>
+            <span class="sector-role">Multi-Drop Driver</span>
+            <span class="sector-role">Home Delivery Driver</span>
+            <span class="sector-role">Click &amp; Collect Operative</span>
+            <span class="sector-role">Delivery Hub Operative</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+        <!-- Cold-Chain Logistics -->
+        <article class="sector-card" onclick="location.href='/signup.html'" style="cursor:pointer">
+          <div class="sector-icon-wrap"><svg viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/><line x1="19.07" y1="4.93" x2="4.93" y2="19.07"/></svg></div>
+          <h3 class="sector-name">Cold-Chain Logistics</h3>
+          <div class="sector-roles">
+            <span class="sector-role">Refrigerated Transport Driver</span>
+            <span class="sector-role">Cold Store Operative</span>
+            <span class="sector-role">Cold Chain Coordinator</span>
+            <span class="sector-role">Temperature-Controlled Manager</span>
+            <span class="sector-role">Chilled &amp; Frozen Distribution</span>
+          </div>
+          <a href="/signup.html" class="sector-cta">Join Logicard free →</a>
+        </article>
+
+      </div><!-- /sectors-grid -->
+
+      <div class="qualify-cta">
+        <a href="/signup.html" class="btn-primary" style="font-size:16px;padding:18px 52px;box-shadow:0 6px 36px rgba(255,179,0,0.4);">
+          Claim Your Free Membership
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <p class="qualify-cta-note">Takes under 2 minutes — no payment ever required</p>
+      </div>
+
     </div>
   </section>
 
@@ -1378,77 +1479,5 @@
 
   <script src="stars.js"></script>
   <script src="contact.js"></script>
-  <script>
-  // ── UK Map Role Pills ───────────────────────────────────────────
-  (function () {
-    const ROLES = [
-      // Drivers
-      'HGV Class 1 Driver', 'HGV Class 2 Driver', 'Van Driver', 'Delivery Driver',
-      'Pallet Network Driver', 'Courier', 'Yard Shunter', 'Abnormal Load Driver',
-      // Warehouse & Logistics
-      'FLT Operator', 'Warehouse Operative', 'Loading Bay Operative', 'Picker & Packer',
-      'Stock Controller', 'Goods-In Operative', 'Despatch Operative', 'Parcel Sorter',
-      // Planning & Coordination
-      'Transport Planner', 'Traffic Coordinator', 'Fleet Controller', 'Route Planner',
-      'Freight Coordinator', 'Import / Export Clerk', 'Customs Officer', 'Freight Forwarder',
-      // Management & Leadership
-      'Operations Director', 'Logistics Manager', 'Transport Manager', 'Warehouse Manager',
-      'Fleet Manager', 'Supply Chain Manager', 'Site Manager', 'Regional Manager',
-      // Specialist & Professional
-      'Supply Chain Analyst', 'Procurement Manager', 'Health & Safety Manager',
-      'Compliance Manager', 'Training Manager', 'IT Systems Manager',
-      // Office & Support
-      'Customer Service Advisor', 'Account Manager', 'Sales Executive', 'Finance Administrator'
-    ];
-
-    const scene = document.getElementById('qualifyScene');
-    const grid  = document.getElementById('qualifyGrid');
-    const svg   = document.getElementById('qualifyLines');
-    if (!scene) return;
-
-    const sW = 920, sH = 620, sCX = sW / 2, sCY = sH / 2;
-    const aX = 370, aY = 245; // ellipse radii — wider/taller for 40 roles
-    const floatAnims = ['qf0', 'qf1', 'qf2', 'qf3'];
-
-    function makePill(role) {
-      const el  = document.createElement('div');
-      el.className = 'qrole';
-      const dot = document.createElement('span');
-      dot.className = 'qrole-dot';
-      el.appendChild(dot);
-      el.appendChild(document.createTextNode(role));
-      return el;
-    }
-
-    ROLES.forEach(function (role, i) {
-      const angle = (i / ROLES.length) * Math.PI * 2 - Math.PI / 2;
-      const x = sCX + aX * Math.cos(angle);
-      const y = sCY + aY * Math.sin(angle);
-
-      // Desktop pill
-      const dp = makePill(role);
-      dp.style.left = x + 'px';
-      dp.style.top  = y + 'px';
-      const dur = (2.6 + (i % 6) * 0.32).toFixed(2);
-      const del = (-(i * 0.18)).toFixed(2);
-      dp.style.animation = floatAnims[i % 4] + ' ' + dur + 's ease-in-out ' + del + 's infinite';
-      scene.appendChild(dp);
-
-      // Spoke line from map centre to pill
-      if (svg) {
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', sCX); line.setAttribute('y1', sCY);
-        line.setAttribute('x2', x);   line.setAttribute('y2', y);
-        line.setAttribute('stroke', 'rgba(255,179,0,0.08)');
-        line.setAttribute('stroke-width', '1');
-        line.setAttribute('stroke-dasharray', '3 9');
-        svg.appendChild(line);
-      }
-
-      // Mobile pill
-      grid.appendChild(makePill(role));
-    });
-  })();
-  </script>
 </body>
 </html>
