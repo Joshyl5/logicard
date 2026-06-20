@@ -111,6 +111,11 @@ function requireAdmin(req, res, next) {
   res.redirect('/admin-login.html');
 }
 
+// ── Root redirect ──────────────────────────────────────────────
+app.get('/', (_req, res) => {
+  res.redirect('/login.html');
+});
+
 // ── Member pages ───────────────────────────────────────────────
 app.get('/members', requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'members.html'));
