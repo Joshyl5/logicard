@@ -216,8 +216,8 @@ app.get('/api/admin/members', requireAdmin, (_req, res) => {
 
 app.get('/api/admin/export.csv', requireAdmin, (_req, res) => {
   const members = getAllMembers();
-  const headers = ['Membership #','First Name','Last Name','Email','Phone','Date of Birth','Company','Role','Address 1','Address 2','City','County','Postcode','Country','Registered'];
-  const keys    = ['membershipNumber','firstName','lastName','email','phone','dateOfBirth','companyName','role','addressLine1','addressLine2','city','county','postcode','country','createdAt'];
+  const headers = ['Membership #','First Name','Last Name','Email','Phone','Date of Birth','Company','Role','Address 1','Address 2','City','County','Postcode','Country','Registered','Marketing Consent','Consent Date'];
+  const keys    = ['membershipNumber','firstName','lastName','email','phone','dateOfBirth','companyName','role','addressLine1','addressLine2','city','county','postcode','country','createdAt','marketingConsent','marketingConsentAt'];
   const escape  = v => `"${(v == null ? '' : String(v)).replace(/"/g, '""')}"`;
   const rows    = members.map(m => keys.map(k => escape(m[k])).join(','));
   const csv     = '﻿' + [headers.map(h => `"${h}"`).join(','), ...rows].join('\r\n');
@@ -456,7 +456,7 @@ app.get('/api/offers', requireAuth, (_req, res) => res.json(OFFERS));
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', async (req, res) => {
   const { companyName, role, firstName, lastName, email, phone, dateOfBirth,
-          addressLine1, addressLine2, city, county, postcode, country, password, gdprConsent, ref } = req.body;
+          addressLine1, addressLine2, city, county, postcode, country, password, gdprConsent, marketingConsent, ref } = req.body;
 
   const required = { companyName, role, firstName, lastName, email, phone, addressLine1, city, postcode, country };
   for (const [field, value] of Object.entries(required)) {
@@ -478,6 +478,7 @@ app.post('/api/signup', async (req, res) => {
       city: city.trim(), county: county ? county.trim() : null,
       postcode: postcode.trim().toUpperCase(), country: country.trim(),
       password, gdprConsent,
+      marketingConsent: !!marketingConsent,
       referredBy: ref || null,
     });
 

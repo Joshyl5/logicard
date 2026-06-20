@@ -28,8 +28,9 @@ function createMember(data) {
     : MEMBERSHIP_START - 1;
 
   const membershipNumber = lastNumber + 1;
-  const { password, referredBy, ...rest } = data;
+  const { password, referredBy, marketingConsent, ...rest } = data;
   const passwordHash = password ? bcrypt.hashSync(password, 10) : null;
+  const now = new Date().toISOString();
 
   const member = {
     membershipNumber,
@@ -37,10 +38,12 @@ function createMember(data) {
     email: data.email.toLowerCase(),
     passwordHash,
     verified: true,
-    createdAt: new Date().toISOString(),
+    createdAt: now,
     referredBy: referredBy || null,
     totalReferrals: 0,
     monthlyEntries: 0,
+    marketingConsent: !!marketingConsent,
+    marketingConsentAt: marketingConsent ? now : null,
   };
 
   db.members.push(member);
