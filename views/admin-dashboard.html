@@ -89,14 +89,14 @@
         </svg>
         <input id="searchInput" type="text" class="search-input" placeholder="Search by name, email, company or membership number…" />
       </div>
-      <a href="/api/admin/export.csv" class="export-btn" download>
+      <button class="export-btn" id="exportCsvBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
           <polyline points="7 10 12 15 17 10"/>
           <line x1="12" y1="15" x2="12" y2="3"/>
         </svg>
         Export CSV
-      </a>
+      </button>
     </div>
 
     <!-- Table -->
@@ -130,6 +130,78 @@
     <p>© 2026 Logicard Admin Panel</p>
   </footer>
 
+  <!-- Export OTP Modal -->
+  <div id="exportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;">
+    <div style="background:#0d1a2e;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:40px 36px;max-width:400px;width:90%;text-align:center;">
+      <div style="width:56px;height:56px;background:rgba(255,179,0,0.1);border:2px solid rgba(255,179,0,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFB300" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+      </div>
+      <h2 style="color:#fff;font-size:20px;font-weight:800;margin:0 0 8px;">Authorise Export</h2>
+      <p style="color:rgba(255,255,255,0.55);font-size:14px;line-height:1.6;margin:0 0 24px;">A verification code has been sent to your admin email. Enter it below to download the member CSV.</p>
+      <input id="exportOtpInput" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="000000"
+        style="width:100%;font-size:28px;letter-spacing:10px;text-align:center;font-weight:700;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#fff;padding:14px;outline:none;margin-bottom:16px;" />
+      <div id="exportOtpError" style="color:#f87171;font-size:13px;margin-bottom:14px;min-height:18px;"></div>
+      <div style="display:flex;gap:10px;">
+        <button id="exportOtpCancel" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:600;cursor:pointer;">Cancel</button>
+        <button id="exportOtpSubmit" style="flex:2;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Verify &amp; Download</button>
+      </div>
+      <p style="color:rgba(255,255,255,0.3);font-size:11px;margin-top:14px;">Code expires in 10 minutes — one use only</p>
+    </div>
+  </div>
+
   <script src="/admin-dashboard.js"></script>
+  <script>
+    const exportModal     = document.getElementById('exportModal');
+    const exportOtpInput  = document.getElementById('exportOtpInput');
+    const exportOtpError  = document.getElementById('exportOtpError');
+    const exportOtpSubmit = document.getElementById('exportOtpSubmit');
+    const exportOtpCancel = document.getElementById('exportOtpCancel');
+
+    document.getElementById('exportCsvBtn').addEventListener('click', async () => {
+      exportOtpError.textContent = '';
+      exportOtpInput.value = '';
+      exportModal.style.display = 'flex';
+      exportOtpInput.focus();
+
+      try {
+        const res = await fetch('/api/admin/export/request-otp', { method: 'POST' });
+        const json = await res.json();
+        if (!res.ok) { exportOtpError.textContent = json.error || 'Failed to send code.'; }
+      } catch {
+        exportOtpError.textContent = 'Network error. Please try again.';
+      }
+    });
+
+    exportOtpCancel.addEventListener('click', () => { exportModal.style.display = 'none'; });
+    exportModal.addEventListener('click', e => { if (e.target === exportModal) exportModal.style.display = 'none'; });
+
+    exportOtpInput.addEventListener('input', () => {
+      if (exportOtpInput.value.replace(/\D/g,'').length === 6) exportOtpSubmit.click();
+    });
+
+    exportOtpSubmit.addEventListener('click', async () => {
+      const code = exportOtpInput.value.trim();
+      exportOtpError.textContent = '';
+      exportOtpSubmit.disabled = true;
+      exportOtpSubmit.textContent = 'Verifying…';
+
+      try {
+        const res  = await fetch('/api/admin/export/verify-otp', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ code }) });
+        const json = await res.json();
+        if (!res.ok) {
+          exportOtpError.textContent = json.error || 'Incorrect code.';
+          exportOtpSubmit.disabled = false;
+          exportOtpSubmit.textContent = 'Verify & Download';
+          return;
+        }
+        exportModal.style.display = 'none';
+        window.location.href = '/api/admin/export.csv';
+      } catch {
+        exportOtpError.textContent = 'Network error. Please try again.';
+        exportOtpSubmit.disabled = false;
+        exportOtpSubmit.textContent = 'Verify & Download';
+      }
+    });
+  </script>
 </body>
 </html>

@@ -314,7 +314,81 @@ app.get('/api/admin/members', requireAdmin, async (_req, res) => {
   res.json(members);
 });
 
-app.get('/api/admin/export.csv', requireAdmin, async (_req, res) => {
+// ── Export OTP gate ────────────────────────────────────────────
+const exportOtpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many export attempts. Please wait 15 minutes.' },
+});
+
+app.post('/api/admin/export/request-otp', requireAdmin, exportOtpLimiter, async (req, res) => {
+  const otp    = crypto.randomInt(100000, 999999).toString();
+  const expiry = Date.now() + 10 * 60 * 1000;
+  req.session.exportOtp       = otp;
+  req.session.exportOtpExpiry = expiry;
+
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;background:#0a0f1e;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d,#071d40);padding:32px;text-align:center;border-bottom:1px solid rgba(255,179,0,0.2)">
+      <h1 style="color:#FFB300;margin:0;font-size:28px;font-weight:900">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.5);margin:6px 0 0;font-size:13px">CSV Export Authorisation</p>
+    </div>
+    <div style="padding:40px 36px;text-align:center">
+      <p style="color:rgba(255,255,255,0.7);font-size:15px;margin:0 0 28px;line-height:1.6">A full member data export has been requested from the Logicard admin panel. Enter this code to authorise the download.</p>
+      <div style="background:rgba(255,179,0,0.08);border:2px solid rgba(255,179,0,0.4);border-radius:12px;padding:28px;margin-bottom:28px">
+        <p style="color:rgba(255,255,255,0.5);margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:2px">Authorisation code</p>
+        <p style="color:#FFB300;margin:0;font-size:48px;font-weight:900;letter-spacing:8px">${otp}</p>
+        <p style="color:rgba(255,255,255,0.4);margin:12px 0 0;font-size:12px">Expires in 10 minutes — one use only</p>
+      </div>
+      <p style="color:rgba(255,255,255,0.4);font-size:12px;margin:0;line-height:1.6">If you did not request this export, someone with your admin password may have triggered it. Check your admin panel immediately.</p>
+    </div>
+  </div>`;
+
+  try {
+    if (resend && process.env.ADMIN_EMAIL) {
+      await resend.emails.send({
+        from:    'Logicard <accounts@logicard.co.uk>',
+        to:      process.env.ADMIN_EMAIL,
+        subject: `${otp} — Logicard CSV export authorisation`,
+        html,
+      });
+    } else {
+      console.log(`[DEV] Export OTP: ${otp}`);
+    }
+  } catch (err) {
+    console.error('Export OTP email failed:', err.message);
+  }
+
+  res.json({ success: true, pending: true });
+});
+
+app.post('/api/admin/export/verify-otp', requireAdmin, (req, res) => {
+  const { code } = req.body;
+  const { exportOtp, exportOtpExpiry } = req.session;
+
+  if (!exportOtp) return res.status(400).json({ error: 'No pending verification. Please request a new code.' });
+  if (Date.now() > exportOtpExpiry) {
+    delete req.session.exportOtp;
+    delete req.session.exportOtpExpiry;
+    return res.status(400).json({ error: 'Code expired. Please request a new one.' });
+  }
+  if (!code || code.trim() !== exportOtp) return res.status(401).json({ error: 'Incorrect code.' });
+
+  delete req.session.exportOtp;
+  delete req.session.exportOtpExpiry;
+  req.session.exportAuthorized = Date.now(); // valid for 2 minutes, one use
+  res.json({ success: true });
+});
+
+app.get('/api/admin/export.csv', requireAdmin, async (req, res) => {
+  const authorized = req.session.exportAuthorized;
+  if (!authorized || (Date.now() - authorized) > 2 * 60 * 1000) {
+    return res.status(403).json({ error: 'Export requires email verification. Use the Export CSV button in the admin panel.' });
+  }
+  delete req.session.exportAuthorized; // one-time use
+
   const members = await getAllMembers();
   const headers = ['Membership #','First Name','Last Name','Email','Phone','Date of Birth','Company','Role','Address 1','Address 2','City','County','Postcode','Country','Registered','Marketing Consent','Consent Date'];
   const keys    = ['membershipNumber','firstName','lastName','email','phone','dateOfBirth','companyName','role','addressLine1','addressLine2','city','county','postcode','country','createdAt','marketingConsent','marketingConsentAt'];
