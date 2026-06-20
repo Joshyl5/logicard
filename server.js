@@ -1,78 +1,118 @@
 require('dotenv').config();
 
-const express    = require('express');
-const session    = require('express-session');
-const bcrypt     = require('bcryptjs');
-const nodemailer = require('nodemailer');
-const path       = require('path');
+const express = require('express');
+const session = require('express-session');
+const bcrypt  = require('bcryptjs');
+const path    = require('path');
+const { Resend } = require('resend');
 const {
   createMember, emailExists, findMemberByEmail,
   getMemberByNumber, getAllMembers,
 } = require('./database');
 
-const app  = express();
-const PORT = process.env.PORT || 3000;
+const app    = express();
+const PORT   = process.env.PORT || 3000;
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
-// ── Email transporter ──────────────────────────────────────────
-const emailReady = process.env.EMAIL_USER && process.env.EMAIL_PASS &&
-                   process.env.EMAIL_PASS !== 'YOUR_PASSWORD_HERE';
-
-const transporter = emailReady ? nodemailer.createTransport({
-  host:   'smtp-mail.outlook.com',
-  port:   587,
-  secure: false,
-  auth:   { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-  tls:    { rejectUnauthorized: false },
-}) : null;
-
-async function sendNewMemberEmail(member) {
-  if (!transporter) {
-    console.log('Email not configured — skipping notification for member', member.membershipNumber);
-    return;
-  }
-  const date = new Date(member.createdAt).toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' });
-  const addr = [member.addressLine1, member.addressLine2, member.city, member.county, member.postcode, member.country]
-    .filter(Boolean).join(', ');
-
+// ── Welcome email to new member ────────────────────────────────
+async function sendWelcomeEmail(member) {
+  if (!resend) { console.log('Resend not configured — skipping welcome email'); return; }
   const html = `
-    <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
-      <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
-        <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
-        <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">New Member Registration</p>
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d 0%,#071d40 50%,#0d3b80 100%);padding:40px 36px;text-align:center">
+      <h1 style="color:#FFB300;margin:0;font-size:32px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.6);margin:8px 0 0;font-size:14px">Your discount card for logistics workers</p>
+    </div>
+    <div style="padding:40px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 8px;font-size:22px">Welcome, ${member.firstName}! 👋</h2>
+      <p style="color:#5f6d82;margin:0 0 32px;font-size:15px;line-height:1.6">Your Logicard membership is now active. Here are your membership details:</p>
+      <div style="background:linear-gradient(135deg,#071d40,#0d3b80);border-radius:16px;padding:32px;text-align:center;margin-bottom:32px">
+        <p style="color:rgba(255,255,255,0.6);margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:1px">Your Membership Number</p>
+        <p style="color:#FFB300;margin:0;font-size:42px;font-weight:900;letter-spacing:2px">#${member.membershipNumber}</p>
+        <p style="color:rgba(255,255,255,0.5);margin:12px 0 0;font-size:12px">Keep this number safe — use it to redeem all your discounts</p>
       </div>
-      <div style="padding:32px 36px;background:#fff">
-        <h2 style="color:#071d40;margin:0 0 6px">New member registered!</h2>
-        <p style="color:#5f6d82;margin:0 0 28px">A new member has signed up for Logicard.</p>
-        <table style="width:100%;border-collapse:collapse;font-size:14px">
-          <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Membership No.</td><td style="padding:10px 14px;color:#1a6cc8;font-weight:700">#${member.membershipNumber}</td></tr>
-          <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Full Name</td><td style="padding:10px 14px;color:#333">${member.firstName} ${member.lastName}</td></tr>
-          <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#333">${member.email}</td></tr>
-          <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px;color:#333">${member.phone}</td></tr>
-          <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px;color:#333">${member.companyName}</td></tr>
-          <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px;color:#333">${member.role}</td></tr>
-          <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Address</td><td style="padding:10px 14px;color:#333">${addr}</td></tr>
-          <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Date of Birth</td><td style="padding:10px 14px;color:#333">${member.dateOfBirth || '—'}</td></tr>
-          <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Registered</td><td style="padding:10px 14px;color:#333">${date}</td></tr>
-        </table>
-        <div style="margin-top:28px;padding:16px 20px;background:#e8f4fd;border-radius:8px;text-align:center">
-          <p style="margin:0;color:#0d3b80;font-size:13px">View all members in the <a href="http://localhost:${PORT}/admin" style="color:#1a6cc8">Admin Dashboard</a></p>
-        </div>
+      <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:32px">
+        <tr style="background:#f0f2f7"><td style="padding:12px 16px;font-weight:700;color:#071d40;width:40%">Name</td><td style="padding:12px 16px;color:#333">${member.firstName} ${member.lastName}</td></tr>
+        <tr><td style="padding:12px 16px;font-weight:700;color:#071d40">Email</td><td style="padding:12px 16px;color:#333">${member.email}</td></tr>
+        <tr style="background:#f0f2f7"><td style="padding:12px 16px;font-weight:700;color:#071d40">Company</td><td style="padding:12px 16px;color:#333">${member.companyName}</td></tr>
+        <tr><td style="padding:12px 16px;font-weight:700;color:#071d40">Member since</td><td style="padding:12px 16px;color:#333">${new Date(member.createdAt).toLocaleDateString('en-GB',{day:'2-digit',month:'long',year:'numeric'})}</td></tr>
+      </table>
+      <div style="background:#fff8e6;border:1px solid #FFB300;border-radius:10px;padding:20px 24px;margin-bottom:32px">
+        <p style="margin:0 0 8px;font-weight:700;color:#071d40;font-size:15px">What's included in your membership:</p>
+        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ 150+ exclusive deals updated daily</p>
+        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Fuel, hotels, dining, tech, fleet & more</p>
+        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Savings redeemable with your membership number</p>
+        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ First year free — then just £10/year</p>
       </div>
-      <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
-        <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — this is an automated notification</p>
+      <div style="text-align:center">
+        <a href="https://logicard.co.uk/login.html" style="background:#FFB300;color:#071d40;padding:16px 40px;text-decoration:none;border-radius:6px;font-weight:900;font-size:16px;display:inline-block">Browse Your Deals →</a>
       </div>
-    </div>`;
+    </div>
+    <div style="padding:28px 36px;text-align:center;background:#f0f2f7;border-top:1px solid #e2e6ee">
+      <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#071d40">Need help?</p>
+      <p style="margin:0 0 16px;font-size:13px;color:#5f6d82">Visit <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none;font-weight:700">logicard.co.uk</a> for support and FAQs.</p>
+      <div style="border-top:1px solid #e2e6ee;margin:16px 0;padding-top:16px">
+        <p style="margin:0;font-size:11px;color:#aaa">Please do not reply to this email — this mailbox is not monitored.</p>
+        <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard · You received this because you registered at logicard.co.uk</p>
+      </div>
+    </div>
+  </div>`;
 
   try {
-    await transporter.sendMail({
-      from:    `"Logicard" <${process.env.EMAIL_USER}>`,
-      to:      process.env.EMAIL_TO,
+    await resend.emails.send({
+      from:     'Logicard <welcome@logicard.co.uk>',
+      to:       member.email,
+      subject:  `Welcome to Logicard, ${member.firstName}! Your membership #${member.membershipNumber} is active`,
+      reply_to: 'noreply@logicard.co.uk',
+      html,
+    });
+    console.log(`Welcome email sent to ${member.email}`);
+  } catch (err) {
+    console.error('Welcome email failed:', err.message);
+  }
+}
+
+// ── Admin notification email ───────────────────────────────────
+async function sendAdminNotificationEmail(member) {
+  if (!resend) return;
+  const date = new Date(member.createdAt).toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' });
+  const addr = [member.addressLine1, member.addressLine2, member.city, member.county, member.postcode, member.country].filter(Boolean).join(', ');
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
+      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">New Member Registration</p>
+    </div>
+    <div style="padding:32px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 6px">New member registered!</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Membership No.</td><td style="padding:10px 14px;color:#1a6cc8;font-weight:700">#${member.membershipNumber}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Full Name</td><td style="padding:10px 14px">${member.firstName} ${member.lastName}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px">${member.email}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px">${member.phone}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px">${member.companyName}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px">${member.role}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Address</td><td style="padding:10px 14px">${addr}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Registered</td><td style="padding:10px 14px">${date}</td></tr>
+      </table>
+      <div style="margin-top:24px;text-align:center">
+        <a href="https://logicard.co.uk/admin" style="background:#071d40;color:#fff;padding:12px 28px;text-decoration:none;border-radius:6px;font-weight:700;font-size:14px;display:inline-block">View Admin Dashboard →</a>
+      </div>
+    </div>
+    <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
+      <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — automated notification</p>
+    </div>
+  </div>`;
+
+  try {
+    await resend.emails.send({
+      from:    'Logicard <welcome@logicard.co.uk>',
+      to:      process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
       subject: `New Logicard Member — #${member.membershipNumber} ${member.firstName} ${member.lastName}`,
       html,
     });
-    console.log(`Email sent for member #${member.membershipNumber}`);
   } catch (err) {
-    console.error('Email send failed:', err.message);
+    console.error('Admin notification email failed:', err.message);
   }
 }
 
@@ -216,7 +256,10 @@ app.post('/api/signup', async (req, res) => {
     // Send email notification asynchronously (don't block response)
     const { findMemberByEmail: lookup } = require('./database');
     const saved = lookup(email.trim().toLowerCase());
-    if (saved) sendNewMemberEmail(saved);
+    if (saved) {
+      sendWelcomeEmail(saved);
+      sendAdminNotificationEmail(saved);
+    }
 
   } catch (err) {
     console.error('Signup error:', err.message);
@@ -226,5 +269,5 @@ app.post('/api/signup', async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Logicard running at http://localhost:${PORT}`);
-  if (!emailReady) console.log('  > Email not configured. Edit .env to enable signup notifications.');
+  if (!resend) console.log('  > RESEND_API_KEY not set — emails disabled.');
 });
