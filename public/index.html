@@ -831,26 +831,38 @@
 
     /* Desktop scene */
     .qualify-scene {
-      position: relative; width: 860px; height: 560px; margin: 0 auto;
+      position: relative; width: 920px; height: 620px; margin: 0 auto;
     }
     .qualify-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-    #qualifyGlobe {
+    #qualifyMap {
       position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-      filter: drop-shadow(0 0 60px rgba(30,100,220,0.75)) drop-shadow(0 0 25px rgba(30,100,220,0.4));
-      z-index: 2;
+      filter: drop-shadow(0 0 40px rgba(30,100,220,0.65)) drop-shadow(0 0 18px rgba(255,179,0,0.2));
+      overflow: visible; z-index: 2;
     }
+    .map-land {
+      transition: filter 0.3s;
+    }
+    .map-halo {
+      animation: mapBreath 4s ease-in-out infinite alternate;
+    }
+    @keyframes mapBreath { from { opacity: 0.55; } to { opacity: 1; } }
+    .city-dot {
+      fill: #FFB300;
+      animation: cityBlink 2.4s ease-in-out infinite;
+    }
+    @keyframes cityBlink { 0%,100%{opacity:1;r:3} 50%{opacity:0.4;r:2} }
     .globe-pulse {
       position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
-      width: 330px; height: 330px; border-radius: 50%; pointer-events: none; z-index: 1;
+      width: 280px; height: 380px; border-radius: 40%; pointer-events: none; z-index: 1;
     }
     .globe-pulse::before, .globe-pulse::after {
-      content: ''; position: absolute; border-radius: 50%;
-      border: 1px solid rgba(30,108,220,0.4);
-      animation: qPulse 3.2s ease-out infinite;
+      content: ''; position: absolute; border-radius: 42%;
+      border: 1px solid rgba(30,108,220,0.35);
+      animation: qPulse 3.5s ease-out infinite;
     }
-    .globe-pulse::before { inset: -22px; }
-    .globe-pulse::after  { inset: -52px; border-color: rgba(30,108,220,0.2); animation-delay: 1.6s; }
-    @keyframes qPulse { 0%{opacity:.7;transform:scale(.94)} 100%{opacity:0;transform:scale(1.14)} }
+    .globe-pulse::before { inset: -28px; }
+    .globe-pulse::after  { inset: -58px; border-color: rgba(30,108,220,0.18); animation-delay: 1.75s; }
+    @keyframes qPulse { 0%{opacity:.65;transform:scale(.93)} 100%{opacity:0;transform:scale(1.12)} }
 
     /* Role pills */
     .qrole {

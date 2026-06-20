@@ -2,7 +2,8 @@ const fs     = require('fs');
 const path   = require('path');
 const bcrypt = require('bcryptjs');
 
-const DB_FILE         = path.join(__dirname, 'members.json');
+const DB_DIR  = process.env.DATA_DIR || __dirname;
+const DB_FILE = path.join(DB_DIR, 'members.json');
 const MEMBERSHIP_START = 10010121;
 
 function loadDb() {
