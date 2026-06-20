@@ -641,10 +641,15 @@ select option { background: #071d40; color: var(--white); }
 .login-logo-link { display: block; text-decoration: none; }
 
 .login-logo-img {
-  width: clamp(160px, 40vw, 220px);
+  width: clamp(200px, 48vw, 300px);
   height: auto;
   display: block;
-  filter: drop-shadow(0 8px 28px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 8px 28px rgba(0,0,0,0.5));
+  animation: floatLogoAuth 4s ease-in-out infinite;
+}
+@keyframes floatLogoAuth {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
 }
 
 /* Card */
