@@ -15,8 +15,8 @@
     reset() {
       this.x     = Math.random() * canvas.width;
       this.y     = Math.random() * canvas.height;
-      this.r     = Math.random() * 1.6 + 0.2;
-      this.alpha = Math.random() * 0.7 + 0.1;
+      this.r     = Math.random() * 1.0 + 0.1;
+      this.alpha = Math.random() * 0.25 + 0.05;
       this.speed = Math.random() * 0.008 + 0.002;
       this.phase = Math.random() * Math.PI * 2;
     }
