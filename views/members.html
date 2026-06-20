@@ -3,32 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logicard — Member Offers</title>
+  <title>Logicard — Member Area</title>
   <link rel="stylesheet" href="/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Pending section ── */
+    .pending-section {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #04040d 0%, #071d40 60%, #04040d 100%);
+      padding: 80px 24px;
+    }
+    .pending-card {
+      text-align: center;
+      max-width: 560px;
+      padding: 60px 48px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,179,0,0.2);
+      border-radius: 20px;
+      box-shadow: 0 8px 60px rgba(0,0,0,0.5), 0 0 80px rgba(26,108,200,0.08);
+    }
+    .pending-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255,179,0,0.1);
+      border: 2px solid rgba(255,179,0,0.35);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+    }
+    .pending-icon svg {
+      width: 38px;
+      height: 38px;
+      stroke: #FFB300;
+    }
+    .pending-eyebrow {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #FFB300;
+      display: block;
+      margin-bottom: 14px;
+    }
+    .pending-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      margin-bottom: 18px;
+    }
+    .pending-sub {
+      font-size: 15.5px;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.75;
+      margin-bottom: 36px;
+    }
+    .pending-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,179,0,0.08);
+      border: 1px solid rgba(255,179,0,0.3);
+      border-radius: 100px;
+      padding: 10px 22px;
+      color: #FFB300;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .pending-badge span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #FFB300;
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(255,179,0,0.9);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.7); }
+    }
+    @media (max-width: 600px) {
+      .pending-card { padding: 40px 24px; }
+    }
+  </style>
 </head>
 <body class="members-page">
 
-  <!-- ── HEADER ──────────────────────────────────────────────── -->
+  <!-- ── HEADER ──────────────────────────────────────────────────── -->
   <header class="members-header">
     <div class="mh-inner">
 
       <a href="/" class="mh-logo" style="border:2px solid rgba(255,179,0,0.45);padding:7px 16px;border-radius:6px;background:rgba(255,255,255,0.04);text-decoration:none;">
         <span style="font-size:26px;font-weight:900;letter-spacing:-1px;line-height:1;font-family:'Inter',sans-serif;"><span style="color:#fff;">Logi</span><span style="color:#FFB300;">card</span></span>
       </a>
-
-      <nav class="cat-nav" id="catNav">
-        <button class="cat-btn active" data-cat="all">All Deals</button>
-        <button class="cat-btn" data-cat="fuel">Fuel &amp; Fleet</button>
-        <button class="cat-btn" data-cat="hotels">Hotels</button>
-        <button class="cat-btn" data-cat="dining">Dining</button>
-        <button class="cat-btn" data-cat="technology">Technology</button>
-        <button class="cat-btn" data-cat="maintenance">Maintenance</button>
-        <button class="cat-btn" data-cat="shopping">Shopping</button>
-        <button class="cat-btn" data-cat="travel">Travel</button>
-        <button class="cat-btn" data-cat="finance">Finance</button>
-      </nav>
 
       <div class="mh-user">
         <div class="mh-user-info">
@@ -41,33 +116,29 @@
     </div>
   </header>
 
-  <!-- ── HERO STRIP ──────────────────────────────────────────── -->
-  <div class="offers-hero">
-    <div class="oh-inner">
-      <h1>Your Exclusive Member Offers</h1>
-      <p>Special deals available only to verified Logicard members</p>
-    </div>
-  </div>
-
-  <!-- ── OFFERS ──────────────────────────────────────────────── -->
-  <main class="offers-main">
-    <div class="offers-container">
-
-      <!-- Featured deal -->
-      <div id="featuredSlot"></div>
-
-      <!-- No results message -->
-      <div id="noResults" class="no-results" style="display:none">
-        <p>No offers found in this category.</p>
+  <!-- ── OFFERS PENDING ───────────────────────────────────────────── -->
+  <section class="pending-section">
+    <div class="pending-card">
+      <div class="pending-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
       </div>
-
-      <!-- Offer grid -->
-      <div id="offersGrid" class="offers-grid"></div>
-
+      <span class="pending-eyebrow">Coming Soon</span>
+      <h1 class="pending-title">Offers Pending</h1>
+      <p class="pending-sub">
+        We're working hard behind the scenes to secure the best exclusive deals for Logicard members.
+        Your offers will appear here very soon — we'll notify you by email the moment they go live.
+      </p>
+      <div class="pending-badge">
+        <span></span>
+        Deals being added now
+      </div>
     </div>
-  </main>
+  </section>
 
-  <!-- ── REFERRAL BANNER ───────────────────────────────────────── -->
+  <!-- ── REFERRAL BANNER ──────────────────────────────────────────── -->
   <div class="referral-banner" id="referralBanner">
     <div class="referral-inner">
       <div class="referral-text">
