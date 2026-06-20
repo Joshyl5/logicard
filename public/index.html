@@ -995,7 +995,127 @@
       <div class="qualify-scene" id="qualifyScene" aria-hidden="true">
         <svg class="qualify-lines" id="qualifyLines" viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
         <div class="globe-pulse"></div>
-        <canvas id="qualifyGlobe"></canvas>
+
+        <!-- UK & Ireland SVG map -->
+        <svg id="qualifyMap" viewBox="0 0 260 330" width="260" height="330" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <radialGradient id="landFill" cx="55%" cy="45%" r="60%">
+              <stop offset="0%"   stop-color="#1a5bb8"/>
+              <stop offset="45%"  stop-color="#0d3b80"/>
+              <stop offset="100%" stop-color="#020c1e"/>
+            </radialGradient>
+            <radialGradient id="haloGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stop-color="rgba(30,100,220,0.35)"/>
+              <stop offset="60%"  stop-color="rgba(30,100,220,0.1)"/>
+              <stop offset="100%" stop-color="rgba(30,100,220,0)"/>
+            </radialGradient>
+            <filter id="landGlow" x="-25%" y="-25%" width="150%" height="150%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="dotGlow" x="-200%" y="-200%" width="500%" height="500%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Atmosphere halo -->
+          <ellipse class="map-halo" cx="145" cy="180" rx="145" ry="175" fill="url(#haloGrad)"/>
+
+          <!-- Grid lines (lat/lon) -->
+          <g stroke="rgba(80,140,255,0.12)" stroke-width="0.5" fill="none">
+            <line x1="0" y1="55"  x2="260" y2="55"/>
+            <line x1="0" y1="105" x2="260" y2="105"/>
+            <line x1="0" y1="155" x2="260" y2="155"/>
+            <line x1="0" y1="205" x2="260" y2="205"/>
+            <line x1="0" y1="255" x2="260" y2="255"/>
+            <line x1="0" y1="305" x2="260" y2="305"/>
+            <line x1="40"  y1="0" x2="40"  y2="330"/>
+            <line x1="90"  y1="0" x2="90"  y2="330"/>
+            <line x1="140" y1="0" x2="140" y2="330"/>
+            <line x1="190" y1="0" x2="190" y2="330"/>
+            <line x1="240" y1="0" x2="240" y2="330"/>
+          </g>
+
+          <!-- Ireland (Republic + Northern Ireland) -->
+          <path class="map-land" filter="url(#landGlow)"
+            fill="url(#landFill)" stroke="rgba(80,145,255,0.55)" stroke-width="1.2" stroke-linejoin="round"
+            d="M 62,164 L 87,168 L 97,182 L 97,188 L 88,195 L 83,199
+               L 85,208 L 85,215 L 83,228 L 81,240 L 75,244 L 71,245
+               L 60,250 L 44,252 L 30,258 L 14,262 L 8,252 L 5,240
+               L 5,230 L 8,218 L 11,208 L 11,200 L 10,193
+               L 22,192 L 34,189 L 41,184 L 44,176 L 44,169 Z"/>
+
+          <!-- Great Britain -->
+          <path class="map-land" filter="url(#landGlow)"
+            fill="url(#landFill)" stroke="rgba(80,145,255,0.55)" stroke-width="1.2" stroke-linejoin="round"
+            d="M 106,298 L 100,293 L 96,287 L 96,295
+               L 105,280 L 113,272 L 119,271
+               L 126,264 L 130,258 L 130,257
+               L 122,252 L 116,248 L 116,244
+               L 120,237 L 125,230 L 129,227
+               L 126,222 L 125,218
+               L 129,215 L 133,213
+               L 142,211 L 149,210
+               L 151,202 L 153,194
+               L 149,194 L 145,193
+               L 141,187 L 138,182
+               L 140,178 L 144,174
+               L 147,172 L 149,171
+               L 138,175 L 128,179 L 113,181
+               L 115,171 L 118,161
+               L 109,163 L 101,165 L 95,166
+               L 98,158 L 101,152
+               L 101,145 L 101,138
+               L 94,134 L 86,131
+               L 89,124 L 96,117
+               L 98,112 L 100,106
+               L 104,95 L 108,88 L 110,83
+               L 125,82 L 135,82 L 143,82
+               L 146,83 L 149,83
+               L 143,90 L 138,97 L 134,103
+               L 145,106 L 157,108 L 170,108
+               L 169,115 L 168,121
+               L 165,126 L 161,132
+               L 157,135 L 153,138 L 151,139
+               L 153,143 L 156,146 L 158,146
+               L 154,149 L 150,151 L 146,152
+               L 155,154 L 163,155 L 170,156
+               L 173,162 L 176,168 L 178,174
+               L 186,180 L 196,188 L 208,196
+               L 209,202 L 212,208
+               L 213,215 L 216,222 L 218,223
+               L 226,224 L 233,225 L 236,225
+               L 240,231 L 245,237
+               L 243,241 L 241,246
+               L 235,253 L 229,259 L 227,261
+               L 231,265 L 234,268 L 236,270
+               L 227,275 L 221,278 L 215,280
+               L 204,280 L 194,280
+               L 183,281 L 171,281
+               L 165,283 L 161,285
+               L 151,285 L 140,285
+               L 133,287 L 127,289
+               L 122,290 L 117,290
+               L 112,293 L 106,298 Z"/>
+
+          <!-- City dots: major logistics hubs -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="208" cy="261" r="3.5"/> <!-- London -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="165" cy="211" r="3" style="animation-delay:0.4s"/> <!-- Manchester -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="172" cy="236" r="3" style="animation-delay:0.8s"/> <!-- Birmingham -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="179" cy="203" r="3" style="animation-delay:1.2s"/> <!-- Leeds -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="150" cy="212" r="3" style="animation-delay:1.6s"/> <!-- Liverpool -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="158" cy="261" r="2.5" style="animation-delay:2.0s"/> <!-- Bristol -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="125" cy="153" r="2.5" style="animation-delay:0.6s"/> <!-- Glasgow -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="146" cy="151" r="2.5" style="animation-delay:1.0s"/> <!-- Edinburgh -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="91"  cy="182" r="2.5" style="animation-delay:1.4s"/> <!-- Belfast -->
+          <circle class="city-dot" filter="url(#dotGlow)" cx="85"  cy="215" r="2.5" style="animation-delay:1.8s"/> <!-- Dublin -->
+
+          <!-- "UNITED KINGDOM & IRELAND" subtle label -->
+          <text x="130" y="320" text-anchor="middle" font-size="7" font-family="Inter,sans-serif"
+                fill="rgba(255,179,0,0.45)" letter-spacing="2" font-weight="700">UK &amp; IRELAND</text>
+        </svg>
+
         <!-- role pills injected by JS -->
       </div>
 
