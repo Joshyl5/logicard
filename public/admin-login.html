@@ -87,6 +87,10 @@
           btn.disabled = false; btnLabel.style.display = 'inline'; spinner.style.display = 'none';
           return;
         }
+        if (json.pending) {
+          window.location.href = '/admin-verify.html';
+          return;
+        }
         window.location.href = '/admin';
       } catch {
         errorEl.textContent = 'Network error. Please try again.';

@@ -200,19 +200,86 @@ app.get('/api/me', requireAuth, async (req, res) => {
 // ── Admin auth ─────────────────────────────────────────────────
 const adminLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 2,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: 'Too many admin login attempts. Please wait 15 minutes.' },
+  message: { error: 'Too many admin login attempts. Access locked for 15 minutes.' },
 });
 
-app.post('/api/admin/login', adminLimiter, (req, res) => {
+const otpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many code attempts. Please log in again.' },
+});
+
+app.post('/api/admin/login', adminLimiter, async (req, res) => {
   const { password } = req.body;
   const adminPass = process.env.ADMIN_PASSWORD;
   if (!adminPass) return res.status(503).json({ error: 'Admin access is not configured.' });
   if (!password || password !== adminPass) {
     return res.status(401).json({ error: 'Incorrect admin password.' });
   }
+
+  // Generate 6-digit OTP
+  const otp    = Math.floor(100000 + Math.random() * 900000).toString();
+  const expiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+  req.session.pendingAdminOtp       = otp;
+  req.session.pendingAdminOtpExpiry = expiry;
+
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:480px;margin:0 auto;background:#0a0f1e;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d,#071d40);padding:32px;text-align:center;border-bottom:1px solid rgba(255,179,0,0.2)">
+      <h1 style="color:#FFB300;margin:0;font-size:28px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.5);margin:6px 0 0;font-size:13px">Admin Verification</p>
+    </div>
+    <div style="padding:40px 36px;text-align:center">
+      <p style="color:rgba(255,255,255,0.7);font-size:15px;margin:0 0 28px;line-height:1.6">Someone just entered the correct admin password for Logicard. Use the code below to complete sign in.</p>
+      <div style="background:rgba(255,179,0,0.08);border:2px solid rgba(255,179,0,0.4);border-radius:12px;padding:28px;margin-bottom:28px">
+        <p style="color:rgba(255,255,255,0.5);margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:2px">Your verification code</p>
+        <p style="color:#FFB300;margin:0;font-size:48px;font-weight:900;letter-spacing:8px">${otp}</p>
+        <p style="color:rgba(255,255,255,0.4);margin:12px 0 0;font-size:12px">Expires in 10 minutes</p>
+      </div>
+      <p style="color:rgba(255,255,255,0.4);font-size:12px;margin:0;line-height:1.6">If you did not attempt to sign in to the admin panel, your password may be compromised — change it in Railway immediately.</p>
+    </div>
+    <div style="padding:16px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+      <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.25)">© 2026 Logicard — automated security code</p>
+    </div>
+  </div>`;
+
+  try {
+    if (resend) {
+      await resend.emails.send({
+        from:    'Logicard <accounts@logicard.co.uk>',
+        to:      process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
+        subject: `${otp} — Logicard admin verification code`,
+        html,
+      });
+    } else {
+      console.log(`[DEV] Admin OTP: ${otp}`);
+    }
+  } catch (err) {
+    console.error('Admin OTP email failed:', err.message);
+  }
+
+  res.json({ success: true, pending: true });
+});
+
+app.post('/api/admin/verify-otp', otpLimiter, (req, res) => {
+  const { code } = req.body;
+  const { pendingAdminOtp, pendingAdminOtpExpiry } = req.session;
+
+  if (!pendingAdminOtp) return res.status(400).json({ error: 'No pending verification. Please log in again.' });
+  if (Date.now() > pendingAdminOtpExpiry) {
+    delete req.session.pendingAdminOtp;
+    delete req.session.pendingAdminOtpExpiry;
+    return res.status(400).json({ error: 'Code expired. Please log in again.' });
+  }
+  if (!code || code.trim() !== pendingAdminOtp) return res.status(401).json({ error: 'Incorrect code. Please try again.' });
+
+  delete req.session.pendingAdminOtp;
+  delete req.session.pendingAdminOtpExpiry;
   req.session.isAdmin = true;
   res.json({ success: true });
 });
