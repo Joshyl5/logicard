@@ -198,9 +198,18 @@ app.get('/api/me', requireAuth, async (req, res) => {
 });
 
 // ── Admin auth ─────────────────────────────────────────────────
-app.post('/api/admin/login', (req, res) => {
+const adminLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many admin login attempts. Please wait 15 minutes.' },
+});
+
+app.post('/api/admin/login', adminLimiter, (req, res) => {
   const { password } = req.body;
-  const adminPass = process.env.ADMIN_PASSWORD || 'LogicardAdmin2026!';
+  const adminPass = process.env.ADMIN_PASSWORD;
+  if (!adminPass) return res.status(503).json({ error: 'Admin access is not configured.' });
   if (!password || password !== adminPass) {
     return res.status(401).json({ error: 'Incorrect admin password.' });
   }
