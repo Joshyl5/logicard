@@ -799,6 +799,113 @@
       .footer-links { gap: 16px; }
       .footer-copy { font-size: 12px; }
     }
+    /* ── Who Qualifies Globe Section ── */
+    .qualify-section {
+      background: linear-gradient(168deg, #020714 0%, #071d40 52%, #020714 100%);
+      padding: 104px 48px 112px;
+      position: relative;
+      overflow: hidden;
+    }
+    .qualify-section::before {
+      content: '';
+      position: absolute;
+      left: 50%; top: 40%;
+      transform: translate(-50%, -50%);
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(26,108,200,0.22) 0%, rgba(26,108,200,0.06) 50%, transparent 75%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .qualify-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .qualify-head { text-align: center; max-width: 740px; margin: 0 auto 72px; }
+    .qualify-eyebrow {
+      display: block; font-size: 12px; font-weight: 800; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 16px;
+    }
+    .qualify-title {
+      font-size: clamp(36px, 4.5vw, 58px); font-weight: 900; color: #fff;
+      line-height: 1.06; letter-spacing: -1px; margin-bottom: 22px;
+    }
+    .qualify-gold { color: var(--orange); }
+    .qualify-sub { font-size: 17px; color: rgba(255,255,255,0.58); line-height: 1.75; }
+
+    /* Desktop scene */
+    .qualify-scene {
+      position: relative; width: 860px; height: 560px; margin: 0 auto;
+    }
+    .qualify-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    #qualifyGlobe {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      filter: drop-shadow(0 0 60px rgba(30,100,220,0.75)) drop-shadow(0 0 25px rgba(30,100,220,0.4));
+      z-index: 2;
+    }
+    .globe-pulse {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+      width: 330px; height: 330px; border-radius: 50%; pointer-events: none; z-index: 1;
+    }
+    .globe-pulse::before, .globe-pulse::after {
+      content: ''; position: absolute; border-radius: 50%;
+      border: 1px solid rgba(30,108,220,0.4);
+      animation: qPulse 3.2s ease-out infinite;
+    }
+    .globe-pulse::before { inset: -22px; }
+    .globe-pulse::after  { inset: -52px; border-color: rgba(30,108,220,0.2); animation-delay: 1.6s; }
+    @keyframes qPulse { 0%{opacity:.7;transform:scale(.94)} 100%{opacity:0;transform:scale(1.14)} }
+
+    /* Role pills */
+    .qrole {
+      position: absolute; display: flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.055); border: 1px solid rgba(255,255,255,0.13);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      color: rgba(255,255,255,0.88); font-size: 12.5px; font-weight: 600;
+      padding: 8px 14px 8px 10px; border-radius: 100px; white-space: nowrap;
+      cursor: default; z-index: 3;
+      transition: background .22s, border-color .22s, color .22s, box-shadow .22s;
+    }
+    .qrole-dot {
+      width: 6px; height: 6px; border-radius: 50%; background: var(--orange);
+      box-shadow: 0 0 8px rgba(255,179,0,0.9); flex-shrink: 0;
+    }
+    .qrole:hover {
+      background: rgba(255,179,0,0.14); border-color: rgba(255,179,0,0.55);
+      color: #FFD060; box-shadow: 0 0 28px rgba(255,179,0,0.22), 0 4px 18px rgba(0,0,0,0.35);
+    }
+
+    /* Float keyframes */
+    @keyframes qf0 { 0%,100%{transform:translate(-50%,-50%) translateY(0px)}   50%{transform:translate(-50%,-50%) translateY(-8px)} }
+    @keyframes qf1 { 0%,100%{transform:translate(-50%,-50%) translateY(-4px)}  50%{transform:translate(-50%,-50%) translateY(5px)}  }
+    @keyframes qf2 { 0%,100%{transform:translate(-50%,-50%) translateY(3px)}   50%{transform:translate(-50%,-50%) translateY(-7px)} }
+    @keyframes qf3 { 0%,100%{transform:translate(-50%,-50%) translateY(-5px)}  50%{transform:translate(-50%,-50%) translateY(3px)}  }
+
+    /* Mobile pill grid */
+    .qualify-grid {
+      display: none; flex-wrap: wrap; gap: 10px; justify-content: center;
+      max-width: 680px; margin: 0 auto;
+    }
+    .qualify-grid .qrole {
+      position: static !important; transform: none !important;
+      animation: none !important; margin: 0;
+    }
+
+    /* CTA */
+    .qualify-cta { text-align: center; margin-top: 60px; }
+    .qualify-cta-note { color: rgba(255,255,255,0.35); font-size: 13px; margin-top: 14px; }
+
+    /* Responsive */
+    @media (max-width: 920px) {
+      .qualify-section { padding: 72px 32px 80px; }
+      .qualify-scene { display: none; }
+      .qualify-grid { display: flex; }
+      .qualify-head { margin-bottom: 44px; }
+      .qualify-cta { margin-top: 40px; }
+    }
+    @media (max-width: 600px) {
+      .qualify-section { padding: 60px 20px 68px; }
+      .qualify-title { font-size: clamp(28px, 7vw, 38px); }
+      .qualify-sub { font-size: 15px; }
+      .qualify-head { margin-bottom: 32px; }
+      .qrole { font-size: 12px; padding: 7px 12px 7px 9px; }
+    }
   </style>
 </head>
 <body>
@@ -859,6 +966,38 @@
     </div>
     <div class="hero-logo-wrap">
       <img src="logicard-logo-hero.png" alt="Logicard" />
+    </div>
+  </section>
+
+  <!-- Who Qualifies Globe -->
+  <section class="qualify-section" id="who-qualifies">
+    <div class="qualify-inner">
+
+      <div class="qualify-head">
+        <span class="qualify-eyebrow">Who Qualifies?</span>
+        <h2 class="qualify-title">If your career touches logistics,<br/><span class="qualify-gold">you belong here.</span></h2>
+        <p class="qualify-sub">Logicard was built by logistics professionals to reward the people who keep the UK moving. Whether you're behind the wheel, in the warehouse, planning routes or answering the phones — if your role is linked to the supply chain, your membership is waiting.</p>
+      </div>
+
+      <!-- Desktop: spinning globe with orbiting role pills -->
+      <div class="qualify-scene" id="qualifyScene" aria-hidden="true">
+        <svg class="qualify-lines" id="qualifyLines" viewBox="0 0 860 560" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+        <div class="globe-pulse"></div>
+        <canvas id="qualifyGlobe"></canvas>
+        <!-- role pills injected by JS -->
+      </div>
+
+      <!-- Mobile: pill grid -->
+      <div class="qualify-grid" id="qualifyGrid" aria-label="Qualifying roles"></div>
+
+      <div class="qualify-cta">
+        <a href="/signup.html" class="btn-primary" style="font-size:16px;padding:18px 52px;box-shadow:0 6px 36px rgba(255,179,0,0.4);">
+          Claim Your Free Membership
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <p class="qualify-cta-note">Takes under 2 minutes — no payment ever required</p>
+      </div>
+
     </div>
   </section>
 
@@ -1106,5 +1245,141 @@
 
   <script src="stars.js"></script>
   <script src="contact.js"></script>
+  <script>
+  // ── Globe & Role Pills ──────────────────────────────────────────
+  (function () {
+    const ROLES = [
+      'HGV Driver', 'Van Driver', 'FLT Operator', 'Warehouse Operative',
+      'Transport Planner', 'Logistics Manager', 'Operations Director', 'Fleet Controller',
+      'Traffic Coordinator', 'Freight Forwarder', 'Supply Chain Analyst', 'Loading Bay Operative',
+      'Delivery Driver', 'Yard Shunter', 'Import / Export Clerk', 'Procurement Manager',
+      'Health & Safety Manager', 'Courier', 'Customer Service Advisor', 'Pallet Network Operative'
+    ];
+
+    // ─ Canvas globe ─────────────────────────────────────────────
+    const canvas = document.getElementById('qualifyGlobe');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const S = 320, R = 126, CX = S / 2, CY = S / 2;
+    canvas.width = S; canvas.height = S;
+    canvas.style.width = S + 'px'; canvas.style.height = S + 'px';
+    let rot = 0;
+
+    function pt(lat, lon) {
+      const φ = lat * Math.PI / 180, λ = (lon + rot) * Math.PI / 180;
+      return {
+        px: CX + Math.cos(φ) * Math.cos(λ) * R,
+        py: CY - Math.sin(φ) * R,
+        z:  Math.cos(φ) * Math.sin(λ)
+      };
+    }
+
+    function strokeLine(pts, clr, w) {
+      ctx.strokeStyle = clr; ctx.lineWidth = w; ctx.beginPath();
+      let dn = false;
+      for (const p of pts) {
+        if (p.z > 0) { if (!dn) { ctx.moveTo(p.px, p.py); dn = true; } else ctx.lineTo(p.px, p.py); }
+        else dn = false;
+      }
+      ctx.stroke();
+    }
+
+    function latPts(lat)  { const a = []; for (let lo = 0;  lo <= 362; lo += 3) a.push(pt(lat, lo)); return a; }
+    function lonPts(lon)  { const a = []; for (let la = -88; la <= 88;  la += 3) a.push(pt(la, lon)); return a; }
+
+    function drawGlobe() {
+      ctx.clearRect(0, 0, S, S);
+
+      // Outer atmosphere halo
+      const halo = ctx.createRadialGradient(CX, CY, R * 0.88, CX, CY, R * 1.6);
+      halo.addColorStop(0,    'rgba(45,120,255,0.52)');
+      halo.addColorStop(0.35, 'rgba(30,90,220,0.18)');
+      halo.addColorStop(0.7,  'rgba(20,65,180,0.05)');
+      halo.addColorStop(1,    'rgba(20,65,180,0)');
+      ctx.fillStyle = halo;
+      ctx.beginPath(); ctx.arc(CX, CY, R * 1.6, 0, Math.PI * 2); ctx.fill();
+
+      // Sphere body
+      const fill = ctx.createRadialGradient(CX - R * 0.28, CY - R * 0.28, 0, CX, CY, R);
+      fill.addColorStop(0,    '#1a5bb8');
+      fill.addColorStop(0.35, '#0d3b80');
+      fill.addColorStop(0.75, '#071d40');
+      fill.addColorStop(1,    '#020c1e');
+      ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI * 2);
+      ctx.fillStyle = fill; ctx.fill();
+
+      // Clip grid lines to sphere
+      ctx.save();
+      ctx.beginPath(); ctx.arc(CX, CY, R - 0.5, 0, Math.PI * 2); ctx.clip();
+      for (let lat = -60; lat <= 60; lat += 30) strokeLine(latPts(lat), 'rgba(100,165,255,0.22)', 0.65);
+      for (let lon = 0;   lon < 360; lon += 30)  strokeLine(lonPts(lon), 'rgba(100,165,255,0.26)', 0.65);
+      strokeLine(latPts(0), 'rgba(255,179,0,0.75)', 1.4); // gold equator
+      ctx.restore();
+
+      // Specular highlight
+      const spec = ctx.createRadialGradient(CX - R * 0.38, CY - R * 0.38, 0, CX - R * 0.1, CY - R * 0.1, R * 0.72);
+      spec.addColorStop(0,   'rgba(255,255,255,0.22)');
+      spec.addColorStop(0.4, 'rgba(255,255,255,0.06)');
+      spec.addColorStop(1,   'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI * 2);
+      ctx.fillStyle = spec; ctx.fill();
+
+      // Edge ring
+      ctx.beginPath(); ctx.arc(CX, CY, R, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(80,145,255,0.42)'; ctx.lineWidth = 1.5; ctx.stroke();
+
+      rot += 0.12;
+      requestAnimationFrame(drawGlobe);
+    }
+    drawGlobe();
+
+    // ─ Role pills ───────────────────────────────────────────────
+    const scene = document.getElementById('qualifyScene');
+    const grid  = document.getElementById('qualifyGrid');
+    const svg   = document.getElementById('qualifyLines');
+    const sW = 860, sH = 560, sCX = sW / 2, sCY = sH / 2;
+    const aX = 332, aY = 195; // ellipse radii for pill ring
+    const floatAnims = ['qf0', 'qf1', 'qf2', 'qf3'];
+
+    function makePill(role) {
+      const el = document.createElement('div');
+      el.className = 'qrole';
+      const dot = document.createElement('span');
+      dot.className = 'qrole-dot';
+      el.appendChild(dot);
+      el.appendChild(document.createTextNode(role));
+      return el;
+    }
+
+    ROLES.forEach(function (role, i) {
+      const angle = (i / ROLES.length) * Math.PI * 2 - Math.PI / 2;
+      const x = sCX + aX * Math.cos(angle);
+      const y = sCY + aY * Math.sin(angle);
+
+      // Desktop pill (absolutely positioned in scene)
+      const dp = makePill(role);
+      dp.style.left = x + 'px';
+      dp.style.top  = y + 'px';
+      const dur = (2.8 + (i % 5) * 0.38).toFixed(2);
+      const del = (-(i * 0.32)).toFixed(2);
+      dp.style.animation = floatAnims[i % 4] + ' ' + dur + 's ease-in-out ' + del + 's infinite';
+      scene.appendChild(dp);
+
+      // Dashed spoke line from globe centre to pill
+      if (svg) {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', sCX); line.setAttribute('y1', sCY);
+        line.setAttribute('x2', x);   line.setAttribute('y2', y);
+        line.setAttribute('stroke', 'rgba(255,179,0,0.1)');
+        line.setAttribute('stroke-width', '1');
+        line.setAttribute('stroke-dasharray', '3 8');
+        svg.appendChild(line);
+      }
+
+      // Mobile pill (in flex grid)
+      grid.appendChild(makePill(role));
+    });
+  })();
+  </script>
 </body>
 </html>
