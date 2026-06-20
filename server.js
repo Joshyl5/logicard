@@ -1,10 +1,12 @@
 require('dotenv').config();
 
-const express = require('express');
-const session = require('express-session');
-const bcrypt  = require('bcryptjs');
-const crypto  = require('crypto');
-const path    = require('path');
+const express   = require('express');
+const session   = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
+const rateLimit = require('express-rate-limit');
+const bcrypt    = require('bcryptjs');
+const crypto    = require('crypto');
+const path      = require('path');
 const { Resend } = require('resend');
 const {
   createMember, emailExists, findMemberByEmail,
@@ -75,58 +77,66 @@ async function sendWelcomeEmail(member) {
   }
 }
 
-// ── Admin notification email ───────────────────────────────────
-async function sendAdminNotificationEmail(member) {
-  if (!resend) return;
-  const date = new Date(member.createdAt).toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' });
-  const addr = [member.addressLine1, member.addressLine2, member.city, member.county, member.postcode, member.country].filter(Boolean).join(', ');
-  const html = `
-  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
-    <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
-      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">New Member Registration</p>
-    </div>
-    <div style="padding:32px 36px;background:#fff">
-      <h2 style="color:#071d40;margin:0 0 6px">New member registered!</h2>
-      <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Membership No.</td><td style="padding:10px 14px;color:#1a6cc8;font-weight:700">#${member.membershipNumber}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Full Name</td><td style="padding:10px 14px">${member.firstName} ${member.lastName}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px">${member.email}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px">${member.phone}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px">${member.companyName}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px">${member.role}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Address</td><td style="padding:10px 14px">${addr}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Registered</td><td style="padding:10px 14px">${date}</td></tr>
-      </table>
-      <div style="margin-top:24px;text-align:center">
-        <a href="https://logicard.co.uk/admin" style="background:#071d40;color:#fff;padding:12px 28px;text-decoration:none;border-radius:6px;font-weight:700;font-size:14px;display:inline-block">View Admin Dashboard →</a>
-      </div>
-    </div>
-    <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
-      <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — automated notification</p>
-    </div>
-  </div>`;
 
-  try {
-    await resend.emails.send({
-      from:    'Logicard <welcome@logicard.co.uk>',
-      to:      process.env.ADMIN_EMAIL || 'jplawrance@hotmail.co.uk',
-      subject: `New Logicard Member — #${member.membershipNumber} ${member.firstName} ${member.lastName}`,
-      html,
-    });
-  } catch (err) {
-    console.error('Admin notification email failed:', err.message);
-  }
-}
+// ── Rate limiters ──────────────────────────────────────────────
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Please wait 15 minutes and try again.' },
+});
+
+const signupLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many signup attempts from this address. Please try again in an hour.' },
+});
+
+const resetLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many password reset requests. Please wait an hour and try again.' },
+});
 
 // ── Middleware ─────────────────────────────────────────────────
 app.use(express.json());
 app.use(session({
+  store: new pgSession({
+    conString: process.env.DATABASE_URL,
+    tableName: 'session',
+    createTableIfMissing: true,
+  }),
   secret: process.env.SESSION_SECRET || 'logicard-dev-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, maxAge: 8 * 60 * 60 * 1000 },
+  cookie: {
+    httpOnly: true,
+    secure: !!process.env.DATABASE_URL, // true on Railway (HTTPS), false locally
+    maxAge: 8 * 60 * 60 * 1000,
+  },
 }));
+
+// ── Maintenance mode (set MAINTENANCE_PASSWORD in Railway to lock the site) ──
+app.use((req, res, next) => {
+  const pw = process.env.MAINTENANCE_PASSWORD;
+  if (!pw) return next(); // no env var = site is fully public
+
+  const auth = req.headers.authorization;
+  if (auth && auth.startsWith('Basic ')) {
+    const decoded  = Buffer.from(auth.slice(6), 'base64').toString('utf8');
+    const password = decoded.split(':').slice(1).join(':');
+    if (password === pw) return next();
+  }
+
+  res.setHeader('WWW-Authenticate', 'Basic realm="Logicard"');
+  res.status(401).send('Logicard is currently under maintenance. Please check back soon.');
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 function requireAuth(req, res, next) {
@@ -156,7 +166,7 @@ app.get('/admin', requireAdmin, (_req, res) => {
 });
 
 // ── Member auth ────────────────────────────────────────────────
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
 
@@ -379,7 +389,7 @@ app.post('/api/contact', async (req, res) => {
 });
 
 // ── Password reset ─────────────────────────────────────────────
-app.post('/api/forgot-password', async (req, res) => {
+app.post('/api/forgot-password', resetLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email) return res.status(400).json({ error: 'Email is required.' });
 
@@ -448,7 +458,7 @@ app.post('/api/reset-password', async (req, res) => {
 app.get('/api/offers', requireAuth, (_req, res) => res.json([]));
 
 // ── Signup ─────────────────────────────────────────────────────
-app.post('/api/signup', async (req, res) => {
+app.post('/api/signup', signupLimiter, async (req, res) => {
   const { companyName, role, firstName, lastName, email, phone, dateOfBirth,
           addressLine1, addressLine2, city, county, postcode, country,
           password, gdprConsent, marketingConsent, ref } = req.body;
@@ -479,12 +489,9 @@ app.post('/api/signup', async (req, res) => {
 
     res.json({ success: true, membershipNumber });
 
-    // Send emails asynchronously (don't block the response)
+    // Send welcome email asynchronously (don't block the response)
     const saved = await findMemberByEmail(email.trim().toLowerCase());
-    if (saved) {
-      sendWelcomeEmail(saved);
-      sendAdminNotificationEmail(saved);
-    }
+    if (saved) sendWelcomeEmail(saved);
 
   } catch (err) {
     console.error('Signup error:', err.message);
