@@ -28,7 +28,7 @@
     }
     body {
       font-family: 'Inter', sans-serif;
-      background: var(--navy-deep);
+      background: linear-gradient(160deg, #04040d 0%, #071d40 60%, #04040d 100%);
       color: #fff;
       min-height: 100vh;
     }
@@ -42,7 +42,14 @@
       background: rgba(4,4,13,0.92);
       backdrop-filter: blur(12px);
     }
-    .q-nav-logo img { height: 64px; display: block; filter: drop-shadow(0 0 10px rgba(80,160,255,0.6)); }
+    .q-nav-logo {
+      display: inline-flex; align-items: center; text-decoration: none;
+      border: 2px solid rgba(255,179,0,0.4); padding: 6px 14px; border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+    }
+    .q-nav-logo span { font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .q-nav-logo .logi { color: #fff; }
+    .q-nav-logo .card { color: #FFB300; }
     .q-nav-actions { display: flex; gap: 12px; align-items: center; }
     .q-nav-link {
       font-size: 13px; font-weight: 600;
@@ -200,7 +207,7 @@
 <body>
 
   <nav class="q-nav">
-    <a href="/" class="q-nav-logo"><img src="logicard-logo-hero.png" alt="Logicard" /></a>
+    <a href="/" class="q-nav-logo"><span><span class="logi">Logi</span><span class="card">card</span></span></a>
     <div class="q-nav-actions">
       <a href="/" class="q-nav-link">Home</a>
       <a href="/signup.html" class="q-nav-btn">Join Free</a>
