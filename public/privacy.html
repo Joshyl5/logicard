@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — Logicard</title>
+  <meta name="description" content="Logicard Privacy Policy — how we collect, use and protect your personal data in accordance with UK GDPR and the Data Protection Act 2018." />
+  <link rel="canonical" href="https://logicard.co.uk/privacy.html" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #FFB300;
+      --navy-deep: #04040d;
+      --navy: #071d40;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(160deg, #04040d 0%, #071d40 60%, #04040d 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* Nav */
+    .p-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(4,4,13,0.92);
+      backdrop-filter: blur(12px);
+    }
+    .p-nav-logo {
+      display: inline-flex; align-items: center; text-decoration: none;
+      border: 2px solid rgba(255,179,0,0.4); padding: 6px 14px; border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+    }
+    .p-nav-logo span { font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .p-nav-logo .logi { color: #fff; }
+    .p-nav-logo .card { color: #FFB300; }
+    .p-nav-link {
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .p-nav-link:hover { color: #fff; }
+
+    /* Hero */
+    .p-hero {
+      text-align: center;
+      padding: 64px 24px 48px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .p-eyebrow {
+      display: inline-block;
+      font-size: 11px; font-weight: 800; letter-spacing: 2px;
+      color: var(--orange); text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .p-title {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900; line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .p-meta {
+      font-size: 14px; color: rgba(255,255,255,0.4);
+    }
+
+    /* Content */
+    .p-content {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .p-section {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      padding: 32px 36px;
+      margin-bottom: 20px;
+    }
+    .p-section h2 {
+      font-size: 18px; font-weight: 800; color: #fff;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,179,0,0.2);
+    }
+    .p-section h3 {
+      font-size: 14px; font-weight: 700; color: var(--orange);
+      margin: 18px 0 8px;
+    }
+    .p-section p {
+      font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .p-section p:last-child { margin-bottom: 0; }
+    .p-section ul {
+      list-style: none; margin: 8px 0 12px;
+    }
+    .p-section ul li {
+      font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.8;
+      padding-left: 18px; position: relative; margin-bottom: 4px;
+    }
+    .p-section ul li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--orange); font-size: 12px;
+    }
+    .p-section a { color: var(--orange); text-decoration: none; }
+    .p-section a:hover { text-decoration: underline; }
+    .highlight-box {
+      background: rgba(255,179,0,0.06);
+      border: 1px solid rgba(255,179,0,0.2);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+    .highlight-box p { color: rgba(255,255,255,0.8); margin-bottom: 0; }
+
+    /* Footer */
+    .p-footer {
+      text-align: center;
+      padding: 28px 24px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 12px; color: rgba(255,255,255,0.25);
+    }
+    .p-footer a { color: rgba(255,255,255,0.35); text-decoration: none; }
+    .p-footer a:hover { color: rgba(255,255,255,0.6); }
+
+    @media (max-width: 600px) {
+      .p-nav { padding: 16px 20px; }
+      .p-section { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="p-nav">
+    <a href="/" class="p-nav-logo"><span><span class="logi">Logi</span><span class="card">card</span></span></a>
+    <a href="/" class="p-nav-link">← Back to Home</a>
+  </nav>
+
+  <div class="p-hero">
+    <span class="p-eyebrow">Legal</span>
+    <h1 class="p-title">Privacy Policy</h1>
+    <p class="p-meta">Last updated: June 2026 &nbsp;·&nbsp; Logicard is committed to protecting your personal data</p>
+  </div>
+
+  <div class="p-content">
+
+    <div class="p-section">
+      <h2>1. Who We Are</h2>
+      <p>Logicard ("we", "us", "our") operates the website logicard.co.uk and provides a discount membership card service for UK logistics workers.</p>
+      <p>We are the data controller responsible for your personal data. If you have any questions about this policy or how we handle your data, please contact us:</p>
+      <div class="highlight-box">
+        <p><strong>Email:</strong> <a href="mailto:josh@logicard.co.uk">josh@logicard.co.uk</a><br />
+        <strong>Website:</strong> logicard.co.uk</p>
+      </div>
+      <p>This Privacy Policy applies to all personal data we collect when you use our website, sign up for membership, or contact us. It complies with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
+    </div>
+
+    <div class="p-section">
+      <h2>2. What Personal Data We Collect</h2>
+      <p>When you register for Logicard membership, we collect the following information:</p>
+
+      <h3>Identity & Contact Data</h3>
+      <ul>
+        <li>First name and last name</li>
+        <li>Email address</li>
+        <li>Phone number</li>
+        <li>Date of birth (optional, used for age verification and member offers)</li>
+      </ul>
+
+      <h3>Address Data</h3>
+      <ul>
+        <li>Home address (lines 1 and 2, city, county, postcode, country)</li>
+      </ul>
+
+      <h3>Employment Data</h3>
+      <ul>
+        <li>Company name</li>
+        <li>Job title / role</li>
+      </ul>
+
+      <h3>Account Data</h3>
+      <ul>
+        <li>Membership number (assigned on registration)</li>
+        <li>Password (stored as a one-way cryptographic hash — we cannot read your password)</li>
+        <li>Membership status and registration date</li>
+        <li>Promo code used (if any)</li>
+      </ul>
+
+      <h3>Payment Data</h3>
+      <ul>
+        <li>We do not store your card number, CVV, or full payment details</li>
+        <li>Payments are processed securely by Stripe. Stripe may retain payment records in accordance with their own privacy policy</li>
+        <li>We record whether your membership was paid or activated via a promotional code</li>
+      </ul>
+
+      <h3>Technical & Usage Data</h3>
+      <ul>
+        <li>IP address and browser information (collected automatically by our server)</li>
+        <li>Login timestamps and session data</li>
+        <li>Website interaction data (pages visited, links clicked)</li>
+      </ul>
+
+      <h3>Marketing Preferences</h3>
+      <ul>
+        <li>Whether you have opted in to receive marketing emails and prize draw notifications (optional — you can change this at any time)</li>
+      </ul>
+    </div>
+
+    <div class="p-section">
+      <h2>3. How and Why We Use Your Data</h2>
+      <p>We only use your personal data where we have a lawful basis to do so under UK GDPR. The table below explains how we use your data and our legal basis for doing so.</p>
+
+      <h3>To provide your membership (Contractual Necessity)</h3>
+      <ul>
+        <li>Create and manage your Logicard membership account</li>
+        <li>Assign and verify your membership number</li>
+        <li>Process your payment and confirm your subscription</li>
+        <li>Send your welcome email and important membership communications</li>
+        <li>Verify your employment in the logistics sector</li>
+      </ul>
+
+      <h3>To comply with legal obligations (Legal Obligation)</h3>
+      <ul>
+        <li>Maintain financial records for HMRC and accounting purposes</li>
+        <li>Respond to lawful requests from regulatory authorities</li>
+        <li>Comply with fraud prevention obligations</li>
+      </ul>
+
+      <h3>For our legitimate business interests (Legitimate Interests)</h3>
+      <ul>
+        <li>Improve and develop our website and membership service</li>
+        <li>Detect and prevent fraud, abuse, or misuse of our service</li>
+        <li>Maintain the security of our systems</li>
+        <li>Analyse usage patterns to understand how members use the service</li>
+      </ul>
+
+      <h3>Marketing and prize draws (Consent)</h3>
+      <ul>
+        <li>Send you newsletters, deal alerts, and prize draw notifications — only if you have explicitly opted in during registration</li>
+        <li>You may withdraw this consent at any time by emailing us or clicking "unsubscribe" in any marketing email</li>
+      </ul>
+    </div>
+
+    <div class="p-section">
+      <h2>4. Who We Share Your Data With</h2>
+      <p>We do not sell, rent, or trade your personal data to third parties. We share data only with trusted service providers who process it on our behalf under data processing agreements:</p>
+
+      <h3>Stripe (Payment Processing)</h3>
+      <p>Stripe, Inc. processes your payment securely. When you pay by card, your payment details are sent directly to Stripe and never pass through our servers. Stripe is PCI-DSS compliant. <a href="https://stripe.com/gb/privacy" target="_blank" rel="noopener">Stripe's Privacy Policy</a>.</p>
+
+      <h3>Resend (Email Delivery)</h3>
+      <p>We use Resend to deliver transactional and marketing emails. Resend receives your email address and name to facilitate delivery.</p>
+
+      <h3>Railway (Cloud Hosting & Database)</h3>
+      <p>Our website and database are hosted on Railway's infrastructure. Your membership data is stored on Railway-managed servers. Railway's servers are located within secure data centres.</p>
+
+      <h3>Disclosure to Authorities</h3>
+      <p>We may disclose your personal data to law enforcement or regulatory authorities if required by law, or to protect the rights, property, or safety of Logicard, our members, or others.</p>
+    </div>
+
+    <div class="p-section">
+      <h2>5. How Long We Keep Your Data</h2>
+      <ul>
+        <li><strong>Active membership:</strong> We retain your personal data for as long as you hold a Logicard membership</li>
+        <li><strong>After cancellation:</strong> We retain your data for 7 years from the date of cancellation to comply with HMRC record-keeping requirements</li>
+        <li><strong>Failed/incomplete registrations:</strong> Any partial data is deleted after 90 days</li>
+        <li><strong>Marketing opt-out:</strong> If you withdraw marketing consent, we will stop sending marketing emails immediately and remove you from our marketing lists within 30 days</li>
+        <li><strong>Server logs:</strong> Technical logs are retained for up to 90 days for security and debugging purposes</li>
+      </ul>
+    </div>
+
+    <div class="p-section">
+      <h2>6. How We Protect Your Data</h2>
+      <ul>
+        <li>All data is transmitted over HTTPS using TLS encryption</li>
+        <li>Passwords are hashed using bcrypt — we cannot recover or read your password</li>
+        <li>Your database is hosted on a private network and is not directly accessible from the internet</li>
+        <li>Access to member data is restricted to authorised personnel only</li>
+        <li>Payment card details are handled entirely by Stripe and never stored on our systems</li>
+        <li>We use session-based authentication to protect your account</li>
+      </ul>
+    </div>
+
+    <div class="p-section">
+      <h2>7. Your Rights Under UK GDPR</h2>
+      <p>You have the following rights regarding your personal data. To exercise any of these rights, contact us at <a href="mailto:josh@logicard.co.uk">josh@logicard.co.uk</a>. We will respond within 30 days.</p>
+
+      <h3>Right of Access</h3>
+      <p>You can request a copy of all personal data we hold about you (a Subject Access Request).</p>
+
+      <h3>Right to Rectification</h3>
+      <p>You can ask us to correct inaccurate or incomplete personal data.</p>
+
+      <h3>Right to Erasure ("Right to be Forgotten")</h3>
+      <p>You can ask us to delete your personal data. Note that we may need to retain certain data to comply with our legal obligations (e.g. financial records).</p>
+
+      <h3>Right to Restrict Processing</h3>
+      <p>You can ask us to pause how we use your data in certain circumstances.</p>
+
+      <h3>Right to Data Portability</h3>
+      <p>You can ask us to provide your data in a structured, machine-readable format (e.g. CSV).</p>
+
+      <h3>Right to Object</h3>
+      <p>You can object to our processing of your data where we rely on legitimate interests. You can also object to direct marketing at any time.</p>
+
+      <h3>Right to Withdraw Consent</h3>
+      <p>Where we process your data based on consent (e.g. marketing emails), you can withdraw that consent at any time.</p>
+
+      <h3>Right to Complain</h3>
+      <p>If you believe we have mishandled your data, you have the right to lodge a complaint with the UK's data protection authority:</p>
+      <div class="highlight-box">
+        <p><strong>Information Commissioner's Office (ICO)</strong><br />
+        Website: <a href="https://ico.org.uk" target="_blank" rel="noopener">ico.org.uk</a><br />
+        Helpline: 0303 123 1113</p>
+      </div>
+    </div>
+
+    <div class="p-section">
+      <h2>8. Cookies</h2>
+      <p>We use the following cookies on logicard.co.uk:</p>
+
+      <h3>Essential Cookies (no consent required)</h3>
+      <ul>
+        <li><strong>Session cookie:</strong> Used to keep you logged in to your member account. This is deleted when you close your browser or log out.</li>
+        <li><strong>Security cookie:</strong> Used to prevent cross-site request forgery attacks.</li>
+      </ul>
+
+      <h3>Third-Party Cookies</h3>
+      <ul>
+        <li><strong>Stripe.js:</strong> Stripe sets cookies for fraud detection and to remember payment preferences. These are governed by <a href="https://stripe.com/gb/privacy" target="_blank" rel="noopener">Stripe's Privacy Policy</a>.</li>
+        <li><strong>Google Fonts:</strong> We load fonts from Google Fonts. Google may set cookies. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.</li>
+      </ul>
+
+      <p>We do not use analytics cookies (e.g. Google Analytics) or advertising/tracking cookies.</p>
+    </div>
+
+    <div class="p-section">
+      <h2>9. International Data Transfers</h2>
+      <p>Some of our service providers (including Stripe and Resend) are based outside the UK. Where your data is transferred internationally, we ensure appropriate safeguards are in place, including Standard Contractual Clauses (SCCs) approved by the UK ICO or equivalent protections, in accordance with UK GDPR requirements.</p>
+    </div>
+
+    <div class="p-section">
+      <h2>10. Children's Privacy</h2>
+      <p>Logicard is intended for adults working in the UK logistics industry. We do not knowingly collect personal data from anyone under the age of 18. If we become aware that we have inadvertently collected data from a person under 18, we will delete it promptly.</p>
+    </div>
+
+    <div class="p-section">
+      <h2>11. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. When we make significant changes, we will notify registered members by email and update the "Last updated" date at the top of this page. Continued use of the Logicard service after changes are posted constitutes your acceptance of the updated policy.</p>
+    </div>
+
+    <div class="p-section">
+      <h2>12. Contact Us</h2>
+      <p>If you have any questions, concerns, or requests relating to your personal data or this Privacy Policy, please contact us:</p>
+      <div class="highlight-box">
+        <p><strong>Logicard</strong><br />
+        Email: <a href="mailto:josh@logicard.co.uk">josh@logicard.co.uk</a><br />
+        Website: <a href="https://logicard.co.uk">logicard.co.uk</a></p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="p-footer">
+    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/terms.html">Terms of Service</a> &nbsp;|&nbsp; <a href="/signup.html">Sign Up</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+  </footer>
+
+</body>
+</html>
