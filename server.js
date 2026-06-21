@@ -73,11 +73,35 @@ async function sendWelcomeEmail(member) {
       <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#071d40">Need help?</p>
       <p style="margin:0 0 16px;font-size:13px;color:#5f6d82">Visit <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none;font-weight:700">logicard.co.uk</a> for support and FAQs.</p>
       <div style="border-top:1px solid #e2e6ee;margin:16px 0;padding-top:16px">
-        <p style="margin:0;font-size:11px;color:#aaa">Please do not reply to this email — this mailbox is not monitored.</p>
-        <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard · You received this because you registered at logicard.co.uk</p>
+        <p style="margin:0;font-size:12px;color:#5f6d82">To make sure our emails reach your inbox, please add <strong>welcome@logicard.co.uk</strong> to your contacts.</p>
+        <p style="margin:8px 0 0;font-size:11px;color:#aaa">© 2026 Logicard · You received this because you registered at logicard.co.uk</p>
       </div>
     </div>
   </div>`;
+
+  const text = `Welcome to Logicard, ${member.firstName}!
+
+Your membership is now active.
+
+Membership Number: #${member.membershipNumber}
+Name: ${member.firstName} ${member.lastName}
+Email: ${member.email}
+Company: ${member.companyName || '—'}
+Member since: ${new Date(member.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+
+What's included:
+- 150+ exclusive deals updated daily
+- Fuel, hotels, dining, tech, fleet and more
+- Savings redeemable with your membership number
+- Membership: £10/year${member.freeYear ? ' (first year complimentary)' : ''}
+
+Browse your deals: https://logicard.co.uk/login.html
+
+To ensure our emails reach your inbox, please add welcome@logicard.co.uk to your contacts.
+
+Need help? Email josh@logicard.co.uk or visit logicard.co.uk
+
+© 2026 Logicard · You received this because you registered at logicard.co.uk`;
 
   try {
     await resend.emails.send({
@@ -86,6 +110,7 @@ async function sendWelcomeEmail(member) {
       subject:  `Welcome to Logicard, ${member.firstName}! Your membership #${member.membershipNumber} is active`,
       reply_to: 'josh@logicard.co.uk',
       html,
+      text,
     });
     console.log(`Welcome email sent to ${member.email}`);
   } catch (err) {
