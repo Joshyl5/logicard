@@ -63,7 +63,7 @@ async function sendWelcomeEmail(member) {
         <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ 150+ exclusive deals updated daily</p>
         <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Fuel, hotels, dining, tech, fleet & more</p>
         <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Savings redeemable with your membership number</p>
-        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Membership: £10/year${member.freeYear ? ' — <strong>first year FREE with promo code</strong>' : ''}</p>
+        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Membership: £10/year${member.freeYear ? ' — first year complimentary (promo code applied)' : ''}</p>
       </div>
       <div style="text-align:center">
         <a href="https://logicard.co.uk/login.html" style="background:#FFB300;color:#071d40;padding:16px 40px;text-decoration:none;border-radius:6px;font-weight:900;font-size:16px;display:inline-block">Browse Your Deals →</a>
@@ -84,7 +84,7 @@ async function sendWelcomeEmail(member) {
       from:     'Logicard <welcome@logicard.co.uk>',
       to:       member.email,
       subject:  `Welcome to Logicard, ${member.firstName}! Your membership #${member.membershipNumber} is active`,
-      reply_to: 'noreply@logicard.co.uk',
+      reply_to: 'josh@logicard.co.uk',
       html,
     });
     console.log(`Welcome email sent to ${member.email}`);
@@ -459,8 +459,8 @@ app.post('/api/admin/giveaway/draw', requireAdmin, async (req, res) => {
       await resend.emails.send({
         from:     'Logicard <welcome@logicard.co.uk>',
         to:       winner.email,
-        subject:  `🎉 You've won the Logicard monthly giveaway!`,
-        reply_to: 'noreply@logicard.co.uk',
+        subject:  `Congratulations ${winner.firstName} — you've won the Logicard monthly prize draw`,
+        reply_to: 'josh@logicard.co.uk',
         html,
       });
     } catch (err) {
@@ -607,7 +607,7 @@ app.post('/api/forgot-password', resetLimiter, async (req, res) => {
         from:     'Logicard <accounts@logicard.co.uk>',
         to:       member.email,
         subject:  'Reset your Logicard password',
-        reply_to: 'noreply@logicard.co.uk',
+        reply_to: 'josh@logicard.co.uk',
         html,
       });
     }
