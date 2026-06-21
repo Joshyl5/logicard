@@ -82,56 +82,21 @@
                 <input id="phone" name="phone" type="tel" placeholder="+44 7700 900000" autocomplete="tel" required />
               </div>
             </div>
-            <div class="row row--half">
-              <div class="field">
-                <label for="dateOfBirth">Date of Birth</label>
-                <input id="dateOfBirth" name="dateOfBirth" type="date" autocomplete="bday" />
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset class="fieldset">
-            <legend>Address</legend>
-            <div class="field field--full">
-              <label for="addressLine1">Address Line 1 <span class="req">*</span></label>
-              <input id="addressLine1" name="addressLine1" type="text" placeholder="Street address" autocomplete="address-line1" required />
-            </div>
-            <div class="field field--full">
-              <label for="addressLine2">Address Line 2</label>
-              <input id="addressLine2" name="addressLine2" type="text" placeholder="Apartment, suite, unit, etc." autocomplete="address-line2" />
-            </div>
             <div class="row">
               <div class="field">
-                <label for="city">City <span class="req">*</span></label>
-                <input id="city" name="city" type="text" placeholder="City" autocomplete="address-level2" required />
+                <label for="ageRange">Age Range</label>
+                <select id="ageRange" name="dateOfBirth" autocomplete="off">
+                  <option value="">Prefer not to say</option>
+                  <option value="16-18">16 – 18</option>
+                  <option value="18-25">18 – 25</option>
+                  <option value="25-39">25 – 39</option>
+                  <option value="40-55">40 – 55</option>
+                  <option value="55+">55+</option>
+                </select>
               </div>
-              <div class="field">
-                <label for="county">County</label>
-                <input id="county" name="county" type="text" placeholder="County" autocomplete="address-level1" />
-              </div>
-            </div>
-            <div class="row">
               <div class="field">
                 <label for="postcode">Postcode <span class="req">*</span></label>
                 <input id="postcode" name="postcode" type="text" placeholder="SW1A 1AA" autocomplete="postal-code" required />
-              </div>
-              <div class="field">
-                <label for="country">Country <span class="req">*</span></label>
-                <select id="country" name="country" autocomplete="country" required>
-                  <option value="">Select country</option>
-                  <option value="GB" selected>United Kingdom</option>
-                  <option value="IE">Ireland</option>
-                  <option value="US">United States</option>
-                  <option value="AU">Australia</option>
-                  <option value="CA">Canada</option>
-                  <option value="NZ">New Zealand</option>
-                  <option value="FR">France</option>
-                  <option value="DE">Germany</option>
-                  <option value="ES">Spain</option>
-                  <option value="IT">Italy</option>
-                  <option value="NL">Netherlands</option>
-                  <option value="OTHER">Other</option>
-                </select>
               </div>
             </div>
           </fieldset>

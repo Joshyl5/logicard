@@ -58,16 +58,13 @@ form.addEventListener('submit', async e => {
   if (ref) data.ref = ref;
 
   const required = [
-    ['companyName',  'Company Name'],
-    ['role',         'Job Title / Role'],
-    ['firstName',    'First Name'],
-    ['lastName',     'Last Name'],
-    ['email',        'Email Address'],
-    ['phone',        'Phone Number'],
-    ['addressLine1', 'Address Line 1'],
-    ['city',         'City'],
-    ['postcode',     'Postcode'],
-    ['country',      'Country'],
+    ['companyName', 'Company Name'],
+    ['role',        'Job Title / Role'],
+    ['firstName',   'First Name'],
+    ['lastName',    'Last Name'],
+    ['email',       'Email Address'],
+    ['phone',       'Phone Number'],
+    ['postcode',    'Postcode'],
   ];
 
   for (const [key, label] of required) {

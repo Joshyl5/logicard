@@ -101,8 +101,9 @@ async function emailExists(email) {
 
 async function createMember(data) {
   const {
-    companyName, role, firstName, lastName, email, phone, dateOfBirth,
-    addressLine1, addressLine2, city, county, postcode, country,
+    companyName, role, firstName, lastName, email, phone, dateOfBirth = null,
+    addressLine1 = null, addressLine2 = null, city = null, county = null,
+    postcode, country = null,
     password, gdprConsent, marketingConsent, referredBy,
     promoCode = null, freeYear = false,
   } = data;
@@ -129,8 +130,8 @@ async function createMember(data) {
   `, [
     membershipNumber, companyName, role, firstName, lastName,
     email.toLowerCase(), phone, dateOfBirth || null,
-    addressLine1, addressLine2 || null,
-    city, county || null, postcode.toUpperCase(), country,
+    addressLine1 || null, addressLine2 || null,
+    city || null, county || null, postcode ? postcode.toUpperCase() : null, country || null,
     passwordHash, now,
     referredBy ? Number(referredBy) : null,
     !!marketingConsent,
