@@ -41,6 +41,10 @@ async function initDb() {
     )
   `);
 
+  // Safe migrations for existing tables
+  await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS promo_code TEXT`);
+  await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS free_year BOOLEAN DEFAULT FALSE`);
+
   await pool.query(`
     CREATE TABLE IF NOT EXISTS giveaway_history (
       id                SERIAL PRIMARY KEY,
@@ -84,6 +88,8 @@ function toMember(row) {
     gdprConsent:        row.gdpr_consent,
     resetToken:         row.reset_token,
     resetTokenExpiry:   row.reset_token_expiry,
+    promoCode:          row.promo_code,
+    freeYear:           row.free_year,
   };
 }
 
@@ -98,6 +104,7 @@ async function createMember(data) {
     companyName, role, firstName, lastName, email, phone, dateOfBirth,
     addressLine1, addressLine2, city, county, postcode, country,
     password, gdprConsent, marketingConsent, referredBy,
+    promoCode = null, freeYear = false,
   } = data;
 
   // Next membership number
@@ -113,10 +120,11 @@ async function createMember(data) {
       email, phone, date_of_birth, address_line1, address_line2,
       city, county, postcode, country, password_hash, verified, created_at,
       referred_by, total_referrals, monthly_entries,
-      marketing_consent, marketing_consent_at, gdpr_consent
+      marketing_consent, marketing_consent_at, gdpr_consent,
+      promo_code, free_year
     ) VALUES (
       $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,TRUE,$16,
-      $17,0,0,$18,$19,$20
+      $17,0,0,$18,$19,$20,$21,$22
     )
   `, [
     membershipNumber, companyName, role, firstName, lastName,
@@ -128,6 +136,8 @@ async function createMember(data) {
     !!marketingConsent,
     marketingConsent ? now : null,
     !!gdprConsent,
+    promoCode || null,
+    !!freeYear,
   ]);
 
   if (referredBy) {

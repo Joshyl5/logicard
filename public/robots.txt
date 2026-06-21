@@ -6,5 +6,6 @@ Disallow: /admin-verify.html
 Disallow: /members
 Disallow: /report
 Disallow: /api/
+Disallow: /checkout.html
 
 Sitemap: https://logicard.co.uk/sitemap.xml

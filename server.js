@@ -20,6 +20,15 @@ const app    = express();
 const PORT   = process.env.PORT || 3000;
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
+let stripe = null;
+try {
+  if (process.env.STRIPE_SECRET_KEY) stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+} catch (e) { console.warn('Stripe not available:', e.message); }
+
+const VALID_PROMOS = {
+  FREE: { discountPct: 100, label: 'First year free', freeYear: true },
+};
+
 // Trust Railway's reverse proxy so rate limiters see real client IPs
 app.set('trust proxy', 1);
 
@@ -54,7 +63,7 @@ async function sendWelcomeEmail(member) {
         <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ 150+ exclusive deals updated daily</p>
         <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Fuel, hotels, dining, tech, fleet & more</p>
         <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Savings redeemable with your membership number</p>
-        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ First year free — then just £10/year</p>
+        <p style="margin:4px 0;color:#5f6d82;font-size:14px">✅ Membership: £10/year${member.freeYear ? ' — <strong>first year FREE with promo code</strong>' : ''}</p>
       </div>
       <div style="text-align:center">
         <a href="https://logicard.co.uk/login.html" style="background:#FFB300;color:#071d40;padding:16px 40px;text-decoration:none;border-radius:6px;font-weight:900;font-size:16px;display:inline-block">Browse Your Deals →</a>
@@ -631,7 +640,7 @@ app.get('/api/offers', requireAuth, (_req, res) => res.json([]));
 app.post('/api/signup', signupLimiter, async (req, res) => {
   const { companyName, role, firstName, lastName, email, phone, dateOfBirth,
           addressLine1, addressLine2, city, county, postcode, country,
-          password, gdprConsent, marketingConsent, ref } = req.body;
+          password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
   const required = { companyName, role, firstName, lastName, email, phone, addressLine1, city, postcode, country };
   for (const [field, value] of Object.entries(required)) {
@@ -641,6 +650,12 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
   if (!gdprConsent) return res.status(400).json({ error: 'You must accept the privacy policy to continue.' });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Please enter a valid email address.' });
   if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
+
+  const normalizedPromo = (promoCode || '').toUpperCase().trim();
+  if (normalizedPromo && !VALID_PROMOS[normalizedPromo]) {
+    return res.status(400).json({ error: 'Invalid promotion code.' });
+  }
+  const promo = VALID_PROMOS[normalizedPromo] || null;
 
   try {
     const { membershipNumber } = await createMember({
@@ -655,17 +670,63 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
       password, gdprConsent,
       marketingConsent: !!marketingConsent,
       referredBy: ref || null,
+      promoCode: normalizedPromo || null,
+      freeYear: promo ? promo.freeYear : false,
     });
 
     res.json({ success: true, membershipNumber });
 
-    // Send welcome email asynchronously (don't block the response)
     const saved = await findMemberByEmail(email.trim().toLowerCase());
     if (saved) sendWelcomeEmail(saved);
 
   } catch (err) {
     console.error('Signup error:', err.message);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+// ── Checkout endpoints ─────────────────────────────────────────
+app.post('/api/checkout/validate-promo', (req, res) => {
+  const code = (req.body.code || '').toUpperCase().trim();
+  const promo = VALID_PROMOS[code];
+  if (!promo) return res.status(400).json({ error: 'Invalid promotion code.' });
+  res.json({ valid: true, code, ...promo });
+});
+
+app.get('/api/checkout/config', (req, res) => {
+  res.json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY || null });
+});
+
+app.post('/api/checkout/create-intent', async (req, res) => {
+  if (!stripe) return res.status(503).json({ error: 'Payment processing not configured. Please contact support.' });
+  try {
+    const intent = await stripe.paymentIntents.create({
+      amount: 1000,
+      currency: 'gbp',
+      receipt_email: req.body.email || undefined,
+      metadata: { product: 'logicard_annual' },
+    });
+    res.json({ clientSecret: intent.client_secret });
+  } catch (err) {
+    console.error('Stripe error:', err.message);
+    res.status(500).json({ error: 'Payment setup failed. Please try again.' });
+  }
+});
+
+app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
+  if (!stripe) return res.status(503).json({ error: 'Payment not configured.' });
+  const { paymentIntentId, ...signupData } = req.body;
+  try {
+    const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    if (intent.status !== 'succeeded') return res.status(400).json({ error: 'Payment not confirmed. Please try again.' });
+    if (await emailExists(signupData.email)) return res.status(409).json({ error: 'An account with this email already exists.' });
+    const { membershipNumber } = await createMember({ ...signupData, promoCode: null, freeYear: false });
+    const saved = await findMemberByEmail(signupData.email.toLowerCase());
+    if (saved) sendWelcomeEmail(saved);
+    res.json({ success: true, membershipNumber });
+  } catch (err) {
+    console.error('Checkout complete error:', err.message);
+    res.status(500).json({ error: 'Account setup failed. Please contact support.' });
   }
 });
 

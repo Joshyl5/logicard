@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logicard — Free Membership</title>
+  <title>Join Logicard — Claim Your Free Membership Today</title>
+  <meta name="description" content="Join Logicard for £10/year — exclusive discounts on fuel, hotels, food and fleet for UK logistics workers. Use code FREE at checkout for your first year at £0." />
+  <link rel="canonical" href="https://logicard.co.uk/signup.html" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Join Logicard — Claim Your Free Membership Today",
+    "url": "https://logicard.co.uk/signup.html",
+    "description": "Sign up for your free Logicard membership in under 2 minutes.",
+    "isPartOf": { "@id": "https://logicard.co.uk/#website" }
+  }
+  </script>
   <link rel="stylesheet" href="styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
@@ -27,7 +40,7 @@
 
       <div class="signup-header">
         <h2>Claim Your Free Membership</h2>
-        <p>Complete your details below to secure your exclusive membership number — free for the first year, for the first 2,000 members.</p>
+        <p>Complete your details below to secure your exclusive membership number — £10/year. Have a promo code? Enter it on the next step for a discount.</p>
       </div>
 
       <div id="formWrapper">
@@ -153,6 +166,16 @@
             </div>
           </fieldset>
 
+          <!-- Promo Code -->
+          <fieldset class="fieldset" style="border-color:rgba(255,179,0,0.25);background:rgba(255,179,0,0.04);">
+            <legend style="color:#FFB300;">Promotion Code <span style="font-weight:400;font-size:11px;opacity:0.7">(optional)</span></legend>
+            <div class="field field--full">
+              <input id="promoCode" name="promoCode" type="text" placeholder="e.g. FREE" maxlength="20" autocomplete="off"
+                style="text-transform:uppercase;letter-spacing:3px;font-weight:700;font-size:18px;" />
+              <div id="promoFeedback" style="margin-top:8px;font-size:13px;min-height:18px;"></div>
+            </div>
+          </fieldset>
+
           <fieldset class="fieldset fieldset--gdpr">
             <legend>Your Consent</legend>
             <label class="check-label">
@@ -186,7 +209,7 @@
           <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
 
           <button type="submit" class="submit-btn" id="submitBtn">
-            <span id="btnLabel">Create My Free Membership</span>
+            <span id="btnLabel">Continue to Payment — £10/year</span>
             <svg id="btnSpinner" class="spinner" viewBox="0 0 24 24" fill="none" style="display:none">
               <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2.5" stroke-dasharray="40" stroke-dashoffset="10"/>
             </svg>
@@ -224,6 +247,18 @@
   </footer>
 
   <script src="signup.js"></script>
+  <script>
+    // Detect return from checkout page after successful paid subscription
+    (function() {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('checkout') === 'success' && p.get('mn')) {
+        document.getElementById('membershipNumber').textContent = p.get('mn');
+        document.getElementById('formWrapper').style.display  = 'none';
+        document.getElementById('successPanel').style.display = 'block';
+        successPanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    })();
+  </script>
   <script>
     document.getElementById('pwToggle1').addEventListener('click', () => {
       const p = document.getElementById('password');
