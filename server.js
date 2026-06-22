@@ -667,7 +667,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
           addressLine1, addressLine2, city, county, postcode, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
-  const required = { companyName, role, firstName, lastName, email, phone, addressLine1, city, postcode, country };
+  const required = { companyName, role, firstName, lastName, email, phone, postcode };
   for (const [field, value] of Object.entries(required)) {
     if (!value || !String(value).trim()) return res.status(400).json({ error: `Missing required field: ${field}` });
   }
@@ -688,10 +688,10 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
       firstName: firstName.trim(),     lastName: lastName.trim(),
       email: email.trim().toLowerCase(), phone: phone.trim(),
       dateOfBirth: dateOfBirth || null,
-      addressLine1: addressLine1.trim(),
+      addressLine1: addressLine1 ? addressLine1.trim() : null,
       addressLine2: addressLine2 ? addressLine2.trim() : null,
-      city: city.trim(), county: county ? county.trim() : null,
-      postcode: postcode.trim().toUpperCase(), country: country.trim(),
+      city: city ? city.trim() : null, county: county ? county.trim() : null,
+      postcode: postcode.trim().toUpperCase(), country: country ? country.trim() : null,
       password, gdprConsent,
       marketingConsent: !!marketingConsent,
       referredBy: ref || null,
