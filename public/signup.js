@@ -130,12 +130,11 @@ form.addEventListener('submit', async e => {
   window.location.href = '/checkout.html';
 });
 
-// ── Job title selector: browse by category, or search ───────────
-// Layers a category drill-down + search combobox on top of the existing
-// <select id="role"> so the select stays the real form control (FormData
-// still submits its value unchanged) while the fancier UI sits on top.
-// Default view is the 10 category headers; clicking one drills into its
-// job titles; typing anything switches to a flat search across all of them.
+// ── Job title selector: type to search, select to lock it in ────
+// All ~150 titles sit in the background (from the existing <select id="role">,
+// which stays the real form control FormData submits). Nothing is shown
+// until the member starts typing; picking a result collapses the list and
+// leaves just that title in the field.
 (function initRoleSearch() {
   const select = document.getElementById('role');
   if (!select) return;
@@ -145,14 +144,11 @@ form.addEventListener('submit', async e => {
   }
 
   const items = [];
-  const categories = [];
   select.querySelectorAll('option').forEach(opt => {
     if (!opt.value) return;
     const group = opt.parentElement && opt.parentElement.tagName === 'OPTGROUP' ? opt.parentElement.label : '';
     items.push({ value: opt.value, group });
-    if (group && group !== 'Other' && !categories.includes(group)) categories.push(group);
   });
-  const otherItems = items.filter(i => i.group === 'Other');
 
   select.style.display = 'none';
 
@@ -162,7 +158,7 @@ form.addEventListener('submit', async e => {
   const searchInput = document.createElement('input');
   searchInput.type = 'text';
   searchInput.id = 'roleSearchInput';
-  searchInput.placeholder = 'Search or browse by category…';
+  searchInput.placeholder = 'Start typing your job title…';
   searchInput.autocomplete = 'off';
 
   const dropdown = document.createElement('div');
@@ -177,50 +173,36 @@ form.addEventListener('submit', async e => {
   if (label) label.setAttribute('for', 'roleSearchInput');
 
   let activeIndex = -1;
-  let activeCategory = null;
+  let hasSelection = false;
 
-  function getVisibleRows() {
-    return Array.from(dropdown.querySelectorAll('.role-dropdown-row'));
+  function getVisibleOptions() {
+    return Array.from(dropdown.querySelectorAll('.role-dropdown-option'));
   }
 
   function setActive(index) {
-    const rows = getVisibleRows();
-    rows.forEach(r => r.classList.remove('active'));
-    if (rows[index]) {
-      rows[index].classList.add('active');
-      rows[index].scrollIntoView({ block: 'nearest' });
+    const opts = getVisibleOptions();
+    opts.forEach(o => o.classList.remove('active'));
+    if (opts[index]) {
+      opts[index].classList.add('active');
+      opts[index].scrollIntoView({ block: 'nearest' });
     }
     activeIndex = index;
   }
 
-  function renderCategoryList() {
-    let html = categories.map(cat =>
-      `<div class="role-dropdown-row role-dropdown-category" data-action="category" data-value="${escapeHtml(cat)}">${escapeHtml(cat)}</div>`
-    ).join('');
-    if (otherItems.length) {
-      html += '<div class="role-dropdown-divider"></div>';
-      html += otherItems.map(item =>
-        `<div class="role-dropdown-row role-dropdown-option" data-action="select" data-value="${escapeHtml(item.value)}">${escapeHtml(item.value)}</div>`
-      ).join('');
-    }
-    dropdown.innerHTML = html;
-    dropdown.classList.add('open');
+  // Emptying the dropdown (not just hiding it) means there's never stale
+  // content left behind for a stray focus/blur to accidentally reveal.
+  function closeDropdown() {
+    dropdown.classList.remove('open');
+    dropdown.innerHTML = '';
+    activeIndex = -1;
   }
 
-  function renderJobsForCategory(cat) {
-    const jobs = items.filter(i => i.group === cat);
-    let html = `<div class="role-dropdown-row role-dropdown-back" data-action="back">← All categories</div>`;
-    html += `<div class="role-dropdown-group">${escapeHtml(cat)}</div>`;
-    html += jobs.map(job =>
-      `<div class="role-dropdown-row role-dropdown-option" data-action="select" data-value="${escapeHtml(job.value)}">${escapeHtml(job.value)}</div>`
-    ).join('');
-    dropdown.innerHTML = html;
-    dropdown.classList.add('open');
-  }
+  function renderDropdown() {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) { closeDropdown(); return; }
 
-  function renderSearchResults(query) {
-    const q = query.toLowerCase();
     const matches = items.filter(i => i.value.toLowerCase().includes(q) || i.group.toLowerCase().includes(q));
+    activeIndex = -1;
 
     if (!matches.length) {
       dropdown.innerHTML = '<div class="role-dropdown-empty">No matching job titles — try "Other / Not Listed"</div>';
@@ -235,51 +217,33 @@ form.addEventListener('submit', async e => {
         html += `<div class="role-dropdown-group">${escapeHtml(item.group)}</div>`;
         lastGroup = item.group;
       }
-      html += `<div class="role-dropdown-row role-dropdown-option" data-action="select" data-value="${escapeHtml(item.value)}">${escapeHtml(item.value)}</div>`;
+      html += `<div class="role-dropdown-option" data-value="${escapeHtml(item.value)}">${escapeHtml(item.value)}</div>`;
     });
     dropdown.innerHTML = html;
     dropdown.classList.add('open');
   }
 
-  function renderDropdown() {
-    activeIndex = -1;
-    const query = searchInput.value.trim();
-    if (query) { renderSearchResults(query); return; }
-    if (activeCategory) { renderJobsForCategory(activeCategory); return; }
-    renderCategoryList();
-  }
-
-  function closeDropdown() { dropdown.classList.remove('open'); }
-
   function selectValue(value) {
     select.value = value;
     searchInput.value = value;
+    hasSelection = true;
     closeDropdown();
   }
 
-  function handleRowAction(row) {
-    if (!row) return;
-    const action = row.dataset.action;
-    if (action === 'category') {
-      activeCategory = row.dataset.value;
-      searchInput.value = '';
-      renderDropdown();
-    } else if (action === 'back') {
-      activeCategory = null;
-      renderDropdown();
-    } else if (action === 'select') {
-      selectValue(row.dataset.value);
-    }
-  }
+  searchInput.addEventListener('focus', () => {
+    // Re-focusing an already-answered field selects the text for easy
+    // replacement, rather than re-opening a results list underneath it.
+    if (hasSelection) searchInput.select();
+  });
 
-  searchInput.addEventListener('focus', renderDropdown);
   searchInput.addEventListener('input', () => {
+    hasSelection = false;
     select.value = ''; // typing invalidates the previous pick until a real option is chosen again
     renderDropdown();
   });
 
   searchInput.addEventListener('blur', () => {
-    // Delay so a click on a dropdown row registers before the list closes.
+    // Delay so a click on a dropdown option registers before the list closes.
     setTimeout(() => {
       closeDropdown();
       const typed = searchInput.value.trim();
@@ -287,38 +251,40 @@ form.addEventListener('submit', async e => {
       if (exact) {
         select.value = exact.value;
         searchInput.value = exact.value;
-      } else if (!select.value) {
+        hasSelection = true;
+      } else if (!hasSelection) {
+        select.value = '';
         searchInput.value = '';
       }
-      activeCategory = null;
     }, 150);
   });
 
   searchInput.addEventListener('keydown', e => {
-    const rows = getVisibleRows();
-    if (!rows.length) return;
+    const opts = getVisibleOptions();
+    if (!opts.length) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setActive(Math.min(activeIndex + 1, rows.length - 1));
+      setActive(Math.min(activeIndex + 1, opts.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setActive(Math.max(activeIndex - 1, 0));
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      handleRowAction(rows[activeIndex] || rows[0]);
+      const target = opts[activeIndex] || opts[0];
+      if (target) selectValue(target.dataset.value);
     } else if (e.key === 'Escape') {
       closeDropdown();
     }
   });
 
   dropdown.addEventListener('mousedown', e => {
-    const row = e.target.closest('.role-dropdown-row');
-    if (!row) return;
+    const target = e.target.closest('.role-dropdown-option');
+    if (!target) return;
     e.preventDefault(); // keep focus on the input so blur doesn't fire before the click registers
-    handleRowAction(row);
+    selectValue(target.dataset.value);
   });
 
   document.addEventListener('click', e => {
-    if (!wrap.contains(e.target)) { closeDropdown(); activeCategory = null; }
+    if (!wrap.contains(e.target)) closeDropdown();
   });
 })();
