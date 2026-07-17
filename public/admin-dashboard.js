@@ -30,7 +30,7 @@ function renderTable(members) {
   const count = document.getElementById('tableCount');
 
   if (!members.length) {
-    tbody.innerHTML = '<tr><td colspan="10" class="table-empty">No members found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="table-empty">No members found.</td></tr>';
     count.textContent = '';
     return;
   }
@@ -46,6 +46,7 @@ function renderTable(members) {
       <td>${m.city || '—'}</td>
       <td>${m.postcode || '—'}</td>
       <td>${m.country || '—'}</td>
+      <td>${m.verified ? '✅' : '⏳'}</td>
       <td>${fmt(m.createdAt)}</td>
     </tr>`).join('');
 
@@ -76,6 +77,14 @@ async function init() {
   } catch {
     window.location.href = '/admin-login.html';
   }
+
+  try {
+    const vRes = await fetch('/api/admin/verifications');
+    if (vRes.ok) {
+      const pending = await vRes.json();
+      document.getElementById('statPendingVerifications').textContent = pending.length;
+    }
+  } catch { /* non-critical */ }
 
   document.getElementById('searchInput').addEventListener('input', e => {
     renderTable(filterMembers(e.target.value.trim()));

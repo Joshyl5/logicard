@@ -8,13 +8,22 @@ const rateLimit = require('express-rate-limit');
 const bcrypt    = require('bcryptjs');
 const crypto    = require('crypto');
 const path      = require('path');
+const multer    = require('multer');
 const { Resend } = require('resend');
 const {
   createMember, emailExists, findMemberByEmail,
   getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
+  getActiveOffers, getAllOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
+  registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
+  createNotification, getUnreadNotifications, markNotificationRead,
+  createVerificationDocument, getPendingVerificationDocuments, getVerificationDocumentsForMember,
+  getVerificationDocument, reviewVerificationDocument, setWorkEmailToken, confirmWorkEmailToken,
+  getDocumentsDueForPurge, markDocumentPurged,
 } = require('./database');
+const { uploadVerificationFile, getSignedViewUrl, readLocalFile, deleteFile } = require('./storage');
 
 const app    = express();
 const PORT   = process.env.PORT || 3000;
@@ -28,6 +37,57 @@ try {
 const VALID_PROMOS = {
   FREE: { discountPct: 100, label: 'First year free', freeYear: true },
 };
+
+const OFFER_CATEGORIES = [
+  'Beauty & Wellness', 'Children & Baby', 'Food & Drink', 'Fashion', 'Gifts & Flowers',
+  'Holiday & Travel', 'Home & Garden', 'Pets', 'Sports & Fitness', 'Tech & Mobile',
+];
+
+// ── Verification uploads ────────────────────────────────────────
+const VERIFICATION_MIME_EXT = {
+  'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp', 'application/pdf': 'pdf',
+};
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 8 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!VERIFICATION_MIME_EXT[file.mimetype]) return cb(new Error('Only JPG, PNG, WEBP or PDF files are allowed.'));
+    cb(null, true);
+  },
+});
+const VALID_DOC_TYPES = ['uniform', 'badge', 'payslip', 'work_email_screenshot', 'other'];
+
+// Proof-of-employment files are deleted 20 days after an admin approves/rejects
+// them — UK GDPR storage-limitation: no ongoing purpose to keep the document
+// once the employment check has been decided. The decision itself (doc type,
+// status, reviewed date, rejection reason) is kept as an audit trail.
+const VERIFICATION_PURGE_DAYS = 20;
+
+async function runVerificationPurge() {
+  let due;
+  try {
+    due = await getDocumentsDueForPurge(VERIFICATION_PURGE_DAYS);
+  } catch (err) {
+    console.error('Verification purge sweep failed to query due documents:', err.message);
+    return;
+  }
+
+  for (const doc of due) {
+    try {
+      await deleteFile(doc.fileKey);
+      await markDocumentPurged(doc.id);
+    } catch (err) {
+      console.error(`Verification purge failed for document #${doc.id}:`, err.message);
+    }
+  }
+
+  if (due.length) console.log(`[purge] Deleted ${due.length} verification document file(s) past the ${VERIFICATION_PURGE_DAYS}-day retention window.`);
+}
+const FREE_EMAIL_DOMAINS = new Set([
+  'gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com',
+  'hotmail.co.uk', 'live.com', 'icloud.com', 'me.com', 'aol.com', 'protonmail.com',
+  'proton.me', 'msn.com', 'mail.com', 'gmx.com',
+]);
 
 // Trust Railway's reverse proxy so rate limiters see real client IPs
 app.set('trust proxy', 1);
@@ -118,6 +178,198 @@ Need help? Email josh@logicard.co.uk or visit logicard.co.uk
   }
 }
 
+// ── Verification emails ─────────────────────────────────────────
+async function sendVerificationSubmittedAdminEmail(member, docType) {
+  if (!resend || !process.env.ADMIN_EMAIL) return;
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
+      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">New Verification Submitted</p>
+    </div>
+    <div style="padding:32px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 20px;font-size:18px">A member has submitted proof of employment</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Member</td><td style="padding:10px 14px;color:#333">${member.firstName} ${member.lastName}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Membership #</td><td style="padding:10px 14px;color:#1a6cc8;font-weight:700">#${member.membershipNumber}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px;color:#333">${member.companyName || '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Document type</td><td style="padding:10px 14px;color:#333">${docType}</td></tr>
+      </table>
+      <div style="text-align:center;margin-top:28px">
+        <a href="https://logicard.co.uk/admin/verifications" style="background:#FFB300;color:#071d40;padding:14px 32px;text-decoration:none;border-radius:6px;font-weight:900;font-size:15px;display:inline-block">Review in Admin Panel →</a>
+      </div>
+    </div>
+  </div>`;
+  try {
+    await resend.emails.send({
+      from:    'Logicard <welcome@logicard.co.uk>',
+      to:      process.env.ADMIN_EMAIL,
+      subject: `New verification from member #${member.membershipNumber} — ${member.firstName} ${member.lastName}`,
+      html,
+    });
+  } catch (err) {
+    console.error('Verification submitted admin email failed:', err.message);
+  }
+}
+
+async function sendVerificationApprovedEmail(member) {
+  if (!resend) return;
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d 0%,#071d40 50%,#0d3b80 100%);padding:40px 36px;text-align:center">
+      <h1 style="color:#FFB300;margin:0;font-size:32px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.6);margin:8px 0 0;font-size:14px">You're verified!</p>
+    </div>
+    <div style="padding:40px 36px;background:#fff;text-align:center">
+      <h2 style="color:#071d40;margin:0 0 12px;font-size:22px">Welcome to the closed group, ${member.firstName}! 🎉</h2>
+      <p style="color:#5f6d82;margin:0 0 28px;font-size:15px;line-height:1.6">Your proof of employment has been verified. Your full member offers are unlocked — log in to start saving.</p>
+      <a href="https://logicard.co.uk/member-offers" style="background:#FFB300;color:#071d40;padding:16px 40px;text-decoration:none;border-radius:6px;font-weight:900;font-size:16px;display:inline-block">Browse Your Deals →</a>
+    </div>
+  </div>`;
+  try {
+    await resend.emails.send({
+      from:     'Logicard <welcome@logicard.co.uk>',
+      to:       member.email,
+      subject:  'You’re verified — your Logicard offers are unlocked',
+      reply_to: 'josh@logicard.co.uk',
+      html,
+    });
+  } catch (err) {
+    console.error('Verification approved email failed:', err.message);
+  }
+}
+
+async function sendVerificationRejectedEmail(member, reason) {
+  if (!resend) return;
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d 0%,#071d40 50%,#0d3b80 100%);padding:40px 36px;text-align:center">
+      <h1 style="color:#FFB300;margin:0;font-size:32px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.6);margin:8px 0 0;font-size:14px">Verification update</p>
+    </div>
+    <div style="padding:40px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 12px;font-size:20px">We couldn't verify your submission</h2>
+      <p style="color:#5f6d82;margin:0 0 20px;font-size:15px;line-height:1.6">Hi ${member.firstName}, we weren't able to approve the proof you submitted for your Logicard membership.</p>
+      ${reason ? `<div style="background:#fff8e6;border:1px solid #FFB300;border-radius:10px;padding:16px 20px;margin-bottom:24px;color:#071d40;font-size:14px">${reason}</div>` : ''}
+      <p style="color:#5f6d82;margin:0 0 28px;font-size:14px;line-height:1.6">You can submit a new document or your work email address any time — just log in and head to the verification page.</p>
+      <div style="text-align:center">
+        <a href="https://logicard.co.uk/verify" style="background:#FFB300;color:#071d40;padding:14px 32px;text-decoration:none;border-radius:6px;font-weight:900;font-size:15px;display:inline-block">Resubmit Proof →</a>
+      </div>
+    </div>
+  </div>`;
+  try {
+    await resend.emails.send({
+      from:     'Logicard <welcome@logicard.co.uk>',
+      to:       member.email,
+      subject:  'Your Logicard verification needs another look',
+      reply_to: 'josh@logicard.co.uk',
+      html,
+    });
+  } catch (err) {
+    console.error('Verification rejected email failed:', err.message);
+  }
+}
+
+async function sendWorkEmailConfirmation(member, workEmail, confirmLink) {
+  if (!resend) { console.log(`[DEV] Work-email confirm link for #${member.membershipNumber}: ${confirmLink}`); return; }
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d 0%,#071d40 50%,#0d3b80 100%);padding:40px 36px;text-align:center">
+      <h1 style="color:#FFB300;margin:0;font-size:32px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.6);margin:8px 0 0;font-size:14px">Confirm your work email</p>
+    </div>
+    <div style="padding:40px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 8px;font-size:20px">One click to verify, ${member.firstName}</h2>
+      <p style="color:#5f6d82;margin:0 0 28px;font-size:15px;line-height:1.6">Click below to confirm <strong>${workEmail}</strong> is your work email address. Your Logicard account will be verified instantly.</p>
+      <div style="text-align:center;margin-bottom:28px">
+        <a href="${confirmLink}" style="background:#FFB300;color:#071d40;padding:16px 40px;text-decoration:none;border-radius:6px;font-weight:900;font-size:16px;display:inline-block">Confirm My Work Email →</a>
+      </div>
+      <p style="color:#aaa;font-size:12px;margin:0">This link expires in 24 hours. If you didn't request this, you can ignore this email.</p>
+    </div>
+  </div>`;
+  try {
+    await resend.emails.send({
+      from:    'Logicard <accounts@logicard.co.uk>',
+      to:      workEmail,
+      subject: 'Confirm your work email for Logicard',
+      html,
+    });
+  } catch (err) {
+    console.error('Work-email confirmation send failed:', err.message);
+  }
+}
+
+async function sendOfferRestockEmail(member, offer) {
+  if (!resend) return;
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f0f2f7;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#04040d 0%,#071d40 50%,#0d3b80 100%);padding:40px 36px;text-align:center">
+      <h1 style="color:#FFB300;margin:0;font-size:32px;font-weight:900;letter-spacing:-1px">Logi<span style="color:#fff">card</span></h1>
+      <p style="color:rgba(255,255,255,0.6);margin:8px 0 0;font-size:14px">Back in stock</p>
+    </div>
+    <div style="padding:40px 36px;background:#fff;text-align:center">
+      <h2 style="color:#071d40;margin:0 0 12px;font-size:22px">${member.firstName}, more codes just landed 🎉</h2>
+      <p style="color:#5f6d82;margin:0 0 28px;font-size:15px;line-height:1.6">You asked to be notified — <strong>${offer.merchantName}</strong> just added more unique codes for "${offer.title}". They tend to go quickly, so grab yours soon.</p>
+      <a href="https://logicard.co.uk/member-offers" style="background:#FFB300;color:#071d40;padding:16px 40px;text-decoration:none;border-radius:6px;font-weight:900;font-size:16px;display:inline-block">Claim Your Code →</a>
+    </div>
+  </div>`;
+  try {
+    await resend.emails.send({
+      from:     'Logicard <welcome@logicard.co.uk>',
+      to:       member.email,
+      subject:  `Back in stock: ${offer.merchantName} codes are available again`,
+      reply_to: 'josh@logicard.co.uk',
+      html,
+    });
+  } catch (err) {
+    console.error('Restock email failed:', err.message);
+  }
+}
+
+async function notifyOfferRestock(offer, membershipNumbers) {
+  for (const num of membershipNumbers) {
+    try {
+      const member = await getMemberByNumber(num);
+      if (!member) continue;
+      await createNotification({
+        membershipNumber: num,
+        title: `${offer.merchantName} codes are back!`,
+        body:  `More unique codes were just added for "${offer.title}" — grab yours before they're gone again.`,
+        linkUrl: '/member-offers',
+      });
+      await sendOfferRestockEmail(member, offer);
+    } catch (err) {
+      console.error(`Restock notify failed for member #${num}:`, err.message);
+    }
+  }
+}
+
+// ── Startup check: does the Resend API key actually work? ────────
+const SENDING_DOMAIN = 'logicard.co.uk';
+
+async function verifyResendConnection() {
+  if (!resend) {
+    console.warn('  > RESEND_API_KEY not set — emails disabled.');
+    return;
+  }
+  try {
+    const { data, error } = await resend.domains.list();
+    if (error) {
+      console.error(`  > RESEND_API_KEY is set but Resend rejected it (${error.name}: ${error.message}) — no emails will send.`);
+      return;
+    }
+    const domain = (data?.data || []).find(d => d.name === SENDING_DOMAIN);
+    if (!domain) {
+      console.warn(`  > Resend connected, but no "${SENDING_DOMAIN}" domain found on this account — emails from @${SENDING_DOMAIN} addresses will fail.`);
+    } else if (domain.status !== 'verified') {
+      console.warn(`  > Resend domain ${SENDING_DOMAIN} is present but status is "${domain.status}" (not verified) — emails may fail or land in spam.`);
+    } else {
+      console.log(`  > Resend connected — ${SENDING_DOMAIN} is verified, emails will send.`);
+    }
+  } catch (err) {
+    console.error('  > Resend connection check failed:', err.message);
+  }
+}
 
 // ── Rate limiters ──────────────────────────────────────────────
 const contactLimiter = rateLimit({
@@ -150,6 +402,22 @@ const resetLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many password reset requests. Please wait an hour and try again.' },
+});
+
+const verificationUploadLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many upload attempts. Please try again in an hour.' },
+});
+
+const workEmailLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many verification emails requested. Please wait an hour and try again.' },
 });
 
 // ── Middleware ─────────────────────────────────────────────────
@@ -199,24 +467,67 @@ function requireAuth(req, res, next) {
   res.redirect('/login.html');
 }
 
+// Gates the closed-group offers specifically — members can still log in and
+// see their account while their proof of employment is pending review.
+async function requireVerified(req, res, next) {
+  const member = await getMemberByNumber(req.session.membershipNumber);
+  if (member && member.verified) return next();
+  if (req.path.startsWith('/api/')) return res.status(403).json({ error: 'pending_verification' });
+  res.redirect('/verify');
+}
+
 function requireAdmin(req, res, next) {
   if (req.session && req.session.isAdmin) return next();
   if (req.path.startsWith('/api/')) return res.status(401).json({ error: 'Admin access required' });
   res.redirect('/admin-login.html');
 }
 
+// Extra outer wall while /member-offers is still pre-launch and has no real
+// content — separate from and in addition to the normal login/verification
+// flow underneath it. Override MEMBER_OFFERS_PREVIEW_PASSWORD in Railway to
+// change or remove it later without a code change.
+const MEMBER_OFFERS_PREVIEW_PASSWORD = process.env.MEMBER_OFFERS_PREVIEW_PASSWORD || 'LogicardTemp1';
+
+function requirePreviewPassword(req, res, next) {
+  const auth = req.headers.authorization;
+  if (auth && auth.startsWith('Basic ')) {
+    const decoded  = Buffer.from(auth.slice(6), 'base64').toString('utf8');
+    const password = decoded.split(':').slice(1).join(':');
+    if (password === MEMBER_OFFERS_PREVIEW_PASSWORD) return next();
+  }
+  res.setHeader('WWW-Authenticate', 'Basic realm="Logicard Member Offers Preview"');
+  res.status(401).send('This page requires a preview password.');
+}
+
 // ── Member pages ───────────────────────────────────────────────
-app.get('/members', requireAuth, (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'members.html'));
+app.get('/member-offers', requirePreviewPassword, requireAuth, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'member-offers.html'));
 });
+
+// Old URL, kept as a redirect so nothing already bookmarked/emailed breaks.
+app.get('/members', requirePreviewPassword, requireAuth, (_req, res) => res.redirect('/member-offers'));
+
+app.get('/api/offer-categories', requireAuth, (_req, res) => res.json(OFFER_CATEGORIES));
 
 app.get('/report', requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'report.html'));
 });
 
+app.get('/verify', requireAuth, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'verify.html'));
+});
+
 // ── Admin pages ────────────────────────────────────────────────
 app.get('/admin', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-dashboard.html'));
+});
+
+app.get('/admin/offers', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-offers.html'));
+});
+
+app.get('/admin/verifications', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-verifications.html'));
 });
 
 // ── Member auth ────────────────────────────────────────────────
@@ -227,7 +538,6 @@ app.post('/api/login', loginLimiter, async (req, res) => {
   const member = await findMemberByEmail(email);
   if (!member || !member.passwordHash) return res.status(401).json({ error: 'Invalid email or password.' });
   if (!bcrypt.compareSync(password, member.passwordHash)) return res.status(401).json({ error: 'Invalid email or password.' });
-  if (!member.verified) return res.status(403).json({ error: 'Your account is pending verification.' });
 
   req.session.membershipNumber = member.membershipNumber;
   req.session.firstName        = member.firstName;
@@ -248,7 +558,24 @@ app.get('/api/me', requireAuth, async (req, res) => {
     companyName:      member.companyName,
     totalReferrals:   member.totalReferrals  || 0,
     monthlyEntries:   member.monthlyEntries  || 0,
+    verified:            member.verified,
+    verificationStatus:  member.verificationStatus,
+    verificationMethod:  member.verificationMethod,
+    rejectionReason:     member.rejectionReason,
+    workEmail:            member.workEmail,
   });
+});
+
+// ── In-app notifications ─────────────────────────────────────────
+app.get('/api/notifications', requireAuth, async (req, res) => {
+  res.json(await getUnreadNotifications(req.session.membershipNumber));
+});
+
+app.post('/api/notifications/:id/read', requireAuth, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid notification id.' });
+  await markNotificationRead(id, req.session.membershipNumber);
+  res.json({ success: true });
 });
 
 // ── Admin auth ─────────────────────────────────────────────────
@@ -344,8 +671,75 @@ app.post('/api/admin/logout', (req, res) => {
 
 // ── Admin API ──────────────────────────────────────────────────
 app.get('/api/admin/members', requireAdmin, async (_req, res) => {
-  const members = (await getAllMembers()).map(({ passwordHash, resetToken, resetTokenExpiry, ...safe }) => safe);
+  const members = (await getAllMembers()).map(({ passwordHash, resetToken, resetTokenExpiry, workEmailToken, workEmailTokenExpiry, ...safe }) => safe);
   res.json(members);
+});
+
+// ── Admin offers ───────────────────────────────────────────────
+function validOfferPayload(body) {
+  const { merchantName, title, affiliateUrl, category } = body;
+  if (!merchantName || !String(merchantName).trim()) return 'Merchant name is required.';
+  if (!title || !String(title).trim()) return 'Title is required.';
+  if (!affiliateUrl || !/^https?:\/\//i.test(affiliateUrl)) return 'Affiliate URL must start with http:// or https://.';
+  if (category && !OFFER_CATEGORIES.includes(category)) return 'Invalid category.';
+  return null;
+}
+
+app.get('/api/admin/offers', requireAdmin, async (_req, res) => {
+  const offers = await getAllOffers();
+  const statsMap = await getCouponStatsForOffers(offers.map(o => o.id));
+  res.json(offers.map(o => ({
+    ...o,
+    codesAvailable: statsMap[o.id] ? statsMap[o.id].available : null,
+    codesTotal:     statsMap[o.id] ? statsMap[o.id].total : null,
+  })));
+});
+
+app.post('/api/admin/offers/:id/codes', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer id.' });
+  const offer = await getOfferById(id);
+  if (!offer) return res.status(404).json({ error: 'Offer not found.' });
+
+  const codes = String(req.body.codes || '').split(/\r?\n/).map(c => c.trim()).filter(Boolean);
+  if (!codes.length) return res.status(400).json({ error: 'Paste at least one code, one per line.' });
+  if (codes.length > 20000) return res.status(400).json({ error: 'Too many codes in one batch (max 20,000 — split into smaller batches).' });
+
+  const result = await bulkAddCouponCodes(id, codes);
+
+  let notified = 0;
+  if (result.inserted > 0) {
+    const waitingMembers = await popOfferWaitlist(id);
+    notified = waitingMembers.length;
+    if (notified) notifyOfferRestock(offer, waitingMembers); // fire-and-forget — don't block the admin response on N emails
+  }
+
+  res.json({ success: true, inserted: result.inserted, skipped: result.skipped, notified });
+});
+
+app.post('/api/admin/offers', requireAdmin, async (req, res) => {
+  const error = validOfferPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  const offer = await createOffer(req.body);
+  res.json(offer);
+});
+
+app.put('/api/admin/offers/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer id.' });
+  const error = validOfferPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  const offer = await updateOffer(id, req.body);
+  if (!offer) return res.status(404).json({ error: 'Offer not found.' });
+  res.json(offer);
+});
+
+app.delete('/api/admin/offers/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer id.' });
+  const deleted = await deleteOffer(id);
+  if (!deleted) return res.status(404).json({ error: 'Offer not found.' });
+  res.json({ success: true });
 });
 
 // ── Export OTP gate ────────────────────────────────────────────
@@ -441,7 +835,7 @@ app.get('/api/admin/giveaway', requireAdmin, async (_req, res) => {
   const allMembers = await getAllMembers();
   const members = allMembers
     .filter(m => (m.monthlyEntries || 0) > 0)
-    .map(({ passwordHash, resetToken, resetTokenExpiry, ...safe }) => safe)
+    .map(({ passwordHash, resetToken, resetTokenExpiry, workEmailToken, workEmailTokenExpiry, ...safe }) => safe)
     .sort((a, b) => (b.monthlyEntries || 0) - (a.monthlyEntries || 0));
   const history = await getGiveawayHistory();
   res.json({ entries: members, history });
@@ -600,9 +994,10 @@ app.post('/api/forgot-password', resetLimiter, async (req, res) => {
   const member = await findMemberByEmail(email.trim().toLowerCase());
   if (!member) return res.json({ success: true }); // prevent email enumeration
 
-  const token  = crypto.randomBytes(32).toString('hex');
-  const expiry = Date.now() + 60 * 60 * 1000;
-  await setResetToken(member.email, token, expiry);
+  const token     = crypto.randomBytes(32).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const expiry    = Date.now() + 60 * 60 * 1000;
+  await setResetToken(member.email, tokenHash, expiry);
 
   const resetLink = `https://logicard.co.uk/reset-password.html?token=${token}`;
   const html = `
@@ -648,7 +1043,8 @@ app.post('/api/reset-password', async (req, res) => {
   if (!token || !password) return res.status(400).json({ error: 'Invalid request.' });
   if (password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
 
-  const member = await findMemberByResetToken(token);
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const member = await findMemberByResetToken(tokenHash);
   if (!member) return res.status(400).json({ error: 'This reset link is invalid or has expired.' });
   if (Date.now() > member.resetTokenExpiry) return res.status(400).json({ error: 'This reset link has expired. Please request a new one.' });
 
@@ -658,8 +1054,173 @@ app.post('/api/reset-password', async (req, res) => {
   res.json({ success: true });
 });
 
-// ── Offers ─────────────────────────────────────────────────────
-app.get('/api/offers', requireAuth, (_req, res) => res.json([]));
+// ── Proof-of-employment verification ─────────────────────────────
+app.get('/api/verification/status', requireAuth, async (req, res) => {
+  const member    = await getMemberByNumber(req.session.membershipNumber);
+  const documents = await getVerificationDocumentsForMember(req.session.membershipNumber);
+  res.json({
+    verified:            member.verified,
+    verificationStatus:  member.verificationStatus,
+    verificationMethod:  member.verificationMethod,
+    rejectionReason:     member.rejectionReason,
+    workEmail:           member.workEmail,
+    documents:           documents.map(({ id, docType, status, submittedAt, rejectionReason }) => ({ id, docType, status, submittedAt, rejectionReason })),
+  });
+});
+
+app.post('/api/verification/upload', requireAuth, verificationUploadLimiter, (req, res) => {
+  upload.single('file')(req, res, async (err) => {
+    if (err) return res.status(400).json({ error: err.message || 'Upload failed.' });
+    if (!req.file) return res.status(400).json({ error: 'Please choose a file to upload.' });
+
+    const docType = (req.body.docType || '').trim();
+    if (!VALID_DOC_TYPES.includes(docType)) return res.status(400).json({ error: 'Please select a valid document type.' });
+
+    const note              = (req.body.note || '').trim().slice(0, 500);
+    const membershipNumber  = req.session.membershipNumber;
+    const extension         = VERIFICATION_MIME_EXT[req.file.mimetype];
+
+    try {
+      const fileKey = await uploadVerificationFile(req.file.buffer, { membershipNumber, mimeType: req.file.mimetype, extension });
+      await createVerificationDocument({
+        membershipNumber, docType, fileKey,
+        originalFilename: req.file.originalname, mimeType: req.file.mimetype, note,
+      });
+      res.json({ success: true });
+
+      const member = await getMemberByNumber(membershipNumber);
+      if (member) sendVerificationSubmittedAdminEmail(member, docType);
+    } catch (e) {
+      console.error('Verification upload error:', e.message);
+      res.status(500).json({ error: 'Upload failed. Please try again.' });
+    }
+  });
+});
+
+app.post('/api/verification/work-email', requireAuth, workEmailLimiter, async (req, res) => {
+  const workEmail = (req.body.workEmail || '').trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(workEmail)) return res.status(400).json({ error: 'Please enter a valid email address.' });
+
+  const domain = workEmail.split('@')[1];
+  if (FREE_EMAIL_DOMAINS.has(domain)) {
+    return res.status(400).json({ error: "That looks like a personal email address. Please use your company email, or upload proof of employment instead." });
+  }
+
+  const token     = crypto.randomBytes(32).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const expiry    = Date.now() + 24 * 60 * 60 * 1000;
+  await setWorkEmailToken(req.session.membershipNumber, workEmail, tokenHash, expiry);
+
+  const member = await getMemberByNumber(req.session.membershipNumber);
+  const confirmLink = `https://logicard.co.uk/api/verification/confirm-work-email?token=${token}`;
+  await sendWorkEmailConfirmation(member, workEmail, confirmLink);
+
+  res.json({ success: true });
+});
+
+app.get('/api/verification/confirm-work-email', async (req, res) => {
+  const { token } = req.query;
+  if (!token) return res.redirect('/verify?result=invalid');
+
+  const tokenHash = crypto.createHash('sha256').update(String(token)).digest('hex');
+  const member    = await confirmWorkEmailToken(tokenHash);
+  if (!member) return res.redirect('/verify?result=invalid');
+
+  res.redirect('/verify?result=success');
+});
+
+// ── Admin verification review ─────────────────────────────────────
+app.get('/api/admin/verifications', requireAdmin, async (_req, res) => {
+  res.json(await getPendingVerificationDocuments());
+});
+
+app.get('/api/admin/verifications/:id/view-url', requireAdmin, async (req, res) => {
+  const doc = await getVerificationDocument(Number(req.params.id));
+  if (!doc) return res.status(404).json({ error: 'Document not found.' });
+  if (!doc.fileKey) return res.status(410).json({ error: 'This document has been purged and is no longer available.' });
+  const url = await getSignedViewUrl(doc.fileKey);
+  res.json({ url });
+});
+
+app.get('/api/admin/verifications/local-file', requireAdmin, (req, res) => {
+  const filePath = req.query.key && readLocalFile(String(req.query.key));
+  if (!filePath) return res.status(404).send('Not found');
+  res.sendFile(filePath);
+});
+
+app.post('/api/admin/verifications/:id/approve', requireAdmin, async (req, res) => {
+  const result = await reviewVerificationDocument(Number(req.params.id), { status: 'approved' });
+  if (!result) return res.status(404).json({ error: 'Document not found.' });
+  res.json({ success: true });
+  sendVerificationApprovedEmail(result.member);
+});
+
+app.post('/api/admin/verifications/:id/reject', requireAdmin, async (req, res) => {
+  const reason = (req.body.reason || '').trim().slice(0, 500);
+  const result = await reviewVerificationDocument(Number(req.params.id), { status: 'rejected', reason: reason || null });
+  if (!result) return res.status(404).json({ error: 'Document not found.' });
+  res.json({ success: true });
+  sendVerificationRejectedEmail(result.member, reason);
+});
+
+// ── Offers (closed-group — verified members only) ───────────────
+app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
+  const offers = await getActiveOffers();
+  const offerIds = offers.map(o => o.id);
+  const [statsMap, myCodes, waitlisted] = await Promise.all([
+    getCouponStatsForOffers(offerIds),
+    getMemberClaimedCodes(req.session.membershipNumber, offerIds),
+    getMemberWaitlistedOfferIds(req.session.membershipNumber, offerIds),
+  ]);
+
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl }) => {
+    const stats = statsMap[id];
+    return {
+      id, merchantName, title, description, category, discountText, imageUrl,
+      voucherCode:    stats ? undefined : voucherCode, // legacy shared code only applies when no unique-code pool exists
+      hasCodePool:    !!stats,
+      codesAvailable: stats ? stats.available : null,
+      myCode:         myCodes[id] || null,
+      onWaitlist:     waitlisted.has(id),
+    };
+  }));
+});
+
+app.post('/api/offers/:id/claim', requireAuth, requireVerified, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer.' });
+
+  const offer = await getOfferById(id);
+  if (!offer || !offer.isActive) return res.status(404).json({ error: 'This offer is no longer available.' });
+
+  const result = await claimCouponCode(id, req.session.membershipNumber);
+  if (result.outOfStock) return res.status(410).json({ error: 'All codes for this offer have been claimed — check back soon.' });
+  res.json({ code: result.code });
+});
+
+app.post('/api/offers/:id/waitlist', requireAuth, requireVerified, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer.' });
+
+  const offer = await getOfferById(id);
+  if (!offer || !offer.isActive) return res.status(404).json({ error: 'This offer is no longer available.' });
+
+  await registerOfferInterest(id, req.session.membershipNumber);
+  res.json({ success: true });
+});
+
+app.get('/api/offers/:id/go', requireAuth, requireVerified, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).send('Invalid offer.');
+
+  const offer = await getOfferById(id);
+  if (!offer || !offer.isActive) return res.status(404).send('This offer is no longer available.');
+
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.redirect(302, offer.affiliateUrl);
+
+  incrementOfferClicks(id).catch(err => console.error('Offer click tracking failed:', err.message));
+});
 
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', signupLimiter, async (req, res) => {
@@ -755,10 +1316,18 @@ app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
   }
 });
 
+const PURGE_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
+
 app.listen(PORT, () => {
   console.log(`Logicard running at http://localhost:${PORT}`);
-  if (!resend)                          console.warn('  > RESEND_API_KEY not set — emails disabled.');
   if (!process.env.SESSION_SECRET)      console.warn('  > SESSION_SECRET not set — using insecure default. Set this in Railway Variables.');
   if (!process.env.ADMIN_EMAIL)         console.warn('  > ADMIN_EMAIL not set — admin OTP and member reports will not be delivered.');
   if (!process.env.ADMIN_PASSWORD)      console.warn('  > ADMIN_PASSWORD not set — admin panel is inaccessible.');
+  if (!process.env.R2_BUCKET_NAME)      console.warn('  > R2_* env vars not set — verification documents are being saved to local disk (not persistent on Railway).');
+
+  verifyResendConnection();
+
+  // Give the DB pool a moment on cold start, then run daily thereafter.
+  setTimeout(runVerificationPurge, 60 * 1000);
+  setInterval(runVerificationPurge, PURGE_SWEEP_INTERVAL_MS);
 });

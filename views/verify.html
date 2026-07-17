@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Verify Your Account</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="verify-page">
+
+  <header class="members-header">
+    <div class="mh-inner">
+      <a href="/" class="mh-logo" style="border:2px solid rgba(255,179,0,0.45);padding:8px 18px;border-radius:6px;background:rgba(255,255,255,0.04);text-decoration:none;display:flex;align-items:center;">
+        <span style="font-size:32px;font-weight:900;letter-spacing:-1.5px;line-height:1;font-family:'Inter',sans-serif;"><span style="color:#fff;">Logi</span><span style="color:#FFB300;">card</span></span>
+      </a>
+      <div class="mh-user">
+        <div class="mh-user-info">
+          <span class="mh-welcome">Welcome, <strong id="userName">...</strong></span>
+          <span class="mh-badge" id="memberBadge">#...</span>
+        </div>
+        <a href="/member-offers" class="signout-btn" style="text-decoration:none;">Back to Account</a>
+        <button class="signout-btn" id="signoutBtn">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="verify-main">
+
+    <div class="verify-status-card" id="statusCard">
+      <span class="verify-badge verify-badge--pending" id="statusBadge">Pending Verification</span>
+      <h1 id="statusTitle">Verify you work in logistics</h1>
+      <p id="statusText">Logicard is a closed group for verified logistics workers — this keeps the deals genuine and exclusive. Confirm your employment one of two ways below, and we'll unlock your offers as soon as it's approved.</p>
+      <div id="rejectionBox" class="verify-rejection-reason" style="display:none"></div>
+    </div>
+
+    <div id="methodsWrap">
+      <div class="verify-methods">
+
+        <div class="verify-method-card">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg>
+            Work Email
+          </h3>
+          <p>Fastest option — if you have a company email address, we'll verify you the moment you click the confirmation link. No waiting for review.</p>
+          <form id="workEmailForm">
+            <input type="email" id="workEmailInput" class="verify-select" placeholder="you@yourcompany.co.uk" required autocomplete="off" style="margin-bottom:14px;" />
+            <button type="submit" class="verify-method-btn" id="workEmailBtn">Send Verification Link</button>
+          </form>
+          <div class="verify-method-feedback" id="workEmailFeedback"></div>
+        </div>
+
+        <div class="verify-method-card">
+          <h3>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Upload Proof
+          </h3>
+          <p>No work email? Upload a photo of your uniform, name badge, payslip, or another document that shows you work in logistics. A team member reviews it by hand.</p>
+          <form id="uploadForm">
+            <select id="docType" class="verify-select" required>
+              <option value="">What are you uploading?</option>
+              <option value="uniform">Photo of my uniform</option>
+              <option value="badge">Name badge / ID card</option>
+              <option value="payslip">Payslip</option>
+              <option value="work_email_screenshot">Screenshot of work email</option>
+              <option value="other">Other</option>
+            </select>
+            <label class="verify-dropzone" id="dropzone" for="fileInput">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              <div class="verify-dropzone-text">Click to choose a file — JPG, PNG or PDF, max 8MB</div>
+              <div class="verify-dropzone-filename" id="dropzoneFilename"></div>
+              <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,application/pdf" style="display:none" required />
+            </label>
+            <textarea id="docNote" class="verify-note" placeholder="Anything else we should know? (optional)"></textarea>
+            <button type="submit" class="verify-method-btn" id="uploadBtn">Submit for Review</button>
+          </form>
+          <div class="verify-method-feedback" id="uploadFeedback"></div>
+        </div>
+
+      </div>
+
+      <div>
+        <p class="verify-docs-title">Your submissions</p>
+        <div class="verify-doc-list" id="docList"></div>
+      </div>
+    </div>
+
+    <div id="verifiedWrap" style="display:none;text-align:center;">
+      <div class="verify-status-card">
+        <span class="verify-badge verify-badge--verified">Verified</span>
+        <h1>You're all set!</h1>
+        <p>Your account is verified — your closed-group offers are unlocked.</p>
+        <a href="/member-offers" class="verify-method-btn" style="display:inline-block;max-width:260px;margin-top:8px;text-decoration:none;">Browse Your Deals →</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Logicard. All rights reserved.</p>
+  </footer>
+
+  <script src="/verify.js"></script>
+  <script src="/pwa.js" defer></script>
+</body>
+</html>

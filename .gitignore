@@ -3,3 +3,4 @@ node_modules/
 members.json
 *.log
 package-lock.json
+uploads/

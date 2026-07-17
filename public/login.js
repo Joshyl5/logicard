@@ -54,7 +54,7 @@ form.addEventListener('submit', async e => {
       return;
     }
 
-    window.location.href = '/members';
+    window.location.href = '/member-offers';
 
   } catch {
     showError('Network error — please check your connection and try again.');

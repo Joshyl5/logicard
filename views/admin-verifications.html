@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Verification Queue</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-page">
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-logo">
+        <img src="/logicard-logo-hero.png" alt="Logicard" class="admin-logo-img" />
+        <span class="admin-panel-badge">Verification Queue</span>
+      </div>
+      <div class="admin-header-right">
+        <a href="/admin" class="admin-user-label" style="text-decoration:none">← Back to Dashboard</a>
+        <button class="signout-btn" id="adminSignout">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div id="vrList" class="vr-list">
+      <p style="color:var(--muted);text-align:center;padding:40px 0;">Loading…</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Logicard Admin Panel</p>
+  </footer>
+
+  <!-- Reject Reason Modal -->
+  <div id="rejectModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;">
+    <div style="background:#0d1a2e;border:1px solid rgba(248,113,113,0.3);border-radius:16px;padding:32px;max-width:420px;width:90%;">
+      <h2 style="color:#fff;font-size:18px;font-weight:800;margin:0 0 14px;">Reject Submission</h2>
+      <p style="color:rgba(255,255,255,0.55);font-size:13px;margin:0 0 16px;">Optional — this reason is emailed to the member so they know what to fix.</p>
+      <textarea id="rejectReason" rows="3" placeholder="e.g. Photo is too blurry to read the name badge" style="width:100%;background:rgba(4,14,34,0.8);border:1px solid rgba(248,113,113,0.25);border-radius:8px;color:#fff;padding:10px 12px;font-family:inherit;font-size:13px;margin-bottom:18px;resize:vertical;"></textarea>
+      <div style="display:flex;gap:10px;">
+        <button id="rejectCancel" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:600;cursor:pointer;">Cancel</button>
+        <button id="rejectConfirm" style="flex:2;padding:12px;border-radius:8px;border:none;background:#f87171;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Confirm Reject</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/admin-verifications.js"></script>
+</body>
+</html>

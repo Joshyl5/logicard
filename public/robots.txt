@@ -4,6 +4,8 @@ Disallow: /admin
 Disallow: /admin-login.html
 Disallow: /admin-verify.html
 Disallow: /members
+Disallow: /member-offers
+Disallow: /verify
 Disallow: /report
 Disallow: /api/
 Disallow: /checkout.html

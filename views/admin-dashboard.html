@@ -18,6 +18,8 @@
         <span class="admin-panel-badge">Admin Panel</span>
       </div>
       <div class="admin-header-right">
+        <a href="/admin/verifications" class="admin-user-label" style="text-decoration:none">Verification Queue</a>
+        <a href="/admin/offers" class="admin-user-label" style="text-decoration:none">Manage Offers</a>
         <span class="admin-user-label">Administrator</span>
         <button class="signout-btn" id="adminSignout">Sign Out</button>
       </div>
@@ -78,6 +80,17 @@
           <div class="stat-label">Latest Member</div>
         </div>
       </div>
+      <a href="/admin/verifications" class="stat-card" style="text-decoration:none;">
+        <div class="stat-icon" style="background:rgba(248,113,113,0.15);color:#f87171;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+        </div>
+        <div class="stat-body">
+          <div class="stat-value" id="statPendingVerifications">—</div>
+          <div class="stat-label">Pending Verifications</div>
+        </div>
+      </a>
     </div>
 
     <!-- Controls -->
@@ -113,11 +126,12 @@
             <th>City</th>
             <th>Postcode</th>
             <th>Country</th>
+            <th>Verified</th>
             <th>Joined</th>
           </tr>
         </thead>
         <tbody id="membersBody">
-          <tr><td colspan="10" class="table-loading">Loading members…</td></tr>
+          <tr><td colspan="11" class="table-loading">Loading members…</td></tr>
         </tbody>
       </table>
     </div>
