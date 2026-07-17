@@ -55,7 +55,178 @@
               </div>
               <div class="field">
                 <label for="role">Job Title / Role <span class="req">*</span></label>
-                <input id="role" name="role" type="text" placeholder="e.g. Operations Manager" autocomplete="organization-title" required />
+                <select id="role" name="role" autocomplete="organization-title" required>
+                  <option value="" disabled selected>— Select your job title —</option>
+
+                  <optgroup label="Warehousing & Distribution">
+                    <option>Warehouse Operative</option>
+                    <option>Warehouse Supervisor</option>
+                    <option>Warehouse Manager</option>
+                    <option>Warehouse Team Leader</option>
+                    <option>Forklift Driver</option>
+                    <option>Reach Truck Driver</option>
+                    <option>VNA Driver</option>
+                    <option>Picker Packer</option>
+                    <option>Loading Bay Operative</option>
+                    <option>Shunter Driver</option>
+                    <option>Warehouse Administrator</option>
+                    <option>Inventory Controller</option>
+                    <option>Stock Controller</option>
+                    <option>Goods In Operative</option>
+                    <option>Goods Out Operative</option>
+                    <option>Warehouse Planner</option>
+                    <option>Warehouse Quality Inspector</option>
+                    <option>Warehouse Health & Safety Officer</option>
+                    <option>Warehouse Trainer</option>
+                    <option>Warehouse Operative (Nights)</option>
+                  </optgroup>
+
+                  <optgroup label="Transport (Road)">
+                    <option>HGV Class 1 Driver</option>
+                    <option>HGV Class 2 Driver</option>
+                    <option>7.5 Tonne Driver</option>
+                    <option>Van Driver</option>
+                    <option>Multi-Drop Driver</option>
+                    <option>Courier</option>
+                    <option>Transport Planner</option>
+                    <option>Transport Manager</option>
+                    <option>Transport Supervisor</option>
+                    <option>Fleet Manager</option>
+                    <option>Fleet Administrator</option>
+                    <option>LGV Instructor</option>
+                    <option>Tanker Driver</option>
+                    <option>ADR Driver</option>
+                    <option>Recovery Driver</option>
+                    <option>Transport Compliance Officer</option>
+                    <option>Route Optimisation Analyst</option>
+                    <option>Driver Trainer</option>
+                    <option>Transport Clerk</option>
+                  </optgroup>
+
+                  <optgroup label="Freight & Logistics Operations">
+                    <option>Logistics Coordinator</option>
+                    <option>Logistics Manager</option>
+                    <option>Logistics Administrator</option>
+                    <option>Freight Forwarder</option>
+                    <option>Freight Coordinator</option>
+                    <option>Freight Operations Manager</option>
+                    <option>Customs Clerk</option>
+                    <option>Customs Compliance Officer</option>
+                    <option>Import Coordinator</option>
+                    <option>Export Coordinator</option>
+                    <option>Supply Chain Analyst</option>
+                    <option>Supply Chain Planner</option>
+                    <option>Supply Chain Manager</option>
+                    <option>Operations Manager</option>
+                    <option>Operations Coordinator</option>
+                    <option>Depot Manager</option>
+                    <option>Depot Supervisor</option>
+                    <option>Hub Manager</option>
+                    <option>Hub Operative</option>
+                  </optgroup>
+
+                  <optgroup label="Air Freight & Aviation">
+                    <option>Air Cargo Handler</option>
+                    <option>Air Freight Coordinator</option>
+                    <option>Air Freight Agent</option>
+                    <option>Ramp Agent</option>
+                    <option>Cargo Screener</option>
+                    <option>Airside Operative</option>
+                    <option>Aviation Logistics Officer</option>
+                    <option>Dangerous Goods Coordinator (Air)</option>
+                    <option>Air Cargo Supervisor</option>
+                    <option>Air Cargo Planner</option>
+                  </optgroup>
+
+                  <optgroup label="Sea Freight & Maritime">
+                    <option>Port Operative</option>
+                    <option>Port Supervisor</option>
+                    <option>Container Terminal Operative</option>
+                    <option>Vessel Planner</option>
+                    <option>Marine Cargo Coordinator</option>
+                    <option>Shipping Clerk</option>
+                    <option>Shipping Coordinator</option>
+                    <option>Dockside Operative</option>
+                    <option>Marine Logistics Planner</option>
+                    <option>Maritime Compliance Officer</option>
+                  </optgroup>
+
+                  <optgroup label="Rail Freight">
+                    <option>Rail Freight Operative</option>
+                    <option>Rail Planner</option>
+                    <option>Rail Operations Controller</option>
+                    <option>Rail Yard Operative</option>
+                    <option>Rail Cargo Coordinator</option>
+                    <option>Rail Terminal Supervisor</option>
+                    <option>Rail Logistics Manager</option>
+                    <option>Rail Safety Officer</option>
+                    <option>Rail Load Planner</option>
+                    <option>Rail Compliance Officer</option>
+                  </optgroup>
+
+                  <optgroup label="E-Commerce, Parcel & Last-Mile">
+                    <option>Parcel Sorter</option>
+                    <option>Delivery Associate</option>
+                    <option>E-Commerce Fulfilment Operative</option>
+                    <option>Returns Processor</option>
+                    <option>Pick-to-Light Operative</option>
+                    <option>Last-Mile Coordinator</option>
+                    <option>Sortation Operative</option>
+                    <option>Distribution Centre Operative</option>
+                    <option>Distribution Manager</option>
+                    <option>Distribution Supervisor</option>
+                  </optgroup>
+
+                  <optgroup label="Procurement, Inventory & Planning">
+                    <option>Procurement Officer</option>
+                    <option>Procurement Manager</option>
+                    <option>Demand Planner</option>
+                    <option>Materials Planner</option>
+                    <option>Inventory Analyst</option>
+                    <option>Inventory Manager</option>
+                    <option>Stock Auditor</option>
+                    <option>Quality Assurance Manager (Logistics)</option>
+                    <option>Sustainability Manager (Logistics)</option>
+                    <option>Supply Chain Director</option>
+                  </optgroup>
+
+                  <optgroup label="Corporate, HR, Finance & Compliance">
+                    <option>HR Manager (Logistics)</option>
+                    <option>HR Business Partner (Logistics)</option>
+                    <option>HR Advisor (Logistics)</option>
+                    <option>HR Administrator (Logistics)</option>
+                    <option>Talent Acquisition Specialist (Logistics)</option>
+                    <option>Recruitment Consultant (Transport & Logistics)</option>
+                    <option>Payroll Administrator (Logistics)</option>
+                    <option>Finance Manager (Logistics)</option>
+                    <option>Finance Business Partner (Logistics)</option>
+                    <option>Commercial Manager (Logistics)</option>
+                    <option>Compliance Manager</option>
+                    <option>Health & Safety Manager</option>
+                  </optgroup>
+
+                  <optgroup label="Leadership, Founders & IT / Tech">
+                    <option>Chief Executive Officer (CEO)</option>
+                    <option>Managing Director</option>
+                    <option>Founder</option>
+                    <option>Co-Founder</option>
+                    <option>Operations Director</option>
+                    <option>Commercial Director</option>
+                    <option>Technical Director</option>
+                    <option>Head of Technology</option>
+                    <option>IT Manager</option>
+                    <option>IT Support Engineer</option>
+                    <option>Software Developer</option>
+                    <option>Systems Analyst</option>
+                    <option>Data Analyst</option>
+                    <option>Business Analyst</option>
+                    <option>Digital Transformation Manager</option>
+                  </optgroup>
+
+                  <optgroup label="Other">
+                    <option>Other / Not Listed</option>
+                  </optgroup>
+                </select>
               </div>
             </div>
           </fieldset>
@@ -99,6 +270,16 @@
                 <input id="postcode" name="postcode" type="text" placeholder="SW1A 1AA" autocomplete="postal-code" required />
               </div>
             </div>
+
+            <div class="field field--full">
+              <label for="city">Town / City <span class="req">*</span></label>
+              <input id="city" name="city" type="text" placeholder="e.g. Manchester" autocomplete="address-level2" required />
+            </div>
+
+            <details class="why-we-ask">
+              <summary>Why do we ask for this information?</summary>
+              <p>Knowing which town or city you're based in means we can prioritise showing you deals from brands and locations that are actually relevant to you — not just generic national offers. The more accurately we understand where our members live and work, the better we can tailor Logicard to genuinely fit into your day-to-day life, rather than being just another card sitting unused in your wallet.</p>
+            </details>
           </fieldset>
 
           <fieldset class="fieldset">

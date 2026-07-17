@@ -351,6 +351,82 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 select option { background: #071d40; color: var(--white); }
+select optgroup { background: #071d40; color: var(--accent); font-weight: 700; font-style: normal; }
+
+/* ── "Why do we ask?" disclosure ─────────────────────────────── */
+.why-we-ask { margin-top: 4px; font-size: 0.8rem; }
+.why-we-ask summary {
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 600;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  user-select: none;
+}
+.why-we-ask summary::-webkit-details-marker { display: none; }
+.why-we-ask summary::before {
+  content: '?';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  font-size: 0.66rem;
+  flex-shrink: 0;
+}
+.why-we-ask[open] summary { margin-bottom: 10px; }
+.why-we-ask p {
+  color: var(--muted);
+  line-height: 1.65;
+  padding: 12px 16px;
+  background: rgba(79,163,247,0.06);
+  border: 1px solid rgba(79,163,247,0.15);
+  border-radius: var(--radius-sm);
+}
+
+/* ── Searchable job title combobox ───────────────────────────── */
+.role-combobox { position: relative; }
+.role-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background: #071d40;
+  border: 1px solid rgba(79,163,247,0.3);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.55);
+  z-index: 50;
+}
+.role-dropdown.open { display: block; }
+.role-dropdown-group {
+  padding: 9px 13px 5px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.role-dropdown-option {
+  padding: 9px 13px;
+  font-size: 0.88rem;
+  color: var(--white);
+  cursor: pointer;
+}
+.role-dropdown-option:hover,
+.role-dropdown-option.active { background: rgba(79,163,247,0.15); }
+.role-dropdown-empty {
+  padding: 16px 13px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-align: center;
+}
 
 /* GDPR */
 .fieldset--gdpr { padding: 20px 24px; }
@@ -1573,6 +1649,40 @@ select option { background: #071d40; color: var(--white); }
   .membership-card { padding: 20px 24px; }
   .mc-number { font-size: 2rem; }
   .login-card { padding: 28px 20px; }
+}
+
+/* ── MEMBER DASHBOARD ─────────────────────────────────────────── */
+.member-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.detail-card {
+  background: #0b1a33;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius);
+  padding: 4px 28px;
+  margin-bottom: 40px;
+}
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 0.88rem;
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label { color: var(--muted); font-weight: 500; }
+.detail-value { color: var(--white); font-weight: 600; text-align: right; }
+
+@media (max-width: 640px) {
+  .detail-card { padding: 4px 18px; }
+  .detail-row { flex-direction: column; align-items: flex-start; gap: 4px; padding: 14px 0; }
+  .detail-value { text-align: left; }
 }
 
 /* ── VERIFICATION STATUS BADGES (shared: verify page, members pending panel) ── */

@@ -129,6 +129,18 @@ async function initDb() {
     ON offer_coupon_codes (offer_id, claimed_by) WHERE claimed_by IS NOT NULL
   `);
 
+  // Tracks the first time a member actually goes to redeem an offer (clicks
+  // "Get This Deal") — the source for the "offers accepted" dashboard stat.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS offer_redemptions (
+      id                 SERIAL PRIMARY KEY,
+      offer_id           INTEGER NOT NULL REFERENCES offers(id) ON DELETE CASCADE,
+      membership_number  INTEGER NOT NULL REFERENCES members(membership_number),
+      redeemed_at        TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE (offer_id, membership_number)
+    )
+  `);
+
   // "Notify me" list for offers that have run out of unique codes.
   await pool.query(`
     CREATE TABLE IF NOT EXISTS offer_waitlist (
@@ -418,6 +430,22 @@ async function incrementOfferClicks(id) {
   await pool.query('UPDATE offers SET click_count = click_count + 1 WHERE id = $1', [id]);
 }
 
+// ── Offer redemption tracking ────────────────────────────────────
+async function recordOfferRedemption(offerId, membershipNumber) {
+  await pool.query(
+    'INSERT INTO offer_redemptions (offer_id, membership_number) VALUES ($1, $2) ON CONFLICT (offer_id, membership_number) DO NOTHING',
+    [offerId, membershipNumber]
+  );
+}
+
+async function getOffersAcceptedCount(membershipNumber) {
+  const r = await pool.query(
+    'SELECT COUNT(*) AS count FROM offer_redemptions WHERE membership_number = $1',
+    [membershipNumber]
+  );
+  return Number(r.rows[0].count);
+}
+
 // ── One-time-use coupon codes ────────────────────────────────────
 async function bulkAddCouponCodes(offerId, codes) {
   const clean = [...new Set(codes.map(c => String(c).trim()).filter(Boolean))];
@@ -676,6 +704,7 @@ module.exports = {
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  recordOfferRedemption, getOffersAcceptedCount,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,

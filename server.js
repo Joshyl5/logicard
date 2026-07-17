@@ -16,6 +16,7 @@ const {
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  recordOfferRedemption, getOffersAcceptedCount,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -504,6 +505,10 @@ app.get('/member-offers', requirePreviewPassword, requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'member-offers.html'));
 });
 
+app.get('/member-dashboard', requirePreviewPassword, requireAuth, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'member-dashboard.html'));
+});
+
 // Old URL, kept as a redirect so nothing already bookmarked/emailed breaks.
 app.get('/members', requirePreviewPassword, requireAuth, (_req, res) => res.redirect('/member-offers'));
 
@@ -551,13 +556,21 @@ app.post('/api/logout', (req, res) => {
 app.get('/api/me', requireAuth, async (req, res) => {
   const member = await getMemberByNumber(req.session.membershipNumber);
   if (!member) return res.status(404).json({ error: 'Member not found' });
+  const offersAccepted = await getOffersAcceptedCount(member.membershipNumber);
   res.json({
     membershipNumber: member.membershipNumber,
     firstName:        member.firstName,
     lastName:         member.lastName,
+    email:            member.email,
+    phone:            member.phone,
     companyName:      member.companyName,
+    role:             member.role,
+    city:             member.city,
+    postcode:         member.postcode,
+    createdAt:        member.createdAt,
     totalReferrals:   member.totalReferrals  || 0,
     monthlyEntries:   member.monthlyEntries  || 0,
+    offersAccepted,
     verified:            member.verified,
     verificationStatus:  member.verificationStatus,
     verificationMethod:  member.verificationMethod,
@@ -1220,6 +1233,7 @@ app.get('/api/offers/:id/go', requireAuth, requireVerified, async (req, res) => 
   res.redirect(302, offer.affiliateUrl);
 
   incrementOfferClicks(id).catch(err => console.error('Offer click tracking failed:', err.message));
+  recordOfferRedemption(id, req.session.membershipNumber).catch(err => console.error('Offer redemption tracking failed:', err.message));
 });
 
 // ── Signup ─────────────────────────────────────────────────────
@@ -1228,7 +1242,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
           addressLine1, addressLine2, city, county, postcode, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
-  const required = { companyName, role, firstName, lastName, email, phone, postcode };
+  const required = { companyName, role, firstName, lastName, email, phone, postcode, city };
   for (const [field, value] of Object.entries(required)) {
     if (!value || !String(value).trim()) return res.status(400).json({ error: `Missing required field: ${field}` });
   }
