@@ -390,19 +390,18 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* ── Searchable job title combobox ───────────────────────────── */
 .role-combobox { position: relative; }
+/* Positioned via JS (left/top/width set inline) since it's attached to
+   <body> directly, outside the form fieldsets' own stacking contexts. */
 .role-dropdown {
   display: none;
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
+  position: fixed;
   max-height: 300px;
   overflow-y: auto;
   background: #071d40;
   border: 1px solid rgba(79,163,247,0.3);
   border-radius: var(--radius-sm);
   box-shadow: 0 16px 40px rgba(0,0,0,0.55);
-  z-index: 50;
+  z-index: 9999;
 }
 .role-dropdown.open { display: block; }
 .role-dropdown-group {

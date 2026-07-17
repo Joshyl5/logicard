@@ -166,8 +166,14 @@ form.addEventListener('submit', async e => {
 
   select.insertAdjacentElement('beforebegin', wrap);
   wrap.appendChild(searchInput);
-  wrap.appendChild(dropdown);
   wrap.appendChild(select);
+
+  // The dropdown is attached directly to <body> rather than nested inside
+  // the fieldset — fieldsets use backdrop-filter for their frosted-glass
+  // look, which creates its own stacking context that a child's z-index
+  // can never escape, no matter how high it's set. Positioning it here and
+  // placing it with fixed coordinates sidesteps that entirely.
+  document.body.appendChild(dropdown);
 
   const label = document.querySelector('label[for="role"]');
   if (label) label.setAttribute('for', 'roleSearchInput');
@@ -189,12 +195,28 @@ form.addEventListener('submit', async e => {
     activeIndex = index;
   }
 
+  function positionDropdown() {
+    const rect = searchInput.getBoundingClientRect();
+    dropdown.style.left  = `${rect.left}px`;
+    dropdown.style.width = `${rect.width}px`;
+    dropdown.style.top   = `${rect.bottom + 4}px`;
+  }
+
+  function openDropdown() {
+    positionDropdown();
+    dropdown.classList.add('open');
+    window.addEventListener('scroll', positionDropdown, true);
+    window.addEventListener('resize', positionDropdown);
+  }
+
   // Emptying the dropdown (not just hiding it) means there's never stale
   // content left behind for a stray focus/blur to accidentally reveal.
   function closeDropdown() {
     dropdown.classList.remove('open');
     dropdown.innerHTML = '';
     activeIndex = -1;
+    window.removeEventListener('scroll', positionDropdown, true);
+    window.removeEventListener('resize', positionDropdown);
   }
 
   function renderDropdown() {
@@ -206,21 +228,19 @@ form.addEventListener('submit', async e => {
 
     if (!matches.length) {
       dropdown.innerHTML = '<div class="role-dropdown-empty">No matching job titles — try "Other / Not Listed"</div>';
-      dropdown.classList.add('open');
-      return;
+    } else {
+      let html = '';
+      let lastGroup = null;
+      matches.forEach(item => {
+        if (item.group !== lastGroup) {
+          html += `<div class="role-dropdown-group">${escapeHtml(item.group)}</div>`;
+          lastGroup = item.group;
+        }
+        html += `<div class="role-dropdown-option" data-value="${escapeHtml(item.value)}">${escapeHtml(item.value)}</div>`;
+      });
+      dropdown.innerHTML = html;
     }
-
-    let html = '';
-    let lastGroup = null;
-    matches.forEach(item => {
-      if (item.group !== lastGroup) {
-        html += `<div class="role-dropdown-group">${escapeHtml(item.group)}</div>`;
-        lastGroup = item.group;
-      }
-      html += `<div class="role-dropdown-option" data-value="${escapeHtml(item.value)}">${escapeHtml(item.value)}</div>`;
-    });
-    dropdown.innerHTML = html;
-    dropdown.classList.add('open');
+    openDropdown();
   }
 
   function selectValue(value) {
@@ -285,6 +305,6 @@ form.addEventListener('submit', async e => {
   });
 
   document.addEventListener('click', e => {
-    if (!wrap.contains(e.target)) closeDropdown();
+    if (!wrap.contains(e.target) && !dropdown.contains(e.target)) closeDropdown();
   });
 })();
