@@ -460,7 +460,16 @@ app.use((req, res, next) => {
   res.status(401).send('Logicard is currently under maintenance. Please check back soon.');
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders: (res, filePath) => {
+    // Always revalidate CSS/JS with the server (fast 304s when unchanged)
+    // instead of letting the browser or Cloudflare's edge serve a stale
+    // cached copy after a deploy changes them.
+    if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
 
 function requireAuth(req, res, next) {
   if (req.session && req.session.membershipNumber) return next();
