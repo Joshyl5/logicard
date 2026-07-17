@@ -25,7 +25,6 @@ async function initDb() {
       address_line2      TEXT,
       city               TEXT,
       county             TEXT,
-      postcode           TEXT,
       country            TEXT,
       password_hash      TEXT,
       verified           BOOLEAN DEFAULT TRUE,
@@ -42,6 +41,10 @@ async function initDb() {
   `);
 
   // Safe migrations for existing tables
+  // Postcode was dropped from signup (2026-07-17) — Town/City covers the
+  // "where are you based" need, and this permanently removes any postcode
+  // already stored for existing members too.
+  await pool.query(`ALTER TABLE members DROP COLUMN IF EXISTS postcode`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS promo_code TEXT`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS free_year BOOLEAN DEFAULT FALSE`);
 
@@ -184,7 +187,6 @@ function toMember(row) {
     addressLine2:       row.address_line2,
     city:               row.city,
     county:             row.county,
-    postcode:           row.postcode,
     country:            row.country,
     passwordHash:       row.password_hash,
     verified:           row.verified,
@@ -259,7 +261,7 @@ async function createMember(data) {
   const {
     companyName, role, firstName, lastName, email, phone, dateOfBirth = null,
     addressLine1 = null, addressLine2 = null, city = null, county = null,
-    postcode, country = null,
+    country = null,
     password, gdprConsent, marketingConsent, referredBy,
     promoCode = null, freeYear = false,
   } = data;
@@ -275,19 +277,19 @@ async function createMember(data) {
     INSERT INTO members (
       membership_number, company_name, role, first_name, last_name,
       email, phone, date_of_birth, address_line1, address_line2,
-      city, county, postcode, country, password_hash, verified, created_at,
+      city, county, country, password_hash, verified, created_at,
       referred_by, total_referrals, monthly_entries,
       marketing_consent, marketing_consent_at, gdpr_consent,
       promo_code, free_year
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,FALSE,$16,
-      $17,0,0,$18,$19,$20,$21,$22
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,FALSE,$15,
+      $16,0,0,$17,$18,$19,$20,$21
     )
   `, [
     membershipNumber, companyName, role, firstName, lastName,
     email.toLowerCase(), phone, dateOfBirth || null,
     addressLine1 || null, addressLine2 || null,
-    city || null, county || null, postcode ? postcode.toUpperCase() : null, country || null,
+    city || null, county || null, country || null,
     passwordHash, now,
     referredBy ? Number(referredBy) : null,
     !!marketingConsent,

@@ -30,7 +30,7 @@ function renderTable(members) {
   const count = document.getElementById('tableCount');
 
   if (!members.length) {
-    tbody.innerHTML = '<tr><td colspan="11" class="table-empty">No members found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="table-empty">No members found.</td></tr>';
     count.textContent = '';
     return;
   }
@@ -44,7 +44,6 @@ function renderTable(members) {
       <td>${m.companyName || '—'}</td>
       <td>${m.role || '—'}</td>
       <td>${m.city || '—'}</td>
-      <td>${m.postcode || '—'}</td>
       <td>${m.country || '—'}</td>
       <td>${m.verified ? '✅' : '⏳'}</td>
       <td>${fmt(m.createdAt)}</td>
@@ -62,8 +61,7 @@ function filterMembers(query) {
     (m.lastName   || '').toLowerCase().includes(q) ||
     (m.email      || '').toLowerCase().includes(q) ||
     (m.companyName|| '').toLowerCase().includes(q) ||
-    (m.city       || '').toLowerCase().includes(q) ||
-    (m.postcode   || '').toLowerCase().includes(q)
+    (m.city       || '').toLowerCase().includes(q)
   );
 }
 

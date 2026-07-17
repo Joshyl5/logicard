@@ -64,7 +64,6 @@ form.addEventListener('submit', async e => {
     ['lastName',    'Last Name'],
     ['email',       'Email Address'],
     ['phone',       'Phone Number'],
-    ['postcode',    'Postcode'],
     ['city',        'Town / City'],
   ];
 

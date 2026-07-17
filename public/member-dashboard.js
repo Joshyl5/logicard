@@ -43,7 +43,7 @@ async function init() {
     ['Phone Number', me.phone || '—'],
     ['Company', me.companyName || '—'],
     ['Role', me.role || '—'],
-    ['Location', [me.city, me.postcode].filter(Boolean).join(', ') || '—'],
+    ['Location', me.city || '—'],
     ['Member Since', fmtDate(me.createdAt)],
     ['Verification Status', verificationLabel(me)],
   ];

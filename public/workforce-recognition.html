@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workforce Recognition — Reward Your Logistics Team | Logicard</title>
+  <meta name="description" content="Partner with Logicard to give your logistics workforce free access to hundreds of everyday discounts. No cost to your business — a simple, real way to recognise the people who keep you moving." />
+  <link rel="canonical" href="https://logicard.co.uk/workforce-recognition.html" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Workforce Recognition — Reward Your Logistics Team",
+    "url": "https://logicard.co.uk/workforce-recognition.html",
+    "description": "Partner with Logicard to give your logistics workforce free access to hundreds of everyday discounts.",
+    "isPartOf": { "@id": "https://logicard.co.uk/#website" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #FFB300;
+      --orange-dark: #E09A00;
+      --navy-deep: #04040d;
+      --navy: #071d40;
+      --navy-mid: #0d3b80;
+      --blue-accent: #1a6cc8;
+      --white: #ffffff;
+      --text-muted: #666666;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(160deg, #04040d 0%, #071d40 55%, #04040d 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* Nav */
+    .wr-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(4,4,13,0.92);
+      backdrop-filter: blur(12px);
+    }
+    .wr-nav-logo {
+      display: inline-flex; align-items: center; text-decoration: none;
+      border: 2px solid rgba(255,179,0,0.4); padding: 6px 14px; border-radius: 6px;
+      background: rgba(255,255,255,0.04);
+    }
+    .wr-nav-logo span { font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .wr-nav-logo .logi { color: #fff; }
+    .wr-nav-logo .card { color: #FFB300; }
+    .wr-nav-actions { display: flex; gap: 20px; align-items: center; }
+    .wr-nav-link {
+      font-size: 13px; font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .wr-nav-link:hover { color: #fff; }
+    .wr-nav-btn {
+      background: var(--orange); color: #071d40;
+      font-size: 13px; font-weight: 800;
+      padding: 10px 22px; border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .wr-nav-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    /* Hero */
+    .wr-hero {
+      text-align: center;
+      padding: 88px 24px 64px;
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .wr-eyebrow {
+      display: inline-block;
+      font-size: 12px; font-weight: 800; letter-spacing: 2.5px;
+      color: var(--orange); text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .wr-title {
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 900; line-height: 1.06;
+      letter-spacing: -1px;
+      margin-bottom: 22px;
+    }
+    .wr-subtitle {
+      font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.75;
+      margin-bottom: 36px;
+      max-width: 620px;
+      margin-left: auto; margin-right: auto;
+    }
+    .wr-hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .wr-btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      color: #fff;
+      font-size: 15px; font-weight: 800;
+      padding: 15px 34px; border-radius: 100px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 28px rgba(255,179,0,0.35);
+    }
+    .wr-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(255,179,0,0.45); }
+    .wr-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: #fff;
+      font-size: 15px; font-weight: 700;
+      padding: 15px 30px; border-radius: 100px;
+      border: 2px solid rgba(255,255,255,0.25);
+      text-decoration: none;
+      transition: border-color 0.15s;
+    }
+    .wr-btn-secondary:hover { border-color: rgba(255,255,255,0.6); }
+
+    /* Sections */
+    .wr-section { padding: 72px 24px; max-width: 1100px; margin: 0 auto; }
+    .wr-section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+    .wr-section-eyebrow {
+      display: block; font-size: 11px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 14px;
+    }
+    .wr-section-title {
+      font-size: clamp(26px, 3.5vw, 40px); font-weight: 900;
+      letter-spacing: -0.5px; margin-bottom: 14px; line-height: 1.15;
+    }
+    .wr-section-sub { font-size: 15.5px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+    /* Why cards */
+    .wr-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .wr-why-card {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px 22px;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .wr-why-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,179,0,0.06);
+      border-color: rgba(255,179,0,0.3);
+    }
+    .wr-why-icon {
+      width: 46px; height: 46px;
+      background: linear-gradient(135deg, rgba(255,179,0,0.18), rgba(26,108,200,0.18));
+      border: 1px solid rgba(255,179,0,0.25);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .wr-why-icon svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 2; }
+    .wr-why-card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
+    .wr-why-card p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
+    /* How it works */
+    .wr-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: step; }
+    .wr-step {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 32px 26px;
+      position: relative;
+    }
+    .wr-step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      background: var(--orange); color: #071d40;
+      font-weight: 900; font-size: 15px;
+      border-radius: 50%;
+      margin-bottom: 18px;
+    }
+    .wr-step h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 10px; }
+    .wr-step p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
+    /* Founder-style callout */
+    .wr-callout {
+      background: linear-gradient(135deg, rgba(255,179,0,0.1), rgba(26,108,200,0.08));
+      border: 1px solid rgba(255,179,0,0.25);
+      border-radius: 20px;
+      padding: 40px 44px;
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .wr-callout p {
+      font-size: 17px; line-height: 1.75; color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+    .wr-callout strong { color: var(--orange); }
+
+    /* Form */
+    .wr-form-section { background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.06); }
+    .wr-form-card {
+      max-width: 640px; margin: 0 auto;
+      background: rgba(7,29,64,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+    }
+    .wr-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .wr-field { display: flex; flex-direction: column; gap: 6px; }
+    .wr-field label { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.6); }
+    .wr-field input, .wr-field select, .wr-field textarea {
+      background: rgba(4,14,34,0.8);
+      border: 1px solid rgba(255,179,0,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 11px 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .wr-field input:focus, .wr-field select:focus, .wr-field textarea:focus { border-color: var(--orange); }
+    .wr-field textarea { resize: vertical; min-height: 90px; }
+    .wr-field select option { background: #071d40; }
+    .wr-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 15px; border: none; border-radius: 10px;
+      cursor: pointer; margin-top: 8px;
+      transition: transform 0.15s;
+    }
+    .wr-submit-btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .wr-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .wr-form-msg { font-size: 13px; margin-top: 14px; padding: 10px 14px; border-radius: 8px; display: none; }
+    .wr-form-msg.error { display: block; color: #ff7070; background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.22); }
+    .wr-form-msg.success { display: block; color: #4ade80; background: rgba(47,133,90,0.12); border: 1px solid rgba(74,222,128,0.3); }
+
+    /* Footer */
+    .wr-footer {
+      text-align: center; padding: 32px 24px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 12px; color: rgba(255,255,255,0.3);
+    }
+    .wr-footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+    .wr-footer a:hover { color: rgba(255,255,255,0.7); }
+
+    @media (max-width: 900px) {
+      .wr-why-grid { grid-template-columns: repeat(2, 1fr); }
+      .wr-steps { grid-template-columns: 1fr; }
+      .wr-form-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .wr-nav { padding: 16px 20px; }
+      .wr-hero { padding: 56px 20px 48px; }
+      .wr-section { padding: 52px 20px; }
+      .wr-why-grid { grid-template-columns: 1fr; }
+      .wr-callout { padding: 28px 24px; }
+      .wr-form-card { padding: 28px 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="wr-nav">
+    <a href="/" class="wr-nav-logo"><span><span class="logi">Logi</span><span class="card">card</span></span></a>
+    <div class="wr-nav-actions">
+      <a href="/" class="wr-nav-link">Home</a>
+      <a href="/signup.html" class="wr-nav-btn">Join Free</a>
+    </div>
+  </nav>
+
+  <div class="wr-hero">
+    <span class="wr-eyebrow">For Employers</span>
+    <h1 class="wr-title">Workforce Recognition</h1>
+    <p class="wr-subtitle">Your team keeps the country moving — often unseen, and often undervalued. Partner with Logicard to give your logistics workforce free access to hundreds of everyday discounts, at no cost to your business.</p>
+    <div class="wr-hero-btns">
+      <a href="#wr-form" class="wr-btn-primary">
+        Get In Touch
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/#benefits" class="wr-btn-secondary">See Member Benefits</a>
+    </div>
+  </div>
+
+  <section class="wr-section" id="wr-why">
+    <div class="wr-section-head">
+      <span class="wr-section-eyebrow">Why Partner With Logicard</span>
+      <h2 class="wr-section-title">A real way to say thank you</h2>
+      <p class="wr-section-sub">Pay rises and awards ceremonies aren't always possible. Logicard is something every business can offer — free to set up, genuinely useful, and felt every single day.</p>
+    </div>
+    <div class="wr-why-grid">
+      <div class="wr-why-card">
+        <div class="wr-why-icon"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></div>
+        <h3>Zero cost to your business</h3>
+        <p>There's no fee to sign your company up. Your team gets access to Logicard's discounts without it touching your budget.</p>
+      </div>
+      <div class="wr-why-card">
+        <div class="wr-why-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Recognition they'll actually use</h3>
+        <p>Fuel, food, hotels, tech and more — everyday savings that matter far more to your team than a one-off gesture.</p>
+      </div>
+      <div class="wr-why-card">
+        <div class="wr-why-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>Boost morale &amp; retention</h3>
+        <p>A tangible sign that your business values the people doing the hard, often thankless work of keeping things moving.</p>
+      </div>
+      <div class="wr-why-card">
+        <div class="wr-why-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <h3>Built by logistics people</h3>
+        <p>We're not an outside HR vendor — Logicard exists because we know first-hand what it's like to be overworked and overlooked.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wr-section" id="wr-how">
+    <div class="wr-section-head">
+      <span class="wr-section-eyebrow">How It Works</span>
+      <h2 class="wr-section-title">Set up in three simple steps</h2>
+      <p class="wr-section-sub">No contracts, no complicated onboarding — just tell us about your team and we'll take it from there.</p>
+    </div>
+    <div class="wr-steps">
+      <div class="wr-step">
+        <span class="wr-step-num">1</span>
+        <h3>Get in touch</h3>
+        <p>Fill out the form below with a few details about your company and team — takes less than a minute.</p>
+      </div>
+      <div class="wr-step">
+        <span class="wr-step-num">2</span>
+        <h3>We verify your company</h3>
+        <p>A quick check so your team's Logicard membership is properly tied to your business — keeps the closed group genuine.</p>
+      </div>
+      <div class="wr-step">
+        <span class="wr-step-num">3</span>
+        <h3>Your team starts saving</h3>
+        <p>Employees register with their work email, get their membership number, and unlock every Logicard offer straight away.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wr-section" id="wr-callout">
+    <div class="wr-callout">
+      <p>We built Logicard because nobody was building anything for logistics workers. <strong>Give your team the recognition they deserve</strong> — it costs your business nothing, and it means something to every person who uses it.</p>
+    </div>
+  </section>
+
+  <section class="wr-section wr-form-section" id="wr-form">
+    <div class="wr-section-head">
+      <span class="wr-section-eyebrow">Get Started</span>
+      <h2 class="wr-section-title">Tell us about your team</h2>
+      <p class="wr-section-sub">We'll get back to you within one working day to set things up.</p>
+    </div>
+
+    <div class="wr-form-card">
+      <form id="wrForm" novalidate>
+        <div class="wr-form-row">
+          <div class="wr-field">
+            <label for="wrName">Full Name *</label>
+            <input id="wrName" type="text" required autocomplete="name" />
+          </div>
+          <div class="wr-field">
+            <label for="wrEmail">Work Email *</label>
+            <input id="wrEmail" type="email" required autocomplete="email" />
+          </div>
+        </div>
+        <div class="wr-form-row">
+          <div class="wr-field">
+            <label for="wrCompany">Company Name *</label>
+            <input id="wrCompany" type="text" required autocomplete="organization" />
+          </div>
+          <div class="wr-field">
+            <label for="wrTitle">Your Job Title</label>
+            <input id="wrTitle" type="text" autocomplete="organization-title" />
+          </div>
+        </div>
+        <div class="wr-form-row">
+          <div class="wr-field">
+            <label for="wrPhone">Phone Number</label>
+            <input id="wrPhone" type="tel" autocomplete="tel" />
+          </div>
+          <div class="wr-field">
+            <label for="wrTeamSize">Team Size</label>
+            <select id="wrTeamSize">
+              <option value="">Prefer not to say</option>
+              <option>1–10</option>
+              <option>11–50</option>
+              <option>51–200</option>
+              <option>200+</option>
+            </select>
+          </div>
+        </div>
+        <div class="wr-field" style="margin-bottom:16px;">
+          <label for="wrMessage">Tell us about your team (optional)</label>
+          <textarea id="wrMessage" placeholder="e.g. how many drivers/warehouse staff, what would be most useful to them…"></textarea>
+        </div>
+
+        <button type="submit" class="wr-submit-btn" id="wrSubmitBtn">Get In Touch</button>
+        <div class="wr-form-msg" id="wrFormMsg"></div>
+      </form>
+    </div>
+  </section>
+
+  <footer class="wr-footer">
+    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">Join Free</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+  </footer>
+
+  <script src="/workforce-recognition.js"></script>
+</body>
+</html>

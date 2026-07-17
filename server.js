@@ -575,7 +575,6 @@ app.get('/api/me', requireAuth, async (req, res) => {
     companyName:      member.companyName,
     role:             member.role,
     city:             member.city,
-    postcode:         member.postcode,
     createdAt:        member.createdAt,
     totalReferrals:   member.totalReferrals  || 0,
     monthlyEntries:   member.monthlyEntries  || 0,
@@ -840,8 +839,8 @@ app.get('/api/admin/export.csv', requireAdmin, async (req, res) => {
   delete req.session.exportAuthorized; // one-time use
 
   const members = await getAllMembers();
-  const headers = ['Membership #','First Name','Last Name','Email','Phone','Date of Birth','Company','Role','Address 1','Address 2','City','County','Postcode','Country','Registered','Marketing Consent','Consent Date'];
-  const keys    = ['membershipNumber','firstName','lastName','email','phone','dateOfBirth','companyName','role','addressLine1','addressLine2','city','county','postcode','country','createdAt','marketingConsent','marketingConsentAt'];
+  const headers = ['Membership #','First Name','Last Name','Email','Phone','Date of Birth','Company','Role','Address 1','Address 2','City','County','Country','Registered','Marketing Consent','Consent Date'];
+  const keys    = ['membershipNumber','firstName','lastName','email','phone','dateOfBirth','companyName','role','addressLine1','addressLine2','city','county','country','createdAt','marketingConsent','marketingConsentAt'];
   const escape  = v => `"${(v == null ? '' : String(v)).replace(/"/g, '""')}"`;
   const rows    = members.map(m => keys.map(k => escape(m[k])).join(','));
   const csv     = '﻿' + [headers.map(h => `"${h}"`).join(','), ...rows].join('\r\n');
@@ -966,28 +965,33 @@ app.post('/api/report', requireAuth, async (req, res) => {
 
 // ── Contact form ───────────────────────────────────────────────
 app.post('/api/contact', contactLimiter, async (req, res) => {
-  const { name, email, title, company, phone, newsletterOptIn } = req.body;
+  const { name, email, title, company, phone, newsletterOptIn, message, source, teamSize } = req.body;
   if (!name || !email) return res.status(400).json({ error: 'Name and email are required.' });
+
+  const sourceLabel = source ? String(source).slice(0, 60) : 'Contact Form';
 
   const html = `
   <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
     <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
       <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
-      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">New Contact Form Submission</p>
+      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">New ${sourceLabel} Submission</p>
     </div>
     <div style="padding:32px 36px;background:#fff">
       <h2 style="color:#071d40;margin:0 0 20px;font-size:18px">Someone got in touch via logicard.co.uk</h2>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Full Name</td><td style="padding:10px 14px;color:#333">${name}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#1a6cc8">${email}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px;color:#333">${title || '—'}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px;color:#333">${company || '—'}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px;color:#333">${phone || '—'}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Source</td><td style="padding:10px 14px;color:#333">${sourceLabel}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Full Name</td><td style="padding:10px 14px;color:#333">${name}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#1a6cc8">${email}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px;color:#333">${title || '—'}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px;color:#333">${company || '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px;color:#333">${phone || '—'}</td></tr>
+        ${teamSize ? `<tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Team Size</td><td style="padding:10px 14px;color:#333">${teamSize}</td></tr>` : ''}
         <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Newsletter</td><td style="padding:10px 14px;color:#333">${newsletterOptIn ? '✅ Yes' : 'No'}</td></tr>
+        ${message ? `<tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;vertical-align:top">Message</td><td style="padding:10px 14px;color:#333;line-height:1.6">${String(message).replace(/\n/g, '<br/>')}</td></tr>` : ''}
       </table>
     </div>
     <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
-      <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — contact form submission from logicard.co.uk</p>
+      <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — ${sourceLabel.toLowerCase()} submission from logicard.co.uk</p>
     </div>
   </div>`;
 
@@ -997,7 +1001,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
         from:     'Logicard <welcome@logicard.co.uk>',
         to:       'info@logicard.co.uk',
         reply_to: email,
-        subject:  `New contact from ${name}${company ? ` — ${company}` : ''}`,
+        subject:  `New ${sourceLabel.toLowerCase()} from ${name}${company ? ` — ${company}` : ''}`,
         html,
       });
     }
@@ -1248,10 +1252,10 @@ app.get('/api/offers/:id/go', requireAuth, requireVerified, async (req, res) => 
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', signupLimiter, async (req, res) => {
   const { companyName, role, firstName, lastName, email, phone, dateOfBirth,
-          addressLine1, addressLine2, city, county, postcode, country,
+          addressLine1, addressLine2, city, county, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
-  const required = { companyName, role, firstName, lastName, email, phone, postcode, city };
+  const required = { companyName, role, firstName, lastName, email, phone, city };
   for (const [field, value] of Object.entries(required)) {
     if (!value || !String(value).trim()) return res.status(400).json({ error: `Missing required field: ${field}` });
   }
@@ -1275,7 +1279,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
       addressLine1: addressLine1 ? addressLine1.trim() : null,
       addressLine2: addressLine2 ? addressLine2.trim() : null,
       city: city ? city.trim() : null, county: county ? county.trim() : null,
-      postcode: postcode.trim().toUpperCase(), country: country ? country.trim() : null,
+      country: country ? country.trim() : null,
       password, gdprConsent,
       marketingConsent: !!marketingConsent,
       referredBy: ref || null,
