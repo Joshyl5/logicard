@@ -428,6 +428,44 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   text-align: center;
 }
 
+.role-dropdown-category {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 13px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--white);
+  cursor: pointer;
+}
+.role-dropdown-category::after {
+  content: '›';
+  color: var(--muted);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+.role-dropdown-category:hover,
+.role-dropdown-category.active { background: rgba(79,163,247,0.15); }
+
+.role-dropdown-back {
+  padding: 10px 13px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  position: sticky;
+  top: 0;
+  background: #071d40;
+}
+.role-dropdown-back:hover,
+.role-dropdown-back.active { background: rgba(79,163,247,0.15); }
+
+.role-dropdown-divider {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin: 4px 0;
+}
+
 /* GDPR */
 .fieldset--gdpr { padding: 20px 24px; }
 
