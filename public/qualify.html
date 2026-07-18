@@ -102,6 +102,40 @@
     }
     .q-cta-btn:hover { background: #ffc933; transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,179,0,0.45); }
 
+    /* Search */
+    .q-search-wrap { max-width: 480px; margin: 0 auto 4px; position: relative; }
+    .q-search-input {
+      width: 100%; padding: 16px 20px; border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+      color: #fff; font-size: 15px; outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .q-search-input::placeholder { color: rgba(255,255,255,0.35); }
+    .q-search-input:focus { border-color: rgba(255,179,0,0.5); background: rgba(255,255,255,0.09); }
+    .q-search-results { margin-top: 14px; display: none; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .q-search-results.open { display: flex; }
+    .q-search-result {
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 100px; padding: 8px 16px; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .q-search-result:hover { background: rgba(255,179,0,0.1); border-color: rgba(255,179,0,0.4); }
+    .q-search-empty { display: none; margin-top: 14px; font-size: 13.5px; color: rgba(255,255,255,0.45); }
+    .q-search-empty a { color: var(--orange); text-decoration: none; }
+
+    .q-match {
+      display: none; max-width: 480px; margin: 28px auto 0; padding: 24px 28px;
+      border-radius: 16px; background: rgba(255,179,0,0.08); border: 1px solid rgba(255,179,0,0.3);
+      text-align: center;
+    }
+    .q-match.open { display: block; }
+    .q-match h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--orange); }
+    .q-match p { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 18px; }
+
+    .q-browse-hint { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+    .q-browse-hint a { color: rgba(255,255,255,0.55); }
+
     /* Sectors */
     .q-sectors {
       max-width: 920px;
@@ -217,11 +251,28 @@
   <div class="q-hero">
     <span class="q-eyebrow">Check Your Eligibility</span>
     <h1 class="q-title">Applicable <span>Roles</span></h1>
-    <p class="q-subtitle">If your job touches the UK logistics industry, you qualify for a free Logicard membership. Browse your category below to see if your role is included.</p>
-    <a href="/signup.html" class="q-cta-btn">
+    <p class="q-subtitle">If your job touches the UK logistics industry, you qualify for a free Logicard membership. Search for your job title below.</p>
+
+    <div class="q-search-wrap">
+      <input type="text" id="qSearchInput" class="q-search-input" placeholder="Start typing your job title, e.g. Warehouse…" autocomplete="off" />
+      <div class="q-search-results" id="qSearchResults"></div>
+      <p class="q-search-empty" id="qSearchEmpty">No exact match — but you likely still qualify! <a href="/signup.html">Join free anyway →</a></p>
+    </div>
+
+    <div class="q-match" id="qMatch">
+      <h3>🎉 Great news!</h3>
+      <p><strong id="qMatchRole"></strong> qualifies — you're invited to join Logicard.</p>
+      <a href="/signup.html" class="q-cta-btn" id="qMatchCta">
+        Join Logicard free now
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <a href="/signup.html" class="q-cta-btn" id="qDefaultCta">
       Claim your free Logicard
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
+    <p class="q-browse-hint">Prefer to browse? <a href="#qSectors">See the full list by category ↓</a></p>
   </div>
 
   <div class="q-sectors" id="qSectors">
@@ -252,11 +303,15 @@
 
     const sectorIcon = '<svg viewBox="0 0 24 24"><path d="M2 20h20M4 20V8l8-6 8 6v12"/><path d="M9 20v-6h6v6"/></svg>';
 
+    let allRoles = []; // flattened [{ role, category }], built once for search
+
     async function loadEligibility() {
       const container = document.getElementById('qSectors');
       try {
         const res = await fetch('/api/job-roles');
         const { categories } = await res.json();
+
+        allRoles = categories.flatMap(cat => cat.roles.map(role => ({ role, category: cat.name })));
 
         container.innerHTML = categories.map(cat => `
           <div class="q-sector">
@@ -275,6 +330,58 @@
         container.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.4)">Unable to load roles right now — please refresh.</p>';
       }
     }
+
+    // ── Search ────────────────────────────────────────────────────
+    const qSearchInput   = document.getElementById('qSearchInput');
+    const qSearchResults = document.getElementById('qSearchResults');
+    const qSearchEmpty   = document.getElementById('qSearchEmpty');
+    const qMatch         = document.getElementById('qMatch');
+    const qMatchRole      = document.getElementById('qMatchRole');
+    const qMatchCta       = document.getElementById('qMatchCta');
+    const qDefaultCta     = document.getElementById('qDefaultCta');
+
+    function showMatch(role) {
+      qMatchRole.textContent = role;
+      qMatchCta.href = `/signup.html?role=${encodeURIComponent(role)}`;
+      qMatch.classList.add('open');
+      qSearchResults.classList.remove('open');
+      qSearchEmpty.style.display = 'none';
+      qDefaultCta.style.display = 'none';
+    }
+
+    function resetToDefault() {
+      qMatch.classList.remove('open');
+      qSearchResults.classList.remove('open');
+      qSearchEmpty.style.display = 'none';
+      qDefaultCta.style.display = 'inline-flex';
+    }
+
+    qSearchInput.addEventListener('input', () => {
+      const q = qSearchInput.value.trim().toLowerCase();
+      qMatch.classList.remove('open');
+
+      if (!q) { resetToDefault(); return; }
+
+      const matches = allRoles.filter(r => r.role.toLowerCase().includes(q)).slice(0, 12);
+
+      if (!matches.length) {
+        qSearchResults.classList.remove('open');
+        qSearchEmpty.style.display = 'block';
+        qDefaultCta.style.display = 'none';
+        return;
+      }
+
+      qSearchEmpty.style.display = 'none';
+      qDefaultCta.style.display = 'none';
+      qSearchResults.innerHTML = matches.map(r => `<span class="q-search-result" data-role="${escapeHtml(r.role)}">${escapeHtml(r.role)}</span>`).join('');
+      qSearchResults.classList.add('open');
+    });
+
+    qSearchResults.addEventListener('click', e => {
+      const target = e.target.closest('.q-search-result');
+      if (!target) return;
+      showMatch(target.dataset.role);
+    });
 
     loadEligibility();
   </script>
