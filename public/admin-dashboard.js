@@ -1,5 +1,9 @@
 let allMembers = [];
 
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
 function fmt(dateStr) {
   if (!dateStr) return '—';
   return new Date(dateStr).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
@@ -38,13 +42,13 @@ function renderTable(members) {
   tbody.innerHTML = members.map(m => `
     <tr>
       <td><span class="mem-num">#${m.membershipNumber}</span></td>
-      <td>${m.firstName} ${m.lastName}</td>
-      <td><a href="mailto:${m.email}" class="table-link">${m.email}</a></td>
-      <td>${m.phone || '—'}</td>
-      <td>${m.companyName || '—'}</td>
-      <td>${m.role || '—'}</td>
-      <td>${m.city || '—'}</td>
-      <td>${m.country || '—'}</td>
+      <td>${escapeHtml(m.firstName)} ${escapeHtml(m.lastName)}</td>
+      <td><a href="mailto:${encodeURIComponent(m.email)}" class="table-link">${escapeHtml(m.email)}</a></td>
+      <td>${escapeHtml(m.phone) || '—'}</td>
+      <td>${escapeHtml(m.companyName) || '—'}</td>
+      <td>${escapeHtml(m.role) || '—'}</td>
+      <td>${escapeHtml(m.city) || '—'}</td>
+      <td>${escapeHtml(m.country) || '—'}</td>
       <td>${m.verified ? '✅' : '⏳'}</td>
       <td>${fmt(m.createdAt)}</td>
     </tr>`).join('');

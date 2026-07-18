@@ -58,9 +58,10 @@ form.addEventListener('submit', async e => {
   if (ref) data.ref = ref;
 
   const required = [
-    ['companyName', 'Company Name'],
-    ['role',        'Job Title / Role'],
-    ['firstName',   'First Name'],
+    ['companyName',  'Company Name'],
+    ['roleCategory', 'Which part of logistics do you work in'],
+    ['role',         'Job Title / Role'],
+    ['firstName',    'First Name'],
     ['lastName',    'Last Name'],
     ['email',       'Email Address'],
     ['phone',       'Phone Number'],
@@ -129,12 +130,37 @@ form.addEventListener('submit', async e => {
   window.location.href = '/checkout.html';
 });
 
+// ── Job roles: fetched once from the shared /api/job-roles source so this
+// form and the Check Your Eligibility page can never drift apart ──────────
+async function loadJobRoles() {
+  const categorySelect = document.getElementById('roleCategory');
+  const roleSelect      = document.getElementById('role');
+  if (!categorySelect || !roleSelect) return;
+
+  try {
+    const res  = await fetch('/api/job-roles');
+    const { categories } = await res.json();
+
+    categorySelect.innerHTML = '<option value="" disabled selected>— Select a category —</option>' +
+      categories.map(c => `<option>${c.name}</option>`).join('');
+
+    roleSelect.innerHTML = '<option value="" disabled selected>— Select your job title —</option>' +
+      categories.map(c => `<optgroup label="${c.name}">${c.roles.map(r => `<option>${r}</option>`).join('')}</optgroup>`).join('');
+  } catch {
+    categorySelect.innerHTML = '<option value="" disabled selected>Unable to load — please refresh</option>';
+    roleSelect.innerHTML     = '<option value="" disabled selected>Unable to load — please refresh</option>';
+    return;
+  }
+
+  initRoleSearch();
+}
+
 // ── Job title selector: type to search, select to lock it in ────
-// All ~150 titles sit in the background (from the existing <select id="role">,
-// which stays the real form control FormData submits). Nothing is shown
-// until the member starts typing; picking a result collapses the list and
-// leaves just that title in the field.
-(function initRoleSearch() {
+// All titles sit in the background (in the <select id="role"> populated by
+// loadJobRoles() above, which stays the real form control FormData submits).
+// Nothing is shown until the member starts typing; picking a result
+// collapses the list and leaves just that title in the field.
+function initRoleSearch() {
   const select = document.getElementById('role');
   if (!select) return;
 
@@ -306,4 +332,19 @@ form.addEventListener('submit', async e => {
   document.addEventListener('click', e => {
     if (!wrap.contains(e.target) && !dropdown.contains(e.target)) closeDropdown();
   });
+}
+
+loadJobRoles();
+
+// Town/City is a soft suggestion, not an enforced list — the datalist just
+// helps most members type faster and more consistently; typing anything
+// else is still accepted since the underlying input has no allowlist check.
+(async function loadTowns() {
+  const datalist = document.getElementById('cityDatalist');
+  if (!datalist) return;
+  try {
+    const res = await fetch('/api/uk-towns');
+    const { towns } = await res.json();
+    datalist.innerHTML = towns.map(t => `<option value="${t}"></option>`).join('');
+  } catch { /* non-critical — field still works as a free-text input */ }
 })();

@@ -25,6 +25,9 @@ const {
   getDocumentsDueForPurge, markDocumentPurged,
 } = require('./database');
 const { uploadVerificationFile, getSignedViewUrl, readLocalFile, deleteFile } = require('./storage');
+const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG } = require('./job-roles');
+const { UK_TOWNS } = require('./uk-towns');
+const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
 
 const app    = express();
 const PORT   = process.env.PORT || 3000;
@@ -458,6 +461,43 @@ app.use((req, res, next) => {
 
   res.setHeader('WWW-Authenticate', 'Basic realm="Logicard"');
   res.status(401).send('Logicard is currently under maintenance. Please check back soon.');
+});
+
+// ── Job roles (shared source for signup picker + eligibility page) ──
+app.get('/api/job-roles', (_req, res) => res.json({ categories: JOB_ROLE_CATEGORIES }));
+
+// ── UK towns (autocomplete suggestion source, not an enforced allowlist) ──
+app.get('/api/uk-towns', (_req, res) => res.json({ towns: UK_TOWNS }));
+
+// ── Per-role SEO landing pages ───────────────────────────────────
+app.get('/logistics-rewards/:slug', (req, res) => {
+  const entry = JOB_ROLE_BY_SLUG[req.params.slug];
+  if (!entry) return res.status(404).send(renderRoleNotFound());
+  res.send(renderRolePage(entry));
+});
+
+// ── Dynamic sitemap (static pages + one URL per job role) ────────
+const STATIC_SITEMAP_PAGES = [
+  { path: '/',                            changefreq: 'weekly',  priority: '1.0' },
+  { path: '/signup.html',                 changefreq: 'monthly', priority: '0.9' },
+  { path: '/qualify.html',                changefreq: 'monthly', priority: '0.8' },
+  { path: '/things-to-do.html',           changefreq: 'monthly', priority: '0.6' },
+  { path: '/financial-wellbeing.html',    changefreq: 'monthly', priority: '0.6' },
+  { path: '/mental-wellbeing.html',       changefreq: 'monthly', priority: '0.6' },
+  { path: '/shopping-cards.html',         changefreq: 'monthly', priority: '0.6' },
+  { path: '/workforce-recognition.html',  changefreq: 'monthly', priority: '0.7' },
+  { path: '/login.html',                  changefreq: 'monthly', priority: '0.5' },
+  { path: '/privacy.html',                changefreq: 'yearly',  priority: '0.3' },
+  { path: '/terms.html',                  changefreq: 'yearly',  priority: '0.3' },
+];
+
+app.get('/sitemap.xml', (_req, res) => {
+  const roleUrls = Object.keys(JOB_ROLE_BY_SLUG).map(slug => `  <url><loc>https://logicard.co.uk/logistics-rewards/${slug}</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>`);
+  const staticUrls = STATIC_SITEMAP_PAGES.map(p => `  <url><loc>https://logicard.co.uk${p.path}</loc><changefreq>${p.changefreq}</changefreq><priority>${p.priority}</priority></url>`);
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...staticUrls, ...roleUrls].join('\n')}\n</urlset>`;
+  res.setHeader('Content-Type', 'application/xml');
+  res.send(xml);
 });
 
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -1249,13 +1289,25 @@ app.get('/api/offers/:id/go', requireAuth, requireVerified, async (req, res) => 
   recordOfferRedemption(id, req.session.membershipNumber).catch(err => console.error('Offer redemption tracking failed:', err.message));
 });
 
+// ── Signup field validation ──────────────────────────────────────
+// Allowlists shaped to what each field can legitimately contain — this is a
+// defense-in-depth layer alongside output escaping (not a replacement for
+// it), so it deliberately still permits real-world punctuation (O'Brien,
+// Smith & Sons, St. Ives) while excluding characters with no legitimate use
+// in these fields (<, >, {, }, [, ], ;, :, ", \, etc).
+const NAME_PATTERN    = /^[\p{L}\p{M} '-]{1,80}$/u;
+const PLACE_PATTERN   = /^[\p{L}\p{M} '.-]{1,80}$/u;
+const COMPANY_PATTERN = /^[\p{L}\p{N}\p{M} &.,'()-]{1,120}$/u;
+const PHONE_PATTERN   = /^[0-9 +()-]{5,20}$/;
+const ADDRESS_PATTERN = /^[\p{L}\p{N}\p{M} ,./#'&-]{1,120}$/u;
+
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', signupLimiter, async (req, res) => {
-  const { companyName, role, firstName, lastName, email, phone, dateOfBirth,
+  const { companyName, role, roleCategory, firstName, lastName, email, phone, dateOfBirth,
           addressLine1, addressLine2, city, county, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
-  const required = { companyName, role, firstName, lastName, email, phone, city };
+  const required = { companyName, role, roleCategory, firstName, lastName, email, phone, city };
   for (const [field, value] of Object.entries(required)) {
     if (!value || !String(value).trim()) return res.status(400).json({ error: `Missing required field: ${field}` });
   }
@@ -1263,6 +1315,32 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
   if (!gdprConsent) return res.status(400).json({ error: 'You must accept the privacy policy to continue.' });
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Please enter a valid email address.' });
   if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
+
+  // roleCategory/role must be an exact match from the canonical list — the
+  // dropdown on signup.html only ever submits one of these, so this rejects
+  // anything sent by bypassing the form directly (e.g. a raw POST to this
+  // endpoint), with zero impact on any real user.
+  const category = JOB_ROLE_CATEGORIES.find(c => c.name === roleCategory);
+  if (!category) return res.status(400).json({ error: 'Please select a valid logistics category.' });
+  if (!category.roles.includes(role)) return res.status(400).json({ error: 'Please select a valid job title for that category.' });
+
+  const fieldChecks = [
+    [firstName,  NAME_PATTERN,    'First Name'],
+    [lastName,   NAME_PATTERN,    'Last Name'],
+    [companyName, COMPANY_PATTERN, 'Company Name'],
+    [phone,      PHONE_PATTERN,   'Phone Number'],
+    [city,       PLACE_PATTERN,   'Town / City'],
+  ];
+  if (county)        fieldChecks.push([county,        PLACE_PATTERN,   'County']);
+  if (country)       fieldChecks.push([country,       PLACE_PATTERN,   'Country']);
+  if (addressLine1)  fieldChecks.push([addressLine1,  ADDRESS_PATTERN, 'Address Line 1']);
+  if (addressLine2)  fieldChecks.push([addressLine2,  ADDRESS_PATTERN, 'Address Line 2']);
+
+  for (const [value, pattern, label] of fieldChecks) {
+    if (!pattern.test(String(value).trim())) {
+      return res.status(400).json({ error: `${label} contains characters that aren't allowed.` });
+    }
+  }
 
   const normalizedPromo = (promoCode || '').toUpperCase().trim();
   if (normalizedPromo && !VALID_PROMOS[normalizedPromo]) {
@@ -1272,7 +1350,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
 
   try {
     const { membershipNumber } = await createMember({
-      companyName: companyName.trim(), role: role.trim(),
+      companyName: companyName.trim(), role: role.trim(), roleCategory: roleCategory.trim(),
       firstName: firstName.trim(),     lastName: lastName.trim(),
       email: email.trim().toLowerCase(), phone: phone.trim(),
       dateOfBirth: dateOfBirth || null,

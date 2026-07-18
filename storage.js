@@ -58,8 +58,14 @@ if (R2_CONFIGURED) {
   fs.mkdirSync(LOCAL_ROOT, { recursive: true });
 }
 
+// path.join alone doesn't stop a key like "../../../etc/passwd" from resolving
+// outside LOCAL_ROOT — this is what's served back to an admin session, so a
+// crafted key must never be able to escape the uploads directory.
 function localPathFor(key) {
-  return path.join(LOCAL_ROOT, key.replace(/\//g, path.sep));
+  const resolved = path.join(LOCAL_ROOT, key.replace(/\//g, path.sep));
+  const rootWithSep = LOCAL_ROOT.endsWith(path.sep) ? LOCAL_ROOT : LOCAL_ROOT + path.sep;
+  if (!resolved.startsWith(rootWithSep)) return null;
+  return resolved;
 }
 
 // Bucket stays private — proof-of-employment documents can contain payslips
@@ -98,7 +104,7 @@ async function getSignedViewUrl(key, expiresInSeconds = 300) {
 
 function readLocalFile(key) {
   const p = localPathFor(key);
-  return fs.existsSync(p) ? p : null;
+  return p && fs.existsSync(p) ? p : null;
 }
 
 async function deleteFile(key) {
@@ -107,7 +113,7 @@ async function deleteFile(key) {
     await s3Client.send(new DeleteObjectCommand({ Bucket: process.env.R2_BUCKET_NAME, Key: key }));
   } else {
     const p = localPathFor(key);
-    if (fs.existsSync(p)) fs.unlinkSync(p);
+    if (p && fs.existsSync(p)) fs.unlinkSync(p);
   }
 }
 

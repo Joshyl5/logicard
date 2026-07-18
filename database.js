@@ -47,6 +47,7 @@ async function initDb() {
   await pool.query(`ALTER TABLE members DROP COLUMN IF EXISTS postcode`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS promo_code TEXT`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS free_year BOOLEAN DEFAULT FALSE`);
+  await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS role_category TEXT`);
 
   // Proof-of-employment verification — existing members keep their current
   // verified=TRUE value; only new signups default to unverified from here on.
@@ -178,6 +179,7 @@ function toMember(row) {
     membershipNumber:   row.membership_number,
     companyName:        row.company_name,
     role:               row.role,
+    roleCategory:       row.role_category,
     firstName:          row.first_name,
     lastName:           row.last_name,
     email:              row.email,
@@ -259,7 +261,7 @@ async function emailExists(email) {
 
 async function createMember(data) {
   const {
-    companyName, role, firstName, lastName, email, phone, dateOfBirth = null,
+    companyName, role, roleCategory = null, firstName, lastName, email, phone, dateOfBirth = null,
     addressLine1 = null, addressLine2 = null, city = null, county = null,
     country = null,
     password, gdprConsent, marketingConsent, referredBy,
@@ -275,18 +277,18 @@ async function createMember(data) {
 
   await pool.query(`
     INSERT INTO members (
-      membership_number, company_name, role, first_name, last_name,
+      membership_number, company_name, role, role_category, first_name, last_name,
       email, phone, date_of_birth, address_line1, address_line2,
       city, county, country, password_hash, verified, created_at,
       referred_by, total_referrals, monthly_entries,
       marketing_consent, marketing_consent_at, gdpr_consent,
       promo_code, free_year
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,FALSE,$15,
-      $16,0,0,$17,$18,$19,$20,$21
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,FALSE,$16,
+      $17,0,0,$18,$19,$20,$21,$22
     )
   `, [
-    membershipNumber, companyName, role, firstName, lastName,
+    membershipNumber, companyName, role, roleCategory || null, firstName, lastName,
     email.toLowerCase(), phone, dateOfBirth || null,
     addressLine1 || null, addressLine2 || null,
     city || null, county || null, country || null,
