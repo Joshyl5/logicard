@@ -42,6 +42,14 @@ const VALID_PROMOS = {
   FREE: { discountPct: 100, label: 'First year free', freeYear: true },
 };
 
+// Escapes user-supplied values before they're interpolated into HTML emails —
+// these are rendered in a human's inbox (admin or member), not a browser, but
+// most webmail clients still render arbitrary HTML/links, so unescaped input
+// here is a phishing/tracking-pixel vector just like it would be on a page.
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
 const OFFER_CATEGORIES = [
   'Beauty & Wellness', 'Children & Baby', 'Food & Drink', 'Fashion', 'Gifts & Flowers',
   'Holiday & Travel', 'Home & Garden', 'Pets', 'Sports & Fitness', 'Tech & Mobile',
@@ -976,12 +984,12 @@ app.post('/api/report', requireAuth, async (req, res) => {
     <div style="padding:32px 36px;background:#fff">
       <h2 style="color:#071d40;margin:0 0 20px;font-size:18px">A member has submitted a report</h2>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Member</td><td style="padding:10px 14px;color:#333">${memberName}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Member</td><td style="padding:10px 14px;color:#333">${escapeHtml(memberName)}</td></tr>
         <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Membership #</td><td style="padding:10px 14px;color:#1a6cc8;font-weight:700">#${membershipNumber}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#333">${member ? member.email : '—'}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Type</td><td style="padding:10px 14px;color:#333">${issueType}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Title</td><td style="padding:10px 14px;color:#333">${issueTitle || '—'}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40;vertical-align:top">Description</td><td style="padding:10px 14px;color:#333;line-height:1.6">${issueDesc.replace(/\n/g, '<br/>')}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#333">${escapeHtml(member ? member.email : '—')}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Type</td><td style="padding:10px 14px;color:#333">${escapeHtml(issueType)}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Title</td><td style="padding:10px 14px;color:#333">${escapeHtml(issueTitle) || '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40;vertical-align:top">Description</td><td style="padding:10px 14px;color:#333;line-height:1.6">${escapeHtml(issueDesc).replace(/\n/g, '<br/>')}</td></tr>
       </table>
     </div>
     <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
@@ -1010,7 +1018,7 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
   const { name, email, title, company, phone, newsletterOptIn, message, source, teamSize } = req.body;
   if (!name || !email) return res.status(400).json({ error: 'Name and email are required.' });
 
-  const sourceLabel = source ? String(source).slice(0, 60) : 'Contact Form';
+  const sourceLabel = escapeHtml(source ? String(source).slice(0, 60) : 'Contact Form');
 
   const html = `
   <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
@@ -1022,14 +1030,14 @@ app.post('/api/contact', contactLimiter, async (req, res) => {
       <h2 style="color:#071d40;margin:0 0 20px;font-size:18px">Someone got in touch via logicard.co.uk</h2>
       <table style="width:100%;border-collapse:collapse;font-size:14px">
         <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Source</td><td style="padding:10px 14px;color:#333">${sourceLabel}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Full Name</td><td style="padding:10px 14px;color:#333">${name}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#1a6cc8">${email}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px;color:#333">${title || '—'}</td></tr>
-        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px;color:#333">${company || '—'}</td></tr>
-        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px;color:#333">${phone || '—'}</td></tr>
-        ${teamSize ? `<tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Team Size</td><td style="padding:10px 14px;color:#333">${teamSize}</td></tr>` : ''}
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Full Name</td><td style="padding:10px 14px;color:#333">${escapeHtml(name)}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Email</td><td style="padding:10px 14px;color:#1a6cc8">${escapeHtml(email)}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Job Title</td><td style="padding:10px 14px;color:#333">${escapeHtml(title) || '—'}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Company</td><td style="padding:10px 14px;color:#333">${escapeHtml(company) || '—'}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Phone</td><td style="padding:10px 14px;color:#333">${escapeHtml(phone) || '—'}</td></tr>
+        ${teamSize ? `<tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Team Size</td><td style="padding:10px 14px;color:#333">${escapeHtml(teamSize)}</td></tr>` : ''}
         <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Newsletter</td><td style="padding:10px 14px;color:#333">${newsletterOptIn ? '✅ Yes' : 'No'}</td></tr>
-        ${message ? `<tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;vertical-align:top">Message</td><td style="padding:10px 14px;color:#333;line-height:1.6">${String(message).replace(/\n/g, '<br/>')}</td></tr>` : ''}
+        ${message ? `<tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;vertical-align:top">Message</td><td style="padding:10px 14px;color:#333;line-height:1.6">${escapeHtml(message).replace(/\n/g, '<br/>')}</td></tr>` : ''}
       </table>
     </div>
     <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
@@ -1303,35 +1311,36 @@ const COMPANY_PATTERN = /^[\p{L}\p{N}\p{M} &.,'()-]{1,120}$/u;
 const PHONE_PATTERN   = /^[0-9 +()-]{5,20}$/;
 const ADDRESS_PATTERN = /^[\p{L}\p{N}\p{M} ,./#'&-]{1,120}$/u;
 
-// ── Signup ─────────────────────────────────────────────────────
-app.post('/api/signup', signupLimiter, async (req, res) => {
-  const { companyName, role, roleCategory, firstName, lastName, email, phone, dateOfBirth,
-          addressLine1, addressLine2, city, county, country,
-          password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
+// Shared by /api/signup and /api/checkout/complete — both endpoints create a
+// member record from user-supplied data, so both must apply the same
+// required-field, format, and character-allowlist checks. (These two routes
+// previously diverged: checkout/complete skipped all of this.)
+function validateMemberFields(data) {
+  const { companyName, role, roleCategory, firstName, lastName, email, phone,
+          addressLine1, addressLine2, city, county, country, password, gdprConsent } = data;
 
   const required = { companyName, role, roleCategory, firstName, lastName, email, phone, city };
   for (const [field, value] of Object.entries(required)) {
-    if (!value || !String(value).trim()) return res.status(400).json({ error: `Missing required field: ${field}` });
+    if (!value || !String(value).trim()) return `Missing required field: ${field}`;
   }
-  if (!password || password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
-  if (!gdprConsent) return res.status(400).json({ error: 'You must accept the privacy policy to continue.' });
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Please enter a valid email address.' });
-  if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
+  if (!password || password.length < 8) return 'Password must be at least 8 characters.';
+  if (!gdprConsent) return 'You must accept the privacy policy to continue.';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
 
   // roleCategory/role must be an exact match from the canonical list — the
   // dropdown on signup.html only ever submits one of these, so this rejects
   // anything sent by bypassing the form directly (e.g. a raw POST to this
   // endpoint), with zero impact on any real user.
   const category = JOB_ROLE_CATEGORIES.find(c => c.name === roleCategory);
-  if (!category) return res.status(400).json({ error: 'Please select a valid logistics category.' });
-  if (!category.roles.includes(role)) return res.status(400).json({ error: 'Please select a valid job title for that category.' });
+  if (!category) return 'Please select a valid logistics category.';
+  if (!category.roles.includes(role)) return 'Please select a valid job title for that category.';
 
   const fieldChecks = [
-    [firstName,  NAME_PATTERN,    'First Name'],
-    [lastName,   NAME_PATTERN,    'Last Name'],
+    [firstName,   NAME_PATTERN,    'First Name'],
+    [lastName,    NAME_PATTERN,    'Last Name'],
     [companyName, COMPANY_PATTERN, 'Company Name'],
-    [phone,      PHONE_PATTERN,   'Phone Number'],
-    [city,       PLACE_PATTERN,   'Town / City'],
+    [phone,       PHONE_PATTERN,   'Phone Number'],
+    [city,        PLACE_PATTERN,   'Town / City'],
   ];
   if (county)        fieldChecks.push([county,        PLACE_PATTERN,   'County']);
   if (country)       fieldChecks.push([country,       PLACE_PATTERN,   'Country']);
@@ -1339,10 +1348,21 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
   if (addressLine2)  fieldChecks.push([addressLine2,  ADDRESS_PATTERN, 'Address Line 2']);
 
   for (const [value, pattern, label] of fieldChecks) {
-    if (!pattern.test(String(value).trim())) {
-      return res.status(400).json({ error: `${label} contains characters that aren't allowed.` });
-    }
+    if (!pattern.test(String(value).trim())) return `${label} contains characters that aren't allowed.`;
   }
+
+  return null;
+}
+
+// ── Signup ─────────────────────────────────────────────────────
+app.post('/api/signup', signupLimiter, async (req, res) => {
+  const { companyName, role, roleCategory, firstName, lastName, email, phone, dateOfBirth,
+          addressLine1, addressLine2, city, county, country,
+          password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
+
+  const validationError = validateMemberFields(req.body);
+  if (validationError) return res.status(400).json({ error: validationError });
+  if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
 
   const normalizedPromo = (promoCode || '').toUpperCase().trim();
   if (normalizedPromo && !VALID_PROMOS[normalizedPromo]) {
@@ -1409,6 +1429,10 @@ app.post('/api/checkout/create-intent', async (req, res) => {
 app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
   if (!stripe) return res.status(503).json({ error: 'Payment not configured.' });
   const { paymentIntentId, ...signupData } = req.body;
+
+  const validationError = validateMemberFields(signupData);
+  if (validationError) return res.status(400).json({ error: validationError });
+
   try {
     const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
     if (intent.status !== 'succeeded') return res.status(400).json({ error: 'Payment not confirmed. Please try again.' });
