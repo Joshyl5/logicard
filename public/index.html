@@ -88,28 +88,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Promo Banner ── */
-    .promo-banner {
-      background: var(--navy-deep);
-      color: rgba(255,255,255,0.88);
-      padding: 11px 24px;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.1px;
-      border-bottom: 1px solid rgba(255,179,0,0.25);
-    }
-    .promo-banner .trophy {
-      display: inline-block;
-      margin-right: 8px;
-      font-size: 16px;
-    }
-    .promo-banner a {
-      color: var(--orange);
-      text-decoration: underline;
-      font-weight: 700;
-    }
-
     /* ── Navigation ── */
     .main-nav {
       background: var(--navy);
@@ -140,19 +118,6 @@
     }
     .nav-logo-logi { color: #fff; }
     .nav-logo-card { color: var(--orange); }
-    .nav-links {
-      display: flex;
-      gap: 36px;
-      list-style: none;
-    }
-    .nav-links a {
-      color: rgba(255,255,255,0.82);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 15px;
-      transition: color 0.15s;
-    }
-    .nav-links a:hover { color: var(--orange); }
     .nav-right {
       display: flex;
       align-items: center;
@@ -179,10 +144,32 @@
     }
     .nav-cta:hover { background: var(--orange-dark); }
 
-    /* ── Utility bar ── */
-    .util-bar { background: var(--navy-deep); display: flex; justify-content: center; gap: 28px; padding: 8px 24px; font-size: 12.5px; }
-    .util-bar a { color: rgba(255,255,255,0.6); text-decoration: none; font-weight: 600; }
-    .util-bar a:hover { color: var(--orange); }
+    /* ── Category tabs ── */
+    .category-nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-mid);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 54px;
+      overflow-x: auto;
+      position: sticky;
+      top: 76px;
+      z-index: 99;
+    }
+    .category-nav a {
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .category-nav a:hover { background: rgba(255,179,0,0.08); }
+    .category-nav a.active { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
 
     /* ── Hero ── */
     .hero {
@@ -774,7 +761,7 @@
     @media (max-width: 900px) {
       .lc-section { padding: 64px 28px; }
       .main-nav { padding: 0 20px; height: 64px; }
-      .nav-links { display: none; }
+      .category-nav { top: 64px; padding: 0 20px; }
       .nav-logo-text { font-size: 24px; }
       .nav-logo { padding: 6px 12px; }
       .hero { padding: 72px 28px 56px; min-height: auto; }
@@ -793,11 +780,9 @@
 
     /* ── Responsive — Mobile (≤600px) ── */
     @media (max-width: 600px) {
-      /* Promo banner */
-      .promo-banner { font-size: 12px; padding: 9px 16px; }
-
       /* Nav */
       .main-nav { height: 56px; padding: 0 16px; }
+      .category-nav { top: 56px; padding: 0 16px; height: 48px; }
       .nav-logo-text { font-size: 20px; }
       .nav-logo { padding: 5px 10px; }
       .nav-signin { font-size: 12px; }
@@ -1047,40 +1032,27 @@
 </head>
 <body>
 
-  <!-- Promo Banner -->
-  <div class="promo-banner">
-    <span class="trophy">🏆</span>
-    Join Logicard — £10/year for exclusive discounts across fuel, hotels, fleet &amp; more. Use code <strong>FREE</strong> at checkout for your first year at £0. <a href="/signup.html">Join now →</a>
-  </div>
-
-  <!-- Utility bar -->
-  <div class="util-bar">
-    <a href="/qualify.html">Check Your Eligibility</a>
-    <a href="/workforce-recognition.html">Workforce Recognition</a>
-    <a href="#contact">Contact Us</a>
-  </div>
-
   <!-- Navigation -->
   <nav class="main-nav">
     <a href="/" class="nav-logo">
       <span class="nav-logo-text"><span class="nav-logo-logi">Logi</span><span class="nav-logo-card">card</span></span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#how-it-works">How it works</a></li>
-      <li><a href="#our-story">Our Story</a></li>
-      <li><a href="#deals">Deals</a></li>
-      <li><a href="#benefits">Membership</a></li>
-      <li><a href="/things-to-do.html">Things to Do</a></li>
-      <li><a href="/financial-wellbeing.html">Financial Wellbeing</a></li>
-      <li><a href="/mental-wellbeing.html">Mental Wellbeing</a></li>
-      <li><a href="/qualify.html">Check Your Eligibility</a></li>
-      <li><a href="/shopping-cards.html">Shopping Cards</a></li>
-    </ul>
     <div class="nav-right">
-      <a href="/login.html" class="nav-signin">Member Sign In</a>
-      <a href="/signup.html" class="nav-cta">JOIN NOW</a>
+      <a href="/login.html" class="nav-signin">Sign In</a>
+      <a href="/signup.html" class="nav-cta">Join Now</a>
     </div>
   </nav>
+
+  <!-- Category tabs -->
+  <div class="category-nav">
+    <a href="/categories.html">Categories</a>
+    <a href="/things-to-do.html">Things to Do</a>
+    <a href="/financial-wellbeing.html">Financial Wellbeing</a>
+    <a href="/mental-wellbeing.html">Mental Wellbeing</a>
+    <a href="/qualify.html">Check Your Eligibility</a>
+    <a href="/shopping-cards.html">Shopping Cards</a>
+    <a href="/e-learning.html">E-learning</a>
+  </div>
 
   <!-- Hero -->
   <section class="hero">

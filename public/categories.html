@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Things to Do — Logicard Member Discounts</title>
-  <meta name="description" content="Days out, cinema, activities, outdoor adventures, learning, music and sports — discounts for UK logistics workers, exclusively through Logicard." />
-  <link rel="canonical" href="https://logicard.co.uk/things-to-do.html" />
+  <title>Categories — Logicard Member Discounts</title>
+  <meta name="description" content="Browse everything available through Logicard membership — Things to Do, Financial Wellbeing, Mental Wellbeing, Check Your Eligibility, Shopping Cards and E-learning." />
+  <link rel="canonical" href="https://logicard.co.uk/categories.html" />
   <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -37,10 +37,11 @@
     .page-hero p { color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
 
     .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .category-card { border: 1px solid #e5e5e5; border-radius: 14px; padding: 28px; }
-    .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
+    .category-card { display: block; border: 1px solid #e5e5e5; border-radius: 14px; padding: 28px; text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.15s; }
+    .category-card:hover { border-color: var(--orange); transform: translateY(-2px); }
+    .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; color: var(--navy); }
     .category-card p { color: var(--text-muted); font-size: 14.5px; line-height: 1.6; margin-bottom: 14px; }
-    .category-card .badge { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--orange-dark); background: rgba(255,179,0,0.12); padding: 4px 10px; border-radius: 100px; }
+    .category-card .visit { font-size: 13px; font-weight: 700; color: var(--orange-dark); }
 
     .bottom-cta { text-align: center; padding: 0 24px 80px; }
     .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
@@ -65,8 +66,8 @@
   </nav>
 
   <div class="category-nav">
-    <a href="/categories.html">Categories</a>
-    <a href="/things-to-do.html" class="active">Things to Do</a>
+    <a href="/categories.html" class="active">Categories</a>
+    <a href="/things-to-do.html">Things to Do</a>
     <a href="/financial-wellbeing.html">Financial Wellbeing</a>
     <a href="/mental-wellbeing.html">Mental Wellbeing</a>
     <a href="/qualify.html">Check Your Eligibility</a>
@@ -75,18 +76,41 @@
   </div>
 
   <section class="page-hero">
-    <h1>Things to Do</h1>
-    <p>Days out, entertainment and experiences — discounted for every Logicard member across the UK logistics industry.</p>
+    <h1>Categories</h1>
+    <p>Everything available through your Logicard membership, in one place.</p>
   </section>
 
   <div class="category-grid">
-    <div class="category-card"><span class="badge">Coming Soon</span><h2>Days Out & Attractions</h2><p>Theme parks, zoos, museums and family attractions across the UK.</p></div>
-    <div class="category-card"><span class="badge">Coming Soon</span><h2>Cinema</h2><p>Discounted tickets at major UK cinema chains.</p></div>
-    <div class="category-card"><span class="badge">Coming Soon</span><h2>Activities & Experiences</h2><p>Days out, gift experiences and one-off adventures.</p></div>
-    <div class="category-card"><span class="badge">Coming Soon</span><h2>Outdoor Adventures</h2><p>Adventure parks, climbing, watersports and more.</p></div>
-    <div class="category-card"><span class="badge">Coming Soon</span><h2>Learning & Education</h2><p>Online courses and skills development discounts.</p></div>
-    <div class="category-card"><span class="badge">Coming Soon</span><h2>Music</h2><p>Gigs, festivals and streaming subscription discounts.</p></div>
-    <div class="category-card"><span class="badge">Coming Soon</span><h2>Sports</h2><p>Gym memberships, sports events and equipment discounts.</p></div>
+    <a class="category-card" href="/things-to-do.html">
+      <h2>Things to Do</h2>
+      <p>Days out, cinema, activities, outdoor adventures, learning, music and sports.</p>
+      <span class="visit">Visit →</span>
+    </a>
+    <a class="category-card" href="/financial-wellbeing.html">
+      <h2>Financial Wellbeing</h2>
+      <p>Financial services & insurance, transport, mobile phones and household bills.</p>
+      <span class="visit">Visit →</span>
+    </a>
+    <a class="category-card" href="/mental-wellbeing.html">
+      <h2>Mental Wellbeing</h2>
+      <p>Support built for the pressures of shift work and life on the road.</p>
+      <span class="visit">Visit →</span>
+    </a>
+    <a class="category-card" href="/qualify.html">
+      <h2>Check Your Eligibility</h2>
+      <p>See every logistics role, across every sector, that qualifies for Logicard.</p>
+      <span class="visit">Visit →</span>
+    </a>
+    <a class="category-card" href="/shopping-cards.html">
+      <h2>Shopping Cards</h2>
+      <p>Gift cards with a discount on top — coming soon to Logicard.</p>
+      <span class="visit">Visit →</span>
+    </a>
+    <a class="category-card" href="/e-learning.html">
+      <h2>E-learning</h2>
+      <p>Online courses, certifications and skills development discounts.</p>
+      <span class="visit">Visit →</span>
+    </a>
   </div>
 
   <div class="bottom-cta">

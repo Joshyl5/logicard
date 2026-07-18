@@ -17,22 +17,20 @@
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--navy); background: var(--white); }
 
-    .util-bar { background: var(--navy-deep); display: flex; justify-content: center; gap: 28px; padding: 8px 24px; font-size: 12.5px; }
-    .util-bar a { color: rgba(255,255,255,0.6); text-decoration: none; font-weight: 600; }
-    .util-bar a:hover { color: var(--orange); }
-
-    .main-nav { background: var(--navy); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 76px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,179,0,0.2); flex-wrap: wrap; }
+    .main-nav { background: var(--navy); padding: 0 48px; display: flex; align-items: center; justify-content: space-between; height: 76px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,179,0,0.2); }
     .nav-logo { display: flex; align-items: center; border: 2px solid rgba(255,179,0,0.45); padding: 8px 18px; border-radius: 6px; text-decoration: none; background: rgba(255,255,255,0.04); }
     .nav-logo-text { font-size: 32px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
     .nav-logo-logi { color: #fff; } .nav-logo-card { color: var(--orange); }
-    .nav-links { display: flex; gap: 28px; list-style: none; flex-wrap: wrap; }
-    .nav-links a { color: rgba(255,255,255,0.82); text-decoration: none; font-weight: 600; font-size: 14.5px; transition: color 0.15s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--orange); }
     .nav-right { display: flex; align-items: center; gap: 14px; }
     .nav-signin { color: rgba(255,255,255,0.7); font-weight: 600; font-size: 14px; text-decoration: none; }
     .nav-signin:hover { color: var(--white); }
     .nav-cta { background: var(--orange); color: var(--white); padding: 11px 22px; font-weight: 800; font-size: 14px; letter-spacing: 0.5px; text-decoration: none; border-radius: 4px; }
     .nav-cta:hover { background: var(--orange-dark); }
+
+    .category-nav { background: var(--white); border-bottom: 1px solid #e5e5e5; padding: 0 48px; display: flex; align-items: center; gap: 6px; height: 54px; overflow-x: auto; position: sticky; top: 76px; z-index: 99; }
+    .category-nav a { color: var(--navy); text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 6px; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+    .category-nav a:hover { background: rgba(255,179,0,0.08); }
+    .category-nav a.active { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
 
     .page-hero { background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%); color: #fff; padding: 64px 24px; text-align: center; }
     .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
@@ -53,33 +51,30 @@
     footer { text-align: center; padding: 28px 24px; border-top: 1px solid #eee; font-size: 12.5px; color: var(--text-muted); }
     footer a { color: var(--text-muted); }
 
-    @media (max-width: 900px) { .main-nav { height: auto; padding: 14px 20px; gap: 14px; } .nav-links { order: 3; width: 100%; justify-content: center; } }
+    @media (max-width: 900px) { .main-nav { padding: 0 20px; } .category-nav { padding: 0 20px; } }
   </style>
 </head>
 <body>
-
-  <div class="util-bar">
-    <a href="/qualify.html">Check Your Eligibility</a>
-    <a href="/workforce-recognition.html">Workforce Recognition</a>
-    <a href="/#contact">Contact Us</a>
-  </div>
 
   <nav class="main-nav">
     <a href="/" class="nav-logo">
       <span class="nav-logo-text"><span class="nav-logo-logi">Logi</span><span class="nav-logo-card">card</span></span>
     </a>
-    <ul class="nav-links">
-      <li><a href="/things-to-do.html">Things to Do</a></li>
-      <li><a href="/financial-wellbeing.html">Financial Wellbeing</a></li>
-      <li><a href="/mental-wellbeing.html" class="active">Mental Wellbeing</a></li>
-      <li><a href="/qualify.html">Check Your Eligibility</a></li>
-      <li><a href="/shopping-cards.html">Shopping Cards</a></li>
-    </ul>
     <div class="nav-right">
-      <a href="/login.html" class="nav-signin">Member Sign In</a>
-      <a href="/signup.html" class="nav-cta">JOIN NOW</a>
+      <a href="/login.html" class="nav-signin">Sign In</a>
+      <a href="/signup.html" class="nav-cta">Join Now</a>
     </div>
   </nav>
+
+  <div class="category-nav">
+    <a href="/categories.html">Categories</a>
+    <a href="/things-to-do.html">Things to Do</a>
+    <a href="/financial-wellbeing.html">Financial Wellbeing</a>
+    <a href="/mental-wellbeing.html" class="active">Mental Wellbeing</a>
+    <a href="/qualify.html">Check Your Eligibility</a>
+    <a href="/shopping-cards.html">Shopping Cards</a>
+    <a href="/e-learning.html">E-learning</a>
+  </div>
 
   <section class="page-hero">
     <h1>Mental Wellbeing</h1>
