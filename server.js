@@ -171,7 +171,7 @@ Browse your deals: https://logicard.co.uk/login.html
 
 To ensure our emails reach your inbox, please add welcome@logicard.co.uk to your contacts.
 
-Need help? Email josh@logicard.co.uk or visit logicard.co.uk
+Need help? Email info@logicard.co.uk or visit logicard.co.uk
 
 © 2026 Logicard · You received this because you registered at logicard.co.uk`;
 
@@ -180,7 +180,7 @@ Need help? Email josh@logicard.co.uk or visit logicard.co.uk
       from:     'Logicard <welcome@logicard.co.uk>',
       to:       member.email,
       subject:  `Welcome to Logicard, ${member.firstName}! Your membership #${member.membershipNumber} is active`,
-      reply_to: 'josh@logicard.co.uk',
+      reply_to: 'info@logicard.co.uk',
       html,
       text,
     });
@@ -243,7 +243,7 @@ async function sendVerificationApprovedEmail(member) {
       from:     'Logicard <welcome@logicard.co.uk>',
       to:       member.email,
       subject:  'You’re verified — your Logicard offers are unlocked',
-      reply_to: 'josh@logicard.co.uk',
+      reply_to: 'info@logicard.co.uk',
       html,
     });
   } catch (err) {
@@ -274,7 +274,7 @@ async function sendVerificationRejectedEmail(member, reason) {
       from:     'Logicard <welcome@logicard.co.uk>',
       to:       member.email,
       subject:  'Your Logicard verification needs another look',
-      reply_to: 'josh@logicard.co.uk',
+      reply_to: 'info@logicard.co.uk',
       html,
     });
   } catch (err) {
@@ -330,7 +330,7 @@ async function sendOfferRestockEmail(member, offer) {
       from:     'Logicard <welcome@logicard.co.uk>',
       to:       member.email,
       subject:  `Back in stock: ${offer.merchantName} codes are available again`,
-      reply_to: 'josh@logicard.co.uk',
+      reply_to: 'info@logicard.co.uk',
       html,
     });
   } catch (err) {
@@ -954,7 +954,7 @@ app.post('/api/admin/giveaway/draw', requireAdmin, async (req, res) => {
         from:     'Logicard <welcome@logicard.co.uk>',
         to:       winner.email,
         subject:  `Congratulations ${winner.firstName} — you've won the Logicard monthly prize draw`,
-        reply_to: 'josh@logicard.co.uk',
+        reply_to: 'info@logicard.co.uk',
         html,
       });
     } catch (err) {
@@ -1107,7 +1107,7 @@ app.post('/api/forgot-password', resetLimiter, async (req, res) => {
         from:     'Logicard <accounts@logicard.co.uk>',
         to:       member.email,
         subject:  'Reset your Logicard password',
-        reply_to: 'josh@logicard.co.uk',
+        reply_to: 'info@logicard.co.uk',
         html,
       });
     }
