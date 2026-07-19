@@ -1,17 +1,17 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Check Your Eligibility — Logicard for Every Logistics Role</title>
-  <meta name="description" content="Check your eligibility for a free Logicard. Warehousing, road freight, air, sea and rail logistics, e-commerce, procurement, corporate and executive roles — every part of the sector covered." />
+  <title>Check Your Eligibility â€” Logicard for Every Logistics Role</title>
+  <meta name="description" content="Check your eligibility for a free Logicard. Warehousing, road freight, air, sea and rail logistics, e-commerce, procurement, corporate and executive roles â€” every part of the sector covered." />
   <link rel="canonical" href="https://logicard.co.uk/qualify.html" />
-  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Check Your Eligibility — Logicard for Every Logistics Role",
+    "name": "Check Your Eligibility â€” Logicard for Every Logistics Role",
     "url": "https://logicard.co.uk/qualify.html",
     "description": "Check your eligibility for a free Logicard membership across every part of the logistics sector.",
     "isPartOf": { "@id": "https://logicard.co.uk/#website" }
@@ -311,14 +311,14 @@
     <p class="q-subtitle">If your job touches the UK logistics industry, you qualify for a free Logicard membership. Search for your job title below.</p>
 
     <div class="q-search-wrap">
-      <input type="text" id="qSearchInput" class="q-search-input" placeholder="Start typing your job title, e.g. Warehouse…" autocomplete="off" />
+      <input type="text" id="qSearchInput" class="q-search-input" placeholder="Start typing your job title, e.g. Warehouseâ€¦" autocomplete="off" />
       <div class="q-search-results" id="qSearchResults"></div>
-      <p class="q-search-empty" id="qSearchEmpty">No exact match — but you likely still qualify! <a href="/signup.html">Join free anyway →</a></p>
+      <p class="q-search-empty" id="qSearchEmpty">No exact match â€” but you likely still qualify! <a href="/signup.html">Join free anyway â†’</a></p>
     </div>
 
     <div class="q-match" id="qMatch">
-      <h3>🎉 Great news!</h3>
-      <p><strong id="qMatchRole"></strong> qualifies — you're invited to join Logicard.</p>
+      <h3>ðŸŽ‰ Great news!</h3>
+      <p><strong id="qMatchRole"></strong> qualifies â€” you're invited to join Logicard.</p>
       <a href="/signup.html" class="q-cta-btn" id="qMatchCta">
         Join Logicard free now
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -329,12 +329,12 @@
       Claim your free Logicard
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
-    <p class="q-browse-hint">Prefer to browse? <a href="#qSectors">See the full list by category ↓</a></p>
+    <p class="q-browse-hint">Prefer to browse? <a href="#qSectors">See the full list by category â†“</a></p>
    </div>
   </div>
 
   <div class="q-sectors" id="qSectors">
-    <p style="text-align:center;color:var(--text-muted)">Loading roles…</p>
+    <p style="text-align:center;color:var(--text-muted)">Loading rolesâ€¦</p>
   </div><!-- /q-sectors -->
 
   <div class="q-bottom">
@@ -342,7 +342,7 @@
       Claim your free Logicard
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
-    <p>£10/year — use code FREE at checkout for your first year at £0</p>
+    <p>Â£10/year â€” use code FREE at checkout for your first year at Â£0</p>
   </div>
 
   <footer class="q-footer">
@@ -381,15 +381,15 @@
             <div class="q-roles">
               ${cat.roles.map(r => `<span class="q-role">${escapeHtml(r)}</span>`).join('')}
             </div>
-            <div class="q-roles-join"><a href="/signup.html">Join Logicard free →</a></div>
+            <div class="q-roles-join"><a href="/signup.html">Join Logicard free â†’</a></div>
           </div>
         `).join('');
       } catch {
-        container.innerHTML = '<p style="text-align:center;color:var(--text-muted)">Unable to load roles right now — please refresh.</p>';
+        container.innerHTML = '<p style="text-align:center;color:var(--text-muted)">Unable to load roles right now â€” please refresh.</p>';
       }
     }
 
-    // ── Search ────────────────────────────────────────────────────
+    // â”€â”€ Search â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const qSearchInput   = document.getElementById('qSearchInput');
     const qSearchResults = document.getElementById('qSearchResults');
     const qSearchEmpty   = document.getElementById('qSearchEmpty');

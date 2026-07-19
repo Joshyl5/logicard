@@ -1,8 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Card body (navy) -->
-  <rect x="4" y="12" width="56" height="40" rx="7" fill="#071d40"/>
-  <!-- Gold stripe -->
-  <rect x="4" y="22" width="56" height="6" fill="#F5A800"/>
+  <!-- Orange wheel -->
+  <circle cx="32" cy="32" r="29" fill="#FF6A00"/>
   <!-- LC monogram -->
-  <text x="32" y="45" font-family="'Segoe UI', Arial, sans-serif" font-weight="700" font-size="19" fill="#ffffff" text-anchor="middle">LC</text>
+  <text x="32" y="41" font-family="'Segoe UI', Arial, sans-serif" font-weight="800" font-size="23" fill="#ffffff" text-anchor="middle">LC</text>
 </svg>
