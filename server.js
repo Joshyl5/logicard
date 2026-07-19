@@ -498,16 +498,20 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/workforce-recognition.html',  changefreq: 'monthly', priority: '0.7' },
   { path: '/login.html',                  changefreq: 'monthly', priority: '0.5' },
   { path: '/privacy.html',                changefreq: 'yearly',  priority: '0.3' },
-  { path: '/terms.html',                  changefreq: 'yearly',  priority: '0.3' },
+  { path: '/t&cs',                        changefreq: 'yearly',  priority: '0.3' },
 ];
 
 app.get('/sitemap.xml', (_req, res) => {
   const roleUrls = Object.keys(JOB_ROLE_BY_SLUG).map(slug => `  <url><loc>https://logicard.co.uk/logistics-rewards/${slug}</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>`);
-  const staticUrls = STATIC_SITEMAP_PAGES.map(p => `  <url><loc>https://logicard.co.uk${p.path}</loc><changefreq>${p.changefreq}</changefreq><priority>${p.priority}</priority></url>`);
+  const staticUrls = STATIC_SITEMAP_PAGES.map(p => `  <url><loc>https://logicard.co.uk${p.path.replace(/&/g, '&amp;')}</loc><changefreq>${p.changefreq}</changefreq><priority>${p.priority}</priority></url>`);
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...staticUrls, ...roleUrls].join('\n')}\n</urlset>`;
   res.setHeader('Content-Type', 'application/xml');
   res.send(xml);
+});
+
+app.get('/t&cs', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'terms.html'));
 });
 
 app.use(express.static(path.join(__dirname, 'public'), {
