@@ -1040,7 +1040,22 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   gap: 28px;
 }
 
-.no-results { color: var(--muted); text-align: center; padding: 60px 0; font-size: 1rem; }
+.no-results {
+  color: var(--muted);
+  text-align: center;
+  padding: 32px 20px;
+  font-size: 1rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.02);
+}
+.no-results::before {
+  content: '🛍️';
+  display: block;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  opacity: 0.6;
+}
 
 /* ── FEATURED OFFER ──────────────────────────────────────────── */
 .offer-featured {
