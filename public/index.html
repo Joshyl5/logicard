@@ -89,6 +89,11 @@
     }
 
     /* ── Site header (shared across every page) ── */
+    .site-header-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
     .site-header {
       display: flex;
       align-items: center;
@@ -97,9 +102,6 @@
       padding: 16px 48px;
       background: var(--navy-deep);
       border-bottom: 1px solid rgba(255,179,0,0.15);
-      position: sticky;
-      top: 0;
-      z-index: 100;
     }
     .site-header-logo {
       display: inline-flex;
@@ -135,9 +137,35 @@
       transition: color 0.15s;
     }
     .site-header-back:hover { color: var(--white); }
+
+    /* ── Category tabs ── */
+    .category-nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-mid);
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      height: 54px;
+      overflow-x: auto;
+    }
+    .category-nav a {
+      color: var(--navy);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 8px 14px;
+      border-radius: 6px;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+    .category-nav a:hover { background: rgba(255,179,0,0.08); }
+    .category-nav a.active { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
+
     @media (max-width: 700px) {
       .site-header { padding: 14px 20px; }
       .site-header-tagline { display: none; }
+      .category-nav { padding: 0 20px; height: 48px; }
     }
 
     /* ── Hero ── */
@@ -989,10 +1017,21 @@
 <body>
 
   <!-- Navigation -->
-  <nav class="site-header">
-    <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
-    <p class="site-header-tagline">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="site-header-divider">|</span> for the people who keep Britain moving</p>
-  </nav>
+  <div class="site-header-wrap">
+    <nav class="site-header">
+      <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
+      <p class="site-header-tagline">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="site-header-divider">|</span> for the people who keep Britain moving</p>
+    </nav>
+    <div class="category-nav">
+      <a href="/categories.html">Categories</a>
+      <a href="/things-to-do.html">Things to Do</a>
+      <a href="/financial-wellbeing.html">Financial Wellbeing</a>
+      <a href="/mental-wellbeing.html">Mental Wellbeing</a>
+      <a href="/qualify.html">Check Your Eligibility</a>
+      <a href="/shopping-cards.html">Shopping Cards</a>
+      <a href="/e-learning.html">E-learning</a>
+    </div>
+  </div>
 
   <!-- Hero -->
   <section class="hero">
