@@ -629,12 +629,13 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
-  border: 2px solid rgba(255,179,0,0.45);
-  padding: 8px 16px;
+  border: 2.5px solid rgba(255,179,0,0.55);
+  padding: 9px 18px;
   border-radius: 6px;
-  background: rgba(255,255,255,0.04);
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 14px rgba(255,179,0,0.12);
   text-decoration: none;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 900;
   letter-spacing: -1px;
   line-height: 1;
@@ -698,8 +699,13 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 @media (max-width: 700px) {
   .site-header { padding: 12px 20px; }
   .site-header-tagline { display: none; }
-  .site-header-signin { display: none; }
+  .site-header-actions { gap: 10px; }
   .site-subbar { padding: 8px 20px; }
+}
+@media (max-width: 380px) {
+  .site-header-logo { font-size: 22px; padding: 7px 14px; }
+  .site-header-join { padding: 8px 14px; font-size: 12px; }
+  .site-header-signin { font-size: 13px; }
 }
 
 .back-link {
