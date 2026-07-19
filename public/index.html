@@ -184,15 +184,17 @@
     .category-nav a:hover { background: rgba(255,179,0,0.08); }
     .category-nav a.active { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
     .category-nav-item { position: relative; }
+    .category-nav-item:hover > a,
+    .category-nav-item:focus-within > a { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
     .category-dropdown {
       display: none;
       position: absolute;
       top: 100%;
       left: 0;
+      margin-top: 4px;
       background: var(--white);
       border: 1px solid var(--gray-mid);
-      border-top: 3px solid var(--orange);
-      border-radius: 0 0 10px 10px;
+      border-radius: 10px;
       box-shadow: 0 12px 32px rgba(0,0,0,0.15);
       padding: 16px 20px;
       grid-template-columns: repeat(2, minmax(170px, 1fr));
