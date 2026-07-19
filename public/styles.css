@@ -618,7 +618,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 24px;
-  padding: 16px 32px;
+  padding: 16px 40px;
   background: #04040d;
   border-bottom: 1px solid rgba(255,179,0,0.15);
   box-shadow: 0 2px 16px rgba(0,0,0,0.35);
@@ -683,7 +683,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 8px 32px;
+  padding: 8px 40px;
   background: rgba(255,255,255,0.03);
   border-bottom: 1px solid rgba(255,179,0,0.08);
 }
