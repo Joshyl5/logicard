@@ -38,7 +38,23 @@
     .category-nav-item:hover .category-dropdown, .category-nav-item:focus-within .category-dropdown { display: grid; }
     .category-dropdown a { padding: 7px 8px; font-size: 13.5px; font-weight: 600; color: var(--navy); }
     .category-dropdown a:hover { color: var(--orange-dark); background: rgba(255,179,0,0.08); }
-    @media (max-width: 700px) { .site-header { padding: 14px 20px; } .site-header-tagline { display: none; } .site-header-actions { gap: 10px; } .category-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; padding: 12px 20px; } .category-nav a { padding: 6px 4px; white-space: normal; } }
+    .mobile-benefits { display: none; }
+    @media (max-width: 700px) {
+      .site-header { padding: 14px 20px; }
+      .site-header-tagline { display: none; }
+      .site-header-actions { gap: 10px; }
+      .category-nav { display: none; }
+      .mobile-benefits { display: block; background: var(--white); border-bottom: 1px solid #e5e5e5; }
+      .mobile-benefits summary { list-style: none; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; color: var(--navy); font-weight: 800; font-size: 15.5px; letter-spacing: -0.2px; cursor: pointer; }
+      .mobile-benefits summary::-webkit-details-marker { display: none; }
+      .mobile-benefits summary .chevron { color: var(--orange-dark); transition: transform 0.2s; flex-shrink: 0; }
+      .mobile-benefits[open] summary .chevron { transform: rotate(180deg); }
+      .mobile-benefits[open] summary { border-bottom: 1px solid #e5e5e5; }
+      .mobile-benefits-panel { padding: 4px 20px 10px; }
+      .mobile-benefits-panel a { display: flex; align-items: center; padding: 14px 4px; font-weight: 600; font-size: 15px; color: var(--navy); text-decoration: none; border-top: 1px solid rgba(7,29,64,0.07); }
+      .mobile-benefits-panel a:first-child { border-top: none; }
+      .mobile-benefits-panel a.active { color: var(--orange-dark); }
+    }
     @media (max-width: 380px) { .site-header-logo { font-size: 22px; padding: 7px 14px; } .site-header-join { padding: 8px 14px; font-size: 12px; } .site-header-signin { font-size: 13px; } }
 
     .page-hero { background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%); color: #fff; padding: 64px 24px; text-align: center; }
@@ -95,6 +111,21 @@
       <a href="/shopping-cards.html">Shopping Cards</a>
       <a href="/e-learning.html">E-learning</a>
     </div>
+    <details class="mobile-benefits">
+      <summary>
+        Logicard Benefits
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </summary>
+      <div class="mobile-benefits-panel">
+        <a href="/categories.html" class="active">Categories</a>
+        <a href="/things-to-do.html">Things to Do</a>
+        <a href="/financial-wellbeing.html">Financial Wellbeing</a>
+        <a href="/mental-wellbeing.html">Mental Wellbeing</a>
+        <a href="/qualify.html">Check Your Eligibility</a>
+        <a href="/shopping-cards.html">Shopping Cards</a>
+        <a href="/e-learning.html">E-learning</a>
+      </div>
+    </details>
   </div>
 
   <section class="page-hero">
