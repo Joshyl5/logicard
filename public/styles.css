@@ -608,19 +608,24 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 
 /* ── Site header (shared across every page) ──────────────────── */
-.site-header {
+.site-header-wrap {
   position: fixed;
   top: 0; left: 0; right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 14px 32px;
-  background: #04040d;
-  border-bottom: 1px solid rgba(255,179,0,0.15);
   z-index: 1000;
 }
+.site-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 32px;
+  background: #04040d;
+  border-bottom: 1px solid rgba(255,179,0,0.15);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.35);
+}
 .site-header-logo {
+  grid-column: 1;
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   flex-shrink: 0;
@@ -637,26 +642,64 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .site-header-logo .logi { color: #fff; }
 .site-header-logo .card { color: #FFB300; }
 .site-header-tagline {
-  flex: 1;
+  grid-column: 2;
+  justify-self: center;
+  text-align: center;
   font-size: 14px;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.6);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.site-header-divider { color: rgba(255,179,0,0.5); margin: 0 6px; }
-.site-header-back {
+.site-header-divider { color: rgba(255,179,0,0.5); margin: 0 8px; }
+.site-header-actions {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 16px;
   flex-shrink: 0;
+}
+.site-header-signin {
   font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.site-header-signin:hover { color: var(--white); }
+.site-header-join {
+  background: #FFB300;
+  color: #071d40;
+  font-weight: 800;
+  font-size: 13px;
+  padding: 9px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.site-header-join:hover { background: #E09A00; }
+.site-subbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px 32px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid rgba(255,179,0,0.08);
+}
+.site-subbar-back {
+  font-size: 13px;
   font-weight: 600;
   color: rgba(255,255,255,0.6);
   text-decoration: none;
   transition: color 0.15s;
 }
-.site-header-back:hover { color: var(--white); }
+.site-subbar-back:hover { color: var(--white); }
 @media (max-width: 700px) {
   .site-header { padding: 12px 20px; }
   .site-header-tagline { display: none; }
+  .site-header-signin { display: none; }
+  .site-subbar { padding: 8px 20px; }
 }
 
 .back-link {
@@ -672,7 +715,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .back-link:hover { color: var(--white); }
 
 .signup-main {
-  padding: 130px 24px 80px;
+  padding: 175px 24px 80px;
 }
 
 /* Password show/hide */
@@ -716,7 +759,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 90px 24px 24px;
+  padding: 135px 24px 24px;
   overflow: hidden;
 }
 
