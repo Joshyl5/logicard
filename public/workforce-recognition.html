@@ -40,38 +40,14 @@
     }
 
     /* Nav */
-    .wr-nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 48px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      position: sticky; top: 0; z-index: 10;
-      background: rgba(4,4,13,0.92);
-      backdrop-filter: blur(12px);
-    }
-    .wr-nav-logo {
-      display: inline-flex; align-items: center; text-decoration: none;
-      border: 2px solid rgba(255,179,0,0.4); padding: 6px 14px; border-radius: 6px;
-      background: rgba(255,255,255,0.04);
-    }
-    .wr-nav-logo span { font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
-    .wr-nav-logo .logi { color: #fff; }
-    .wr-nav-logo .card { color: #FFB300; }
-    .wr-nav-actions { display: flex; gap: 20px; align-items: center; }
-    .wr-nav-link {
-      font-size: 13px; font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .wr-nav-link:hover { color: #fff; }
-    .wr-nav-btn {
-      background: var(--orange); color: #071d40;
-      font-size: 13px; font-weight: 800;
-      padding: 10px 22px; border-radius: 100px;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .wr-nav-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 48px; background: var(--navy-deep); border-bottom: 1px solid rgba(255,179,0,0.15); position: sticky; top: 0; z-index: 100; }
+    .site-header-logo { display: inline-flex; align-items: center; flex-shrink: 0; border: 2px solid rgba(255,179,0,0.45); padding: 8px 16px; border-radius: 6px; background: rgba(255,255,255,0.04); text-decoration: none; font-size: 24px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--orange); }
+    .site-header-tagline { flex: 1; font-size: 14px; color: rgba(255,255,255,0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .site-header-divider { color: rgba(255,179,0,0.5); margin: 0 6px; }
+    .site-header-back { flex-shrink: 0; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; }
+    .site-header-back:hover { color: var(--white); }
+    @media (max-width: 700px) { .site-header { padding: 14px 20px; } .site-header-tagline { display: none; } }
 
     /* Hero */
     .wr-hero {
@@ -253,7 +229,6 @@
       .wr-form-row { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
-      .wr-nav { padding: 16px 20px; }
       .wr-hero { padding: 56px 20px 48px; }
       .wr-section { padding: 52px 20px; }
       .wr-why-grid { grid-template-columns: 1fr; }
@@ -264,12 +239,10 @@
 </head>
 <body>
 
-  <nav class="wr-nav">
-    <a href="/" class="wr-nav-logo"><span><span class="logi">Logi</span><span class="card">card</span></span></a>
-    <div class="wr-nav-actions">
-      <a href="/" class="wr-nav-link">Home</a>
-      <a href="/signup.html" class="wr-nav-btn">Join Free</a>
-    </div>
+  <nav class="site-header">
+    <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
+    <p class="site-header-tagline">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="site-header-divider">|</span> for the people who keep Britain moving</p>
+    <a href="/" class="site-header-back">&lt; Back</a>
   </nav>
 
   <div class="wr-hero">

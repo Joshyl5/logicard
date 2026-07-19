@@ -34,38 +34,14 @@
     }
 
     /* Nav */
-    .q-nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 20px 40px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      position: sticky; top: 0; z-index: 10;
-      background: rgba(4,4,13,0.92);
-      backdrop-filter: blur(12px);
-    }
-    .q-nav-logo {
-      display: inline-flex; align-items: center; text-decoration: none;
-      border: 2px solid rgba(255,179,0,0.4); padding: 6px 14px; border-radius: 6px;
-      background: rgba(255,255,255,0.04);
-    }
-    .q-nav-logo span { font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
-    .q-nav-logo .logi { color: #fff; }
-    .q-nav-logo .card { color: #FFB300; }
-    .q-nav-actions { display: flex; gap: 12px; align-items: center; }
-    .q-nav-link {
-      font-size: 13px; font-weight: 600;
-      color: rgba(255,255,255,0.6);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .q-nav-link:hover { color: #fff; }
-    .q-nav-btn {
-      background: var(--orange); color: #000;
-      font-size: 13px; font-weight: 800;
-      padding: 9px 20px; border-radius: 100px;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.15s;
-    }
-    .q-nav-btn:hover { background: #ffc933; transform: translateY(-1px); }
+    .site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 40px; background: var(--navy-deep); border-bottom: 1px solid rgba(255,179,0,0.15); position: sticky; top: 0; z-index: 100; }
+    .site-header-logo { display: inline-flex; align-items: center; flex-shrink: 0; border: 2px solid rgba(255,179,0,0.45); padding: 8px 16px; border-radius: 6px; background: rgba(255,255,255,0.04); text-decoration: none; font-size: 24px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--orange); }
+    .site-header-tagline { flex: 1; font-size: 14px; color: rgba(255,255,255,0.55); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .site-header-divider { color: rgba(255,179,0,0.5); margin: 0 6px; }
+    .site-header-back { flex-shrink: 0; font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; }
+    .site-header-back:hover { color: #fff; }
+    @media (max-width: 700px) { .site-header { padding: 14px 20px; } .site-header-tagline { display: none; } }
 
     /* Hero */
     .q-hero {
@@ -229,7 +205,6 @@
     .q-footer a:hover { color: rgba(255,255,255,0.6); }
 
     @media (max-width: 600px) {
-      .q-nav { padding: 16px 20px; }
       .q-hero { padding: 56px 20px 48px; }
       .q-sectors { padding: 0 16px 72px; }
       .q-sector-header { padding: 18px 20px; }
@@ -240,12 +215,10 @@
 </head>
 <body>
 
-  <nav class="q-nav">
-    <a href="/" class="q-nav-logo"><span><span class="logi">Logi</span><span class="card">card</span></span></a>
-    <div class="q-nav-actions">
-      <a href="/" class="q-nav-link">Home</a>
-      <a href="/signup.html" class="q-nav-btn">Join Free</a>
-    </div>
+  <nav class="site-header">
+    <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
+    <p class="site-header-tagline">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="site-header-divider">|</span> for the people who keep Britain moving</p>
+    <a href="/" class="site-header-back">&lt; Back</a>
   </nav>
 
   <div class="q-hero">

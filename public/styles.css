@@ -607,34 +607,56 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   min-height: 100vh;
 }
 
-.signup-nav {
+/* ── Site header (shared across every page) ──────────────────── */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 40px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(4, 14, 34, 0.6);
-  backdrop-filter: blur(10px);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  gap: 24px;
+  padding: 14px 32px;
+  background: #04040d;
+  border-bottom: 1px solid rgba(255,179,0,0.15);
+  z-index: 1000;
 }
-
-.signup-nav .logo {
-  display: flex;
+.site-header-logo {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,179,0,0.45);
+  padding: 8px 16px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.04);
   text-decoration: none;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
 }
-
-.logo-truck { width: 48px; height: auto; }
-
-.logo-name {
-  font-family: var(--font-brand);
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--white);
-  letter-spacing: 0.02em;
+.site-header-logo .logi { color: #fff; }
+.site-header-logo .card { color: #FFB300; }
+.site-header-tagline {
+  flex: 1;
+  font-size: 14px;
+  color: rgba(255,255,255,0.55);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.site-header-divider { color: rgba(255,179,0,0.5); margin: 0 6px; }
+.site-header-back {
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.site-header-back:hover { color: var(--white); }
+@media (max-width: 700px) {
+  .site-header { padding: 12px 20px; }
+  .site-header-tagline { display: none; }
 }
 
 .back-link {
@@ -650,7 +672,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .back-link:hover { color: var(--white); }
 
 .signup-main {
-  padding: 60px 24px 80px;
+  padding: 130px 24px 80px;
 }
 
 /* Password show/hide */
@@ -694,7 +716,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 90px 24px 24px;
   overflow: hidden;
 }
 

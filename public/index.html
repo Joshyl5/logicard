@@ -88,88 +88,57 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── Navigation ── */
-    .main-nav {
-      background: var(--navy);
-      padding: 0 48px;
+    /* ── Site header (shared across every page) ── */
+    .site-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 76px;
+      gap: 24px;
+      padding: 16px 48px;
+      background: var(--navy-deep);
+      border-bottom: 1px solid rgba(255,179,0,0.15);
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.5), 0 1px 0 rgba(255,179,0,0.2);
     }
-    .nav-logo {
-      display: flex;
+    .site-header-logo {
+      display: inline-flex;
       align-items: center;
+      flex-shrink: 0;
       border: 2px solid rgba(255,179,0,0.45);
-      padding: 8px 18px;
+      padding: 8px 16px;
       border-radius: 6px;
-      text-decoration: none;
       background: rgba(255,255,255,0.04);
-    }
-    .nav-logo-text {
-      font-size: 32px;
+      text-decoration: none;
+      font-size: 24px;
       font-weight: 900;
-      letter-spacing: -1.5px;
+      letter-spacing: -1px;
       line-height: 1;
     }
-    .nav-logo-logi { color: #fff; }
-    .nav-logo-card { color: var(--orange); }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .nav-signin {
-      color: rgba(255,255,255,0.7);
-      font-weight: 600;
+    .site-header-logo .logi { color: #fff; }
+    .site-header-logo .card { color: var(--orange); }
+    .site-header-tagline {
+      flex: 1;
       font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .site-header-divider { color: rgba(255,179,0,0.5); margin: 0 6px; }
+    .site-header-back {
+      flex-shrink: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
       text-decoration: none;
       transition: color 0.15s;
     }
-    .nav-signin:hover { color: var(--white); }
-    .nav-cta {
-      background: var(--orange);
-      color: var(--white);
-      padding: 11px 22px;
-      font-weight: 800;
-      font-size: 14px;
-      letter-spacing: 0.5px;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background 0.15s;
+    .site-header-back:hover { color: var(--white); }
+    @media (max-width: 700px) {
+      .site-header { padding: 14px 20px; }
+      .site-header-tagline { display: none; }
     }
-    .nav-cta:hover { background: var(--orange-dark); }
-
-    /* ── Category tabs ── */
-    .category-nav {
-      background: var(--white);
-      border-bottom: 1px solid var(--gray-mid);
-      padding: 0 48px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      height: 54px;
-      overflow-x: auto;
-      position: sticky;
-      top: 76px;
-      z-index: 99;
-    }
-    .category-nav a {
-      color: var(--navy);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 14px;
-      padding: 8px 14px;
-      border-radius: 6px;
-      white-space: nowrap;
-      transition: background 0.15s, color 0.15s;
-    }
-    .category-nav a:hover { background: rgba(255,179,0,0.08); }
-    .category-nav a.active { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
 
     /* ── Hero ── */
     .hero {
@@ -760,10 +729,6 @@
     /* ── Responsive — Tablet (≤900px) ── */
     @media (max-width: 900px) {
       .lc-section { padding: 64px 28px; }
-      .main-nav { padding: 0 20px; height: 64px; }
-      .category-nav { top: 64px; padding: 0 20px; }
-      .nav-logo-text { font-size: 24px; }
-      .nav-logo { padding: 6px 12px; }
       .hero { padding: 72px 28px 56px; min-height: auto; }
       .hero-logo-wrap { display: none; }
       .hero-stats { flex-wrap: wrap; gap: 24px; }
@@ -780,15 +745,6 @@
 
     /* ── Responsive — Mobile (≤600px) ── */
     @media (max-width: 600px) {
-      /* Nav */
-      .main-nav { height: 56px; padding: 0 16px; }
-      .category-nav { top: 56px; padding: 0 16px; height: 48px; }
-      .nav-logo-text { font-size: 20px; }
-      .nav-logo { padding: 5px 10px; }
-      .nav-signin { font-size: 12px; }
-      .nav-right { gap: 10px; }
-      .nav-cta { font-size: 12px; padding: 8px 14px; letter-spacing: 0; }
-
       /* Hero */
       .hero { padding: 52px 20px 48px; }
       .hero-tag { font-size: 11px; padding: 5px 11px; margin-bottom: 18px; }
@@ -1033,26 +989,10 @@
 <body>
 
   <!-- Navigation -->
-  <nav class="main-nav">
-    <a href="/" class="nav-logo">
-      <span class="nav-logo-text"><span class="nav-logo-logi">Logi</span><span class="nav-logo-card">card</span></span>
-    </a>
-    <div class="nav-right">
-      <a href="/login.html" class="nav-signin">Sign In</a>
-      <a href="/signup.html" class="nav-cta">Join Now</a>
-    </div>
+  <nav class="site-header">
+    <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
+    <p class="site-header-tagline">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="site-header-divider">|</span> for the people who keep Britain moving</p>
   </nav>
-
-  <!-- Category tabs -->
-  <div class="category-nav">
-    <a href="/categories.html">Categories</a>
-    <a href="/things-to-do.html">Things to Do</a>
-    <a href="/financial-wellbeing.html">Financial Wellbeing</a>
-    <a href="/mental-wellbeing.html">Mental Wellbeing</a>
-    <a href="/qualify.html">Check Your Eligibility</a>
-    <a href="/shopping-cards.html">Shopping Cards</a>
-    <a href="/e-learning.html">E-learning</a>
-  </div>
 
   <!-- Hero -->
   <section class="hero">
