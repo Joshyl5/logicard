@@ -65,7 +65,8 @@ form.addEventListener('submit', async e => {
     ['lastName',    'Last Name'],
     ['email',       'Email Address'],
     ['phone',       'Phone Number'],
-    ['city',        'Town / City'],
+    ['town',        'Town'],
+    ['city',        'City'],
   ];
 
   for (const [key, label] of required) {
@@ -336,15 +337,131 @@ function initRoleSearch() {
 
 loadJobRoles();
 
-// Town/City is a soft suggestion, not an enforced list — the datalist just
-// helps most members type faster and more consistently; typing anything
-// else is still accepted since the underlying input has no allowlist check.
+// ── Town / City: type-ahead suggestions, but never enforced ─────
+// Unlike the job-title picker, Town and City stay free text — typing
+// something not in the list is always accepted (see PLACE_PATTERN in
+// server.js for the actual character restriction, which is the only real
+// gate). This is a plain suggestion aid, aimed at making the field faster
+// and more accessible to fill in correctly, not a closed list.
+function createPlaceCombobox(inputId, items, minChars = 2) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+
+  function escapeHtml(str) {
+    return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+
+  const dropdown = document.createElement('div');
+  dropdown.className = 'role-dropdown';
+  document.body.appendChild(dropdown);
+
+  let activeIndex = -1;
+
+  function getVisibleOptions() {
+    return Array.from(dropdown.querySelectorAll('.role-dropdown-option'));
+  }
+
+  function setActive(index) {
+    const opts = getVisibleOptions();
+    opts.forEach(o => o.classList.remove('active'));
+    if (opts[index]) {
+      opts[index].classList.add('active');
+      opts[index].scrollIntoView({ block: 'nearest' });
+    }
+    activeIndex = index;
+  }
+
+  function positionDropdown() {
+    const rect = input.getBoundingClientRect();
+    dropdown.style.left  = `${rect.left}px`;
+    dropdown.style.width = `${rect.width}px`;
+    dropdown.style.top   = `${rect.bottom + 4}px`;
+  }
+
+  function openDropdown() {
+    positionDropdown();
+    dropdown.classList.add('open');
+    window.addEventListener('scroll', positionDropdown, true);
+    window.addEventListener('resize', positionDropdown);
+  }
+
+  function closeDropdown() {
+    dropdown.classList.remove('open');
+    dropdown.innerHTML = '';
+    activeIndex = -1;
+    window.removeEventListener('scroll', positionDropdown, true);
+    window.removeEventListener('resize', positionDropdown);
+  }
+
+  function renderDropdown() {
+    const q = input.value.trim().toLowerCase();
+    if (q.length < minChars) { closeDropdown(); return; }
+
+    const matches = items.filter(i => i.toLowerCase().includes(q));
+    activeIndex = -1;
+
+    if (!matches.length) {
+      dropdown.innerHTML = '<div class="role-dropdown-empty">No matches — you can still type your own</div>';
+    } else {
+      dropdown.innerHTML = matches.map(m => `<div class="role-dropdown-option" data-value="${escapeHtml(m)}">${escapeHtml(m)}</div>`).join('');
+    }
+    openDropdown();
+  }
+
+  function selectValue(value) {
+    input.value = value;
+    closeDropdown();
+  }
+
+  input.addEventListener('input', renderDropdown);
+
+  input.addEventListener('blur', () => {
+    // Delay so a click on a dropdown option registers before the list closes.
+    // Unlike the role picker, free text is always kept — nothing gets cleared.
+    setTimeout(closeDropdown, 150);
+  });
+
+  input.addEventListener('keydown', e => {
+    const opts = getVisibleOptions();
+    if (!opts.length) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive(Math.min(activeIndex + 1, opts.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive(Math.max(activeIndex - 1, 0));
+    } else if (e.key === 'Enter') {
+      // Only hijack Enter if the member has actually navigated to a
+      // suggestion — otherwise let Enter behave normally (free text).
+      if (activeIndex >= 0) {
+        e.preventDefault();
+        selectValue(opts[activeIndex].dataset.value);
+      }
+    } else if (e.key === 'Escape') {
+      closeDropdown();
+    }
+  });
+
+  dropdown.addEventListener('mousedown', e => {
+    const target = e.target.closest('.role-dropdown-option');
+    if (!target) return;
+    e.preventDefault(); // keep focus on the input so blur doesn't fire before the click registers
+    selectValue(target.dataset.value);
+  });
+
+  document.addEventListener('click', e => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) closeDropdown();
+  });
+}
+
 (async function loadTowns() {
-  const datalist = document.getElementById('cityDatalist');
-  if (!datalist) return;
+  const townInput = document.getElementById('townInput');
+  const cityInput = document.getElementById('cityInput');
+  if (!townInput || !cityInput) return;
   try {
     const res = await fetch('/api/uk-towns');
     const { towns } = await res.json();
-    datalist.innerHTML = towns.map(t => `<option value="${t}"></option>`).join('');
-  } catch { /* non-critical — field still works as a free-text input */ }
+    createPlaceCombobox('townInput', towns, 2);
+    createPlaceCombobox('cityInput', towns, 2);
+  } catch { /* non-critical — fields still work as plain free-text inputs */ }
 })();

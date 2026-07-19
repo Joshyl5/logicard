@@ -1317,9 +1317,9 @@ const ADDRESS_PATTERN = /^[\p{L}\p{N}\p{M} ,./#'&-]{1,120}$/u;
 // previously diverged: checkout/complete skipped all of this.)
 function validateMemberFields(data) {
   const { companyName, role, roleCategory, firstName, lastName, email, phone,
-          addressLine1, addressLine2, city, county, country, password, gdprConsent } = data;
+          addressLine1, addressLine2, town, city, county, country, password, gdprConsent } = data;
 
-  const required = { companyName, role, roleCategory, firstName, lastName, email, phone, city };
+  const required = { companyName, role, roleCategory, firstName, lastName, email, phone, town, city };
   for (const [field, value] of Object.entries(required)) {
     if (!value || !String(value).trim()) return `Missing required field: ${field}`;
   }
@@ -1340,7 +1340,8 @@ function validateMemberFields(data) {
     [lastName,    NAME_PATTERN,    'Last Name'],
     [companyName, COMPANY_PATTERN, 'Company Name'],
     [phone,       PHONE_PATTERN,   'Phone Number'],
-    [city,        PLACE_PATTERN,   'Town / City'],
+    [town,        PLACE_PATTERN,   'Town'],
+    [city,        PLACE_PATTERN,   'City'],
   ];
   if (county)        fieldChecks.push([county,        PLACE_PATTERN,   'County']);
   if (country)       fieldChecks.push([country,       PLACE_PATTERN,   'Country']);
@@ -1357,12 +1358,11 @@ function validateMemberFields(data) {
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', signupLimiter, async (req, res) => {
   const { companyName, role, roleCategory, firstName, lastName, email, phone, dateOfBirth,
-          addressLine1, addressLine2, city, county, country,
+          addressLine1, addressLine2, town, city, county, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
   const validationError = validateMemberFields(req.body);
   if (validationError) return res.status(400).json({ error: validationError });
-  if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
 
   const normalizedPromo = (promoCode || '').toUpperCase().trim();
   if (normalizedPromo && !VALID_PROMOS[normalizedPromo]) {
@@ -1370,7 +1370,13 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
   }
   const promo = VALID_PROMOS[normalizedPromo] || null;
 
+  // emailExists is now inside the same try/catch as createMember — a
+  // transient DB hiccup here previously threw as an unhandled rejection
+  // and crashed the whole Node process (confirmed directly while testing
+  // the Town/City change), rather than just failing this one request.
   try {
+    if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
+
     const { membershipNumber } = await createMember({
       companyName: companyName.trim(), role: role.trim(), roleCategory: roleCategory.trim(),
       firstName: firstName.trim(),     lastName: lastName.trim(),
@@ -1378,6 +1384,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
       dateOfBirth: dateOfBirth || null,
       addressLine1: addressLine1 ? addressLine1.trim() : null,
       addressLine2: addressLine2 ? addressLine2.trim() : null,
+      town: town ? town.trim() : null,
       city: city ? city.trim() : null, county: county ? county.trim() : null,
       country: country ? country.trim() : null,
       password, gdprConsent,

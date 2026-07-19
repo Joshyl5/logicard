@@ -26,11 +26,37 @@ const categories = [
     ],
   },
   {
+    name: 'Business Services',
+    roles: [
+      'Customer Service Advisor (Logistics)', 'Customer Service Manager (Logistics)',
+      'Sales Executive (Logistics)', 'Business Development Manager (Logistics)',
+      'Account Manager (Logistics)', 'Administrative Assistant (Logistics)',
+      'Office Manager (Logistics)', 'Receptionist (Logistics)', 'Marketing Manager (Logistics)',
+      'Legal Counsel (Logistics)',
+    ],
+  },
+  {
     name: 'Customs',
     roles: [
       'Customs Clerk', 'Customs Compliance Officer', 'Import Coordinator', 'Export Coordinator',
       'Customs Broker', 'Trade Compliance Officer', 'Import/Export Administrator',
       'International Trade Coordinator', 'Export Sales Logistics Coordinator',
+    ],
+  },
+  {
+    name: 'E-Commerce',
+    roles: [
+      'E-Commerce Fulfilment Operative', 'Pick-to-Light Operative', 'Sortation Operative',
+      'Parcel Sorter', 'Fulfilment Centre Operative', 'Fulfilment Manager', 'Online Order Picker',
+      'E-Commerce Logistics Manager', 'Marketplace Fulfilment Coordinator', 'Click & Collect Operative',
+    ],
+  },
+  {
+    name: 'Finance',
+    roles: [
+      'Finance Manager (Logistics)', 'Finance Business Partner (Logistics)', 'Finance Analyst (Logistics)',
+      'Credit Controller (Logistics)', 'Accounts Payable Clerk (Logistics)', 'Freight Cost Analyst',
+      'Billing Coordinator (Logistics)', 'Finance Director (Logistics)',
     ],
   },
   {
@@ -51,6 +77,14 @@ const categories = [
     ],
   },
   {
+    name: 'Logistics Charity',
+    roles: [
+      'Charity Logistics Coordinator', 'Humanitarian Logistics Officer', 'Disaster Relief Logistics Manager',
+      'Food Bank Distribution Coordinator', 'Charity Warehouse Volunteer Coordinator',
+      'NGO Supply Chain Officer', 'Aid Logistics Officer', 'Community Transport Coordinator',
+    ],
+  },
+  {
     name: 'Management',
     roles: [
       'Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Financial Officer (CFO)',
@@ -58,25 +92,23 @@ const categories = [
       'Chief People Officer (CHRO)', 'Chief Commercial Officer (CCO)', 'Chief Sustainability Officer',
       'Managing Director', 'Founder', 'Co-Founder', 'Investor', 'Non-Executive Director',
       'Chairperson', 'Board Member', 'Operations Director', 'Commercial Director', 'Technical Director',
-      'Finance Manager (Logistics)', 'Finance Business Partner (Logistics)', 'Commercial Manager (Logistics)',
-      'Compliance Manager', 'Health & Safety Manager', 'Quality Assurance Manager (Logistics)',
-      'Sustainability Manager (Logistics)', 'Supply Chain Manager', 'Supply Chain Director',
-      'Logistics Consultant', 'Supply Chain Strategy Manager', 'Global Logistics Manager',
+      'Commercial Manager (Logistics)', 'Compliance Manager', 'Health & Safety Manager',
+      'Quality Assurance Manager (Logistics)', 'Sustainability Manager (Logistics)', 'Global Logistics Manager',
     ],
   },
   {
     name: 'Operations',
     roles: [
-      'Operations Manager', 'Operations Coordinator', 'Supply Chain Analyst', 'Supply Chain Planner',
-      'Supply Chain Coordinator', 'Healthcare Logistics Coordinator', 'Clinical Trials Logistics Coordinator',
-      'Automotive Logistics Coordinator', 'Manufacturing Logistics Planner', 'Parts Distribution Operative',
-      'Production Line Supply Operative', 'Construction Logistics Coordinator', 'Site Logistics Manager',
-      'Crane Operator (Logistics)', 'Materials Handling Operative', 'Returns Processor', 'Returns Coordinator',
-      'Reverse Logistics Manager', 'Recycling Operative', 'Waste & Recycling Coordinator',
-      'Refurbishment Operative', 'Food Safety & Compliance Officer', 'FMCG Logistics Coordinator',
-      'Distribution Manager', 'Distribution Supervisor', 'Hub Manager', 'Hub Operative', 'Depot Manager',
-      'Depot Supervisor', 'Retail Replenishment Coordinator', 'GDP Compliance Officer',
-      'ADR Compliance Officer', 'Dangerous Goods Safety Adviser (DGSA)', 'Hazardous Waste Coordinator',
+      'Operations Manager', 'Operations Coordinator', 'Healthcare Logistics Coordinator',
+      'Clinical Trials Logistics Coordinator', 'Automotive Logistics Coordinator',
+      'Manufacturing Logistics Planner', 'Parts Distribution Operative', 'Production Line Supply Operative',
+      'Construction Logistics Coordinator', 'Site Logistics Manager', 'Crane Operator (Logistics)',
+      'Materials Handling Operative', 'Returns Processor', 'Returns Coordinator', 'Reverse Logistics Manager',
+      'Recycling Operative', 'Waste & Recycling Coordinator', 'Refurbishment Operative',
+      'Food Safety & Compliance Officer', 'FMCG Logistics Coordinator', 'Distribution Manager',
+      'Distribution Supervisor', 'Hub Manager', 'Hub Operative', 'Depot Manager', 'Depot Supervisor',
+      'Retail Replenishment Coordinator', 'GDP Compliance Officer', 'ADR Compliance Officer',
+      'Dangerous Goods Safety Adviser (DGSA)', 'Hazardous Waste Coordinator',
     ],
   },
   {
@@ -113,6 +145,14 @@ const categories = [
     ],
   },
   {
+    name: 'Self Employed',
+    roles: [
+      'Self-Employed Courier', 'Owner Driver', 'Independent Haulier', 'Self-Employed Delivery Driver',
+      'Freelance Logistics Consultant', 'Sole Trader Removals', 'Self-Employed Warehouse Contractor',
+      'Owner-Operator (HGV)',
+    ],
+  },
+  {
     name: 'Stock Control',
     roles: [
       'Inventory Controller', 'Inventory Analyst', 'Inventory Manager', 'Stock Auditor',
@@ -120,11 +160,20 @@ const categories = [
     ],
   },
   {
+    name: 'Supply Chain',
+    roles: [
+      'Supply Chain Manager', 'Supply Chain Director', 'Supply Chain Analyst', 'Supply Chain Planner',
+      'Supply Chain Coordinator', 'Supply Chain Strategy Manager', 'Supply Chain Data Analyst',
+      'Network Design Analyst', 'Logistics Consultant', 'S&OP Manager', 'Supply Chain Risk Manager',
+      'End-to-End Supply Chain Planner',
+    ],
+  },
+  {
     name: 'Technology',
     roles: [
       'IT Manager', 'IT Support Engineer', 'Software Developer', 'Systems Analyst', 'Data Analyst',
       'Business Analyst', 'Digital Transformation Manager', 'Head of Technology', 'WMS Administrator',
-      'TMS Analyst', 'Warehouse Automation Engineer', 'Supply Chain Data Analyst', 'Network Design Analyst',
+      'TMS Analyst', 'Warehouse Automation Engineer',
     ],
   },
   {
@@ -133,17 +182,17 @@ const categories = [
       'Truck Driver', 'HGV Class 1 Driver', 'HGV Class 2 Driver', '7.5 Tonne Driver', 'Van Driver',
       'Multi-Drop Driver', 'Tanker Driver', 'ADR Driver', 'Recovery Driver', 'Driver Trainer',
       'LGV Instructor', 'Articulated Lorry Driver', 'Class 1 Driver (Days)', 'Class 1 Driver (Nights)',
-      'Owner Driver', 'Haulage Contractor', 'Transport Planner', 'Transport Manager', 'Transport Supervisor',
+      'Haulage Contractor', 'Transport Planner', 'Transport Manager', 'Transport Supervisor',
       'Transport Compliance Officer', 'Route Optimisation Analyst', 'Transport Clerk',
       'Transport Operations Manager', 'Traffic Office Manager', 'Fuel & Compliance Analyst', 'Courier',
-      'Same-Day Courier', 'Self-Employed Courier', 'Courier Driver', 'Multi-Drop Courier',
-      'Courier Fleet Coordinator', 'Parcel Delivery Driver', 'Delivery Associate', 'Last-Mile Coordinator',
-      'Last-Mile Delivery Driver', 'Delivery Route Planner', 'Final Mile Operations Manager',
-      'Delivery Partner', 'Refrigerated Transport Driver', 'Chilled Distribution Driver',
-      'Medical Supplies Distribution Driver', 'Just-In-Time Delivery Driver', 'Heavy Goods Driver',
-      'Plant Delivery Driver', 'Abnormal Loads Driver', 'Removals Driver', 'Removals Operative',
-      'Relocation Coordinator', 'Man and Van Driver', 'Removals Team Leader', 'Storage & Removals Manager',
-      'Hazmat Driver', 'Food Distribution Driver', 'Beverage Delivery Driver', 'Store Delivery Driver',
+      'Same-Day Courier', 'Courier Driver', 'Multi-Drop Courier', 'Courier Fleet Coordinator',
+      'Parcel Delivery Driver', 'Delivery Associate', 'Last-Mile Coordinator', 'Last-Mile Delivery Driver',
+      'Delivery Route Planner', 'Final Mile Operations Manager', 'Delivery Partner',
+      'Refrigerated Transport Driver', 'Chilled Distribution Driver', 'Medical Supplies Distribution Driver',
+      'Just-In-Time Delivery Driver', 'Heavy Goods Driver', 'Plant Delivery Driver', 'Abnormal Loads Driver',
+      'Removals Driver', 'Removals Operative', 'Relocation Coordinator', 'Man and Van Driver',
+      'Removals Team Leader', 'Storage & Removals Manager', 'Hazmat Driver', 'Food Distribution Driver',
+      'Beverage Delivery Driver', 'Store Delivery Driver',
     ],
   },
   {
@@ -153,9 +202,7 @@ const categories = [
       'Forklift Driver', 'Reach Truck Driver', 'VNA Driver', 'Picker Packer', 'Loading Bay Operative',
       'Shunter Driver', 'Warehouse Administrator', 'Warehouse Planner', 'Warehouse Quality Inspector',
       'Warehouse Health & Safety Officer', 'Warehouse Trainer', 'Warehouse Operative (Nights)',
-      'Goods In Operative', 'Goods Out Operative', 'E-Commerce Fulfilment Operative',
-      'Pick-to-Light Operative', 'Sortation Operative', 'Parcel Sorter', 'Fulfilment Centre Operative',
-      'Fulfilment Manager', 'Online Order Picker', 'Cold Chain Operative',
+      'Goods In Operative', 'Goods Out Operative', 'Cold Chain Operative',
       'Temperature-Controlled Warehouse Operative', 'Cold Store Manager', 'Cold Chain Compliance Officer',
       'Frozen Goods Warehouse Operative', 'Pharmaceutical Warehouse Operative', 'Pharma Cold Chain Specialist',
       'Food Warehouse Operative', 'Packaging Operative', 'Pallet Controller', 'Packing Line Supervisor',

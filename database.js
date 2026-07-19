@@ -48,6 +48,9 @@ async function initDb() {
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS promo_code TEXT`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS free_year BOOLEAN DEFAULT FALSE`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS role_category TEXT`);
+  // Town/City split into two separate required fields (2026-07-19) — "city"
+  // already existed; "town" is the new column, existing rows just get NULL.
+  await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS town TEXT`);
 
   // Proof-of-employment verification — existing members keep their current
   // verified=TRUE value; only new signups default to unverified from here on.
@@ -187,6 +190,7 @@ function toMember(row) {
     dateOfBirth:        row.date_of_birth,
     addressLine1:       row.address_line1,
     addressLine2:       row.address_line2,
+    town:               row.town,
     city:               row.city,
     county:             row.county,
     country:            row.country,
@@ -262,7 +266,7 @@ async function emailExists(email) {
 async function createMember(data) {
   const {
     companyName, role, roleCategory = null, firstName, lastName, email, phone, dateOfBirth = null,
-    addressLine1 = null, addressLine2 = null, city = null, county = null,
+    addressLine1 = null, addressLine2 = null, town = null, city = null, county = null,
     country = null,
     password, gdprConsent, marketingConsent, referredBy,
     promoCode = null, freeYear = false,
@@ -279,19 +283,19 @@ async function createMember(data) {
     INSERT INTO members (
       membership_number, company_name, role, role_category, first_name, last_name,
       email, phone, date_of_birth, address_line1, address_line2,
-      city, county, country, password_hash, verified, created_at,
+      town, city, county, country, password_hash, verified, created_at,
       referred_by, total_referrals, monthly_entries,
       marketing_consent, marketing_consent_at, gdpr_consent,
       promo_code, free_year
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,FALSE,$16,
-      $17,0,0,$18,$19,$20,$21,$22
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,FALSE,$17,
+      $18,0,0,$19,$20,$21,$22,$23
     )
   `, [
     membershipNumber, companyName, role, roleCategory || null, firstName, lastName,
     email.toLowerCase(), phone, dateOfBirth || null,
     addressLine1 || null, addressLine2 || null,
-    city || null, county || null, country || null,
+    town || null, city || null, county || null, country || null,
     passwordHash, now,
     referredBy ? Number(referredBy) : null,
     !!marketingConsent,

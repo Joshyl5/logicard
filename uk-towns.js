@@ -9,6 +9,7 @@ const UK_TOWNS = [
   // Greater London
   'London', 'Croydon', 'Bromley', 'Sutton', 'Kingston upon Thames', 'Richmond upon Thames',
   'Harrow', 'Ealing', 'Enfield', 'Barnet', 'Romford', 'Ilford', 'Uxbridge', 'Twickenham', 'Wembley',
+  'Rainham', 'Dagenham', 'Hornchurch', 'Upminster', 'Barking',
 
   // South East
   'Brighton', 'Hove', 'Reading', 'Oxford', 'Southampton', 'Portsmouth', 'Guildford', 'Woking',
@@ -72,6 +73,22 @@ const UK_TOWNS = [
   'Belfast', 'Derry', 'Lisburn', 'Newtownabbey', 'Bangor (NI)', 'Craigavon', 'Castlereagh',
   'Ballymena', 'Newtownards', 'Carrickfergus', 'Coleraine', 'Antrim', 'Larne', 'Omagh',
   'Enniskillen', 'Armagh', 'Dungannon', 'Strabane', 'Downpatrick', 'Newry', 'Portadown',
+
+  // Counties & regions — some members describe where they're based by county
+  // rather than by town/city (e.g. "Essex"), so these are included too.
+  'Bedfordshire', 'Berkshire', 'Buckinghamshire', 'Cambridgeshire', 'Cheshire', 'Cornwall',
+  'County Durham', 'Cumbria', 'Derbyshire', 'Devon', 'Dorset', 'East Sussex', 'Essex',
+  'Gloucestershire', 'Hampshire', 'Herefordshire', 'Hertfordshire', 'Isle of Wight', 'Kent',
+  'Lancashire', 'Leicestershire', 'Lincolnshire', 'Norfolk', 'North Yorkshire', 'Northamptonshire',
+  'Northumberland', 'Nottinghamshire', 'Oxfordshire', 'Rutland', 'Shropshire', 'Somerset',
+  'South Yorkshire', 'Staffordshire', 'Suffolk', 'Surrey', 'Warwickshire', 'West Midlands',
+  'West Sussex', 'West Yorkshire', 'Wiltshire', 'Worcestershire',
+  'Aberdeenshire', 'Angus', 'Argyll and Bute', 'Ayrshire', 'Dumfries and Galloway', 'East Lothian',
+  'Fife', 'Highland', 'Lanarkshire', 'Midlothian', 'Moray', 'Perthshire', 'Renfrewshire',
+  'Scottish Borders', 'West Lothian',
+  'Anglesey', 'Carmarthenshire', 'Ceredigion', 'Denbighshire', 'Flintshire', 'Gwynedd',
+  'Monmouthshire', 'Pembrokeshire', 'Powys', 'Vale of Glamorgan',
+  'County Antrim', 'County Armagh', 'County Down', 'County Fermanagh', 'County Londonderry', 'County Tyrone',
 ];
 
 module.exports = { UK_TOWNS };
