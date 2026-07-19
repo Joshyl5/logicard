@@ -61,8 +61,7 @@ form.addEventListener('submit', async e => {
     ['companyName',  'Company Name'],
     ['roleCategory', 'Which part of logistics do you work in'],
     ['role',         'Job Title / Role'],
-    ['firstName',    'First Name'],
-    ['lastName',    'Last Name'],
+    ['fullName',     'Full Name'],
     ['email',       'Email Address'],
     ['phone',       'Phone Number'],
     ['town',        'Town'],
@@ -75,6 +74,24 @@ form.addEventListener('submit', async e => {
       return;
     }
   }
+
+  if (data.roleCategory === 'Other' && (!data.roleCategoryOther || !data.roleCategoryOther.trim())) {
+    showError('Please confirm which part of logistics you work in.');
+    return;
+  }
+
+  // Full Name is one field in the UI, but the API and personalised emails
+  // still expect firstName/lastName separately — split on the last word as
+  // the surname (keeps compound first names like "Mary Jane" together).
+  const nameParts = data.fullName.trim().split(/\s+/).filter(Boolean);
+  if (nameParts.length > 1) {
+    data.lastName  = nameParts.pop();
+    data.firstName = nameParts.join(' ');
+  } else {
+    data.firstName = nameParts[0];
+    data.lastName  = nameParts[0];
+  }
+  delete data.fullName;
 
   if (!data.password || data.password.length < 8) {
     showError('Password must be at least 8 characters.');
@@ -143,7 +160,8 @@ async function loadJobRoles() {
     const { categories } = await res.json();
 
     categorySelect.innerHTML = '<option value="" disabled selected>— Select a category —</option>' +
-      categories.map(c => `<option>${c.name}</option>`).join('');
+      categories.map(c => `<option>${c.name}</option>`).join('') +
+      '<option value="Other">Other</option>';
 
     roleSelect.innerHTML = '<option value="" disabled selected>— Select your job title —</option>' +
       categories.map(c => `<optgroup label="${c.name}">${c.roles.map(r => `<option>${r}</option>`).join('')}</optgroup>`).join('');
@@ -152,6 +170,17 @@ async function loadJobRoles() {
     roleSelect.innerHTML     = '<option value="" disabled selected>Unable to load — please refresh</option>';
     return;
   }
+
+  // Picking "Other" reveals a text box to confirm which area, since "Other"
+  // itself isn't a real logistics category.
+  const otherField = document.getElementById('otherCategoryField');
+  const otherInput = document.getElementById('otherCategoryInput');
+  categorySelect.addEventListener('change', () => {
+    const isOther = categorySelect.value === 'Other';
+    otherField.style.display = isOther ? 'block' : 'none';
+    otherInput.required = isOther;
+    if (!isOther) otherInput.value = '';
+  });
 
   initRoleSearch();
 }

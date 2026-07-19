@@ -54,17 +54,21 @@
                 <input id="companyName" name="companyName" type="text" placeholder="Your company name" autocomplete="organization" required />
               </div>
               <div class="field">
-                <label for="roleCategory">Which part of logistics do you work in? <span class="req">*</span></label>
-                <select id="roleCategory" name="roleCategory" required>
-                  <option value="" disabled selected>Loading categories…</option>
-                </select>
-              </div>
-              <div class="field">
                 <label for="role">Job Title / Role <span class="req">*</span></label>
                 <select id="role" name="role" autocomplete="organization-title" required>
                   <option value="" disabled selected>Loading job titles…</option>
                 </select>
               </div>
+            </div>
+            <div class="field field--full">
+              <label for="roleCategory">Which part of logistics do you work in? <span class="req">*</span></label>
+              <select id="roleCategory" name="roleCategory" required>
+                <option value="" disabled selected>Loading categories…</option>
+              </select>
+            </div>
+            <div class="field field--full" id="otherCategoryField" style="display:none;">
+              <label for="otherCategoryInput">Please confirm which area <span class="req">*</span></label>
+              <input id="otherCategoryInput" name="roleCategoryOther" type="text" placeholder="Tell us which part of logistics you work in" />
             </div>
           </fieldset>
 
@@ -72,25 +76,19 @@
             <legend>Personal Details</legend>
             <div class="row">
               <div class="field">
-                <label for="firstName">First Name <span class="req">*</span></label>
-                <input id="firstName" name="firstName" type="text" placeholder="First name" autocomplete="given-name" required />
+                <label for="fullName">Full Name <span class="req">*</span></label>
+                <input id="fullName" name="fullName" type="text" placeholder="e.g. John Smith" autocomplete="name" required />
               </div>
-              <div class="field">
-                <label for="lastName">Last Name <span class="req">*</span></label>
-                <input id="lastName" name="lastName" type="text" placeholder="Last name" autocomplete="family-name" required />
-              </div>
-            </div>
-            <div class="row">
               <div class="field">
                 <label for="email">Email Address <span class="req">*</span></label>
                 <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
               </div>
+            </div>
+            <div class="row">
               <div class="field">
                 <label for="phone">Phone Number <span class="req">*</span></label>
                 <input id="phone" name="phone" type="tel" placeholder="+44 7700 900000" autocomplete="tel" required />
               </div>
-            </div>
-            <div class="row">
               <div class="field">
                 <label for="ageRange">Age Range</label>
                 <select id="ageRange" name="dateOfBirth" autocomplete="off">
@@ -102,13 +100,13 @@
                   <option value="55+">55+</option>
                 </select>
               </div>
+            </div>
+            <div class="row">
               <div class="field">
                 <label for="townInput">Town <span class="req">*</span></label>
                 <input id="townInput" name="town" type="text" placeholder="e.g. Rainham" autocomplete="off" required />
               </div>
-            </div>
-            <div class="row">
-              <div class="field field--full">
+              <div class="field">
                 <label for="cityInput">City <span class="req">*</span></label>
                 <input id="cityInput" name="city" type="text" placeholder="e.g. Manchester" autocomplete="off" required />
               </div>

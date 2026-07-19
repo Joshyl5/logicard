@@ -226,4 +226,9 @@ for (const category of categories) {
   }
 }
 
-module.exports = { categories, slugify, roleBySlug };
+// Flat set of every real role name, regardless of category — used to
+// validate the Job Title field when a member picks "Other" as their
+// category (which has no roles array of its own to check against).
+const allRoles = new Set(categories.flatMap(c => c.roles));
+
+module.exports = { categories, slugify, roleBySlug, allRoles };

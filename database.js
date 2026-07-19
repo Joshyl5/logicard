@@ -51,6 +51,9 @@ async function initDb() {
   // Town/City split into two separate required fields (2026-07-19) — "city"
   // already existed; "town" is the new column, existing rows just get NULL.
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS town TEXT`);
+  // Free-text confirmation captured when a member picks "Other" for
+  // roleCategory, since "Other" itself isn't one of the real categories.
+  await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS role_category_other TEXT`);
 
   // Proof-of-employment verification — existing members keep their current
   // verified=TRUE value; only new signups default to unverified from here on.
@@ -183,6 +186,7 @@ function toMember(row) {
     companyName:        row.company_name,
     role:               row.role,
     roleCategory:       row.role_category,
+    roleCategoryOther:  row.role_category_other,
     firstName:          row.first_name,
     lastName:           row.last_name,
     email:              row.email,
@@ -265,8 +269,8 @@ async function emailExists(email) {
 
 async function createMember(data) {
   const {
-    companyName, role, roleCategory = null, firstName, lastName, email, phone, dateOfBirth = null,
-    addressLine1 = null, addressLine2 = null, town = null, city = null, county = null,
+    companyName, role, roleCategory = null, roleCategoryOther = null, firstName, lastName, email, phone,
+    dateOfBirth = null, addressLine1 = null, addressLine2 = null, town = null, city = null, county = null,
     country = null,
     password, gdprConsent, marketingConsent, referredBy,
     promoCode = null, freeYear = false,
@@ -281,18 +285,18 @@ async function createMember(data) {
 
   await pool.query(`
     INSERT INTO members (
-      membership_number, company_name, role, role_category, first_name, last_name,
+      membership_number, company_name, role, role_category, role_category_other, first_name, last_name,
       email, phone, date_of_birth, address_line1, address_line2,
       town, city, county, country, password_hash, verified, created_at,
       referred_by, total_referrals, monthly_entries,
       marketing_consent, marketing_consent_at, gdpr_consent,
       promo_code, free_year
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,FALSE,$17,
-      $18,0,0,$19,$20,$21,$22,$23
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,FALSE,$18,
+      $19,0,0,$20,$21,$22,$23,$24
     )
   `, [
-    membershipNumber, companyName, role, roleCategory || null, firstName, lastName,
+    membershipNumber, companyName, role, roleCategory || null, roleCategoryOther || null, firstName, lastName,
     email.toLowerCase(), phone, dateOfBirth || null,
     addressLine1 || null, addressLine2 || null,
     town || null, city || null, county || null, country || null,

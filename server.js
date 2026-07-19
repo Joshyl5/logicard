@@ -25,7 +25,7 @@ const {
   getDocumentsDueForPurge, markDocumentPurged,
 } = require('./database');
 const { uploadVerificationFile, getSignedViewUrl, readLocalFile, deleteFile } = require('./storage');
-const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG } = require('./job-roles');
+const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
 const { UK_TOWNS } = require('./uk-towns');
 const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
 
@@ -1316,7 +1316,7 @@ const ADDRESS_PATTERN = /^[\p{L}\p{N}\p{M} ,./#'&-]{1,120}$/u;
 // required-field, format, and character-allowlist checks. (These two routes
 // previously diverged: checkout/complete skipped all of this.)
 function validateMemberFields(data) {
-  const { companyName, role, roleCategory, firstName, lastName, email, phone,
+  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone,
           addressLine1, addressLine2, town, city, county, country, password, gdprConsent } = data;
 
   const required = { companyName, role, roleCategory, firstName, lastName, email, phone, town, city };
@@ -1327,13 +1327,20 @@ function validateMemberFields(data) {
   if (!gdprConsent) return 'You must accept the privacy policy to continue.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
 
-  // roleCategory/role must be an exact match from the canonical list — the
-  // dropdown on signup.html only ever submits one of these, so this rejects
-  // anything sent by bypassing the form directly (e.g. a raw POST to this
-  // endpoint), with zero impact on any real user.
-  const category = JOB_ROLE_CATEGORIES.find(c => c.name === roleCategory);
-  if (!category) return 'Please select a valid logistics category.';
-  if (!category.roles.includes(role)) return 'Please select a valid job title for that category.';
+  // roleCategory must be an exact match from the canonical list, OR the
+  // literal "Other" — in which case roleCategoryOther must be filled in and
+  // role is checked against the full role set instead of one category's
+  // list (since "Other" has no roles array of its own).
+  if (roleCategory === 'Other') {
+    if (!roleCategoryOther || !String(roleCategoryOther).trim()) {
+      return 'Please confirm which part of logistics you work in.';
+    }
+    if (!ALL_JOB_ROLES.has(role)) return 'Please select a valid job title.';
+  } else {
+    const category = JOB_ROLE_CATEGORIES.find(c => c.name === roleCategory);
+    if (!category) return 'Please select a valid logistics category.';
+    if (!category.roles.includes(role)) return 'Please select a valid job title for that category.';
+  }
 
   const fieldChecks = [
     [firstName,   NAME_PATTERN,    'First Name'],
@@ -1343,10 +1350,11 @@ function validateMemberFields(data) {
     [town,        PLACE_PATTERN,   'Town'],
     [city,        PLACE_PATTERN,   'City'],
   ];
-  if (county)        fieldChecks.push([county,        PLACE_PATTERN,   'County']);
-  if (country)       fieldChecks.push([country,       PLACE_PATTERN,   'Country']);
-  if (addressLine1)  fieldChecks.push([addressLine1,  ADDRESS_PATTERN, 'Address Line 1']);
-  if (addressLine2)  fieldChecks.push([addressLine2,  ADDRESS_PATTERN, 'Address Line 2']);
+  if (county)             fieldChecks.push([county,             PLACE_PATTERN,   'County']);
+  if (country)            fieldChecks.push([country,            PLACE_PATTERN,   'Country']);
+  if (addressLine1)       fieldChecks.push([addressLine1,       ADDRESS_PATTERN, 'Address Line 1']);
+  if (addressLine2)       fieldChecks.push([addressLine2,       ADDRESS_PATTERN, 'Address Line 2']);
+  if (roleCategoryOther)  fieldChecks.push([roleCategoryOther,  COMPANY_PATTERN, 'Logistics area confirmation']);
 
   for (const [value, pattern, label] of fieldChecks) {
     if (!pattern.test(String(value).trim())) return `${label} contains characters that aren't allowed.`;
@@ -1357,7 +1365,7 @@ function validateMemberFields(data) {
 
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', signupLimiter, async (req, res) => {
-  const { companyName, role, roleCategory, firstName, lastName, email, phone, dateOfBirth,
+  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone, dateOfBirth,
           addressLine1, addressLine2, town, city, county, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
@@ -1379,6 +1387,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
 
     const { membershipNumber } = await createMember({
       companyName: companyName.trim(), role: role.trim(), roleCategory: roleCategory.trim(),
+      roleCategoryOther: roleCategoryOther ? roleCategoryOther.trim() : null,
       firstName: firstName.trim(),     lastName: lastName.trim(),
       email: email.trim().toLowerCase(), phone: phone.trim(),
       dateOfBirth: dateOfBirth || null,
