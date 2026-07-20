@@ -51,8 +51,9 @@ function escapeHtml(str) {
 }
 
 const OFFER_CATEGORIES = [
-  'Beauty & Wellness', 'Children & Baby', 'Food & Drink', 'Fashion', 'Gifts & Flowers',
-  'Holiday & Travel', 'Home & Garden', 'Pets', 'Sports & Fitness', 'Tech & Mobile',
+  'Home & Garden', 'Fashion', 'Food & Drink', 'Business', 'Benefits',
+  'Travel', 'Health & Beauty', 'Gifting', 'Motoring', 'E-learning',
+  'Tech & Electronic', 'Days Out & Entertainment', 'Finance & Insurance', 'Sport & Fitness', 'Advice',
 ];
 
 // ── Verification uploads ────────────────────────────────────────
