@@ -59,7 +59,6 @@ form.addEventListener('submit', async e => {
 
   const required = [
     ['companyName',  'Company Name'],
-    ['roleCategory', 'Which part of logistics do you work in'],
     ['role',         'Job Title / Role'],
     ['fullName',     'Full Name'],
     ['email',       'Email Address'],

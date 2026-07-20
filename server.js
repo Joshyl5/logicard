@@ -1324,7 +1324,7 @@ function validateMemberFields(data) {
   const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone,
           addressLine1, addressLine2, town, city, county, country, password, gdprConsent } = data;
 
-  const required = { companyName, role, roleCategory, firstName, lastName, email, phone, town, city };
+  const required = { companyName, role, firstName, lastName, email, phone, town, city };
   for (const [field, value] of Object.entries(required)) {
     if (!value || !String(value).trim()) return `Missing required field: ${field}`;
   }
@@ -1332,12 +1332,12 @@ function validateMemberFields(data) {
   if (!gdprConsent) return 'You must accept the privacy policy to continue.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
 
-  // roleCategory must be an exact match from the canonical list, OR the
-  // literal "Other" — in which case roleCategoryOther must be filled in and
-  // role is checked against the full role set instead of one category's
-  // list (since "Other" has no roles array of its own).
-  if (roleCategory === 'Other') {
-    if (!roleCategoryOther || !String(roleCategoryOther).trim()) {
+  // roleCategory is optional. When it's "Other" or left blank, role is
+  // checked against the full role set instead of one category's list (since
+  // neither "Other" nor "no category" has a roles array of its own). When
+  // "Other" is picked, roleCategoryOther must be filled in to say which area.
+  if (!roleCategory || roleCategory === 'Other') {
+    if (roleCategory === 'Other' && (!roleCategoryOther || !String(roleCategoryOther).trim())) {
       return 'Please confirm which part of logistics you work in.';
     }
     if (!ALL_JOB_ROLES.has(role)) return 'Please select a valid job title.';
@@ -1391,7 +1391,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
     if (await emailExists(email)) return res.status(409).json({ error: 'An account with this email address already exists.' });
 
     const { membershipNumber } = await createMember({
-      companyName: companyName.trim(), role: role.trim(), roleCategory: roleCategory.trim(),
+      companyName: companyName.trim(), role: role.trim(), roleCategory: roleCategory ? roleCategory.trim() : null,
       roleCategoryOther: roleCategoryOther ? roleCategoryOther.trim() : null,
       firstName: firstName.trim(),     lastName: lastName.trim(),
       email: email.trim().toLowerCase(), phone: phone.trim(),
