@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shopping Cards — Logicard</title>
-  <meta name="description" content="Logicard Shopping Cards — discounted gift cards for your favourite retailers, coming soon for UK logistics workers." />
-  <link rel="canonical" href="https://logicard.co.uk/shopping-cards.html" />
+  <title>Food & Drink Discounts — Logicard Member Discounts</title>
+  <meta name="description" content="Discounts on casual dining, pubs & bars, quick service, family dining, nightlife, meal delivery and home cooking — exclusively for UK logistics workers through Logicard." />
+  <link rel="canonical" href="https://logicard.co.uk/food-drink.html" />
   <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -38,6 +38,7 @@
     .category-nav-item:hover .category-dropdown, .category-nav-item:focus-within .category-dropdown { display: grid; }
     .category-dropdown a { padding: 7px 8px; font-size: 13.5px; font-weight: 600; color: var(--white); }
     .category-dropdown a:hover { color: var(--orange-dark); background: rgba(255,179,0,0.08); }
+    .category-dropdown a.active { color: var(--orange-dark); }
     .mobile-benefits { display: none; }
     @media (max-width: 700px) {
       .site-header { padding: 14px 20px; }
@@ -57,42 +58,17 @@
     }
     @media (max-width: 380px) { .site-header-logo { font-size: 22px; padding: 7px 14px; } .site-header-join { padding: 8px 14px; font-size: 12px; } .site-header-signin { font-size: 13px; } }
 
-    .page-hero { background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%); color: #fff; padding: 72px 24px; text-align: center; }
-    .page-hero .eyebrow { color: var(--orange); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; font-size: 12.5px; }
-    .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin: 12px 0; letter-spacing: -0.5px; }
-    .page-hero p { color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
+    .page-hero { background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%); color: #fff; padding: 64px 24px; text-align: center; }
+    .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
+    .page-hero p { color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
 
     .verify-banner { text-align: center; font-weight: 800; color: var(--orange-dark); font-size: 15px; padding: 40px 24px; }
-    .verify-banner + .explainer { padding-top: 0; }
+    .verify-banner + .category-grid { padding-top: 0; }
 
-    .explainer { max-width: 760px; margin: 0 auto; padding: 56px 24px; text-align: center; }
-    .explainer h2 { font-size: 24px; font-weight: 800; margin-bottom: 14px; }
-    .explainer p { color: rgba(255,255,255,0.65); font-size: 15.5px; line-height: 1.8; }
-
-    .category-grid { max-width: 680px; margin: 0 auto; padding: 0 24px 56px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .category-card {
-      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 22px 16px;
-      text-decoration: none; color: inherit;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-    .category-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(0,0,0,0.25); border-color: rgba(255,179,0,0.4); }
-    .category-card-icon {
-      width: 42px; height: 42px; flex-shrink: 0;
-      background: rgba(255,179,0,0.12); border: 1px solid rgba(255,179,0,0.25);
-      border-radius: 11px; display: flex; align-items: center; justify-content: center;
-    }
-    .category-card-icon svg { width: 21px; height: 21px; fill: none; stroke: var(--orange-dark); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .category-card h2 { font-size: 14.5px; font-weight: 800; color: var(--white); line-height: 1.3; }
-
-    @media (max-width: 560px) {
-      .category-grid { gap: 12px; }
-      .category-card { padding: 16px 12px; }
-      .category-card-icon { width: 36px; height: 36px; }
-      .category-card-icon svg { width: 18px; height: 18px; }
-      .category-card h2 { font-size: 13.5px; }
-    }
+    .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+    .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; }
+    .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
+    .category-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
 
     .bottom-cta { text-align: center; padding: 0 24px 80px; }
     .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
@@ -120,7 +96,7 @@
         <div class="category-dropdown">
           <a href="/beauty-wellness.html">Beauty &amp; Wellness</a>
           <a href="/children-baby.html">Children &amp; Baby</a>
-          <a href="/food-drink.html">Food &amp; Drink</a>
+          <a href="/food-drink.html" class="active">Food &amp; Drink</a>
           <a href="/signup.html">Fashion</a>
           <a href="/signup.html">Gifts &amp; Flowers</a>
           <a href="/signup.html">Holiday &amp; Travel</a>
@@ -131,7 +107,7 @@
         </div>
       </div>
       <a href="/things-to-do.html">Things to Do</a>
-      <a href="/shopping-cards.html" class="active">Shopping Cards</a>
+      <a href="/shopping-cards.html">Shopping Cards</a>
       <a href="/e-learning.html">E-learning</a>
       <a href="/financial-wellbeing.html">Financial Wellbeing</a>
       <a href="/mental-wellbeing.html">Mental Wellbeing</a>
@@ -143,9 +119,9 @@
         <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
       </summary>
       <div class="mobile-benefits-panel">
-        <a href="/categories.html">Categories</a>
+        <a href="/food-drink.html" class="active">Food &amp; Drink</a>
         <a href="/things-to-do.html">Things to Do</a>
-        <a href="/shopping-cards.html" class="active">Shopping Cards</a>
+        <a href="/shopping-cards.html">Shopping Cards</a>
         <a href="/e-learning.html">E-learning</a>
         <a href="/financial-wellbeing.html">Financial Wellbeing</a>
         <a href="/mental-wellbeing.html">Mental Wellbeing</a>
@@ -155,69 +131,20 @@
   </div>
 
   <section class="page-hero">
-    <span class="eyebrow">Coming Soon</span>
-    <h1>Shopping Cards</h1>
-    <p>Gift cards with a discount on top — buy a card for your favourite retailer, spend less than face value.</p>
+    <h1>Food &amp; Drink</h1>
+    <p>Fuel up for less — casual dining, pubs, quick service, family meals, nightlife, delivery and home cooking, discounted for logistics workers.</p>
   </section>
 
   <p class="verify-banner">Become verified to see all offers</p>
 
-  <div class="explainer">
-    <h2>How Shopping Cards will work</h2>
-    <p>A Logicard Shopping Card is a real gift card for a retailer you already shop with — just bought for less than it's worth. Load it up, then spend it in-store or online exactly like a normal gift card. We're building this out as a dedicated part of your Logicard membership — check back soon, or sign up now to be notified the moment it launches.</p>
-  </div>
-
   <div class="category-grid">
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
-      <h2>Supermarkets</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 001 .84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.14a1 1 0 001-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg></span>
-      <h2>High Street Fashion</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
-      <h2>DIY &amp; Home</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span>
-      <h2>Electronics &amp; Tech</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M4 8h13a3 3 0 010 6h-1M4 8v9a3 3 0 003 3h6a3 3 0 003-3V8M4 8V5h13v3"/></svg></span>
-      <h2>Restaurants &amp; Dining</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M6 10v4M4 12h4"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg></span>
-      <h2>Gaming &amp; Entertainment</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
-      <h2>Holidays &amp; Travel</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span>
-      <h2>Health &amp; Beauty</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
-      <h2>Cinema &amp; Streaming</h2>
-      
-    </a>
-    <a class="category-card" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8 8 5 11.5 5 15a7 7 0 0014 0c0-3.5-3-7-7-13z"/></svg></span>
-      <h2>Fuel &amp; Motoring</h2>
-      
-    </a>
+    <div class="category-card"><h2>Casual Dining</h2><p>Discounts at sit-down restaurants for every taste.</p></div>
+    <div class="category-card"><h2>Pubs &amp; Bars</h2><p>Savings on food and drinks at pubs and bars nationwide.</p></div>
+    <div class="category-card"><h2>Quick Service</h2><p>Discounted fast food and grab-and-go options between shifts.</p></div>
+    <div class="category-card"><h2>Family Dining</h2><p>Savings on family-friendly restaurants and meal deals.</p></div>
+    <div class="category-card"><h2>Nightlife</h2><p>Discounts on bars, clubs and evening entertainment.</p></div>
+    <div class="category-card"><h2>Meal Delivery</h2><p>Save on takeaway and meal delivery services.</p></div>
+    <div class="category-card"><h2>Home Cooking</h2><p>Discounts on groceries and meal kits for cooking at home.</p></div>
   </div>
 
   <div class="bottom-cta">
