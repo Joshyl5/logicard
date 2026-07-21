@@ -266,6 +266,8 @@
       position: relative;
       display: flex;
       align-items: center;
+      justify-content: center;
+      text-align: center;
       padding: 80px 80px 80px 80px;
       overflow: hidden;
     }
@@ -298,11 +300,13 @@
     .hero-content {
       position: relative;
       z-index: 1;
-      max-width: 620px;
+      max-width: 700px;
+      margin: 0 auto;
     }
     .hero-tag {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       background: rgba(255,179,0,0.15);
       border: 1px solid rgba(255,179,0,0.4);
@@ -327,7 +331,7 @@
     .hero-sub {
       font-size: 19px;
       color: rgba(255,255,255,0.72);
-      margin-bottom: 44px;
+      margin: 0 auto 44px;
       line-height: 1.65;
       max-width: 520px;
     }
@@ -335,6 +339,7 @@
       display: flex;
       gap: 16px;
       flex-wrap: wrap;
+      justify-content: center;
     }
     .btn-primary {
       background: var(--orange);
@@ -367,31 +372,11 @@
       transition: border-color 0.15s;
     }
     .btn-secondary:hover { border-color: rgba(255,255,255,0.8); }
-    .hero-logo-wrap {
-      position: absolute;
-      right: 40px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 1;
-    }
-    .hero-logo-wrap img {
-      position: relative;
-      z-index: 1;
-      width: 820px;
-      max-width: 58vw;
-      filter:
-        drop-shadow(0 0 18px rgba(80,160,255,0.75))
-        drop-shadow(0 0 40px rgba(60,130,255,0.45))
-        drop-shadow(0 12px 28px rgba(0,0,0,0.5));
-      animation: floatLogo 4s ease-in-out infinite;
-    }
-    @keyframes floatLogo {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-14px); }
-    }
     .hero-stats {
       display: flex;
       gap: 36px;
+      justify-content: center;
+      flex-wrap: wrap;
       margin-top: 48px;
       padding-top: 36px;
       border-top: 1px solid rgba(255,255,255,0.12);
@@ -849,7 +834,6 @@
     @media (max-width: 900px) {
       .lc-section { padding: 64px 28px; }
       .hero { padding: 72px 28px 56px; min-height: auto; }
-      .hero-logo-wrap { display: none; }
       .hero-stats { flex-wrap: wrap; gap: 24px; }
       .how-cards { grid-template-columns: 1fr; gap: 20px; }
       .how-card { padding: 36px 28px 32px; }
@@ -1214,9 +1198,6 @@
           <span class="hs-label">Mental health support &amp; advice</span>
         </div>
       </div>
-    </div>
-    <div class="hero-logo-wrap">
-      <img src="logicard-logo-hero.png" alt="Logicard" />
     </div>
   </section>
 
