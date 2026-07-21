@@ -495,6 +495,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/children-baby.html',          changefreq: 'monthly', priority: '0.6' },
   { path: '/food-drink.html',             changefreq: 'monthly', priority: '0.6' },
   { path: '/fashion.html',                changefreq: 'monthly', priority: '0.6' },
+  { path: '/gifts-flowers.html',          changefreq: 'monthly', priority: '0.6' },
   { path: '/things-to-do.html',           changefreq: 'monthly', priority: '0.6' },
   { path: '/financial-wellbeing.html',    changefreq: 'monthly', priority: '0.6' },
   { path: '/mental-wellbeing.html',       changefreq: 'monthly', priority: '0.6' },
