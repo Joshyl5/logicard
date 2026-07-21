@@ -491,6 +491,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/signup.html',                 changefreq: 'monthly', priority: '0.9' },
   { path: '/qualify.html',                changefreq: 'monthly', priority: '0.8' },
   { path: '/categories.html',             changefreq: 'monthly', priority: '0.7' },
+  { path: '/beauty-wellness.html',        changefreq: 'monthly', priority: '0.6' },
   { path: '/things-to-do.html',           changefreq: 'monthly', priority: '0.6' },
   { path: '/financial-wellbeing.html',    changefreq: 'monthly', priority: '0.6' },
   { path: '/mental-wellbeing.html',       changefreq: 'monthly', priority: '0.6' },
