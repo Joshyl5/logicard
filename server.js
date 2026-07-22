@@ -502,6 +502,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/shopping-cards.html',         changefreq: 'monthly', priority: '0.6' },
   { path: '/e-learning.html',             changefreq: 'monthly', priority: '0.6' },
   { path: '/workforce-recognition.html',  changefreq: 'monthly', priority: '0.7' },
+  { path: '/deals.html',                  changefreq: 'monthly', priority: '0.7' },
   { path: '/login.html',                  changefreq: 'monthly', priority: '0.5' },
   { path: '/privacy.html',                changefreq: 'yearly',  priority: '0.3' },
   { path: '/t&cs',                        changefreq: 'yearly',  priority: '0.3' },

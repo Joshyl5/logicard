@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How We Find Your Deals — Logicard</title>
+  <meta name="description" content="How Logicard sources and negotiates member discounts — using the collective buying power of thousands of UK logistics workers to secure real, vetted savings." />
+  <link rel="canonical" href="https://logicard.co.uk/deals.html" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "How We Find Your Deals — Logicard",
+    "url": "https://logicard.co.uk/deals.html",
+    "description": "How Logicard sources and negotiates member discounts using the collective buying power of UK logistics workers.",
+    "isPartOf": { "@id": "https://logicard.co.uk/#website" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #FFB300;
+      --orange-dark: #E09A00;
+      --navy-deep: #04040d;
+      --navy: #071d40;
+      --navy-mid: #0d3b80;
+      --blue-accent: #1a6cc8;
+      --white: #ffffff;
+      --text-muted: #666666;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(160deg, #04040d 0%, #071d40 55%, #04040d 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* Nav */
+    .site-header-wrap { position: sticky; top: 0; z-index: 100; }
+    .site-header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 16px 40px; background: var(--navy); border-bottom: 1px solid rgba(255,179,0,0.15); box-shadow: 0 2px 16px rgba(0,0,0,0.35); }
+    .site-header-logo { grid-column: 1; justify-self: start; display: inline-flex; align-items: center; flex-shrink: 0; border: 2.5px solid rgba(255,179,0,0.55); padding: 9px 18px; border-radius: 6px; background: rgba(255,255,255,0.05); box-shadow: 0 0 14px rgba(255,179,0,0.12); text-decoration: none; font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--orange); }
+    .site-header-tagline { grid-column: 2; justify-self: center; text-align: center; font-size: 14px; color: var(--white); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .site-header-divider { color: rgba(255,179,0,0.5); margin: 0 8px; }
+    .site-header-actions { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .site-header-signin { font-size: 14px; font-weight: 600; color: var(--white); text-decoration: none; transition: color 0.15s; }
+    .site-header-signin:hover { color: var(--white); }
+    .site-header-join { background: var(--orange); color: var(--navy-deep); font-weight: 800; font-size: 13px; padding: 9px 18px; border-radius: 6px; text-decoration: none; transition: background 0.15s; }
+    .site-header-join:hover { background: var(--orange-dark); }
+    .site-subbar { display: flex; justify-content: flex-end; align-items: center; padding: 8px 40px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,179,0,0.08); }
+    .site-subbar-back { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; }
+    .site-subbar-back:hover { color: var(--white); }
+    @media (max-width: 700px) { .site-header { padding: 14px 20px; } .site-header-tagline { display: none; } .site-header-actions { gap: 10px; } .site-subbar { padding: 8px 20px; } }
+    @media (max-width: 380px) { .site-header-logo { font-size: 22px; padding: 7px 14px; } .site-header-join { padding: 8px 14px; font-size: 12px; } .site-header-signin { font-size: 13px; } }
+
+    /* Hero */
+    .dl-hero {
+      text-align: center;
+      padding: 88px 24px 64px;
+      max-width: 780px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .dl-eyebrow {
+      display: inline-block;
+      font-size: 12px; font-weight: 800; letter-spacing: 2.5px;
+      color: var(--orange); text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .dl-title {
+      font-size: clamp(36px, 5.5vw, 64px);
+      font-weight: 900; line-height: 1.06;
+      letter-spacing: -1px;
+      margin-bottom: 22px;
+    }
+    .dl-subtitle {
+      font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.75;
+      margin-bottom: 36px;
+      max-width: 640px;
+      margin-left: auto; margin-right: auto;
+    }
+    .dl-hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .dl-btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      color: #fff;
+      font-size: 15px; font-weight: 800;
+      padding: 15px 34px; border-radius: 100px;
+      text-decoration: none;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 28px rgba(255,179,0,0.35);
+    }
+    .dl-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(255,179,0,0.45); }
+    .dl-btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: #fff;
+      font-size: 15px; font-weight: 700;
+      padding: 15px 30px; border-radius: 100px;
+      border: 2px solid rgba(255,255,255,0.25);
+      text-decoration: none;
+      transition: border-color 0.15s;
+    }
+    .dl-btn-secondary:hover { border-color: rgba(255,255,255,0.6); }
+
+    /* Sections */
+    .dl-section { padding: 72px 24px; max-width: 1100px; margin: 0 auto; }
+    .dl-section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
+    .dl-section-eyebrow {
+      display: block; font-size: 11px; font-weight: 800; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--orange); margin-bottom: 14px;
+    }
+    .dl-section-title {
+      font-size: clamp(26px, 3.5vw, 40px); font-weight: 900;
+      letter-spacing: -0.5px; margin-bottom: 14px; line-height: 1.15;
+    }
+    .dl-section-sub { font-size: 15.5px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+
+    /* Why cards */
+    .dl-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .dl-why-card {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px 22px;
+      transition: transform 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .dl-why-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,179,0,0.06);
+      border-color: rgba(255,179,0,0.3);
+    }
+    .dl-why-icon {
+      width: 46px; height: 46px;
+      background: linear-gradient(135deg, rgba(255,179,0,0.18), rgba(26,108,200,0.18));
+      border: 1px solid rgba(255,179,0,0.25);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .dl-why-icon svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 2; }
+    .dl-why-card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
+    .dl-why-card p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
+    /* How it works */
+    .dl-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .dl-step {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 32px 26px;
+      position: relative;
+    }
+    .dl-step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px;
+      background: var(--orange); color: #071d40;
+      font-weight: 900; font-size: 15px;
+      border-radius: 50%;
+      margin-bottom: 18px;
+    }
+    .dl-step h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 10px; }
+    .dl-step p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+
+    /* Callout */
+    .dl-callout {
+      background: linear-gradient(135deg, rgba(255,179,0,0.1), rgba(26,108,200,0.08));
+      border: 1px solid rgba(255,179,0,0.25);
+      border-radius: 20px;
+      padding: 40px 44px;
+      text-align: center;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .dl-callout p {
+      font-size: 17px; line-height: 1.75; color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+    .dl-callout strong { color: var(--orange); }
+
+    /* Vetting list */
+    .dl-vet-list { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .dl-vet-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 18px 22px;
+    }
+    .dl-vet-check {
+      width: 24px; height: 24px; flex-shrink: 0; margin-top: 2px;
+      background: rgba(255,179,0,0.15); border: 1px solid rgba(255,179,0,0.4);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    }
+    .dl-vet-check svg { width: 13px; height: 13px; stroke: var(--orange); fill: none; stroke-width: 3; }
+    .dl-vet-item p { font-size: 14.5px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+    .dl-vet-item strong { color: #fff; }
+
+    /* Final CTA */
+    .dl-cta-section { text-align: center; padding: 64px 24px 88px; }
+    .dl-cta-title { font-size: clamp(24px, 3.5vw, 36px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.5px; }
+    .dl-cta-sub { font-size: 15.5px; color: rgba(255,255,255,0.55); margin-bottom: 32px; }
+
+    /* Footer */
+    .dl-footer {
+      text-align: center; padding: 32px 24px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      font-size: 12px; color: rgba(255,255,255,0.3);
+    }
+    .dl-footer a { color: rgba(255,255,255,0.45); text-decoration: none; }
+    .dl-footer a:hover { color: rgba(255,255,255,0.7); }
+
+    @media (max-width: 900px) {
+      .dl-why-grid { grid-template-columns: repeat(2, 1fr); }
+      .dl-steps { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .dl-hero { padding: 56px 20px 48px; }
+      .dl-section { padding: 52px 20px; }
+      .dl-why-grid { grid-template-columns: 1fr; }
+      .dl-steps { grid-template-columns: 1fr; }
+      .dl-callout { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-header-wrap">
+    <nav class="site-header">
+      <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
+      <p class="site-header-tagline">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="site-header-divider">|</span> for the people who keep Britain moving</p>
+      <div class="site-header-actions">
+        <a href="/login.html" class="site-header-signin">Log In</a>
+        <a href="/signup.html" class="site-header-join">Sign Up</a>
+      </div>
+    </nav>
+    <div class="site-subbar">
+      <a href="/" class="site-subbar-back">&lt; Back</a>
+    </div>
+  </div>
+
+  <div class="dl-hero">
+    <span class="dl-eyebrow">How It Works</span>
+    <h1 class="dl-title">How We Find Your Deals</h1>
+    <p class="dl-subtitle">No single logistics worker can walk into a national retailer and negotiate a discount. But thousands of us, together, can. That's the whole idea behind Logicard.</p>
+    <div class="dl-hero-btns">
+      <a href="/signup.html" class="dl-btn-primary">
+        Join Free
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/categories.html" class="dl-btn-secondary">Browse Categories</a>
+    </div>
+  </div>
+
+  <section class="dl-section" id="dl-why">
+    <div class="dl-section-head">
+      <span class="dl-section-eyebrow">Group Buying Power</span>
+      <h2 class="dl-section-title">Strength in numbers</h2>
+      <p class="dl-section-sub">Logicard exists to represent logistics workers as a single, collective group — because that's what actually gets a brand's attention.</p>
+    </div>
+    <div class="dl-why-grid">
+      <div class="dl-why-card">
+        <div class="dl-why-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <h3>One voice, thousands strong</h3>
+        <p>On your own, a discount request goes nowhere. As part of a network of thousands of logistics workers, Logicard can ask on behalf of everyone at once.</p>
+      </div>
+      <div class="dl-why-card">
+        <div class="dl-why-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+        <h3>Direct brand partnerships</h3>
+        <p>We approach retailers and service providers directly, rather than relying on generic public offers anyone can find online.</p>
+      </div>
+      <div class="dl-why-card">
+        <div class="dl-why-icon"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Bigger group, better rates</h3>
+        <p>As Logicard's membership grows, so does our negotiating position — we go back to partners regularly to push for stronger discounts.</p>
+      </div>
+      <div class="dl-why-card">
+        <div class="dl-why-icon"><svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></div>
+        <h3>Checked before it's listed</h3>
+        <p>Every offer is compared against genuine market pricing before it goes live, so the saving on the label is a real one.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dl-section" id="dl-how">
+    <div class="dl-section-head">
+      <span class="dl-section-eyebrow">The Process</span>
+      <h2 class="dl-section-title">From new member to negotiated deal</h2>
+      <p class="dl-section-sub">The same collective process runs behind every deal on Logicard.</p>
+    </div>
+    <div class="dl-steps">
+      <div class="dl-step">
+        <span class="dl-step-num">1</span>
+        <h3>The group grows</h3>
+        <p>Every new member who joins Logicard adds to the collective size of the group we represent to brands.</p>
+      </div>
+      <div class="dl-step">
+        <span class="dl-step-num">2</span>
+        <h3>We approach partners</h3>
+        <p>Our team reaches out to retailers and service providers relevant to the everyday spend of logistics workers.</p>
+      </div>
+      <div class="dl-step">
+        <span class="dl-step-num">3</span>
+        <h3>We negotiate as one</h3>
+        <p>Instead of one person asking for a discount, we ask on behalf of the whole Logicard membership.</p>
+      </div>
+      <div class="dl-step">
+        <span class="dl-step-num">4</span>
+        <h3>You get the deal</h3>
+        <p>The negotiated rate goes straight into your member account, ready to use whenever you need it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dl-section" id="dl-callout">
+    <div class="dl-callout">
+      <p>The bigger Logicard grows, <strong>the stronger our negotiating position becomes</strong> — every new member helps secure a better deal for everyone else too.</p>
+    </div>
+  </section>
+
+  <section class="dl-section" id="dl-vetting">
+    <div class="dl-section-head">
+      <span class="dl-section-eyebrow">Quality Over Quantity</span>
+      <h2 class="dl-section-title">Not every offer makes the cut</h2>
+      <p class="dl-section-sub">A discount is only worth listing if it's a genuine one.</p>
+    </div>
+    <div class="dl-vet-list">
+      <div class="dl-vet-item">
+        <span class="dl-vet-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <p><strong>Real market comparison</strong> — we check the discounted price against genuine retail pricing, not an inflated "before" price.</p>
+      </div>
+      <div class="dl-vet-item">
+        <span class="dl-vet-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <p><strong>Relevant to logistics workers</strong> — offers are chosen around the day-to-day life of drivers, warehouse teams and transport staff, not generic discounts.</p>
+      </div>
+      <div class="dl-vet-item">
+        <span class="dl-vet-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <p><strong>Kept up to date</strong> — offers are reviewed regularly and removed if a partner can no longer honour the terms.</p>
+      </div>
+      <div class="dl-vet-item">
+        <span class="dl-vet-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+        <p><strong>Exclusive to members</strong> — verified Logicard members only, keeping the group genuine and the deals meaningful.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="dl-cta-section">
+    <h2 class="dl-cta-title">Add your voice to the group</h2>
+    <p class="dl-cta-sub">Join free today — the bigger we are, the better the deals get for everyone.</p>
+    <a href="/signup.html" class="dl-btn-primary">
+      Join Logicard Free
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </section>
+
+  <footer class="dl-footer">
+    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">Join Free</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+  </footer>
+
+</body>
+</html>
