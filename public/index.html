@@ -374,25 +374,78 @@
     .btn-secondary:hover { border-color: rgba(255,255,255,0.8); }
     .hero-stats {
       display: flex;
-      gap: 36px;
+      gap: 28px;
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: 48px;
-      padding-top: 36px;
-      border-top: 1px solid rgba(255,255,255,0.12);
+      margin-top: 56px;
+    }
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 158px;
+      height: 158px;
+      border-radius: 50%;
+      padding: 12px;
+      background: radial-gradient(circle at 32% 28%, rgba(255,179,0,0.16) 0%, rgba(26,108,200,0.16) 45%, rgba(4,4,13,0.4) 100%);
+      border: 1px solid rgba(255,179,0,0.3);
+      box-shadow: 0 10px 32px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .hero-stat:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 44px rgba(255,179,0,0.22);
+      border-color: rgba(255,179,0,0.55);
     }
     .hero-stat .hs-num {
-      font-size: 28px;
+      font-size: 27px;
       font-weight: 900;
       color: var(--orange);
       display: block;
       line-height: 1;
     }
     .hero-stat .hs-label {
-      font-size: 13px;
-      color: rgba(255,255,255,0.55);
-      margin-top: 4px;
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.65);
+      margin-top: 6px;
+      line-height: 1.35;
+      max-width: 118px;
     }
+
+    /* ── Browse by Category ── */
+    .cat-buttons-section { background: var(--navy); padding: 80px 80px 88px; text-align: center; }
+    .cat-buttons-grid {
+      max-width: 1100px; margin: 44px auto 0;
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px;
+    }
+    .cat-btn {
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+      background: linear-gradient(155deg, var(--navy-mid) 0%, var(--navy) 100%);
+      border: 1px solid rgba(255,179,0,0.2);
+      border-radius: 16px;
+      padding: 26px 12px;
+      text-decoration: none;
+      color: var(--white);
+      font-size: 14px; font-weight: 700; letter-spacing: -0.1px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .cat-btn:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255,179,0,0.55);
+      box-shadow: 0 16px 36px rgba(255,179,0,0.2);
+      background: linear-gradient(155deg, #12428a 0%, var(--navy) 100%);
+    }
+    .cat-btn-icon {
+      width: 44px; height: 44px; flex-shrink: 0;
+      background: rgba(255,179,0,0.12);
+      border: 1px solid rgba(255,179,0,0.25);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cat-btn-icon svg { width: 22px; height: 22px; fill: none; stroke: var(--orange); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
     /* ── Shared section styles ── */
     .lc-section { padding: 88px 80px; }
@@ -835,6 +888,8 @@
       .lc-section { padding: 64px 28px; }
       .hero { padding: 72px 28px 56px; min-height: auto; }
       .hero-stats { flex-wrap: wrap; gap: 24px; }
+      .cat-buttons-section { padding: 64px 28px 72px; }
+      .cat-buttons-grid { grid-template-columns: repeat(3, 1fr); }
       .how-cards { grid-template-columns: 1fr; gap: 20px; }
       .how-card { padding: 36px 28px 32px; }
       .deals-grid, .support-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
@@ -855,9 +910,17 @@
       .hero-sub { font-size: 15px; margin-bottom: 28px; }
       .hero-btns { flex-direction: column; gap: 12px; }
       .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 15px 20px; font-size: 15px; }
-      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; margin-top: 32px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.12); }
-      .hero-stat .hs-num { font-size: 22px; }
-      .hero-stat .hs-label { font-size: 11px; }
+      .hero-stats { display: grid; grid-template-columns: 1fr 1fr; justify-items: center; gap: 16px; margin-top: 36px; }
+      .hero-stat { width: 128px; height: 128px; }
+      .hero-stat .hs-num { font-size: 21px; }
+      .hero-stat .hs-label { font-size: 10.5px; max-width: 96px; }
+
+      /* Browse by Category */
+      .cat-buttons-section { padding: 48px 20px 56px; }
+      .cat-buttons-grid { grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; }
+      .cat-btn { padding: 20px 10px; font-size: 12.5px; }
+      .cat-btn-icon { width: 38px; height: 38px; }
+      .cat-btn-icon svg { width: 19px; height: 19px; }
 
       /* Sections */
       .lc-section { padding: 52px 20px; }
@@ -1175,8 +1238,9 @@
       <h1>If you work in logistics, <span class="yellow">Logicard is for you.</span></h1>
       <p class="hero-sub">The UK's dedicated rewards and discount service for those working and retired from, the logistics industry, which includes; Warehousing, Transport, Storage of goods &amp; more.</p>
       <div class="hero-btns">
+        <a href="/login.html" class="btn-secondary">Log In</a>
         <a href="/signup.html" class="btn-primary">
-          JOIN NOW
+          Sign Up
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       </div>
@@ -1198,6 +1262,54 @@
           <span class="hs-label">Mental health support &amp; advice</span>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Browse by Category -->
+  <section class="cat-buttons-section" id="browse-categories">
+    <p class="section-eyebrow">Browse</p>
+    <h2 class="section-heading" style="margin-bottom: 0;">Everything you need, in one place</h2>
+    <div class="cat-buttons-grid">
+      <a class="cat-btn" href="/beauty-wellness.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span>
+        Beauty &amp; Wellness
+      </a>
+      <a class="cat-btn" href="/children-baby.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg></span>
+        Children &amp; Baby
+      </a>
+      <a class="cat-btn" href="/food-drink.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M4 8h13a3 3 0 010 6h-1M4 8v9a3 3 0 003 3h6a3 3 0 003-3V8M4 8V5h13v3"/></svg></span>
+        Food &amp; Drink
+      </a>
+      <a class="cat-btn" href="/fashion.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 001 .84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.14a1 1 0 001-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg></span>
+        Fashion
+      </a>
+      <a class="cat-btn" href="/gifts-flowers.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M19 8v13H5V8"/><path d="M12 8c-1.5-4-6-4-6 0M12 8c1.5-4 6-4 6 0"/></svg></span>
+        Gifts &amp; Flowers
+      </a>
+      <a class="cat-btn" href="/signup.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
+        Holiday &amp; Travel
+      </a>
+      <a class="cat-btn" href="/signup.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
+        Home &amp; Garden
+      </a>
+      <a class="cat-btn" href="/signup.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="1.6"/><circle cx="11" cy="5.5" r="1.6"/><circle cx="15" cy="5.5" r="1.6"/><circle cx="18" cy="9" r="1.6"/><path d="M12 12c-3 0-6 2.2-6 5.2 0 1.5 1.2 2.8 2.8 2.8.9 0 1.5-.3 2.2-.6.6-.3 1-.5 1.6-.5s1 .2 1.6.5c.7.3 1.3.6 2.2.6 1.6 0 2.8-1.3 2.8-2.8 0-3-3-5.2-6-5.2z"/></svg></span>
+        Pets
+      </a>
+      <a class="cat-btn" href="/signup.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><path d="M4 8v8M2 10v4M20 8v8M22 10v4M6 12h12"/></svg></span>
+        Sports &amp; Fitness
+      </a>
+      <a class="cat-btn" href="/signup.html">
+        <span class="cat-btn-icon"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span>
+        Tech &amp; Mobile
+      </a>
     </div>
   </section>
 
