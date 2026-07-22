@@ -65,7 +65,7 @@
     .verify-banner + .category-grid { padding-top: 0; }
 
     .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-    .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; }
+    .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; scroll-margin-top: 120px; }
     .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
     .category-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
 
@@ -105,7 +105,18 @@
           <a href="/signup.html">Tech &amp; Mobile</a>
         </div>
       </div>
-      <a href="/things-to-do.html" class="active">Things to Do</a>
+      <div class="category-nav-item">
+        <a href="/things-to-do.html" class="active">Things to Do</a>
+        <div class="category-dropdown">
+          <a href="/things-to-do.html#days-out">Days Out &amp; Attractions</a>
+          <a href="/things-to-do.html#cinema">Cinema</a>
+          <a href="/things-to-do.html#activities-experiences">Activities &amp; Experiences</a>
+          <a href="/things-to-do.html#outdoor-adventures">Outdoor Adventures</a>
+          <a href="/things-to-do.html#learning-education">Learning &amp; Education</a>
+          <a href="/things-to-do.html#music">Music</a>
+          <a href="/things-to-do.html#sports">Sports</a>
+        </div>
+      </div>
       <a href="/shopping-cards.html">Shopping Cards</a>
       <a href="/e-learning.html">E-learning</a>
       <a href="/financial-wellbeing.html">Financial Wellbeing</a>
@@ -137,13 +148,13 @@
   <p class="verify-banner">Become verified to see all offers</p>
 
   <div class="category-grid">
-    <div class="category-card"><h2>Days Out & Attractions</h2><p>Theme parks, zoos, museums and family attractions across the UK.</p></div>
-    <div class="category-card"><h2>Cinema</h2><p>Discounted tickets at major UK cinema chains.</p></div>
-    <div class="category-card"><h2>Activities & Experiences</h2><p>Days out, gift experiences and one-off adventures.</p></div>
-    <div class="category-card"><h2>Outdoor Adventures</h2><p>Adventure parks, climbing, watersports and more.</p></div>
-    <div class="category-card"><h2>Learning & Education</h2><p>Online courses and skills development discounts.</p></div>
-    <div class="category-card"><h2>Music</h2><p>Gigs, festivals and streaming subscription discounts.</p></div>
-    <div class="category-card"><h2>Sports</h2><p>Gym memberships, sports events and equipment discounts.</p></div>
+    <div class="category-card" id="days-out"><h2>Days Out & Attractions</h2><p>Theme parks, zoos, museums and family attractions across the UK.</p></div>
+    <div class="category-card" id="cinema"><h2>Cinema</h2><p>Discounted tickets at major UK cinema chains.</p></div>
+    <div class="category-card" id="activities-experiences"><h2>Activities & Experiences</h2><p>Days out, gift experiences and one-off adventures.</p></div>
+    <div class="category-card" id="outdoor-adventures"><h2>Outdoor Adventures</h2><p>Adventure parks, climbing, watersports and more.</p></div>
+    <div class="category-card" id="learning-education"><h2>Learning & Education</h2><p>Online courses and skills development discounts.</p></div>
+    <div class="category-card" id="music"><h2>Music</h2><p>Gigs, festivals and streaming subscription discounts.</p></div>
+    <div class="category-card" id="sports"><h2>Sports</h2><p>Gym memberships, sports events and equipment discounts.</p></div>
   </div>
 
   <div class="bottom-cta">
