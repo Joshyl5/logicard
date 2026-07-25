@@ -900,8 +900,8 @@ app.get('/api/admin/export.csv', requireAdmin, async (req, res) => {
   delete req.session.exportAuthorized; // one-time use
 
   const members = await getAllMembers();
-  const headers = ['Membership #','First Name','Last Name','Email','Phone','Date of Birth','Company','Role','Address 1','Address 2','City','County','Country','Registered','Marketing Consent','Consent Date'];
-  const keys    = ['membershipNumber','firstName','lastName','email','phone','dateOfBirth','companyName','role','addressLine1','addressLine2','city','county','country','createdAt','marketingConsent','marketingConsentAt'];
+  const headers = ['Membership #','First Name','Last Name','Email','Phone','Age Range','Company','Role','Address 1','Address 2','City','County','Country','Registered','Marketing Consent','Consent Date'];
+  const keys    = ['membershipNumber','firstName','lastName','email','phone','ageRange','companyName','role','addressLine1','addressLine2','city','county','country','createdAt','marketingConsent','marketingConsentAt'];
   const escape  = v => `"${(v == null ? '' : String(v)).replace(/"/g, '""')}"`;
   const rows    = members.map(m => keys.map(k => escape(m[k])).join(','));
   const csv     = '﻿' + [headers.map(h => `"${h}"`).join(','), ...rows].join('\r\n');
@@ -1376,7 +1376,7 @@ function validateMemberFields(data) {
 
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', signupLimiter, async (req, res) => {
-  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone, dateOfBirth,
+  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone, ageRange,
           addressLine1, addressLine2, town, city, county, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
@@ -1401,7 +1401,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
       roleCategoryOther: roleCategoryOther ? roleCategoryOther.trim() : null,
       firstName: firstName.trim(),     lastName: lastName.trim(),
       email: email.trim().toLowerCase(), phone: phone.trim(),
-      dateOfBirth: dateOfBirth || null,
+      ageRange: ageRange || null,
       addressLine1: addressLine1 ? addressLine1.trim() : null,
       addressLine2: addressLine2 ? addressLine2.trim() : null,
       town: town ? town.trim() : null,

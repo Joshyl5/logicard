@@ -20,7 +20,7 @@ async function initDb() {
       last_name          TEXT NOT NULL,
       email              TEXT UNIQUE NOT NULL,
       phone              TEXT,
-      date_of_birth      TEXT,
+      age_range          TEXT,
       address_line1      TEXT,
       address_line2      TEXT,
       city               TEXT,
@@ -45,6 +45,20 @@ async function initDb() {
   // "where are you based" need, and this permanently removes any postcode
   // already stored for existing members too.
   await pool.query(`ALTER TABLE members DROP COLUMN IF EXISTS postcode`);
+  // date_of_birth never actually held a date — the signup form only ever
+  // collected an age band (e.g. "25-39") — so the column is renamed to match
+  // what it really stores (2026-07-24). Guarded so it only runs once: after
+  // the first successful rename, date_of_birth no longer exists.
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'members' AND column_name = 'date_of_birth')
+         AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'members' AND column_name = 'age_range')
+      THEN
+        ALTER TABLE members RENAME COLUMN date_of_birth TO age_range;
+      END IF;
+    END $$;
+  `);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS promo_code TEXT`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS free_year BOOLEAN DEFAULT FALSE`);
   await pool.query(`ALTER TABLE members ADD COLUMN IF NOT EXISTS role_category TEXT`);
@@ -191,7 +205,7 @@ function toMember(row) {
     lastName:           row.last_name,
     email:              row.email,
     phone:              row.phone,
-    dateOfBirth:        row.date_of_birth,
+    ageRange:           row.age_range,
     addressLine1:       row.address_line1,
     addressLine2:       row.address_line2,
     town:               row.town,
@@ -270,7 +284,7 @@ async function emailExists(email) {
 async function createMember(data) {
   const {
     companyName, role, roleCategory = null, roleCategoryOther = null, firstName, lastName, email, phone,
-    dateOfBirth = null, addressLine1 = null, addressLine2 = null, town = null, city = null, county = null,
+    ageRange = null, addressLine1 = null, addressLine2 = null, town = null, city = null, county = null,
     country = null,
     password, gdprConsent, marketingConsent, referredBy,
     promoCode = null, freeYear = false,
@@ -286,7 +300,7 @@ async function createMember(data) {
   await pool.query(`
     INSERT INTO members (
       membership_number, company_name, role, role_category, role_category_other, first_name, last_name,
-      email, phone, date_of_birth, address_line1, address_line2,
+      email, phone, age_range, address_line1, address_line2,
       town, city, county, country, password_hash, verified, created_at,
       referred_by, total_referrals, monthly_entries,
       marketing_consent, marketing_consent_at, gdpr_consent,
@@ -297,7 +311,7 @@ async function createMember(data) {
     )
   `, [
     membershipNumber, companyName, role, roleCategory || null, roleCategoryOther || null, firstName, lastName,
-    email.toLowerCase(), phone, dateOfBirth || null,
+    email.toLowerCase(), phone, ageRange || null,
     addressLine1 || null, addressLine2 || null,
     town || null, city || null, county || null, country || null,
     passwordHash, now,
