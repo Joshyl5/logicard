@@ -343,6 +343,7 @@
       gap: 16px;
       flex-wrap: wrap;
       justify-content: center;
+      align-items: center;
     }
     .btn-primary {
       background: var(--orange);
@@ -415,6 +416,96 @@
       margin-top: 6px;
       line-height: 1.3;
       max-width: 104px;
+    }
+
+    /* ── Photo Wall ── */
+    .photo-wall-section { background: var(--navy-deep); padding: 32px 40px 48px; }
+    .photo-wall-grid {
+      max-width: 1400px; margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.7fr 1fr 1fr;
+      grid-auto-rows: 180px;
+      gap: 8px;
+    }
+    .pw-tile {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: flex-end;
+    }
+    .pw-tile::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(0deg, rgba(4,4,13,0.82) 0%, rgba(4,4,13,0.15) 55%, transparent 100%);
+    }
+    .pw-tile-icon {
+      position: absolute; top: 14px; right: 14px;
+      width: 26px; height: 26px;
+      opacity: 0.5;
+    }
+    .pw-tile-icon svg { width: 100%; height: 100%; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .pw-tile-label { position: relative; z-index: 1; padding: 14px 16px; }
+    .pw-tile-label .role { display: block; font-size: 14.5px; font-weight: 800; color: #fff; letter-spacing: -0.1px; }
+    .pw-tile-label .sub { display: block; font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+
+    .pw-center {
+      grid-column: 3; grid-row: 1 / span 2;
+      background: var(--navy);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .pw-center-top { height: 6px; background: var(--orange); flex-shrink: 0; }
+    .pw-center-body {
+      flex: 1;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .pw-center-body h2 {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 900;
+      color: var(--orange);
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+    .pw-center-divider { width: 90px; height: 2px; background: var(--orange); margin-bottom: 18px; }
+    .pw-center-body .pw-tagline { color: #fff; font-size: 19px; font-weight: 700; margin-bottom: 18px; }
+    .pw-dots { display: flex; gap: 8px; margin-bottom: 18px; }
+    .pw-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); }
+    .pw-center-body .pw-features { color: var(--orange); font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+    .pw-center-body .pw-sub { color: rgba(255,255,255,0.5); font-size: 13px; }
+    .pw-center-bottom {
+      background: var(--orange);
+      color: var(--navy-deep);
+      font-weight: 800;
+      font-size: 13px;
+      text-align: center;
+      padding: 12px;
+      flex-shrink: 0;
+    }
+
+    .photo-wall-note {
+      max-width: 1400px; margin: 14px auto 0;
+      font-size: 12px; color: rgba(255,255,255,0.3);
+      text-align: center;
+    }
+
+    @media (max-width: 1024px) {
+      .photo-wall-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; }
+      .pw-center { grid-column: 1 / span 2; grid-row: auto; order: -1; min-height: 320px; }
+    }
+    @media (max-width: 560px) {
+      .photo-wall-section { padding: 24px 20px 36px; }
+      .photo-wall-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 130px; gap: 6px; }
+      .pw-center { min-height: 280px; }
+      .pw-center-body h2 { font-size: 26px; }
+      .pw-tile-label .role { font-size: 13px; }
+      .pw-tile-label .sub { font-size: 11px; }
     }
 
     /* ── Browse by Category ── */
@@ -1293,11 +1384,8 @@
       <h1>If you work in logistics, <span class="yellow">Logicard is for you.</span></h1>
       <p class="hero-sub">The UK's dedicated rewards and discount service for those working and retired from, the logistics industry, which includes; Warehousing, Transport, Storage of goods &amp; more.</p>
       <div class="hero-btns">
-        <a href="/login.html" class="btn-secondary">Log In</a>
-        <a href="/signup.html" class="btn-primary">
-          Sign Up
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+        <a href="/login.html" class="site-header-signin">Log In</a>
+        <a href="/signup.html" class="site-header-join">Sign Up</a>
       </div>
       <div class="hero-stats">
         <div class="hero-stat">
@@ -1318,6 +1406,60 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- Photo Wall -->
+  <section class="photo-wall-section">
+    <div class="photo-wall-grid">
+
+      <div class="pw-center">
+        <div class="pw-center-top"></div>
+        <div class="pw-center-body">
+          <h2>LOGICARD</h2>
+          <div class="pw-center-divider"></div>
+          <p class="pw-tagline">we're on your side</p>
+          <div class="pw-dots"><span></span><span></span><span></span></div>
+          <p class="pw-features">Discounts &middot; Rewards &middot; Recognition</p>
+          <p class="pw-sub">for the people who keep Britain moving</p>
+        </div>
+        <div class="pw-center-bottom">logicard.co.uk</div>
+      </div>
+
+      <div class="pw-tile" style="background:linear-gradient(155deg,#0d3b80,#04040d);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Warehouse Team</span><span class="sub">Fulfilment &amp; Distribution</span></span>
+      </div>
+      <div class="pw-tile" style="background:linear-gradient(155deg,#1a6cc8,#071d40);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 13l1.5-5A2 2 0 016.4 6.5h11.2a2 2 0 011.9 1.5L21 13"/><rect x="2" y="13" width="20" height="6" rx="1"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Distribution</span><span class="sub">Proud to Deliver</span></span>
+      </div>
+      <div class="pw-tile" style="background:linear-gradient(155deg,#071d40,#0d3b80);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Management</span><span class="sub">Planning &amp; Operations</span></span>
+      </div>
+      <div class="pw-tile" style="background:linear-gradient(155deg,#0d3b80,#1a6cc8);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Warehouse Op.</span><span class="sub">Pick, Pack &amp; Dispatch</span></span>
+      </div>
+      <div class="pw-tile" style="background:linear-gradient(155deg,#04040d,#0d3b80);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Forklift Op.</span><span class="sub">Trained &amp; Licensed</span></span>
+      </div>
+      <div class="pw-tile" style="background:linear-gradient(155deg,#071d40,#1a6cc8);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M9 2h6a2 2 0 012 2v1H7V4a2 2 0 012-2z"/><rect x="5" y="5" width="14" height="16" rx="2"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="13" y2="18"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Coordinator</span><span class="sub">Logistics Management</span></span>
+      </div>
+      <div class="pw-tile" style="background:linear-gradient(155deg,#0d3b80,#071d40);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="21"/><path d="M5 12H2a10 10 0 0020 0h-3"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Port Workers</span><span class="sub">Dock &amp; Terminal</span></span>
+      </div>
+      <div class="pw-tile" style="background:linear-gradient(155deg,#1a6cc8,#04040d);">
+        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
+        <span class="pw-tile-label"><span class="role">Air Freight</span><span class="sub">International Logistics</span></span>
+      </div>
+
+    </div>
+    <p class="photo-wall-note">Placeholder tiles shown — swap each <code>.pw-tile</code>'s background for a real photo when available.</p>
   </section>
 
   <!-- Browse by Category -->
