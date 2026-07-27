@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Logicard Brand Book</title>
+<style>
+  :root {
+    --navy-deep: #04040d;
+    --navy: #071d40;
+    --navy-mid: #0d3b80;
+    --gold: #FFB300;
+    --gold-dark: #E09A00;
+    --blue-accent: #1a6cc8;
+    --white: #ffffff;
+    --ink: rgba(255,255,255,0.92);
+    --muted: rgba(255,255,255,0.62);
+    --faint: rgba(255,255,255,0.4);
+    --hairline: rgba(255,255,255,0.1);
+    --panel: rgba(255,255,255,0.035);
+    --panel-border: rgba(255,255,255,0.09);
+
+    --lock-bg: rgba(255,99,99,0.08);
+    --lock-border: rgba(255,99,99,0.3);
+    --lock-text: #ff9b9b;
+    --guide-bg: rgba(255,179,0,0.08);
+    --guide-border: rgba(255,179,0,0.3);
+    --guide-text: var(--gold);
+    --free-bg: rgba(88,214,141,0.08);
+    --free-border: rgba(88,214,141,0.3);
+    --free-text: #7fe0aa;
+
+    --font-display: -apple-system, "Segoe UI Semibold", "Segoe UI", Roboto, system-ui, sans-serif;
+    --font-body: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 55%, var(--navy-deep) 100%);
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
+
+  ::selection { background: rgba(255,179,0,0.35); }
+
+  a { color: var(--gold); }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 28px 120px; }
+
+  /* ── Governing banner ── */
+  .gov-banner {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(4,4,13,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--lock-border);
+    padding: 12px 28px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: var(--lock-text);
+  }
+  .gov-banner span.icon { margin-right: 6px; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 88px 0 56px;
+    text-align: center;
+  }
+  .logo-pill {
+    display: inline-flex;
+    align-items: center;
+    border: 2.5px solid rgba(255,179,0,0.55);
+    padding: 12px 30px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    box-shadow: 0 0 22px rgba(255,179,0,0.14);
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .logo-pill .logi { color: #fff; }
+  .logo-pill .card { color: var(--gold); }
+  .hero-eyebrow {
+    display: block;
+    margin-top: 30px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5vw, 50px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 14px 0 16px;
+    text-wrap: balance;
+  }
+  .hero p {
+    max-width: 560px;
+    margin: 0 auto;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── Section scaffolding ── */
+  section.block { padding: 64px 0; border-top: 1px solid var(--hairline); }
+  section.block:first-of-type { border-top: none; }
+  .sec-num {
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  h2.sec-title {
+    font-family: var(--font-display);
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  .sec-lede {
+    color: var(--muted);
+    font-size: 15.5px;
+    max-width: 640px;
+    margin: 0 0 32px;
+  }
+
+  /* ── Audience cards ── */
+  .audience-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+  .audience-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 24px 22px;
+  }
+  .audience-card .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .audience-card p { margin: 0; font-size: 14.5px; color: var(--muted); }
+  .audience-card strong { color: var(--ink); }
+  .surface-line {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .surface-line strong { color: var(--ink); }
+
+  /* ── Voice traits ── */
+  .trait-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .trait-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 22px 20px;
+  }
+  .trait-card .num {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 10px;
+  }
+  .trait-card h3 { margin: 0 0 8px; font-size: 15.5px; font-weight: 700; }
+  .trait-card p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+  .voice-note {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+  .voice-note h4 { margin: 0 0 8px; font-size: 14.5px; font-weight: 700; color: var(--gold); }
+  .voice-note p { margin: 0; font-size: 14px; color: var(--muted); }
+
+  .dodont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+  .dodont-card { border-radius: 14px; padding: 20px 22px; border: 1px solid; }
+  .dodont-card.do { background: var(--free-bg); border-color: var(--free-border); }
+  .dodont-card.dont { background: var(--lock-bg); border-color: var(--lock-border); }
+  .dodont-card .label { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+  .dodont-card.do .label { color: var(--free-text); }
+  .dodont-card.dont .label { color: var(--lock-text); }
+  .dodont-card p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--ink); font-style: italic; }
+
+  /* ── Colour swatches ── */
+  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 32px; }
+  .swatch { border-radius: 12px; overflow: hidden; border: 1px solid var(--panel-border); }
+  .swatch-fill { height: 76px; }
+  .swatch-meta { padding: 10px 12px; background: var(--panel); }
+  .swatch-meta .name { display: block; font-size: 12.5px; font-weight: 700; }
+  .swatch-meta .hex { display: block; font-size: 11.5px; color: var(--muted); font-variant-numeric: tabular-nums; margin-top: 2px; }
+
+  .rule-box {
+    background: var(--guide-bg);
+    border: 1px solid var(--guide-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 36px;
+  }
+  .rule-box strong { color: var(--gold); }
+
+  /* ── Type pairing ── */
+  .type-demo { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+  .type-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 22px 22px 24px;
+  }
+  .type-card .role { font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; display: block; }
+  .type-card .sample-h { font-family: var(--font-display); font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .type-card .sample-b { font-family: var(--font-body); font-size: 14.5px; color: var(--muted); line-height: 1.65; }
+  .type-note { font-size: 12.5px; color: var(--faint); margin-top: -8px; margin-bottom: 32px; }
+
+  /* ── Icon style ── */
+  .icon-demo-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; }
+  .icon-tile {
+    width: 56px; height: 56px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .icon-tile svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .icon-warning {
+    background: var(--lock-bg);
+    border: 1px solid var(--lock-border);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 13.5px;
+    color: var(--ink);
+    margin-top: 16px;
+  }
+  .icon-warning strong { color: var(--lock-text); }
+
+  /* ── Logo rules ── */
+  .logo-rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 24px 0 8px; }
+  .logo-rule-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 22px;
+    text-align: center;
+  }
+  .logo-rule-card .mini-pill {
+    display: inline-flex;
+    align-items: center;
+    border: 2px solid rgba(255,179,0,0.55);
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 14px;
+  }
+  .logo-rule-card p { margin: 0; font-size: 13px; color: var(--muted); }
+
+  /* ── Rules scale ── */
+  .tier {
+    border-radius: 16px;
+    padding: 26px 26px 22px;
+    margin-bottom: 20px;
+    border: 1px solid;
+  }
+  .tier.lock  { background: var(--lock-bg);  border-color: var(--lock-border); }
+  .tier.guide { background: var(--guide-bg); border-color: var(--guide-border); }
+  .tier.free  { background: var(--free-bg);  border-color: var(--free-border); }
+  .tier-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+  .tier-icon { font-size: 22px; line-height: 1; }
+  .tier-title { font-family: var(--font-display); font-size: 19px; font-weight: 800; }
+  .tier.lock .tier-title  { color: var(--lock-text); }
+  .tier.guide .tier-title { color: var(--guide-text); }
+  .tier.free .tier-title  { color: var(--free-text); }
+  .tier-sub { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+  .tier ul { margin: 0; padding-left: 20px; }
+  .tier li { font-size: 14px; color: var(--ink); margin-bottom: 8px; line-height: 1.55; }
+  .tier li:last-child { margin-bottom: 0; }
+
+  .tier-caveat {
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  /* ── Governance steps ── */
+  .steps { counter-reset: step; display: flex; flex-direction: column; gap: 14px; }
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .step-num {
+    counter-increment: step;
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy-deep);
+    font-weight: 800;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-num::before { content: counter(step); }
+  .step p { margin: 0; font-size: 14px; color: var(--ink); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 56px 0 0;
+    color: var(--faint);
+    font-size: 12.5px;
+  }
+  footer a { color: var(--faint); text-decoration: underline; }
+
+  @media (max-width: 720px) {
+    .audience-grid, .trait-row, .dodont, .type-demo, .logo-rules-grid { grid-template-columns: 1fr; }
+    .hero { padding: 56px 0 40px; }
+    .logo-pill { font-size: 28px; padding: 10px 22px; }
+    section.block { padding: 48px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gov-banner"><span class="icon">🔒</span>Governing document — review this before any change to logicard.co.uk</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <div class="logo-pill"><span class="logi">Logi</span><span class="card">card</span></div>
+    <span class="hero-eyebrow">Brand Book</span>
+    <h1>How Logicard looks, sounds, and decides</h1>
+    <p>The reference for staying recognisably Logicard as the site grows — new category pages, the weekly quiz, brand partnerships, and whoever works on this next.</p>
+  </div>
+
+  <section class="block">
+    <p class="sec-num">01</p>
+    <h2 class="sec-title">Who this is for</h2>
+    <p class="sec-lede">Every design and copy decision gets checked against this list first.</p>
+    <div class="audience-grid">
+      <div class="audience-card">
+        <span class="tag">Primary audience</span>
+        <p><strong>~2.8 million UK logistics workers</strong> — HGV drivers, warehouse and fulfilment staff, transport planners, fleet management, freight and ports, plus retired members of the industry. Often reading mid-shift, tired, on a phone.</p>
+      </div>
+      <div class="audience-card">
+        <span class="tag">Secondary audience</span>
+        <p><strong>Brands and advertisers</strong> who want to reach that audience through Logicard — sponsorship, partner offers, workforce-recognition partnerships.</p>
+      </div>
+    </div>
+    <div class="surface-line">
+      <strong>Product surface:</strong> £10/year membership (FREE promo for year 1) · workforce wellbeing content · employer workforce-recognition partnerships · a weekly 10-question quiz paying cashback for a perfect score.
+    </div>
+  </section>
+
+  <section class="block">
+    <p class="sec-num">02</p>
+    <h2 class="sec-title">Voice and tone</h2>
+    <p class="sec-lede">Three traits, one voice: direct, warm, and allergic to corporate speak. Write like a colleague who happens to know where the good deals are — not a marketing department.</p>
+
+    <div class="trait-row">
+      <div class="trait-card">
+        <span class="num">01</span>
+        <h3>Direct</h3>
+        <p>Lead with the number, the saving, the deadline. Personality comes after clarity, not instead of it.</p>
+      </div>
+      <div class="trait-card">
+        <span class="num">02</span>
+        <h3>Warm, not saccharine</h3>
+        <p>Acknowledge the graft without being patronising. "For the people who keep Britain moving" is the reference point.</p>
+      </div>
+      <div class="trait-card">
+        <span class="num">03</span>
+        <h3>No corporate jargon</h3>
+        <p>No "synergy," "leverage," "solutions." If a line would fit in a corporate all-hands deck, rewrite it.</p>
+      </div>
+    </div>
+
+    <div class="voice-note">
+      <h4>One voice, not two registers</h4>
+      <p>Brand-facing copy trades warmth for <em>credibility</em> — real numbers, real reach ("2.8 million UK logistics workers," not vague enthusiasm) — but it isn't a different personality. If member-facing and brand-facing copy start reading like two different companies, that's the signal something has drifted.</p>
+    </div>
+    <div class="voice-note">
+      <h4>The quiz is the one deliberate exception</h4>
+      <p>A lighter, competitive, watercooler feature — it can carry more energy than a discount page: <em>"Reckon you know your stuff? Nail all 10, walk away with cash."</em> Still no fluff, just more cheek.</p>
+    </div>
+    <div class="voice-note">
+      <h4>The failure mode to actively avoid</h4>
+      <p>A "geezer" / white-van-man caricature. The workforce is far broader than that stereotype — warehouse staff, ops, admin, retired members, women in logistics — and a caricatured voice reads as patronising to most of the 2.8 million rather than authentic to any of it.</p>
+    </div>
+
+    <div class="dodont">
+      <div class="dodont-card do">
+        <span class="label">Sounds like Logicard</span>
+        <p>"£10 a year. Use code FREE and your first year's on us."</p>
+      </div>
+      <div class="dodont-card dont">
+        <span class="label">Doesn't sound like Logicard</span>
+        <p>"Unlock a world of exclusive savings tailored to your on-the-road lifestyle, mate!"</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <p class="sec-num">03</p>
+    <h2 class="sec-title">Visual identity</h2>
+
+    <p class="sec-lede" style="margin-bottom:16px;">Colour palette — navy and gold, nothing else added as a competing primary.</p>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-fill" style="background:#071d40"></div><div class="swatch-meta"><span class="name">Navy</span><span class="hex">#071d40</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#04040d"></div><div class="swatch-meta"><span class="name">Navy Deep</span><span class="hex">#04040d</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#0d3b80"></div><div class="swatch-meta"><span class="name">Navy Mid</span><span class="hex">#0d3b80</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#FFB300"></div><div class="swatch-meta"><span class="name">Gold</span><span class="hex">#FFB300</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#E09A00"></div><div class="swatch-meta"><span class="name">Gold Dark</span><span class="hex">#E09A00</span></div></div>
+      <div class="swatch"><div class="swatch-fill" style="background:#1a6cc8"></div><div class="swatch-meta"><span class="name">Blue Accent</span><span class="hex">#1a6cc8</span></div></div>
+    </div>
+    <div class="rule-box"><strong>Rule:</strong> gold is the only accent used for calls to action. Blue Accent is borrowed sparingly for secondary moments (e.g. the founders' story) — it never competes with gold in the same view.</div>
+
+    <p class="sec-lede" style="margin-bottom:16px;">Logo — never recoloured, never placed on light backgrounds without inverting it first.</p>
+    <div class="logo-rules-grid">
+      <div class="logo-rule-card">
+        <div class="mini-pill"><span style="color:#fff">Logi</span><span style="color:#FFB300">card</span></div>
+        <p>Wordmark lockup — the header/UI version. "Logi" white, "card" gold, bordered pill, subtle gold glow.</p>
+      </div>
+      <div class="logo-rule-card">
+        <div class="mini-pill" style="background:linear-gradient(135deg,#0d3b80,#1a6cc8); border-color:transparent;"><span style="color:#fff">☁</span></div>
+        <p>Illustrated cloud mark — marketing/social use only (hero banners, email headers). Not a header replacement.</p>
+      </div>
+    </div>
+
+    <p class="sec-lede" style="margin:32px 0 16px;">Typography — two roles, no third typeface.</p>
+    <div class="type-demo">
+      <div class="type-card">
+        <span class="role">Display · Raleway</span>
+        <p class="sample-h">Deals built for logistics workers</p>
+        <p class="sample-b">Used for brand headlines only — page titles, hero statements, section headings.</p>
+      </div>
+      <div class="type-card">
+        <span class="role">Body · Inter</span>
+        <p class="sample-h" style="font-size:16px;">150+ exclusive deals, updated daily</p>
+        <p class="sample-b">Everything else — body copy, forms, buttons, navigation.</p>
+      </div>
+    </div>
+    <p class="type-note">Rendered here in close system-font equivalents — this file doesn't embed the real Inter/Raleway font files, so treat the shapes as a stand-in for the pairing rule, not a pixel-accurate preview. The live site loads the real fonts directly.</p>
+
+    <p class="sec-lede" style="margin-bottom:12px;">Iconography — line icons, 24×24 viewbox, 1.8–2px stroke, round caps, no fill.</p>
+    <div class="icon-demo-row">
+      <div class="icon-tile"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></div>
+      <div class="icon-tile"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></div>
+      <div class="icon-tile"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M19 8v13H5V8"/><path d="M12 8c-1.5-4-6-4-6 0M12 8c1.5-4 6-4 6 0"/></svg></div>
+      <div class="icon-tile"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></div>
+    </div>
+    <div class="icon-warning"><strong>Known failure mode:</strong> an icon using unstyled <code>stroke="currentColor"</code> inside a white/light card will inherit whatever text colour the page sets — this shipped invisible once already when the site's body text turned white. Always set an explicit stroke colour on icons inside light-background cards.</div>
+  </section>
+
+  <section class="block">
+    <p class="sec-num">04</p>
+    <h2 class="sec-title">The Rules Scale</h2>
+    <p class="sec-lede">Not every rule carries the same weight. Use this to judge how much justification a change needs — and when to stop and ask the site owner first, rather than deciding alone.</p>
+
+    <div class="tier lock">
+      <div class="tier-head"><span class="tier-icon">🔒</span><span class="tier-title">Tier 1 — Locked</span></div>
+      <p class="tier-sub">Requires explicit sign-off before changing. Never change these as a side effect of an unrelated task.</p>
+      <ul>
+        <li>The colour palette hex values</li>
+        <li>The logo lockup (colours, "Logi"/"card" split, pill treatment)</li>
+        <li>The core voice traits — direct, warm, no corporate jargon, no caricature</li>
+        <li>The £10/year price point and the FREE promo mechanic, wherever stated</li>
+        <li>Legal and compliance copy — Privacy Policy, Terms &amp; Conditions, the complaints process, consent wording</li>
+      </ul>
+    </div>
+
+    <div class="tier guide">
+      <div class="tier-head"><span class="tier-icon">🟡</span><span class="tier-title">Tier 2 — Guided</span></div>
+      <p class="tier-sub">Can change, but the change should be deliberate and explainable — flag the reasoning, don't change it quietly.</p>
+      <ul>
+        <li>Page layouts and new page structures</li>
+        <li>New icons (must match the existing line-icon style)</li>
+        <li>Navigation structure — adding or removing nav items, dropdowns</li>
+        <li>Tone register for a genuinely new feature (e.g. establishing the quiz's voice)</li>
+        <li>New category pages and what they link to</li>
+      </ul>
+    </div>
+
+    <div class="tier free">
+      <div class="tier-head"><span class="tier-icon">🟢</span><span class="tier-title">Tier 3 — Flexible</span></div>
+      <p class="tier-sub">Encouraged to iterate freely, no sign-off needed.</p>
+      <ul>
+        <li>Individual card copy/descriptions within an established template</li>
+        <li>Weekly quiz question content</li>
+        <li>Seasonal promotional copy (e.g. the monthly giveaway prize)</li>
+        <li>Marketing email subject lines</li>
+        <li>Minor spacing/padding adjustments within an existing component</li>
+      </ul>
+    </div>
+    <p class="tier-caveat">When in doubt about which tier something falls into, treat it as the higher tier.</p>
+  </section>
+
+  <section class="block">
+    <p class="sec-num">05</p>
+    <h2 class="sec-title">Using this document</h2>
+    <div class="steps">
+      <div class="step"><span class="step-num"></span><p>Check whether the change touches a Tier 1 item. If so, confirm with the site owner before proceeding — even if the request seems small.</p></div>
+      <div class="step"><span class="step-num"></span><p>If it's Tier 2, make the change, but say what changed and why, so it's easy to review.</p></div>
+      <div class="step"><span class="step-num"></span><p>If it's Tier 3, proceed freely.</p></div>
+      <div class="step"><span class="step-num"></span><p>If a change reveals this document is wrong or out of date, update it in the same piece of work — it should always describe the site as it actually is.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    Logicard Brand Book · lives alongside <code>BRAND.md</code> and <code>CLAUDE.md</code> in the project repo
+  </footer>
+
+</div>
+</body>
+</html>
