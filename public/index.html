@@ -377,12 +377,16 @@
       transition: border-color 0.15s;
     }
     .btn-secondary:hover { border-color: rgba(255,255,255,0.8); }
+    .floating-stats-section {
+      background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%);
+      padding: 64px 40px;
+    }
     .hero-stats {
       display: flex;
       gap: 20px;
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: 96px;
+      margin-top: 0;
     }
     .hero-stat {
       display: flex;
@@ -987,6 +991,7 @@
       .lc-section { padding: 64px 28px; }
       .hero { padding: 72px 28px 56px; min-height: auto; }
       .hero-stats { flex-wrap: wrap; gap: 24px; }
+      .floating-stats-section { padding: 48px 28px; }
       .cat-buttons-section { padding: 64px 28px 72px; }
       .cat-buttons-grid { grid-template-columns: repeat(3, 1fr); }
       .how-cards { grid-template-columns: 1fr; gap: 20px; }
@@ -1004,6 +1009,7 @@
     @media (max-width: 600px) {
       /* Hero */
       .hero { padding: 52px 20px 48px; }
+      .floating-stats-section { padding: 36px 20px; }
       .hero-tag { font-size: 11px; padding: 5px 11px; margin-bottom: 18px; }
       .hero h1 { font-size: clamp(30px, 8vw, 42px); margin-bottom: 16px; letter-spacing: -0.5px; }
       .hero-sub { font-size: 15px; margin-bottom: 28px; }
@@ -1013,7 +1019,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 28px 16px;
-        margin-top: 64px;
+        margin-top: 0;
         background: radial-gradient(circle at 30% 20%, rgba(255,179,0,0.14) 0%, rgba(26,108,200,0.14) 50%, rgba(4,4,13,0.35) 100%);
         border: 1px solid rgba(255,179,0,0.3);
         border-radius: 28px;
@@ -1388,24 +1394,6 @@
         <a href="/login.html" class="site-header-signin">Log In</a>
         <a href="/signup.html" class="site-header-join">Sign Up</a>
       </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <span class="hs-num">150+</span>
-          <span class="hs-label">Deals &amp; more every day</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hs-num">FREE</span>
-          <span class="hs-label">Use code FREE for year 1 at £0</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hs-num">FREE</span>
-          <span class="hs-label">Mental health support &amp; advice</span>
-        </div>
-        <div class="hero-stat">
-          <span class="hs-num">FREE</span>
-          <span class="hs-label">Chances to win prizes every month</span>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -1461,6 +1449,28 @@
 
     </div>
     <p class="photo-wall-note">Placeholder tiles shown — swap each <code>.pw-tile</code>'s background for a real photo when available.</p>
+  </section>
+
+  <!-- Floating Stats -->
+  <section class="floating-stats-section">
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hs-num">150+</span>
+        <span class="hs-label">Deals &amp; more every day</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hs-num">FREE</span>
+        <span class="hs-label">Use code FREE for year 1 at £0</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hs-num">FREE</span>
+        <span class="hs-label">Mental health support &amp; advice</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hs-num">FREE</span>
+        <span class="hs-label">Chances to win prizes every month</span>
+      </div>
+    </div>
   </section>
 
   <!-- Browse by Category -->
