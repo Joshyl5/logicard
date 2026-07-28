@@ -265,14 +265,14 @@
 
     /* ── Hero ── */
     .hero {
-      min-height: 88vh;
+      min-height: 52vh;
       background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%);
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 80px 80px 80px 80px;
+      padding: 80px 80px 48px;
       overflow: hidden;
     }
     .hero::before {
@@ -335,16 +335,9 @@
     .hero-sub {
       font-size: 19px;
       color: rgba(255,255,255,0.72);
-      margin: 0 auto 44px;
+      margin: 0 auto;
       line-height: 1.65;
       max-width: 520px;
-    }
-    .hero-btns {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
     }
     .btn-primary {
       background: var(--orange);
@@ -424,7 +417,7 @@
     }
 
     /* ── Photo Wall ── */
-    .photo-wall-section { background: var(--navy-deep); padding: 32px 40px 48px; }
+    .photo-wall-section { background: var(--navy); padding: 32px 40px 48px; }
     .photo-wall-grid {
       max-width: 1400px; margin: 0 auto;
       display: grid;
@@ -440,6 +433,7 @@
       background-position: center;
       display: flex;
       align-items: flex-end;
+      border: 1px solid rgba(255,179,0,0.25);
     }
     .pw-tile::before {
       content: '';
@@ -824,6 +818,99 @@
       line-height: 1.65;
     }
 
+    /* ── About Us ── */
+    .about-section { background: var(--navy); text-align: center; }
+    .about-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
+    .about-section .section-eyebrow,
+    .about-section .section-heading { text-align: center; }
+    .about-section .section-sub { text-align: center; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .about-banner {
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 48px 32px;
+      background: linear-gradient(120deg, #0d3b80 0%, #071d40 45%, #04040d 100%);
+    }
+    .about-banner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 22% 28%, rgba(255,179,0,0.2) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 75%, rgba(26,108,200,0.22) 0%, transparent 55%);
+    }
+    .about-banner-content { position: relative; z-index: 1; max-width: 560px; }
+    .about-banner-content h3 {
+      font-size: clamp(24px, 3vw, 34px);
+      font-weight: 900;
+      color: var(--white);
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+    .about-banner-content p {
+      font-size: 16px;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 28px;
+    }
+    .about-banner-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--orange);
+      color: var(--navy-deep);
+      font-weight: 800;
+      font-size: 15px;
+      padding: 14px 32px;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .about-banner-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    /* ── FAQs ── */
+    .faq-section { background: var(--navy-deep); text-align: center; }
+    .faq-section .section-heading,
+    .faq-section .section-eyebrow { text-align: center; }
+    .faq-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
+    .faq-list { width: 100%; max-width: 760px; text-align: left; }
+    .faq-item { border-bottom: 1px solid rgba(255,255,255,0.12); }
+    .faq-item summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 22px 4px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      cursor: pointer;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary .chevron { color: var(--orange); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item[open] summary .chevron { transform: rotate(180deg); }
+    .faq-item-body { padding: 0 4px 24px; }
+    .faq-item-body p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.65);
+    }
+    .faq-item-body p + p { margin-top: 14px; }
+    .faq-item-body ul { margin: 14px 0 0; padding-left: 20px; }
+    .faq-item-body li {
+      font-size: 15px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 8px;
+    }
+    .faq-item-body strong { color: var(--white); }
+
     /* ── Sign Up CTA Section ── */
     .cta-section {
       background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, var(--navy-mid) 100%);
@@ -1000,6 +1087,7 @@
       .benefits-grid { grid-template-columns: 1fr 1fr; }
       .contact-layout { flex-direction: column; gap: 40px; }
       .contact-illustration { display: none; }
+      .about-banner { min-height: 260px; padding: 40px 24px; }
       .main-footer { flex-direction: column; gap: 20px; text-align: center; padding: 32px 24px; }
       .footer-links { flex-wrap: wrap; justify-content: center; }
       .cta-section { padding: 56px 32px; }
@@ -1012,9 +1100,10 @@
       .floating-stats-section { padding: 36px 20px; }
       .hero-tag { font-size: 11px; padding: 5px 11px; margin-bottom: 18px; }
       .hero h1 { font-size: clamp(30px, 8vw, 42px); margin-bottom: 16px; letter-spacing: -0.5px; }
-      .hero-sub { font-size: 15px; margin-bottom: 28px; }
-      .hero-btns { flex-direction: column; gap: 12px; }
-      .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: 15px 20px; font-size: 15px; }
+      .hero-sub { font-size: 15px; }
+      .about-banner { min-height: 220px; padding: 32px 20px; border-radius: 14px; }
+      .about-banner-content p { font-size: 14px; margin-bottom: 22px; }
+      .faq-item summary { font-size: 15.5px; padding: 18px 4px; }
       .hero-stats {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1390,10 +1479,6 @@
     <div class="hero-content">
       <h1>If you work in logistics, <span class="yellow">Logicard is for you.</span></h1>
       <p class="hero-sub">The UK's dedicated rewards and discount service for those working and retired from, the logistics industry, which includes; Warehousing, Transport, Storage of goods &amp; more.</p>
-      <div class="hero-btns">
-        <a href="/login.html" class="site-header-signin">Log In</a>
-        <a href="/signup.html" class="site-header-join">Sign Up</a>
-      </div>
     </div>
   </section>
 
@@ -1414,7 +1499,7 @@
         <div class="pw-center-bottom">logicard.co.uk</div>
       </div>
 
-      <div class="pw-tile" style="background:linear-gradient(155deg,#0d3b80,#04040d);">
+      <div class="pw-tile" style="background:linear-gradient(155deg,#FFB300,#E09A00);">
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
         <span class="pw-tile-label"><span class="role">Warehouse Team</span><span class="sub">Fulfilment &amp; Distribution</span></span>
       </div>
@@ -1792,6 +1877,92 @@
           <h3>A community just for you</h3>
           <p>Join thousands of logistics workers already benefitting from Logicard. Your card, your community.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Us -->
+  <section class="lc-section about-section" id="about">
+    <div class="lc-inner">
+      <p class="section-eyebrow">About Us</p>
+      <h2 class="section-heading">The discount service built for logistics.</h2>
+      <p class="section-sub">Logicard is the dedicated rewards and discount service for the UK's logistics workforce — the people who load the vans, drive the routes, run the warehouses and keep the shelves stocked, nationwide. Our members save with over 150 trusted UK brands, both online and in-store, across everyday shopping, fuel, food, travel and more. It's just £10 a year, with your first year free using code FREE at checkout.</p>
+
+      <div class="about-banner">
+        <div class="about-banner-content">
+          <h3>Not sure if you qualify?</h3>
+          <p>Whether you're working or retired from the industry, check your eligibility in under a minute.</p>
+          <a href="/qualify.html" class="about-banner-btn">
+            Find out more
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQs -->
+  <section class="lc-section faq-section" id="faqs">
+    <div class="lc-inner">
+      <h2 class="section-heading">FAQs</h2>
+      <div class="faq-list">
+
+        <details class="faq-item">
+          <summary>
+            What is Logicard?
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="faq-item-body">
+            <p>Logicard is the number 1 discount service for eligible logistics workers in the UK; including any staff members involved in the production of goods, the storage of goods, the transporting of goods, the stocking of goods, as well as the management of all the processes behind the scenes. Our valued members can access exclusive savings from thousands of brands across everyday shopping, fashion, travel, motoring, days out, home and lifestyle categories.</p>
+            <p>Logicard has become a well known way to save with recognised retailers and household names. It is designed to give everyday value to the people who support communities nationwide, making it a popular choice for reliable and genuine member discounts.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            How do I join?
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="faq-item-body">
+            <p>You will need to register online to join Logicard. It costs just £10 per year for access to our dedicated rewards service — use code FREE at checkout for your first year at £0. Unlocking thousands of discounts, exclusive events and free tickets. Ready to apply? <a href="/signup.html" style="color:var(--orange)">Start your sign up journey here</a>.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            Who can apply?
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="faq-item-body">
+            <p>Logicard is available for those who work or have retired from the logistics industry. <a href="/qualify.html" style="color:var(--orange)">Check to see if you're eligible here</a>.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            How will my eligibility be verified?
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="faq-item-body">
+            <p>There are two ways we verify your eligibility:</p>
+            <ul>
+              <li><strong>Instant Email Verification:</strong> If you have a recognised work email, from a known logistics company, you will be verified instantly when you sign up.</li>
+              <li><strong>Document Upload:</strong> If email verification is not possible, you can upload proof of employment. This includes a work ID badge, recent payslip, or official letter showing your name, employer, and role. Our team will then review your documents and verify your membership; this typically is done within 7 days.</li>
+            </ul>
+            <p>Please note: During busy periods, processing times may vary slightly.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            What discounts can I access with Logicard?
+            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </summary>
+          <div class="faq-item-body">
+            <p>Our members have access to over 150 discounts with local, regional and national UK brands. These discounts are available online and in-store across many categories. If you head to the top of our homepage, you can browse some of the offers available across a variety of categories in our 'discover savings' section.</p>
+          </div>
+        </details>
+
       </div>
     </div>
   </section>
