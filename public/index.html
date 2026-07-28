@@ -69,7 +69,7 @@
       --orange-dark: #E09A00;
       --gold: #FFB800;          /* logo sun glow / price tag */
       --navy: #071d40;          /* logo cloud background */
-      --navy-deep: #04040d;
+      --navy-deep: #071d40;
       --navy-mid: #0d3b80;
       --blue-accent: #1a6cc8;   /* logo % circle */
       --white: #ffffff;
@@ -125,12 +125,13 @@
     .site-header-logo .card { color: var(--orange); }
     .site-header-tagline {
       grid-column: 2;
-      justify-self: center;
+      justify-self: stretch;
       text-align: center;
       font-size: 14px;
       color: var(--white);
       white-space: nowrap;
       overflow: hidden;
+      min-width: 0;
       text-overflow: ellipsis;
     }
     .site-header-divider { color: rgba(255,179,0,0.5); margin: 0 8px; }
@@ -152,7 +153,7 @@
     .site-header-signin:hover { color: var(--white); }
     .site-header-join {
       background: var(--orange);
-      color: var(--navy-deep);
+      color: var(--navy);
       font-weight: 800;
       font-size: 13px;
       padding: 9px 18px;
@@ -265,41 +266,14 @@
 
     /* ── Hero ── */
     .hero {
-      min-height: 52vh;
-      background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%);
+      background: var(--navy);
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding: 80px 80px 48px;
+      padding: 140px 80px;
       overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 75% 45%, rgba(255, 140, 0, 0.14) 0%, transparent 55%),
-        radial-gradient(ellipse at 20% 80%, rgba(26, 108, 200, 0.1) 0%, transparent 50%);
-    }
-    /* Dot grid texture */
-    .hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-      background-size: 32px 32px;
-      pointer-events: none;
-    }
-    .hero #stars {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.18;
     }
     .hero-content {
       position: relative;
@@ -370,54 +344,9 @@
       transition: border-color 0.15s;
     }
     .btn-secondary:hover { border-color: rgba(255,255,255,0.8); }
-    .floating-stats-section {
-      background: linear-gradient(140deg, #04040d 0%, #071d40 45%, #0d3b80 100%);
-      padding: 64px 40px;
-    }
-    .hero-stats {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 0;
-    }
-    .hero-stat {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      padding: 12px;
-      background: radial-gradient(circle at 32% 28%, rgba(255,179,0,0.16) 0%, rgba(26,108,200,0.16) 45%, rgba(4,4,13,0.4) 100%);
-      border: 1px solid rgba(255,179,0,0.3);
-      box-shadow: 0 10px 32px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.04);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-    }
-    .hero-stat:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 18px 44px rgba(255,179,0,0.22);
-      border-color: rgba(255,179,0,0.55);
-    }
-    .hero-stat .hs-num {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--orange);
-      display: block;
-      line-height: 1;
-    }
-    .hero-stat .hs-label {
-      font-size: 10.5px;
-      color: rgba(255,255,255,0.65);
-      margin-top: 6px;
-      line-height: 1.3;
-      max-width: 104px;
-    }
 
     /* ── Photo Wall ── */
-    .photo-wall-section { background: var(--navy); padding: 32px 40px 48px; }
+    .photo-wall-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 32px 40px 48px; }
     .photo-wall-grid {
       max-width: 1400px; margin: 0 auto;
       display: grid;
@@ -425,7 +354,6 @@
       grid-auto-rows: 180px;
       gap: 8px;
       padding: 20px;
-      border: 2px solid rgba(255,179,0,0.7);
       border-radius: 24px;
     }
     .pw-tile {
@@ -436,12 +364,12 @@
       background-position: center;
       display: flex;
       align-items: flex-end;
-      border: 1px solid rgba(255,179,0,0.25);
+      border: 1px solid rgba(7,29,64,0.3);
     }
     .pw-tile::before {
       content: '';
       position: absolute; inset: 0;
-      background: linear-gradient(0deg, rgba(4,4,13,0.82) 0%, rgba(4,4,13,0.15) 55%, transparent 100%);
+      background: linear-gradient(0deg, rgba(7,29,64,0.82) 0%, rgba(7,29,64,0.15) 55%, transparent 100%);
     }
     .pw-tile-icon {
       position: absolute; top: 14px; right: 14px;
@@ -457,6 +385,8 @@
       grid-column: 3; grid-row: 1 / span 2;
       background: var(--navy);
       border-radius: 10px;
+      border-top-left-radius: 22px;
+      border-top-right-radius: 22px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -481,63 +411,46 @@
     .pw-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); }
     .pw-center-body .pw-features { color: var(--orange); font-size: 14px; font-weight: 700; margin-bottom: 8px; }
     .pw-center-body .pw-sub { color: rgba(255,255,255,0.5); font-size: 13px; }
-    .pw-center-bottom {
-      background: var(--orange);
-      color: var(--navy-deep);
-      font-weight: 800;
-      font-size: 13px;
-      text-align: center;
-      padding: 12px;
-      flex-shrink: 0;
-    }
-
-    .photo-wall-note {
-      max-width: 1400px; margin: 14px auto 0;
-      font-size: 12px; color: rgba(255,255,255,0.3);
-      text-align: center;
-    }
+    .pw-center-body .pw-highlight { color: #22c55e; font-size: 13px; font-weight: 700; margin-top: 10px; }
 
     @media (max-width: 1024px) {
       .photo-wall-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; }
-      .pw-center { grid-column: 1 / span 2; grid-row: auto; order: -1; min-height: 320px; }
+      .pw-center { grid-column: 1 / span 2; grid-row: span 2; order: -1; min-height: 320px; }
     }
     @media (max-width: 560px) {
       .photo-wall-section { padding: 24px 20px 36px; }
       .photo-wall-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 130px; gap: 6px; padding: 12px; border-radius: 16px; }
-      .pw-center { min-height: 280px; }
+      .pw-center { grid-row: span 3; min-height: 390px; }
       .pw-center-body h2 { font-size: 26px; }
       .pw-tile-label .role { font-size: 13px; }
       .pw-tile-label .sub { font-size: 11px; }
     }
 
     /* ── Browse by Category ── */
-    .cat-buttons-section { background: var(--navy); padding: 80px 80px 88px; text-align: center; }
+    .cat-buttons-section { background: var(--navy); padding: 88px 80px; text-align: center; }
     .cat-buttons-grid {
       max-width: 1100px; margin: 44px auto 0;
       display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px;
     }
     .cat-btn {
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-      background: linear-gradient(155deg, var(--navy-mid) 0%, var(--navy) 100%);
-      border: 1px solid rgba(255,179,0,0.2);
+      background: var(--orange);
+      border: 1px solid rgba(4,4,13,0.15);
       border-radius: 16px;
       padding: 26px 12px;
       text-decoration: none;
-      color: var(--white);
+      color: var(--navy);
       font-size: 14px; font-weight: 700; letter-spacing: -0.1px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      transition: transform 0.2s ease, background 0.2s ease;
     }
     .cat-btn:hover {
       transform: translateY(-5px);
-      border-color: rgba(255,179,0,0.55);
-      box-shadow: 0 16px 36px rgba(255,179,0,0.2);
-      background: linear-gradient(155deg, #12428a 0%, var(--navy) 100%);
+      background: var(--orange-dark);
     }
     .cat-btn-icon {
       width: 44px; height: 44px; flex-shrink: 0;
-      background: rgba(255,179,0,0.12);
-      border: 1px solid rgba(255,179,0,0.25);
+      background: var(--white);
+      border: 1px solid rgba(7,29,64,0.12);
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
     }
@@ -574,7 +487,9 @@
     .section-eyebrow.light { color: rgba(255,184,0,0.9); }
 
     /* ── How It Works ── */
-    .how-section { background: var(--navy); }
+    .how-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); text-align: center; }
+    .how-section .section-heading { color: var(--navy); }
+    .how-section .section-sub { color: rgba(4,4,13,0.6); margin-left: auto; margin-right: auto; }
     .how-cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -668,47 +583,15 @@
     }
     .how-card-cta:hover { gap: 10px; }
 
-    /* ── Deals Section ── */
-    .deals-section { background: var(--dark-bg); }
-    .deals-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .deal-card {
-      background: var(--white);
-      border-radius: 12px;
-      padding: 40px 28px;
-      text-align: center;
-    }
-    .deal-card-icon {
-      width: 64px;
-      height: 64px;
-      margin: 0 auto 24px;
-    }
-    .deal-card-icon svg {
-      width: 64px;
-      height: 64px;
-      stroke: var(--navy);
-    }
-    .deal-card h3 {
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 12px;
-    }
-    .deal-card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
-
     /* ── Benefits / Pricing ── */
     .benefits-section {
       background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
     }
+    .benefits-section .section-eyebrow,
+    .benefits-section .section-heading { text-align: center; }
     .benefits-section .section-heading { color: var(--navy); font-size: clamp(32px, 4vw, 54px); }
-    .benefits-section .section-sub { color: rgba(4,4,13,0.6); }
+    .benefits-section .section-sub { color: rgba(4,4,13,0.6); text-align: center; margin-left: auto; margin-right: auto; }
+    .benefit-card { text-align: left; }
     .benefits-section .section-eyebrow { color: rgba(4,4,13,0.55); }
     .benefits-grid {
       display: grid;
@@ -720,12 +603,20 @@
       border-radius: 14px;
       padding: 28px 20px;
       backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      min-height: 220px;
     }
     .benefit-card.featured {
       background: var(--navy);
       border: 3px solid rgba(255,255,255,0.3);
       color: #fff;
     }
+    .benefit-card-foot {
+      margin-top: auto;
+      padding-top: 20px;
+    }
+    .benefit-card-foot svg { width: 30px; height: 30px; stroke: var(--orange); opacity: 0.85; }
     .bc-icon {
       width: 44px;
       height: 44px;
@@ -775,6 +666,7 @@
     .benefit-card.featured h3 { color: #fff; }
     .benefit-card.featured p  { color: rgba(255,255,255,0.7); }
     .benefit-card.featured .price-old { color: rgba(255,255,255,0.5); }
+    .benefit-card.featured .price-period { color: rgba(255,255,255,0.6); }
     .yellow-check {
       width: 24px;
       height: 24px;
@@ -790,7 +682,9 @@
     /* ── Driver Support ── */
     .support-section {
       background: var(--navy);
+      text-align: center;
     }
+    .support-section .section-sub { margin-left: auto; margin-right: auto; }
     .support-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -822,11 +716,13 @@
     }
 
     /* ── About Us ── */
-    .about-section { background: var(--navy); text-align: center; }
+    .about-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); text-align: center; }
     .about-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
     .about-section .section-eyebrow,
     .about-section .section-heading { text-align: center; }
-    .about-section .section-sub { text-align: center; max-width: 700px; margin-left: auto; margin-right: auto; }
+    .about-section .section-eyebrow { color: rgba(4,4,13,0.55); }
+    .about-section .section-heading { color: var(--navy); }
+    .about-section .section-sub { text-align: center; max-width: 640px; margin-left: auto; margin-right: auto; color: rgba(4,4,13,0.6); text-wrap: balance; }
     .about-banner {
       width: 100%;
       position: relative;
@@ -838,15 +734,7 @@
       justify-content: center;
       text-align: center;
       padding: 48px 32px;
-      background: linear-gradient(120deg, #0d3b80 0%, #071d40 45%, #04040d 100%);
-    }
-    .about-banner::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 22% 28%, rgba(255,179,0,0.2) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 75%, rgba(26,108,200,0.22) 0%, transparent 55%);
+      background: var(--navy);
     }
     .about-banner-content { position: relative; z-index: 1; max-width: 560px; }
     .about-banner-content h3 {
@@ -866,7 +754,7 @@
       align-items: center;
       gap: 8px;
       background: var(--orange);
-      color: var(--navy-deep);
+      color: var(--navy);
       font-weight: 800;
       font-size: 15px;
       padding: 14px 32px;
@@ -877,7 +765,7 @@
     .about-banner-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
 
     /* ── FAQs ── */
-    .faq-section { background: var(--navy-deep); text-align: center; }
+    .faq-section { background: var(--navy); text-align: center; }
     .faq-section .section-heading,
     .faq-section .section-eyebrow { text-align: center; }
     .faq-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
@@ -916,17 +804,19 @@
 
     /* ── Sign Up CTA Section ── */
     .cta-section {
-      background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, var(--navy-mid) 100%);
+      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
       text-align: center;
-      padding: 64px 48px;
+      padding: 88px 48px;
     }
     .cta-section .section-heading.light {
       font-size: clamp(30px, 4vw, 52px);
       margin-bottom: 16px;
+      color: var(--navy);
     }
     .cta-section .section-sub.light {
       margin: 0 auto 36px;
       text-align: center;
+      color: rgba(4,4,13,0.6);
     }
     .cta-btns {
       display: flex;
@@ -938,21 +828,32 @@
       padding: 22px 56px;
       font-size: 18px;
       letter-spacing: 0.5px;
-      box-shadow: 0 6px 32px rgba(255,179,0,0.4);
+      background: var(--navy);
+      color: var(--white);
+      box-shadow: none;
     }
+    .cta-section .btn-primary:hover { background: var(--navy-mid); }
     .cta-section .btn-secondary {
       padding: 22px 44px;
       font-size: 18px;
+      color: var(--navy);
+      border-color: rgba(7,29,64,0.4);
     }
+    .cta-section .btn-secondary:hover { border-color: var(--navy); }
 
     /* ── Contact Section ── */
-    .contact-section { background: #0a0a0a; }
-    .contact-section .section-heading { color: var(--white); }
-    .contact-section .section-sub { color: rgba(255,255,255,0.55); }
+    .contact-section { background: var(--navy); text-align: center; }
+    .contact-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
+    .contact-section .section-heading { color: var(--white); text-align: center; }
+    .contact-section .section-sub { color: rgba(255,255,255,0.55); text-align: center; margin-left: auto; margin-right: auto; }
     .contact-layout {
       display: flex;
       gap: 80px;
       align-items: flex-start;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      text-align: left;
     }
     .contact-form-wrap { flex: 1; }
     .contact-input {
@@ -1051,7 +952,7 @@
 
     /* ── Footer ── */
     .main-footer {
-      background: #070707;
+      background: var(--navy);
       padding: 36px 80px;
       display: flex;
       align-items: center;
@@ -1080,13 +981,11 @@
     @media (max-width: 900px) {
       .lc-section { padding: 64px 28px; }
       .hero { padding: 72px 28px 56px; min-height: auto; }
-      .hero-stats { flex-wrap: wrap; gap: 24px; }
-      .floating-stats-section { padding: 48px 28px; }
       .cat-buttons-section { padding: 64px 28px 72px; }
       .cat-buttons-grid { grid-template-columns: repeat(3, 1fr); }
       .how-cards { grid-template-columns: 1fr; gap: 20px; }
       .how-card { padding: 36px 28px 32px; }
-      .deals-grid, .support-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
+      .support-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
       .benefits-grid { grid-template-columns: 1fr 1fr; }
       .contact-layout { flex-direction: column; gap: 40px; }
       .contact-illustration { display: none; }
@@ -1100,35 +999,12 @@
     @media (max-width: 600px) {
       /* Hero */
       .hero { padding: 52px 20px 48px; }
-      .floating-stats-section { padding: 36px 20px; }
       .hero-tag { font-size: 11px; padding: 5px 11px; margin-bottom: 18px; }
       .hero h1 { font-size: clamp(30px, 8vw, 42px); margin-bottom: 16px; letter-spacing: -0.5px; }
       .hero-sub { font-size: 15px; }
       .about-banner { min-height: 220px; padding: 32px 20px; border-radius: 14px; }
       .about-banner-content p { font-size: 14px; margin-bottom: 22px; }
       .faq-item summary { font-size: 15.5px; padding: 18px 4px; }
-      .hero-stats {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 28px 16px;
-        margin-top: 0;
-        background: radial-gradient(circle at 30% 20%, rgba(255,179,0,0.14) 0%, rgba(26,108,200,0.14) 50%, rgba(4,4,13,0.35) 100%);
-        border: 1px solid rgba(255,179,0,0.3);
-        border-radius: 28px;
-        padding: 28px 20px;
-        box-shadow: 0 10px 32px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.04);
-      }
-      .hero-stat {
-        width: auto;
-        height: auto;
-        border-radius: 0;
-        margin: 0;
-        background: none;
-        border: none;
-        box-shadow: none;
-      }
-      .hero-stat .hs-num { font-size: 22px; }
-      .hero-stat .hs-label { font-size: 10.5px; max-width: 110px; }
 
       /* Browse by Category */
       .cat-buttons-section { padding: 48px 20px 56px; }
@@ -1150,11 +1026,8 @@
       .how-card-num { font-size: 56px; }
       .how-card-icon { width: 56px; height: 56px; margin-bottom: 20px; }
 
-      /* Deals & support */
-      .deals-grid, .support-grid { grid-template-columns: 1fr; gap: 14px; }
-      .deal-card { padding: 28px 24px; }
-      .deal-card-icon { width: 48px; height: 48px; margin: 0 auto 16px; }
-      .deal-card-icon svg { width: 48px; height: 48px; }
+      /* Support */
+      .support-grid { grid-template-columns: 1fr; gap: 14px; }
       .support-card { padding: 28px 24px; }
       .support-card svg { width: 40px; height: 40px; margin-bottom: 14px; }
 
@@ -1177,26 +1050,19 @@
 
       /* Footer */
       .main-footer { padding: 24px 20px; gap: 16px; }
-      .footer-logo img { height: 275px; opacity: 0.95; }
+      .footer-logo img { height: 28px; opacity: 0.95; }
       .footer-links { gap: 16px; }
       .footer-copy { font-size: 12px; }
+
+      /* Who Qualifies CTA button */
+      .qualify-cta-btn { padding: 16px 32px; font-size: 14.5px; }
     }
     /* ── Who Qualifies Section ── */
     .qualify-section {
-      background: linear-gradient(168deg, #020714 0%, #071d40 52%, #020714 100%);
-      padding: 104px 48px 112px;
+      background: var(--navy);
+      padding: 88px 48px;
       position: relative;
       overflow: hidden;
-    }
-    .qualify-section::before {
-      content: '';
-      position: absolute;
-      left: 50%; top: 40%;
-      transform: translate(-50%, -50%);
-      width: 900px; height: 900px;
-      background: radial-gradient(circle, rgba(26,108,200,0.18) 0%, rgba(26,108,200,0.05) 50%, transparent 75%);
-      border-radius: 50%;
-      pointer-events: none;
     }
     .qualify-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
     .qualify-head { text-align: center; max-width: 740px; margin: 0 auto 64px; }
@@ -1234,26 +1100,24 @@
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
       padding: 28px 24px 26px;
-      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
       cursor: default;
     }
     .sector-card:hover {
       background: rgba(255,179,0,0.07);
       border-color: rgba(255,179,0,0.38);
       transform: translateY(-5px);
-      box-shadow: 0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,179,0,0.12);
     }
     .sector-icon-wrap {
       width: 50px; height: 50px;
-      background: linear-gradient(135deg, rgba(255,179,0,0.16) 0%, rgba(26,108,200,0.16) 100%);
+      background: rgba(255,179,0,0.16);
       border: 1px solid rgba(255,179,0,0.2);
       border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 16px;
-      transition: background 0.25s, border-color 0.25s;
+      transition: border-color 0.25s;
     }
     .sector-card:hover .sector-icon-wrap {
-      background: linear-gradient(135deg, rgba(255,179,0,0.28) 0%, rgba(26,108,200,0.22) 100%);
       border-color: rgba(255,179,0,0.45);
     }
     .sector-icon-wrap svg {
@@ -1279,6 +1143,7 @@
 
     /* CTA */
     .qualify-cta { text-align: center; margin-top: 20px; }
+    .qualify-cta-btn { font-size: 16px; padding: 18px 52px; }
     .qualify-cta-note { color: rgba(255,255,255,0.35); font-size: 13px; margin-top: 14px; }
 
     /* Responsive */
@@ -1306,26 +1171,27 @@
 
     /* ── Built By Logistics Workers ── */
     .founders-section {
-      background: linear-gradient(155deg, #04040d 0%, #071d40 55%, #0a2d5e 100%);
-      padding: 96px 48px;
+      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      padding: 88px 48px;
       position: relative;
       overflow: hidden;
     }
     .founders-inner { max-width: 1000px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
     .founders-badge {
       display: inline-flex; align-items: center; gap: 8px;
-      background: rgba(26,108,200,0.15); border: 1px solid rgba(26,108,200,0.4);
-      color: var(--blue-accent); font-size: 12px; font-weight: 800;
+      background: #1a9c4a; border: 1px solid #14853d;
+      color: var(--white); font-size: 12px; font-weight: 800;
       letter-spacing: 1.5px; text-transform: uppercase;
       padding: 7px 16px; border-radius: 100px; margin-bottom: 26px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.25);
     }
     .founders-heading {
-      font-size: clamp(30px, 4vw, 46px); font-weight: 900; color: #fff;
+      font-size: clamp(30px, 4vw, 46px); font-weight: 900; color: var(--navy);
       line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 24px;
     }
-    .founders-heading .yellow { color: var(--orange); }
+    .founders-heading .yellow { color: var(--navy); }
     .founders-text {
-      font-size: 17px; color: rgba(255,255,255,0.65); line-height: 1.8;
+      font-size: 17px; color: rgba(4,4,13,0.6); line-height: 1.8;
       max-width: 720px; margin: 0 auto 52px;
     }
     .founders-points {
@@ -1333,25 +1199,25 @@
       text-align: center;
     }
     .founder-point {
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(26,108,200,0.25);
+      background: var(--navy);
+      border: 1px solid rgba(255,179,0,0.25);
       border-radius: 16px;
       padding: 26px 24px;
     }
     .founder-point-icon {
       width: 42px; height: 42px;
-      background: rgba(26,108,200,0.18);
-      border: 1px solid rgba(26,108,200,0.4);
+      background: rgba(255,179,0,0.15);
+      border: 1px solid rgba(255,179,0,0.4);
       border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 16px;
     }
-    .founder-point-icon svg { width: 20px; height: 20px; stroke: var(--blue-accent); }
+    .founder-point-icon svg { width: 20px; height: 20px; stroke: var(--orange); }
     .founder-point h3 { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .founder-point p  { font-size: 13.5px; color: rgba(255,255,255,0.5); line-height: 1.65; }
+    .founder-point p  { font-size: 13.5px; color: rgba(255,255,255,0.6); line-height: 1.65; }
 
     /* ── Brand Partners Strip ── */
-    .partners-section { background: var(--navy); padding: 72px 48px; text-align: center; }
+    .partners-section { background: var(--navy); padding: 88px 48px; text-align: center; }
     .partners-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--orange-dark); margin-bottom: 12px; }
     .partners-heading { font-size: clamp(24px, 3vw, 34px); font-weight: 900; color: var(--white); margin-bottom: 44px; letter-spacing: -0.3px; }
     .partners-strip {
@@ -1390,6 +1256,9 @@
       .partner-chip-icon { width: 36px; height: 36px; }
       .partner-chip-icon svg { width: 18px; height: 18px; }
       .partner-chip-label { font-size: 13px; }
+    }
+    @media (max-width: 400px) {
+      .partners-strip { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 900px) {
@@ -1478,7 +1347,6 @@
 
   <!-- Hero -->
   <section class="hero">
-    <canvas id="stars"></canvas>
     <div class="hero-content">
       <h1>If you work in logistics, <span class="yellow">Logicard is for you.</span></h1>
       <p class="hero-sub">The UK's dedicated rewards and discount service for those working and retired from, the logistics industry, which includes; Warehousing, Transport, Storage of goods &amp; more.</p>
@@ -1498,11 +1366,11 @@
           <div class="pw-dots"><span></span><span></span><span></span></div>
           <p class="pw-features">Discounts &middot; Rewards &middot; Recognition</p>
           <p class="pw-sub">for the people who keep Britain moving</p>
+          <p class="pw-highlight">Logicard is for all Logistics workers</p>
         </div>
-        <div class="pw-center-bottom">logicard.co.uk</div>
       </div>
 
-      <div class="pw-tile" style="background:linear-gradient(155deg,#FFB300,#E09A00);">
+      <div class="pw-tile" style="background-image:url('/images/photo-wall/Warehouseworkers.png.png');">
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
         <span class="pw-tile-label"><span class="role">Warehouse Team</span><span class="sub">Fulfilment &amp; Distribution</span></span>
       </div>
@@ -1514,56 +1382,32 @@
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
         <span class="pw-tile-label"><span class="role">Management</span><span class="sub">Planning &amp; Operations</span></span>
       </div>
-      <div class="pw-tile" style="background:linear-gradient(155deg,#0d3b80,#1a6cc8);">
+      <div class="pw-tile" style="background-image:url('/images/photo-wall/Railworkers.png.png');">
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Warehouse Op.</span><span class="sub">Pick, Pack &amp; Dispatch</span></span>
+        <span class="pw-tile-label"><span class="role">Rail Freight</span><span class="sub">Rail &amp; Freight Yards</span></span>
       </div>
-      <div class="pw-tile" style="background:linear-gradient(155deg,#04040d,#0d3b80);">
+      <div class="pw-tile" style="background-image:url('/images/photo-wall/Leadership.png.png');">
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Forklift Op.</span><span class="sub">Trained &amp; Licensed</span></span>
+        <span class="pw-tile-label"><span class="role">Leadership</span><span class="sub">Strategy &amp; Operations</span></span>
       </div>
-      <div class="pw-tile" style="background:linear-gradient(155deg,#071d40,#1a6cc8);">
+      <div class="pw-tile" style="background-image:url('/images/photo-wall/Officeworkers.png.png');">
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M9 2h6a2 2 0 012 2v1H7V4a2 2 0 012-2z"/><rect x="5" y="5" width="14" height="16" rx="2"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="13" y2="18"/></svg></span>
         <span class="pw-tile-label"><span class="role">Coordinator</span><span class="sub">Logistics Management</span></span>
       </div>
-      <div class="pw-tile" style="background:linear-gradient(155deg,#0d3b80,#071d40);">
+      <div class="pw-tile" style="background-image:url('/images/photo-wall/Seafreight.png.png');">
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="21"/><path d="M5 12H2a10 10 0 0020 0h-3"/></svg></span>
         <span class="pw-tile-label"><span class="role">Port Workers</span><span class="sub">Dock &amp; Terminal</span></span>
       </div>
-      <div class="pw-tile" style="background:linear-gradient(155deg,#1a6cc8,#04040d);">
+      <div class="pw-tile" style="background-image:url('/images/photo-wall/Aircargoworkers.png.png');">
         <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
         <span class="pw-tile-label"><span class="role">Air Freight</span><span class="sub">International Logistics</span></span>
       </div>
 
     </div>
-    <p class="photo-wall-note">Placeholder tiles shown — swap each <code>.pw-tile</code>'s background for a real photo when available.</p>
-  </section>
-
-  <!-- Floating Stats -->
-  <section class="floating-stats-section">
-    <div class="hero-stats">
-      <div class="hero-stat">
-        <span class="hs-num">150+</span>
-        <span class="hs-label">Deals &amp; more every day</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hs-num">FREE</span>
-        <span class="hs-label">Use code FREE for year 1 at £0</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hs-num">FREE</span>
-        <span class="hs-label">Mental health support &amp; advice</span>
-      </div>
-      <div class="hero-stat">
-        <span class="hs-num">FREE</span>
-        <span class="hs-label">Chances to win prizes every month</span>
-      </div>
-    </div>
   </section>
 
   <!-- Browse by Category -->
   <section class="cat-buttons-section" id="browse-categories">
-    <p class="section-eyebrow">Browse</p>
     <h2 class="section-heading" style="margin-bottom: 0;">Everything you need, in one place</h2>
     <div class="cat-buttons-grid">
       <a class="cat-btn" href="/beauty-wellness.html">
@@ -1612,7 +1456,6 @@
   <!-- How It Works -->
   <section class="lc-section how-section" id="how-it-works">
     <div class="lc-inner">
-      <p class="section-eyebrow">Getting started</p>
       <h2 class="section-heading">How it works</h2>
       <p class="section-sub">Join thousands of logistics workers already saving money on fuel, hotels, dining and more. It takes under 2 minutes to sign up — just £10/year. Use promo code FREE at checkout for your first year at £0.</p>
       <div class="how-cards">
@@ -1644,7 +1487,7 @@
           </div>
           <h3>Browse your deals</h3>
           <p>Explore hundreds of exclusive offers across fuel, hotels, food, tech, fleet maintenance and more — all in one place, updated daily for Logicard members.</p>
-          <a href="#deals" class="how-card-cta">See deals →</a>
+          <a href="#benefits" class="how-card-cta">See deals →</a>
         </div>
 
         <div class="how-card">
@@ -1677,7 +1520,7 @@
 
 
       <div class="qualify-cta">
-        <a href="/signup.html" class="btn-primary" style="font-size:16px;padding:18px 52px;box-shadow:0 6px 36px rgba(255,179,0,0.4);">
+        <a href="/signup.html" class="btn-primary qualify-cta-btn">
           Claim Your Free Membership
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -1765,46 +1608,6 @@
     <p class="partners-note">Brand partners are onboarding now — new deals are added every week as we grow.</p>
   </section>
 
-  <!-- Deals -->
-  <section class="lc-section deals-section" id="deals">
-    <div class="lc-inner">
-      <p class="section-eyebrow light">Member benefits</p>
-      <h2 class="section-heading light">Deals built for all logistics workers</h2>
-      <p class="section-sub light">Find straightforward deals that save you money on the job — updated daily and exclusive to Logicard members.</p>
-      <div class="deals-grid">
-        <div class="deal-card">
-          <div class="deal-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-            </svg>
-          </div>
-          <h3>Updated daily</h3>
-          <p>Browse exclusive offers from trusted brands — fuel, food, accommodation and more. Fresh deals added every day.</p>
-        </div>
-        <div class="deal-card">
-          <div class="deal-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
-              <line x1="12" y1="8" x2="12" y2="14"/>
-              <line x1="9" y1="11" x2="15" y2="11"/>
-            </svg>
-          </div>
-          <h3>Save deals to your profile</h3>
-          <p>Bookmark the offers you want to use later. Your saved deals are always ready in your member profile.</p>
-        </div>
-        <div class="deal-card">
-          <div class="deal-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-            </svg>
-          </div>
-          <h3>Redeem in seconds</h3>
-          <p>Show your Logicard membership number or use a unique promo code — redeeming discounts is instant and easy.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- Benefits / Membership -->
   <section class="lc-section benefits-section" id="benefits">
     <div class="lc-inner">
@@ -1819,30 +1622,40 @@
           <div class="price-row">
             <span class="price-free">£10/yr</span>
           </div>
-          <span class="price-period">Use code <strong>FREE</strong> at checkout — first year at £0</span>
-          <h3 style="margin-top:12px">Exclusive member pricing</h3>
-          <p>Just £10 per year — less than 3p a day for 150+ exclusive discounts on fuel, hotels, food, tech and fleet. Use promo code FREE at checkout to make your first year completely free.</p>
+          <span class="price-period">Free until 2027</span>
+          <div class="benefit-card-foot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
         </div>
         <div class="benefit-card">
           <div class="yellow-check">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3>Unlimited access to 100s of discounts</h3>
-          <p>Offers relevant to HGV drivers, fleet managers, warehouse teams, transport coordinators and anyone working for a logistics unit.</p>
+          <h3>Unlimited access to hundreds of deals</h3>
+          <p>We seek the very best deals for you.</p>
+          <div class="benefit-card-foot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
         </div>
         <div class="benefit-card">
           <div class="yellow-check">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3>Personalised deals for your role</h3>
-          <p>Offers relevant to HGV drivers, fleet managers, warehouse teams and transport coordinators.</p>
+          <h3>Personalised deals for you</h3>
+          <p>We prioritise deals based on you, your role, and the deals you've previously opted into.</p>
+          <div class="benefit-card-foot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </div>
         </div>
         <div class="benefit-card">
           <div class="yellow-check">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h3>Access anytime, anywhere</h3>
-          <p>Your membership number works at the point of purchase — on the road, at the pump, or online.</p>
+          <p>Mobile, online, email or SMS — deals are always available, as long as you opt in fast enough.</p>
+          <div class="benefit-card-foot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </div>
         </div>
       </div>
     </div>
@@ -1896,7 +1709,7 @@
           <h3>Not sure if you qualify?</h3>
           <p>Whether you're working or retired from the industry, check your eligibility in under a minute.</p>
           <a href="/qualify.html" class="about-banner-btn">
-            Find out more
+            Check your eligibility now
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
@@ -2038,7 +1851,6 @@
     <p class="footer-copy">© 2026 Logicard. All rights reserved.</p>
   </footer>
 
-  <script src="stars.js"></script>
   <script src="contact.js"></script>
 </body>
 </html>

@@ -39,17 +39,25 @@ Design and copy decisions should be checked against this list first: does it res
 ## 3. Visual identity
 
 ### Colour palette
-The palette is navy-and-gold. Nothing else is added as a competing primary colour.
+The palette is navy-and-gold, full stop. As of 2026-07, the homepage was swept to remove every near-black/deep-navy background and the blue secondary accent — every section is either flat navy or flat/gradient gold, no exceptions.
 
 | Token | Hex | Use |
 |---|---|---|
-| `--navy` | `#071d40` | Primary background (headers, page backgrounds, cards) |
-| `--navy-deep` | `#04040d` | Darkest gradient stop, deep backgrounds |
-| `--navy-mid` | `#0d3b80` | Mid gradient stop, secondary panels |
-| `--orange` / `--gold` | `#FFB300` | Primary accent — CTAs, highlights, the word "card" in the logo |
+| `--navy` | `#071d40` | Section backgrounds, cards, buttons that sit on a gold section |
+| `--navy-deep` | `#071d40` (alias of `--navy`) | Kept for backwards compatibility only — no longer a distinct near-black value. Do not reintroduce a near-black background anywhere. |
+| `--navy-mid` | `#0d3b80` | Hover state / secondary panels, always paired with navy, never used as a section background on its own |
+| `--orange` / `--gold` | `#FFB300` | Primary accent — CTAs, highlights, the word "card" in the logo, gold section backgrounds |
 | `--orange-dark` | `#E09A00` | Hover/active state for gold elements |
-| `--blue-accent` | `#1a6cc8` | Used sparingly for secondary accents (e.g. founders section) — not a replacement for gold |
+| `--blue-accent` | `#1a6cc8` | **Retired.** Previously used sparingly in the founders section (badge + icons); that section is now gold-accented like the rest of the site. The variable is kept defined but unused — do not reintroduce it as a section accent. |
 | `--white` | `#ffffff` | Text on navy, card backgrounds |
+
+**Homepage section colour rule:** every `<section>` background is either flat `var(--navy)` or the gold gradient `linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%)`. No section uses a multi-stop navy gradient, a radial glow, a dot-grid texture, or a starfield canvas — those decorative effects were removed sitewide in favour of flat, consistent colour blocks.
+
+**Sections strictly alternate navy → gold → navy → gold, starting navy at the Hero, all the way to Contact.** Current order: Hero (navy) → Photo Wall (gold) → Everything you need (navy) → How it works (gold) → Who Qualifies (navy) → Built by logistics workers (gold) → Our Partners (navy) → Member benefits/pricing (gold) → Driver Support (navy) → About Us (gold) → FAQs (navy) → CTA banner (gold) → Contact (navy). The header and footer sit outside this rhythm and are always navy, bookending the page. When adding, removing, or reordering a homepage section, re-derive this alternation rather than guessing a colour — inserting or deleting a section shifts every colour below it.
+
+Section vertical padding is normalised to ~88px top/bottom on desktop so no section reads as conspicuously shorter or taller than its neighbours (Photo Wall is the one deliberate exception — its height is driven by the tile grid, not padding).
+
+**Button contrast rule:** a button's fill always contrasts with the section it sits in — gold-filled buttons on a navy section, navy-filled buttons on a gold section (see `.cat-btn` and `.cta-section .btn-primary` for navy-on-gold examples). Never place a gold button on a gold section or a navy button on a navy section. This also applies to badges/icon chips that sit directly on a section background (see founders-badge), though accent chips *inside* an already-flipped card (e.g. the gold icon inside a navy `.founder-point` card) follow the card's contrast, not the section's.
 
 **Rule:** gold is the *only* accent colour used for calls to action. If a page needs a second accent, it borrows `--blue-accent` deliberately and sparingly — it never competes with gold for attention in the same view.
 
