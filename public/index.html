@@ -386,102 +386,6 @@
     }
     .how-card-cta:hover { gap: 10px; }
 
-    /* ── Benefits / Pricing ── */
-    .benefits-section {
-      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
-    }
-    .benefits-section .section-eyebrow,
-    .benefits-section .section-heading { text-align: center; }
-    .benefits-section .section-heading { color: var(--navy); font-size: clamp(32px, 4vw, 54px); }
-    .benefits-section .section-sub { color: var(--navy); font-weight: 500; text-align: center; margin-left: auto; margin-right: auto; }
-    .benefit-card { text-align: left; }
-    .benefits-section .section-eyebrow { color: var(--navy); }
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-    .benefit-card {
-      background: rgba(255,255,255,0.88);
-      border-radius: 14px;
-      padding: 28px 20px;
-      backdrop-filter: blur(4px);
-      display: flex;
-      flex-direction: column;
-      min-height: 220px;
-    }
-    .benefit-card.featured {
-      background: var(--navy);
-      border: 3px solid rgba(255,255,255,0.3);
-      color: #fff;
-    }
-    .benefit-card-foot {
-      margin-top: auto;
-      padding-top: 20px;
-    }
-    .benefit-card-foot svg { width: 30px; height: 30px; stroke: var(--orange); opacity: 0.85; }
-    .bc-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--navy);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-    .bc-icon svg { width: 22px; height: 22px; color: var(--orange); }
-    .benefit-card.featured .bc-icon { background: rgba(255,255,255,0.12); }
-    .benefit-card.featured .bc-icon svg { color: var(--orange); }
-    .price-row {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      margin-bottom: 6px;
-    }
-    .price-old {
-      font-size: 18px;
-      font-weight: 700;
-      color: #888;
-      text-decoration: line-through;
-    }
-    .price-free {
-      font-size: 32px;
-      font-weight: 900;
-      color: var(--orange);
-    }
-    .price-period {
-      font-size: 13px;
-      color: #555;
-    }
-    .benefit-card h3 {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-    .benefit-card p {
-      font-size: 13px;
-      color: #555;
-      line-height: 1.55;
-    }
-    .benefit-card.featured h3 { color: #fff; }
-    .benefit-card.featured p  { color: rgba(255,255,255,0.7); }
-    .benefit-card.featured .price-old { color: rgba(255,255,255,0.5); }
-    .benefit-card.featured .price-period { color: rgba(255,255,255,0.6); }
-    .yellow-check {
-      width: 24px;
-      height: 24px;
-      background: var(--navy);
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-    }
-    .yellow-check svg { width: 13px; height: 13px; color: var(--orange); }
-
     /* ── Driver Support ── */
     .support-section {
       background: var(--navy);
@@ -789,7 +693,6 @@
       .how-cards { grid-template-columns: 1fr; gap: 20px; }
       .how-card { padding: 36px 28px 32px; }
       .support-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
-      .benefits-grid { grid-template-columns: 1fr 1fr; }
       .contact-layout { flex-direction: column; gap: 40px; }
       .contact-illustration { display: none; }
       .about-banner { min-height: 260px; padding: 40px 24px; }
@@ -833,11 +736,6 @@
       .support-grid { grid-template-columns: 1fr; gap: 14px; }
       .support-card { padding: 28px 24px; }
       .support-card svg { width: 40px; height: 40px; margin-bottom: 14px; }
-
-      /* Benefits */
-      .benefits-grid { grid-template-columns: 1fr; gap: 14px; }
-      .benefit-card { padding: 22px 18px; }
-      .price-free { font-size: 26px; }
 
       /* CTA section */
       .cta-section { padding: 48px 20px; }
@@ -992,10 +890,6 @@
       line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 24px;
     }
     .founders-heading .yellow { color: var(--navy); }
-    .founders-text {
-      font-size: 17px; color: var(--navy); font-weight: 500; line-height: 1.8;
-      max-width: 720px; margin: 0 auto 52px;
-    }
     .founders-points {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
       text-align: center;
@@ -1258,7 +1152,6 @@
         Verified logistics workers only
       </span>
       <h2 class="founders-heading">Built <span class="yellow">by</span> logistics workers,<br/>for logistics workers.</h2>
-      <p class="founders-text">We've loaded the vans at 4am. We've missed meal breaks to hit a deadline. We know what it feels like to be undervalued and overworked in an industry that never stops moving — because we've lived it. Logicard exists because nobody was building anything for us, so we built it ourselves.</p>
       <div class="founders-points">
         <div class="founder-point">
           <div class="founder-point-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></div>
@@ -1325,59 +1218,6 @@
       </span>
     </div>
     <p class="partners-note">Brand partners are onboarding now — new deals are added every week as we grow.</p>
-  </section>
-
-  <!-- Benefits / Membership -->
-  <section class="lc-section benefits-section" id="benefits">
-    <div class="lc-inner">
-      <p class="section-eyebrow">Member benefits</p>
-      <h2 class="section-heading">Finally get the rewards you deserve working in logistics</h2>
-      <p class="section-sub">Unlock 150+ deals and more every day — designed around the day-to-day life of logistics and transport workers.</p>
-      <div class="benefits-grid">
-        <div class="benefit-card featured">
-          <div class="bc-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-          </div>
-          <div class="price-row">
-            <span class="price-free">£10/yr</span>
-          </div>
-          <span class="price-period">Free until 2027</span>
-          <div class="benefit-card-foot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          </div>
-        </div>
-        <div class="benefit-card">
-          <div class="yellow-check">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <h3>Unlimited access to hundreds of deals</h3>
-          <p>We seek the very best deals for you.</p>
-          <div class="benefit-card-foot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          </div>
-        </div>
-        <div class="benefit-card">
-          <div class="yellow-check">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <h3>Personalised deals for you</h3>
-          <p>We prioritise deals based on you, your role, and the deals you've previously opted into.</p>
-          <div class="benefit-card-foot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-          </div>
-        </div>
-        <div class="benefit-card">
-          <div class="yellow-check">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <h3>Access anytime, anywhere</h3>
-          <p>Mobile, online, email or SMS — deals are always available, as long as you opt in fast enough.</p>
-          <div class="benefit-card-foot">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
-          </div>
-        </div>
-      </div>
-    </div>
   </section>
 
   <!-- Driver Support -->
