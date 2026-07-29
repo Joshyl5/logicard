@@ -8,6 +8,7 @@ const rateLimit = require('express-rate-limit');
 const bcrypt    = require('bcryptjs');
 const crypto    = require('crypto');
 const path      = require('path');
+const fs        = require('fs');
 const multer    = require('multer');
 const { Resend } = require('resend');
 const {
@@ -28,6 +29,7 @@ const { uploadVerificationFile, getSignedViewUrl, readLocalFile, deleteFile } = 
 const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
 const { UK_TOWNS } = require('./uk-towns');
 const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
+const { renderNav } = require('./templates/nav');
 
 const app    = express();
 const PORT   = process.env.PORT || 3000;
@@ -490,6 +492,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/',                            changefreq: 'weekly',  priority: '1.0' },
   { path: '/signup.html',                 changefreq: 'monthly', priority: '0.9' },
   { path: '/qualify.html',                changefreq: 'monthly', priority: '0.8' },
+  { path: '/categories.html',             changefreq: 'monthly', priority: '0.7' },
   { path: '/beauty-wellness.html',        changefreq: 'monthly', priority: '0.6' },
   { path: '/children-baby.html',          changefreq: 'monthly', priority: '0.6' },
   { path: '/food-drink.html',             changefreq: 'monthly', priority: '0.6' },
@@ -518,6 +521,30 @@ app.get('/sitemap.xml', (_req, res) => {
 
 app.get('/t&cs', (_req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'terms.html'));
+});
+
+// ── Shared nav injection (see templates/nav.js) ───────────────────
+const NAV_OPTIONS_BY_PAGE = {
+  '/index.html':               { tagline: true },
+  '/':                         { tagline: true },
+  '/categories.html':          { tagline: true, active: 'categories' },
+  '/qualify.html':             { tagline: true, active: 'qualify' },
+  '/things-to-do.html':        { active: 'things-to-do' },
+  '/shopping-cards.html':      { active: 'shopping-cards' },
+  '/e-learning.html':          { active: 'e-learning' },
+  '/financial-wellbeing.html': { active: 'financial-wellbeing' },
+  '/mental-wellbeing.html':    { active: 'mental-wellbeing' },
+  '/beauty-wellness.html':     { activeDropdown: 'beauty-wellness' },
+  '/children-baby.html':       { activeDropdown: 'children-baby' },
+  '/food-drink.html':          { activeDropdown: 'food-drink' },
+  '/fashion.html':             { activeDropdown: 'fashion' },
+  '/gifts-flowers.html':       { activeDropdown: 'gifts-flowers' },
+};
+
+app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
+  const file = req.path === '/' ? 'index.html' : req.path.slice(1);
+  const html = fs.readFileSync(path.join(__dirname, 'public', file), 'utf8');
+  res.type('html').send(html.replace('<!-- SHARED_NAV -->', renderNav(NAV_OPTIONS_BY_PAGE[req.path])));
 });
 
 app.use(express.static(path.join(__dirname, 'public'), {
