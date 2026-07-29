@@ -253,26 +253,6 @@ a     { color: inherit; text-decoration: none; }
 
 .signup-inner { max-width: 760px; margin: 0 auto; }
 
-.signup-header {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.signup-header h2 {
-  font-family: var(--font-brand);
-  font-size: clamp(1.7rem, 4vw, 2.3rem);
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.signup-header p {
-  color: var(--muted);
-  font-size: 1rem;
-  max-width: 500px;
-  margin: 0 auto;
-  line-height: 1.65;
-}
-
 /* ── FORM ─────────────────────────────────────────────────────── */
 .form { display: flex; flex-direction: column; gap: 28px; }
 
@@ -722,7 +702,28 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .back-link:hover { color: var(--white); }
 
 .signup-main {
-  padding: 175px 24px 80px;
+  padding: 40px 24px 80px;
+}
+
+.page-hero {
+  background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+  color: #071d40;
+  padding: 118px 24px 24px;
+  text-align: center;
+}
+.page-hero h1 {
+  font-family: var(--font-brand);
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.page-hero p {
+  color: #071d40;
+  font-weight: 500;
+  font-size: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.65;
 }
 
 /* Password show/hide */

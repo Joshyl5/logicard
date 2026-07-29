@@ -51,13 +51,13 @@
     .site-header-signin:hover { color: #fff; }
     .site-header-join { background: var(--orange); color: var(--navy-deep); font-weight: 800; font-size: 13px; padding: 9px 18px; border-radius: 6px; text-decoration: none; transition: background 0.15s; }
     .site-header-join:hover { background: #ffc233; }
-    .category-nav { background: var(--navy); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 40px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
-    .category-nav a { color: var(--white); text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 6px; white-space: nowrap; transition: background 0.15s, color 0.15s; }
-    .category-nav a:hover { background: rgba(255,179,0,0.08); }
-    .category-nav a.cat-nav-cta, .mobile-benefits-panel a.cat-nav-cta { color: var(--orange); }
-    .category-nav a.active { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
+    .category-nav { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); border-bottom: 1px solid rgba(7,29,64,0.15); padding: 10px 40px; min-height: 56px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
+    .category-nav a { color: var(--navy); text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 6px; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+    .category-nav a:hover { background: rgba(7,29,64,0.08); }
+    .category-nav a.cat-nav-cta, .mobile-benefits-panel a.cat-nav-cta { display: inline-flex; align-items: center; gap: 6px; background: #1a9c4a; border: 1px solid #14853d; color: var(--white); padding: 8px 16px; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); } .category-nav a.cat-nav-cta:hover, .mobile-benefits-panel a.cat-nav-cta:hover { background: #159141; } .category-nav a.cat-nav-cta.active { background: #1a9c4a; color: var(--white); }
+    .category-nav a.active { background: rgba(7,29,64,0.15); color: var(--navy); }
     .category-nav-item { position: relative; }
-    .category-nav-item:hover > a, .category-nav-item:focus-within > a { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
+    .category-nav-item:hover > a, .category-nav-item:focus-within > a { background: rgba(7,29,64,0.15); color: var(--navy); }
     .category-dropdown { display: none; position: absolute; top: 100%; left: 0; margin-top: 4px; background: var(--navy); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.35); padding: 16px 20px; grid-template-columns: repeat(2, minmax(170px, 1fr)); grid-auto-flow: column; grid-template-rows: repeat(5, auto); gap: 2px 28px; z-index: 200; }
     .category-nav-item:hover .category-dropdown, .category-nav-item:focus-within .category-dropdown { display: grid; }
     .category-dropdown a { padding: 7px 8px; font-size: 13.5px; font-weight: 600; color: var(--white); text-align: center; }
@@ -314,7 +314,7 @@
       <a href="/e-learning.html">E-learning</a>
       <a href="/financial-wellbeing.html">Financial Wellbeing</a>
       <a href="/mental-wellbeing.html">Mental Wellbeing</a>
-      <a href="/qualify.html" class="active cat-nav-cta">Check Your Eligibility Now</a>
+      <a href="/qualify.html" class="active cat-nav-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Check Your Eligibility Now</a>
     </div>
     <details class="mobile-benefits">
       <summary>
@@ -328,7 +328,7 @@
         <a href="/e-learning.html">E-learning</a>
         <a href="/financial-wellbeing.html">Financial Wellbeing</a>
         <a href="/mental-wellbeing.html">Mental Wellbeing</a>
-        <a href="/qualify.html" class="active cat-nav-cta">Check Your Eligibility Now</a>
+        <a href="/qualify.html" class="active cat-nav-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Check Your Eligibility Now</a>
       </div>
     </details>
   </div>

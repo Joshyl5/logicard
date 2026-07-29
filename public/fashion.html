@@ -21,21 +21,18 @@
     .site-header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 16px 40px; background: var(--navy); border-bottom: 1px solid rgba(255,179,0,0.15); box-shadow: 0 2px 16px rgba(0,0,0,0.35); }
     .site-header-logo { grid-column: 1; justify-self: start; display: inline-flex; align-items: center; flex-shrink: 0; border: 2.5px solid rgba(255,179,0,0.55); padding: 9px 18px; border-radius: 6px; background: rgba(255,255,255,0.05); box-shadow: 0 0 14px rgba(255,179,0,0.12); text-decoration: none; font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
     .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--orange); }
-    .site-header-tagline { grid-column: 2; justify-self: stretch; text-align: center; font-size: 14px; color: var(--white); white-space: nowrap; overflow: hidden;
-      min-width: 0; text-overflow: ellipsis; }
-    .site-header-divider { color: rgba(255,179,0,0.5); margin: 0 8px; }
     .site-header-actions { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
     .site-header-signin { font-size: 14px; font-weight: 600; color: var(--white); text-decoration: none; transition: color 0.15s; }
     .site-header-signin:hover { color: var(--white); }
     .site-header-join { background: var(--orange); color: var(--navy-deep); font-weight: 800; font-size: 13px; padding: 9px 18px; border-radius: 6px; text-decoration: none; transition: background 0.15s; }
     .site-header-join:hover { background: var(--orange-dark); }
-    .category-nav { background: var(--navy); border-bottom: 1px solid rgba(255,255,255,0.1); padding: 10px 40px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
-    .category-nav a { color: var(--white); text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 6px; white-space: nowrap; transition: background 0.15s, color 0.15s; }
-    .category-nav a:hover { background: rgba(255,179,0,0.08); }
-    .category-nav a.cat-nav-cta, .mobile-benefits-panel a.cat-nav-cta { color: var(--orange); }
-    .category-nav a.active { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
+    .category-nav { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); border-bottom: 1px solid rgba(7,29,64,0.15); padding: 10px 40px; min-height: 56px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
+    .category-nav a { color: var(--navy); text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 6px; white-space: nowrap; transition: background 0.15s, color 0.15s; }
+    .category-nav a:hover { background: rgba(7,29,64,0.08); }
+    .category-nav a.cat-nav-cta, .mobile-benefits-panel a.cat-nav-cta { display: inline-flex; align-items: center; gap: 6px; background: #1a9c4a; border: 1px solid #14853d; color: var(--white); padding: 8px 16px; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); } .category-nav a.cat-nav-cta:hover, .mobile-benefits-panel a.cat-nav-cta:hover { background: #159141; }
+    .category-nav a.active { background: rgba(7,29,64,0.15); color: var(--navy); }
     .category-nav-item { position: relative; }
-    .category-nav-item:hover > a, .category-nav-item:focus-within > a { background: rgba(255,179,0,0.15); color: var(--orange-dark); }
+    .category-nav-item:hover > a, .category-nav-item:focus-within > a { background: rgba(7,29,64,0.15); color: var(--navy); }
     .category-dropdown { display: none; position: absolute; top: 100%; left: 0; margin-top: 4px; background: var(--navy); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.35); padding: 16px 20px; grid-template-columns: repeat(2, minmax(170px, 1fr)); grid-auto-flow: column; grid-template-rows: repeat(5, auto); gap: 2px 28px; z-index: 200; }
     .category-nav-item:hover .category-dropdown, .category-nav-item:focus-within .category-dropdown { display: grid; }
     .category-dropdown a { padding: 7px 8px; font-size: 13.5px; font-weight: 600; color: var(--white); text-align: center; }
@@ -44,7 +41,7 @@
     .mobile-benefits { display: none; }
     @media (max-width: 700px) {
       .site-header { padding: 14px 20px; }
-      .site-header-tagline { display: none; }
+      .hero-gold-bar { font-size: 12.5px; padding: 10px 16px; gap: 4px; }
       .site-header-actions { gap: 10px; }
       .category-nav { display: none; }
       .mobile-benefits { display: block; background: var(--navy); border-bottom: 1px solid rgba(255,255,255,0.1); }
@@ -60,14 +57,15 @@
     }
     @media (max-width: 380px) { .site-header-logo { font-size: 22px; padding: 7px 14px; } .site-header-join { padding: 8px 14px; font-size: 12px; } .site-header-signin { font-size: 13px; } }
 
-    .page-hero { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); color: var(--navy); padding: 64px 24px; text-align: center; }
+    .page-hero { background: var(--navy); color: var(--white); padding: 64px 24px; text-align: center; }
+    .hero-gold-bar { background: var(--orange); min-height: 56px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 24px; text-align: center; font-size: 14px; font-weight: 600; color: var(--navy); }
+    .hero-gold-bar .hero-gold-divider { color: rgba(7,29,64,0.45); margin: 0 2px; }
     .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
-    .page-hero p { color: rgba(4,4,13,0.6); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
+    .page-hero p { color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
 
-    .verify-banner { text-align: center; font-weight: 800; color: #22c55e; font-size: 15px; padding: 40px 24px; }
-    .verify-banner + .category-grid { padding-top: 0; }
-
-    .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+    .verify-banner { display: flex; align-items: center; justify-content: center; gap: 6px; width: fit-content; margin: 0 auto 40px; background: #1a9c4a; border: 1px solid #14853d; color: var(--white); font-weight: 800; font-size: 14px; padding: 9px 20px; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    
+    .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 24px; }
     .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; text-align: center; }
     .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
     .category-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
@@ -86,7 +84,6 @@
   <div class="site-header-wrap">
     <nav class="site-header">
       <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
-      <p class="site-header-tagline">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="site-header-divider">|</span> for the people who keep Britain moving</p>
       <div class="site-header-actions">
         <a href="/login.html" class="site-header-signin">Log In</a>
         <a href="/signup.html" class="site-header-join">Sign Up</a>
@@ -94,7 +91,7 @@
     </nav>
     <div class="category-nav">
       <div class="category-nav-item">
-        <a href="/categories.html">Categories</a>
+        <a>Categories</a>
         <div class="category-dropdown">
           <a href="/beauty-wellness.html">Beauty &amp; Wellness</a>
           <a href="/children-baby.html">Children &amp; Baby</a>
@@ -138,7 +135,7 @@
       <a href="/e-learning.html">E-learning</a>
       <a href="/financial-wellbeing.html">Financial Wellbeing</a>
       <a href="/mental-wellbeing.html">Mental Wellbeing</a>
-      <a href="/qualify.html" class="cat-nav-cta">Check Your Eligibility Now</a>
+      <a href="/qualify.html" class="cat-nav-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Check Your Eligibility Now</a>
     </div>
     <details class="mobile-benefits">
       <summary>
@@ -152,7 +149,7 @@
         <a href="/e-learning.html">E-learning</a>
         <a href="/financial-wellbeing.html">Financial Wellbeing</a>
         <a href="/mental-wellbeing.html">Mental Wellbeing</a>
-        <a href="/qualify.html" class="cat-nav-cta">Check Your Eligibility Now</a>
+        <a href="/qualify.html" class="cat-nav-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Check Your Eligibility Now</a>
       </div>
     </details>
   </div>
@@ -162,7 +159,7 @@
     <p>Look sharp for less — womenswear, menswear, childrenswear, high street fashion, accessories, shoes and sportswear, discounted for logistics workers.</p>
   </section>
 
-  <p class="verify-banner">Verified Logistics workers only</p>
+  <p class="hero-gold-bar">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="hero-gold-divider">|</span> for the people who keep Britain moving</p>
 
   <div class="category-grid">
     <div class="category-card"><h2>Fashion Favourites</h2><p>Our members' most popular fashion discounts in one place.</p></div>
@@ -174,6 +171,8 @@
     <div class="category-card"><h2>Shoes</h2><p>Discounted footwear for work, rest and everything between.</p></div>
     <div class="category-card"><h2>Sportswear</h2><p>Savings on activewear and sports clothing.</p></div>
   </div>
+
+  <p class="verify-banner"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified Logistics workers only</p>
 
   <div class="bottom-cta">
     <a href="/signup.html" class="cta-btn">Join Logicard free →</a>
