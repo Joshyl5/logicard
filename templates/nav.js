@@ -1,18 +1,11 @@
-const CATEGORY_LABELS = {
-  'beauty-wellness': 'Beauty &amp; Wellness',
-  'children-baby':   'Children &amp; Baby',
-  'food-drink':      'Food &amp; Drink',
-  fashion:           'Fashion',
-  'gifts-flowers':   'Gifts &amp; Flowers',
-};
-
 function cls(active, key) {
   return active === key ? ' class="active"' : '';
 }
 
 // active: 'categories' | 'things-to-do' | 'shopping-cards' | 'e-learning' |
 //         'financial-wellbeing' | 'mental-wellbeing' | 'qualify' | null
-// activeDropdown: one of the CATEGORY_LABELS keys, for the 5 shop-category pages | null
+// activeDropdown: 'beauty-wellness' | 'children-baby' | 'food-drink' | 'fashion' |
+//                 'gifts-flowers' (the 5 shop-category pages) | null
 // tagline: whether this page still shows the "Discounts • Giveaways..." strip
 //          in the top navy bar (only index/qualify/categories do — the other
 //          10 category pages moved it into their own hero-gold-bar instead)
@@ -25,10 +18,6 @@ function renderNav({ active = null, activeDropdown = null, tagline = false } = {
   const mentalCls = cls(active, 'mental-wellbeing');
   const ctaCls = active === 'qualify' ? 'active cat-nav-cta' : 'cat-nav-cta';
   const dropdownCls = (key) => cls(activeDropdown, key);
-
-  const mobileFirstItem = activeDropdown
-    ? `<a href="/${activeDropdown}.html" class="active">${CATEGORY_LABELS[activeDropdown]}</a>`
-    : `<a href="/categories.html"${categoriesCls}>Categories</a>`;
 
   const ctaSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
@@ -90,21 +79,6 @@ function renderNav({ active = null, activeDropdown = null, tagline = false } = {
       <a href="/mental-wellbeing.html"${mentalCls}>Mental Wellbeing</a>
       <a href="/qualify.html" class="${ctaCls}">${ctaSvg}Check Your Eligibility Now</a>
     </div>
-    <details class="mobile-benefits">
-      <summary>
-        Logicard Benefits
-        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-      </summary>
-      <div class="mobile-benefits-panel">
-        ${mobileFirstItem}
-        <a href="/things-to-do.html"${thingsToDoCls}>Things to Do</a>
-        <a href="/shopping-cards.html"${shoppingCardsCls}>Shopping Cards</a>
-        <a href="/e-learning.html"${eLearningCls}>E-learning</a>
-        <a href="/financial-wellbeing.html"${financialCls}>Financial Wellbeing</a>
-        <a href="/mental-wellbeing.html"${mentalCls}>Mental Wellbeing</a>
-        <a href="/qualify.html" class="${ctaCls}">${ctaSvg}Check Your Eligibility Now</a>
-      </div>
-    </details>
   </div>`;
 }
 
