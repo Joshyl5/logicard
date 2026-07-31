@@ -1231,7 +1231,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 /* ── OFFERS GRID ──────────────────────────────────────────────── */
 .offers-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
   gap: 22px;
 }
 
