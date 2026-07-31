@@ -1091,7 +1091,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 /* Offers hero strip */
 .offers-hero {
   background: linear-gradient(135deg, #071d40 0%, #0d3b80 100%);
-  padding: 52px 28px;
+  padding: 40px 28px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
@@ -1113,7 +1113,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 
 /* Offers layout */
-.offers-main { padding: 32px 28px 60px; }
+.offers-main { padding: 24px 28px 32px; }
 
 .offers-container {
   max-width: 1400px;
@@ -1126,7 +1126,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .no-results {
   color: var(--muted);
   text-align: center;
-  padding: 32px 20px;
+  padding: 26px 20px;
   font-size: 1rem;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 14px;
