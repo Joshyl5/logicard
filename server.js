@@ -427,6 +427,14 @@ const verificationUploadLimiter = rateLimit({
   message: { error: 'Too many upload attempts. Please try again in an hour.' },
 });
 
+const editDetailsLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many edit requests. Please wait an hour and try again.' },
+});
+
 const workEmailLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 5,
@@ -579,39 +587,26 @@ function requireAdmin(req, res, next) {
   res.redirect('/admin-login.html');
 }
 
-// Extra outer wall while /member-offers is still pre-launch and has no real
-// content — separate from and in addition to the normal login/verification
-// flow underneath it. Override MEMBER_OFFERS_PREVIEW_PASSWORD in Railway to
-// change or remove it later without a code change.
-const MEMBER_OFFERS_PREVIEW_PASSWORD = process.env.MEMBER_OFFERS_PREVIEW_PASSWORD || 'LogicardTemp1';
-
-function requirePreviewPassword(req, res, next) {
-  const auth = req.headers.authorization;
-  if (auth && auth.startsWith('Basic ')) {
-    const decoded  = Buffer.from(auth.slice(6), 'base64').toString('utf8');
-    const password = decoded.split(':').slice(1).join(':');
-    if (password === MEMBER_OFFERS_PREVIEW_PASSWORD) return next();
-  }
-  res.setHeader('WWW-Authenticate', 'Basic realm="Logicard Member Offers Preview"');
-  res.status(401).send('This page requires a preview password.');
-}
-
 // ── Member pages ───────────────────────────────────────────────
-app.get('/member-offers', requirePreviewPassword, requireAuth, (_req, res) => {
+app.get('/member-offers', requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'member-offers.html'));
 });
 
-app.get('/member-dashboard', requirePreviewPassword, requireAuth, (_req, res) => {
+app.get('/member-dashboard', requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'member-dashboard.html'));
 });
 
 // Old URL, kept as a redirect so nothing already bookmarked/emailed breaks.
-app.get('/members', requirePreviewPassword, requireAuth, (_req, res) => res.redirect('/member-offers'));
+app.get('/members', requireAuth, (_req, res) => res.redirect('/member-offers'));
 
 app.get('/api/offer-categories', requireAuth, (_req, res) => res.json(OFFER_CATEGORIES));
 
 app.get('/report', requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'report.html'));
+});
+
+app.get('/edit-details', requireAuth, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'edit-details.html'));
 });
 
 app.get('/verify', requireAuth, (_req, res) => {
@@ -1047,6 +1042,57 @@ app.post('/api/report', requireAuth, async (req, res) => {
   } catch (err) {
     console.error('Report email failed:', err.message);
     res.status(500).json({ error: 'Failed to submit report. Please try again.' });
+  }
+});
+
+// A member's own name, DOB, employer etc. aren't self-editable in the app —
+// changing them affects verification/eligibility, so a person reviews each
+// request rather than the member updating the database directly.
+app.post('/api/member/request-edit', requireAuth, editDetailsLimiter, async (req, res) => {
+  const { message } = req.body;
+  if (!message || !String(message).trim()) return res.status(400).json({ error: 'Please describe what you\'d like changed.' });
+
+  const membershipNumber = req.session.membershipNumber;
+  const member = await getMemberByNumber(membershipNumber);
+  if (!member) return res.status(404).json({ error: 'Member not found.' });
+
+  const memberName = `${member.firstName} ${member.lastName}`;
+
+  const html = `
+  <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#f4f7fb;padding:0;border-radius:12px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#0d3b80,#1a6cc8);padding:32px 36px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:24px;letter-spacing:1px">LOGICARD</h1>
+      <p style="color:rgba(255,255,255,0.7);margin:6px 0 0;font-size:14px">Member Details Edit Request</p>
+    </div>
+    <div style="padding:32px 36px;background:#fff">
+      <h2 style="color:#071d40;margin:0 0 20px;font-size:18px">A member wants their details updated</h2>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40;width:38%">Member</td><td style="padding:10px 14px;color:#333">${escapeHtml(memberName)}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40">Membership #</td><td style="padding:10px 14px;color:#1a6cc8;font-weight:700">#${membershipNumber}</td></tr>
+        <tr style="background:#f4f7fb"><td style="padding:10px 14px;font-weight:700;color:#071d40">Current Email</td><td style="padding:10px 14px;color:#333">${escapeHtml(member.email)}</td></tr>
+        <tr><td style="padding:10px 14px;font-weight:700;color:#071d40;vertical-align:top">Requested Change</td><td style="padding:10px 14px;color:#333;line-height:1.6">${escapeHtml(message).replace(/\n/g, '<br/>')}</td></tr>
+      </table>
+    </div>
+    <div style="padding:18px 36px;text-align:center;background:#f4f7fb">
+      <p style="margin:0;font-size:12px;color:#999">© 2026 Logicard — edit request submitted via logicard.co.uk</p>
+    </div>
+  </div>`;
+
+  try {
+    if (resend) {
+      await resend.emails.send({
+        from:    'Logicard <welcome@logicard.co.uk>',
+        to:      'josh@logicard.co.uk',
+        subject: `Edit request from member #${membershipNumber} — ${memberName}`,
+        html,
+      });
+    } else {
+      console.log(`[DEV] Edit-details request from #${membershipNumber}: ${message}`);
+    }
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Edit-details request email failed:', err.message);
+    res.status(500).json({ error: 'Failed to send your request. Please try again.' });
   }
 });
 

@@ -960,11 +960,11 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .mh-logo-pill .card { color: #FFB300; }
 
 .mh-search-wrap { flex: 1; max-width: 480px; position: relative; display: flex; align-items: center; }
-.mh-search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.mh-search-icon { position: absolute; left: 16px; top: 50%; width: 16px; height: 16px; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
 .mh-search-input {
   width: 100%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
   border-radius: 100px; color: #fff; font-family: var(--font); font-size: 0.98rem;
-  padding: 12px 18px 12px 48px; outline: none; transition: border-color 0.2s, background 0.2s;
+  padding: 12px 18px 12px 54px; outline: none; transition: border-color 0.2s, background 0.2s;
 }
 .mh-search-input::placeholder { color: var(--muted); }
 .mh-search-input:focus { border-color: #FFB300; background: rgba(255,255,255,0.09); }
