@@ -188,6 +188,22 @@ async function initDb() {
       read_at            TIMESTAMPTZ
     )
   `);
+
+  // Promotional tiles shown on the member dashboard — simpler than offers
+  // (no categories/coupons), just an image, caption and click-through link.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS adverts (
+      id           SERIAL PRIMARY KEY,
+      title        TEXT NOT NULL,
+      image_url    TEXT NOT NULL,
+      link_url     TEXT,
+      is_active    BOOLEAN DEFAULT TRUE,
+      sort_order   INTEGER DEFAULT 0,
+      click_count  INTEGER DEFAULT 0,
+      created_at   TIMESTAMPTZ DEFAULT NOW(),
+      updated_at   TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -272,6 +288,21 @@ function toOffer(row) {
     clickCount:    row.click_count,
     createdAt:     row.created_at,
     updatedAt:     row.updated_at,
+  };
+}
+
+function toAdvert(row) {
+  if (!row) return null;
+  return {
+    id:         row.id,
+    title:      row.title,
+    imageUrl:   row.image_url,
+    linkUrl:    row.link_url,
+    isActive:   row.is_active,
+    sortOrder:  row.sort_order,
+    clickCount: row.click_count,
+    createdAt:  row.created_at,
+    updatedAt:  row.updated_at,
   };
 }
 
@@ -454,6 +485,58 @@ async function deleteOffer(id) {
 
 async function incrementOfferClicks(id) {
   await pool.query('UPDATE offers SET click_count = click_count + 1 WHERE id = $1', [id]);
+}
+
+// ── Adverts (member-dashboard promo tiles) ────────────────────────
+async function getActiveAdverts() {
+  const r = await pool.query(
+    'SELECT * FROM adverts WHERE is_active = true ORDER BY sort_order ASC, created_at DESC, id ASC'
+  );
+  return r.rows.map(toAdvert);
+}
+
+async function getAllAdverts() {
+  const r = await pool.query('SELECT * FROM adverts ORDER BY sort_order ASC, created_at DESC, id ASC');
+  return r.rows.map(toAdvert);
+}
+
+async function getAdvertById(id) {
+  const r = await pool.query('SELECT * FROM adverts WHERE id = $1', [id]);
+  return toAdvert(r.rows[0]);
+}
+
+async function createAdvert(data) {
+  const { title, imageUrl, linkUrl = null, isActive = true, sortOrder = 0 } = data;
+
+  const r = await pool.query(`
+    INSERT INTO adverts (title, image_url, link_url, is_active, sort_order)
+    VALUES ($1,$2,$3,$4,$5)
+    RETURNING *
+  `, [title, imageUrl, linkUrl, !!isActive, sortOrder]);
+
+  return toAdvert(r.rows[0]);
+}
+
+async function updateAdvert(id, data) {
+  const { title, imageUrl, linkUrl = null, isActive = true, sortOrder = 0 } = data;
+
+  const r = await pool.query(`
+    UPDATE adverts SET
+      title = $1, image_url = $2, link_url = $3, is_active = $4, sort_order = $5, updated_at = NOW()
+    WHERE id = $6
+    RETURNING *
+  `, [title, imageUrl, linkUrl, !!isActive, sortOrder, id]);
+
+  return toAdvert(r.rows[0]);
+}
+
+async function deleteAdvert(id) {
+  const r = await pool.query('DELETE FROM adverts WHERE id = $1', [id]);
+  return r.rowCount > 0;
+}
+
+async function incrementAdvertClicks(id) {
+  await pool.query('UPDATE adverts SET click_count = click_count + 1 WHERE id = $1', [id]);
 }
 
 // ── Offer redemption tracking ────────────────────────────────────
@@ -731,6 +814,7 @@ module.exports = {
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
+  getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,

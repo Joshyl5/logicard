@@ -54,6 +54,31 @@ async function init() {
       <span class="detail-value">${escapeHtml(value)}</span>
     </div>
   `).join('');
+
+  loadAdverts();
+}
+
+async function loadAdverts() {
+  let adverts = [];
+  try {
+    const res = await fetch('/api/adverts');
+    if (res.ok) adverts = await res.json();
+  } catch { /* non-critical — section just stays hidden */ }
+
+  if (!adverts.length) return;
+
+  document.getElementById('advertsGrid').innerHTML = adverts.map(a => {
+    const tag = a.linkUrl ? 'a' : 'div';
+    const href = a.linkUrl ? ` href="/api/adverts/${a.id}/go" target="_blank" rel="noopener"` : '';
+    return `
+      <${tag} class="advert-tile"${href}>
+        <img class="advert-tile-img" src="${escapeHtml(a.imageUrl)}" alt="${escapeHtml(a.title)}" loading="lazy" />
+        <div class="advert-tile-caption">${escapeHtml(a.title)}</div>
+      </${tag}>
+    `;
+  }).join('');
+
+  document.getElementById('advertsSection').style.display = 'block';
 }
 
 document.addEventListener('DOMContentLoaded', init);

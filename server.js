@@ -18,6 +18,7 @@ const {
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
+  getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -622,6 +623,10 @@ app.get('/admin/offers', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-offers.html'));
 });
 
+app.get('/admin/adverts', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-adverts.html'));
+});
+
 app.get('/admin/verifications', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-verifications.html'));
 });
@@ -842,6 +847,44 @@ app.delete('/api/admin/offers/:id', requireAdmin, async (req, res) => {
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer id.' });
   const deleted = await deleteOffer(id);
   if (!deleted) return res.status(404).json({ error: 'Offer not found.' });
+  res.json({ success: true });
+});
+
+// ── Adverts (member-dashboard promo tiles) ────────────────────────
+function validAdvertPayload(body) {
+  const { title, imageUrl, linkUrl } = body;
+  if (!title || !String(title).trim()) return 'Title is required.';
+  if (!imageUrl || !String(imageUrl).trim()) return 'Image URL is required.';
+  if (linkUrl && !/^https?:\/\//i.test(linkUrl)) return 'Link URL must start with http:// or https://.';
+  return null;
+}
+
+app.get('/api/admin/adverts', requireAdmin, async (_req, res) => {
+  res.json(await getAllAdverts());
+});
+
+app.post('/api/admin/adverts', requireAdmin, async (req, res) => {
+  const error = validAdvertPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  const advert = await createAdvert(req.body);
+  res.json(advert);
+});
+
+app.put('/api/admin/adverts/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid advert id.' });
+  const error = validAdvertPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  const advert = await updateAdvert(id, req.body);
+  if (!advert) return res.status(404).json({ error: 'Advert not found.' });
+  res.json(advert);
+});
+
+app.delete('/api/admin/adverts/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid advert id.' });
+  const deleted = await deleteAdvert(id);
+  if (!deleted) return res.status(404).json({ error: 'Advert not found.' });
   res.json({ success: true });
 });
 
@@ -1380,6 +1423,27 @@ app.get('/api/offers/:id/go', requireAuth, requireVerified, async (req, res) => 
 
   incrementOfferClicks(id).catch(err => console.error('Offer click tracking failed:', err.message));
   recordOfferRedemption(id, req.session.membershipNumber).catch(err => console.error('Offer redemption tracking failed:', err.message));
+});
+
+// Adverts are reachable as soon as a member is logged in (the dashboard
+// itself doesn't wait on verification), unlike offers above.
+app.get('/api/adverts', requireAuth, async (_req, res) => {
+  const adverts = await getActiveAdverts();
+  res.json(adverts.map(({ id, title, imageUrl, linkUrl }) => ({ id, title, imageUrl, linkUrl })));
+});
+
+app.get('/api/adverts/:id/go', requireAuth, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).send('Invalid advert.');
+
+  const advert = await getAdvertById(id);
+  if (!advert || !advert.isActive) return res.status(404).send('This advert is no longer available.');
+  if (!advert.linkUrl) return res.status(404).send('This advert has no link.');
+
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.redirect(302, advert.linkUrl);
+
+  incrementAdvertClicks(id).catch(err => console.error('Advert click tracking failed:', err.message));
 });
 
 // ── Signup field validation ──────────────────────────────────────
