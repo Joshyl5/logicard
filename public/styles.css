@@ -1006,32 +1006,24 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   display: none;
   position: absolute; top: calc(100% + 8px); left: 0;
   background: var(--blue-deep); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
-  box-shadow: 0 20px 48px rgba(0,0,0,0.4); padding: 24px;
-  grid-template-columns: repeat(3, minmax(160px, 1fr)); gap: 14px;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4); padding: 10px;
+  grid-template-columns: repeat(2, minmax(190px, 1fr)); gap: 2px;
   z-index: 300; width: max-content; max-width: calc(100vw - 40px);
 }
 #megaMenuWrap.open .mega-menu { display: grid; }
 
 .mega-item {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
-  background: var(--gold);
-  border: 1px solid rgba(4,4,13,0.15);
-  border-radius: 14px;
-  padding: 20px 14px;
-  cursor: pointer; text-align: center;
-  transition: transform 0.2s ease, background 0.2s ease;
+  display: block;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 16px;
+  cursor: pointer; text-align: left;
+  transition: background 0.15s ease;
 }
-.mega-item:hover { transform: translateY(-3px); background: var(--gold-dark); }
-.mega-item-icon {
-  width: 38px; height: 38px; flex-shrink: 0;
-  background: var(--white);
-  border: 1px solid rgba(7,29,64,0.12);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--gold);
-}
-.mega-item-icon svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.mega-item-label { font-family: var(--font); font-size: 0.92rem; font-weight: 800; color: var(--blue-deep); }
+.mega-item:hover { background: rgba(255,179,0,0.12); }
+.mega-item-label { font-family: var(--font); font-size: 0.88rem; font-weight: 600; color: var(--white); }
+.mega-item:hover .mega-item-label { color: var(--gold); }
 
 @media (max-width: 640px) {
   .mh-topbar { flex-wrap: wrap; height: auto; padding: 12px 0; gap: 12px; }

@@ -131,7 +131,6 @@ function renderMegaMenu() {
 
   menu.innerHTML = CATEGORIES.map(c => `
     <button type="button" class="mega-item" data-cat="${escapeHtml(c)}">
-      <span class="mega-item-icon">${CATEGORY_ICONS[c] || ''}</span>
       <span class="mega-item-label">${escapeHtml(c)}</span>
     </button>
   `).join('');
