@@ -69,7 +69,7 @@ async function loadAdverts() {
 
   document.getElementById('advertsGrid').innerHTML = adverts.map(a => {
     const tag = a.linkUrl ? 'a' : 'div';
-    const href = a.linkUrl ? ` href="/api/adverts/${a.id}/go" target="_blank" rel="noopener"` : '';
+    const href = a.linkUrl ? ` href="/api/adverts/${a.id}/go" target="_blank" rel="sponsored noopener"` : '';
     return `
       <${tag} class="advert-tile"${href}>
         <img class="advert-tile-img" src="${escapeHtml(a.imageUrl)}" alt="${escapeHtml(a.title)}" loading="lazy" />
