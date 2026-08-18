@@ -260,12 +260,21 @@ function renderOffers(offers) {
 
   grid.innerHTML = offers.map(o => `
     <div class="offer-card">
-      ${o.imageUrl ? `<img class="oc-image" src="${escapeHtml(o.imageUrl)}" alt="${escapeHtml(o.merchantName)}" loading="lazy" />` : ''}
-      <div class="oc-header">
-        ${o.category ? `<span class="oc-cat">${escapeHtml(o.category)}</span>` : ''}
-      </div>
+      ${o.imageUrl ? `
+        <div class="oc-image-wrap">
+          <img class="oc-image" src="${escapeHtml(o.imageUrl)}" alt="${escapeHtml(o.merchantName)}" loading="lazy" />
+          <div class="oc-image-overlay">
+            ${o.category ? `<span class="oc-cat">${escapeHtml(o.category)}</span>` : ''}
+            <h3 class="oc-title oc-title--overlay">${escapeHtml(o.merchantName)} — ${escapeHtml(o.title)}</h3>
+          </div>
+        </div>
+      ` : `
+        <div class="oc-header">
+          ${o.category ? `<span class="oc-cat">${escapeHtml(o.category)}</span>` : ''}
+        </div>
+      `}
       <div class="oc-body">
-        <h3 class="oc-title">${escapeHtml(o.merchantName)} — ${escapeHtml(o.title)}</h3>
+        ${!o.imageUrl ? `<h3 class="oc-title">${escapeHtml(o.merchantName)} — ${escapeHtml(o.title)}</h3>` : ''}
         ${o.description ? `<p class="oc-desc">${escapeHtml(o.description)}</p>` : ''}
         <div class="oc-pricing">
           ${o.discountText ? `<span class="price-badge">${escapeHtml(o.discountText)}</span>` : ''}
