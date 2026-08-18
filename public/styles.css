@@ -1244,15 +1244,12 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 
 .oc-header {
-  padding: 24px 22px 18px;
+  padding: 16px 22px 10px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 118px;
   position: relative;
 }
-
-.oc-icon { width: 40px; height: 40px; color: rgba(255,255,255,0.85); }
 
 .oc-cat {
   font-size: 0.76rem;
