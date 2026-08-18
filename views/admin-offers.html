@@ -56,12 +56,13 @@
             <th>Voucher Code</th>
             <th>Unique Codes</th>
             <th>Active</th>
+            <th>Featured</th>
             <th>Clicks</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="offersBody">
-          <tr><td colspan="9" class="table-loading">Loading offers…</td></tr>
+          <tr><td colspan="10" class="table-loading">Loading offers…</td></tr>
         </tbody>
       </table>
     </div>
@@ -135,9 +136,13 @@
           <label for="offerSortOrder">Sort Order</label>
           <input id="offerSortOrder" type="number" value="0" />
         </div>
-        <div class="lfield" style="margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+        <div class="lfield" style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
           <input id="offerIsActive" type="checkbox" checked style="width:auto;" />
           <label for="offerIsActive" style="margin:0;">Active (visible to members)</label>
+        </div>
+        <div class="lfield" style="margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+          <input id="offerIsFeatured" type="checkbox" style="width:auto;" />
+          <label for="offerIsFeatured" style="margin:0;">Feature on member dashboard (up to 6 shown)</label>
         </div>
 
         <div id="offerFormError" class="form-error" role="alert" style="margin-bottom:14px;"></div>

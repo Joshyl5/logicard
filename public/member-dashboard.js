@@ -55,28 +55,24 @@ async function init() {
     </div>
   `).join('');
 
-  loadAdverts();
+  if (me.verified) loadFeaturedOffers();
 }
 
-async function loadAdverts() {
-  let adverts = [];
+async function loadFeaturedOffers() {
+  let offers = [];
   try {
-    const res = await fetch('/api/adverts');
-    if (res.ok) adverts = await res.json();
+    const res = await fetch('/api/offers/featured');
+    if (res.ok) offers = await res.json();
   } catch { /* non-critical — section just stays hidden */ }
 
-  if (!adverts.length) return;
+  if (!offers.length) return;
 
-  document.getElementById('advertsGrid').innerHTML = adverts.map(a => {
-    const tag = a.linkUrl ? 'a' : 'div';
-    const href = a.linkUrl ? ` href="/api/adverts/${a.id}/go" target="_blank" rel="sponsored noopener"` : '';
-    return `
-      <${tag} class="advert-tile"${href}>
-        <img class="advert-tile-img" src="${escapeHtml(a.imageUrl)}" alt="${escapeHtml(a.title)}" loading="lazy" />
-        <div class="advert-tile-caption">${escapeHtml(a.title)}</div>
-      </${tag}>
-    `;
-  }).join('');
+  document.getElementById('advertsGrid').innerHTML = offers.map(o => `
+    <a class="advert-tile" href="/api/offers/${o.id}/go" target="_blank" rel="sponsored noopener">
+      <img class="advert-tile-img" src="${escapeHtml(o.imageUrl)}" alt="${escapeHtml(o.merchantName)}" loading="lazy" />
+      <div class="advert-tile-caption">${escapeHtml(o.merchantName)} — ${escapeHtml(o.title)}</div>
+    </a>
+  `).join('');
 
   document.getElementById('advertsSection').style.display = 'block';
 }

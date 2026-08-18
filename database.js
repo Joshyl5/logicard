@@ -131,6 +131,9 @@ async function initDb() {
       updated_at     TIMESTAMPTZ DEFAULT NOW()
     )
   `);
+  // Lets a normal category offer also appear as a "Featured Partner" tile
+  // on the member dashboard, instead of maintaining a separate advert entry.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`);
 
   // One-time-use coupon pool — lets marketing hand over a batch of unique
   // codes per offer instead of one shared code that can leak publicly.
@@ -284,6 +287,7 @@ function toOffer(row) {
     affiliateUrl:  row.affiliate_url,
     imageUrl:      row.image_url,
     isActive:      row.is_active,
+    isFeatured:    row.is_featured,
     sortOrder:     row.sort_order,
     clickCount:    row.click_count,
     createdAt:     row.created_at,
@@ -436,6 +440,13 @@ async function getAllOffers() {
   return r.rows.map(toOffer);
 }
 
+async function getFeaturedOffers() {
+  const r = await pool.query(
+    'SELECT * FROM offers WHERE is_active = true AND is_featured = true ORDER BY sort_order ASC, created_at DESC, id ASC LIMIT 6'
+  );
+  return r.rows.map(toOffer);
+}
+
 async function getOfferById(id) {
   const r = await pool.query('SELECT * FROM offers WHERE id = $1', [id]);
   return toOffer(r.rows[0]);
@@ -445,16 +456,16 @@ async function createOffer(data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, sortOrder = 0,
+    isActive = true, isFeatured = false, sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     INSERT INTO offers (
       merchant_name, title, description, category, discount_text,
-      voucher_code, affiliate_url, image_url, is_active, sort_order
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      voucher_code, affiliate_url, image_url, is_active, is_featured, sort_order
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, sortOrder]);
+  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, sortOrder]);
 
   return toOffer(r.rows[0]);
 }
@@ -463,17 +474,17 @@ async function updateOffer(id, data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, sortOrder = 0,
+    isActive = true, isFeatured = false, sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     UPDATE offers SET
       merchant_name = $1, title = $2, description = $3, category = $4,
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
-      is_active = $9, sort_order = $10, updated_at = NOW()
-    WHERE id = $11
+      is_active = $9, is_featured = $10, sort_order = $11, updated_at = NOW()
+    WHERE id = $12
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, sortOrder, id]);
+  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, sortOrder, id]);
 
   return toOffer(r.rows[0]);
 }
@@ -812,7 +823,7 @@ module.exports = {
   createMember, emailExists, findMemberByEmail, getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
-  getActiveOffers, getAllOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  getActiveOffers, getAllOffers, getFeaturedOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,

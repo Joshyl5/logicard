@@ -9,7 +9,7 @@ function renderTable(offers) {
   const count = document.getElementById('tableCount');
 
   if (!offers.length) {
-    tbody.innerHTML = '<tr><td colspan="9" class="table-empty">No offers found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" class="table-empty">No offers found.</td></tr>';
     count.textContent = '';
     return;
   }
@@ -23,6 +23,7 @@ function renderTable(offers) {
       <td>${escapeHtml(o.voucherCode) || '—'}</td>
       <td>${o.codesTotal ? `${o.codesAvailable.toLocaleString()} / ${o.codesTotal.toLocaleString()} left` : '—'}</td>
       <td>${o.isActive ? 'Yes' : 'No'}</td>
+      <td>${o.isFeatured ? 'Yes' : 'No'}</td>
       <td>${o.clickCount || 0}</td>
       <td>
         <button type="button" class="table-link offer-edit-btn" data-id="${o.id}" style="margin-right:10px;background:none;border:none;cursor:pointer;">Edit</button>
@@ -66,6 +67,7 @@ function openModal(id) {
   offerForm.reset();
   document.getElementById('offerId').value       = '';
   document.getElementById('offerIsActive').checked = true;
+  document.getElementById('offerIsFeatured').checked = false;
   document.getElementById('offerSortOrder').value  = 0;
 
   if (id) {
@@ -83,6 +85,7 @@ function openModal(id) {
       document.getElementById('offerImageUrl').value       = offer.imageUrl || '';
       document.getElementById('offerSortOrder').value      = offer.sortOrder || 0;
       document.getElementById('offerIsActive').checked     = !!offer.isActive;
+      document.getElementById('offerIsFeatured').checked   = !!offer.isFeatured;
     }
   } else {
     offerModalTitle.textContent = 'Add Offer';
@@ -113,6 +116,7 @@ offerForm.addEventListener('submit', async e => {
     imageUrl:     document.getElementById('offerImageUrl').value.trim() || null,
     sortOrder:    Number(document.getElementById('offerSortOrder').value) || 0,
     isActive:     document.getElementById('offerIsActive').checked,
+    isFeatured:   document.getElementById('offerIsFeatured').checked,
   };
 
   offerSubmitBtn.disabled    = true;

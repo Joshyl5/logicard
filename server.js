@@ -16,7 +16,7 @@ const {
   getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
-  getActiveOffers, getAllOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  getActiveOffers, getAllOffers, getFeaturedOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -1386,6 +1386,13 @@ app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
       onWaitlist:     waitlisted.has(id),
     };
   }));
+});
+
+// Powers the "Featured Partners" tiles on the member dashboard — a small,
+// lightweight slice of the same offers data, not a separate content type.
+app.get('/api/offers/featured', requireAuth, requireVerified, async (_req, res) => {
+  const offers = await getFeaturedOffers();
+  res.json(offers.map(({ id, merchantName, title, imageUrl }) => ({ id, merchantName, title, imageUrl })));
 });
 
 app.post('/api/offers/:id/claim', requireAuth, requireVerified, async (req, res) => {
