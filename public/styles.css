@@ -2001,8 +2001,14 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .adverts-section { margin-bottom: 28px; }
 .adverts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 18px;
+}
+@media (max-width: 900px) {
+  .adverts-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .adverts-grid { grid-template-columns: 1fr; }
 }
 .advert-tile {
   display: block;
