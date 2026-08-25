@@ -784,12 +784,15 @@ app.get('/api/admin/members', requireAdmin, async (_req, res) => {
 });
 
 // ── Admin offers ───────────────────────────────────────────────
+const GENDER_VALUES = ['M', 'F', 'Other'];
+
 function validOfferPayload(body) {
-  const { merchantName, title, affiliateUrl, category } = body;
+  const { merchantName, title, affiliateUrl, category, targetGender } = body;
   if (!merchantName || !String(merchantName).trim()) return 'Merchant name is required.';
   if (!title || !String(title).trim()) return 'Title is required.';
   if (!affiliateUrl || !/^https?:\/\//i.test(affiliateUrl)) return 'Affiliate URL must start with http:// or https://.';
   if (category && !OFFER_CATEGORIES.includes(category)) return 'Invalid category.';
+  if (targetGender && !GENDER_VALUES.includes(targetGender)) return 'Invalid target gender.';
   return null;
 }
 
@@ -1365,9 +1368,18 @@ app.post('/api/admin/verifications/:id/reject', requireAdmin, async (req, res) =
   sendVerificationRejectedEmail(result.member, reason);
 });
 
+// An offer with no target_gender is shown to everyone. A member with no
+// gender on file also sees everything, regardless of any offer's target —
+// missing data should never hide content, only an explicit mismatch does.
+function filterOffersForMember(offers, memberGender) {
+  if (!memberGender) return offers;
+  return offers.filter(o => !o.targetGender || o.targetGender === memberGender);
+}
+
 // ── Offers (closed-group — verified members only) ───────────────
 app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
-  const offers = await getActiveOffers();
+  const member = await getMemberByNumber(req.session.membershipNumber);
+  const offers = filterOffersForMember(await getActiveOffers(), member ? member.gender : null);
   const offerIds = offers.map(o => o.id);
   const [statsMap, myCodes, waitlisted] = await Promise.all([
     getCouponStatsForOffers(offerIds),
@@ -1390,8 +1402,9 @@ app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
 
 // Powers the "Featured Partners" tiles on the member dashboard — a small,
 // lightweight slice of the same offers data, not a separate content type.
-app.get('/api/offers/featured', requireAuth, requireVerified, async (_req, res) => {
-  const offers = await getFeaturedOffers();
+app.get('/api/offers/featured', requireAuth, requireVerified, async (req, res) => {
+  const member = await getMemberByNumber(req.session.membershipNumber);
+  const offers = filterOffersForMember(await getFeaturedOffers(), member ? member.gender : null);
   res.json(offers.map(({ id, merchantName, title, imageUrl }) => ({ id, merchantName, title, imageUrl })));
 });
 
@@ -1470,7 +1483,7 @@ const ADDRESS_PATTERN = /^[\p{L}\p{N}\p{M} ,./#'&-]{1,120}$/u;
 // required-field, format, and character-allowlist checks. (These two routes
 // previously diverged: checkout/complete skipped all of this.)
 function validateMemberFields(data) {
-  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone,
+  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone, gender,
           addressLine1, addressLine2, town, city, county, country, password, gdprConsent } = data;
 
   const required = { companyName, role, firstName, lastName, email, phone, town, city };
@@ -1480,6 +1493,8 @@ function validateMemberFields(data) {
   if (!password || password.length < 8) return 'Password must be at least 8 characters.';
   if (!gdprConsent) return 'You must accept the privacy policy to continue.';
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
+  // Optional — members aren't required to disclose this.
+  if (gender && !GENDER_VALUES.includes(gender)) return 'Invalid gender selection.';
 
   // roleCategory is optional. When it's "Other" or left blank, role is
   // checked against the full role set instead of one category's list (since
@@ -1519,7 +1534,7 @@ function validateMemberFields(data) {
 
 // ── Signup ─────────────────────────────────────────────────────
 app.post('/api/signup', signupLimiter, async (req, res) => {
-  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone, ageRange,
+  const { companyName, role, roleCategory, roleCategoryOther, firstName, lastName, email, phone, ageRange, gender,
           addressLine1, addressLine2, town, city, county, country,
           password, gdprConsent, marketingConsent, ref, promoCode } = req.body;
 
@@ -1545,6 +1560,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
       firstName: firstName.trim(),     lastName: lastName.trim(),
       email: email.trim().toLowerCase(), phone: phone.trim(),
       ageRange: ageRange || null,
+      gender: gender || null,
       addressLine1: addressLine1 ? addressLine1.trim() : null,
       addressLine2: addressLine2 ? addressLine2.trim() : null,
       town: town ? town.trim() : null,

@@ -57,12 +57,13 @@
             <th>Unique Codes</th>
             <th>Active</th>
             <th>Featured</th>
+            <th>Shown To</th>
             <th>Clicks</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody id="offersBody">
-          <tr><td colspan="10" class="table-loading">Loading offers…</td></tr>
+          <tr><td colspan="11" class="table-loading">Loading offers…</td></tr>
         </tbody>
       </table>
     </div>
@@ -114,6 +115,15 @@
             <option>Finance &amp; Insurance</option>
             <option>Sport &amp; Fitness</option>
             <option>Advice</option>
+          </select>
+        </div>
+        <div class="lfield" style="margin-bottom:14px;">
+          <label for="offerTargetGender">Show To</label>
+          <select id="offerTargetGender">
+            <option value="">Everyone</option>
+            <option value="M">Male members only</option>
+            <option value="F">Female members only</option>
+            <option value="Other">Other-gender members only</option>
           </select>
         </div>
         <div class="lfield" style="margin-bottom:14px;">

@@ -21,6 +21,7 @@ async function initDb() {
       email              TEXT UNIQUE NOT NULL,
       phone              TEXT,
       age_range          TEXT,
+      gender             TEXT,
       address_line1      TEXT,
       address_line2      TEXT,
       city               TEXT,
@@ -134,6 +135,10 @@ async function initDb() {
   // Lets a normal category offer also appear as a "Featured Partner" tile
   // on the member dashboard, instead of maintaining a separate advert entry.
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`);
+  // NULL = shown to everyone. 'M'/'F'/'Other' restricts the offer to members
+  // who set the matching gender — members with no gender on file always see
+  // every offer regardless of this field.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS target_gender TEXT`);
 
   // One-time-use coupon pool — lets marketing hand over a batch of unique
   // codes per offer instead of one shared code that can leak publicly.
@@ -225,6 +230,7 @@ function toMember(row) {
     email:              row.email,
     phone:              row.phone,
     ageRange:           row.age_range,
+    gender:             row.gender,
     addressLine1:       row.address_line1,
     addressLine2:       row.address_line2,
     town:               row.town,
@@ -288,6 +294,7 @@ function toOffer(row) {
     imageUrl:      row.image_url,
     isActive:      row.is_active,
     isFeatured:    row.is_featured,
+    targetGender:  row.target_gender,
     sortOrder:     row.sort_order,
     clickCount:    row.click_count,
     createdAt:     row.created_at,
@@ -319,7 +326,7 @@ async function emailExists(email) {
 async function createMember(data) {
   const {
     companyName, role, roleCategory = null, roleCategoryOther = null, firstName, lastName, email, phone,
-    ageRange = null, addressLine1 = null, addressLine2 = null, town = null, city = null, county = null,
+    ageRange = null, gender = null, addressLine1 = null, addressLine2 = null, town = null, city = null, county = null,
     country = null,
     password, gdprConsent, marketingConsent, referredBy,
     promoCode = null, freeYear = false,
@@ -335,18 +342,18 @@ async function createMember(data) {
   await pool.query(`
     INSERT INTO members (
       membership_number, company_name, role, role_category, role_category_other, first_name, last_name,
-      email, phone, age_range, address_line1, address_line2,
+      email, phone, age_range, gender, address_line1, address_line2,
       town, city, county, country, password_hash, verified, created_at,
       referred_by, total_referrals, monthly_entries,
       marketing_consent, marketing_consent_at, gdpr_consent,
       promo_code, free_year
     ) VALUES (
-      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,FALSE,$18,
-      $19,0,0,$20,$21,$22,$23,$24
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,FALSE,$19,
+      $20,0,0,$21,$22,$23,$24,$25
     )
   `, [
     membershipNumber, companyName, role, roleCategory || null, roleCategoryOther || null, firstName, lastName,
-    email.toLowerCase(), phone, ageRange || null,
+    email.toLowerCase(), phone, ageRange || null, gender || null,
     addressLine1 || null, addressLine2 || null,
     town || null, city || null, county || null, country || null,
     passwordHash, now,
@@ -456,16 +463,16 @@ async function createOffer(data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, isFeatured = false, sortOrder = 0,
+    isActive = true, isFeatured = false, targetGender = null, sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     INSERT INTO offers (
       merchant_name, title, description, category, discount_text,
-      voucher_code, affiliate_url, image_url, is_active, is_featured, sort_order
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
+      voucher_code, affiliate_url, image_url, is_active, is_featured, target_gender, sort_order
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, sortOrder]);
+  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, sortOrder]);
 
   return toOffer(r.rows[0]);
 }
@@ -474,17 +481,17 @@ async function updateOffer(id, data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, isFeatured = false, sortOrder = 0,
+    isActive = true, isFeatured = false, targetGender = null, sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     UPDATE offers SET
       merchant_name = $1, title = $2, description = $3, category = $4,
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
-      is_active = $9, is_featured = $10, sort_order = $11, updated_at = NOW()
-    WHERE id = $12
+      is_active = $9, is_featured = $10, target_gender = $11, sort_order = $12, updated_at = NOW()
+    WHERE id = $13
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, sortOrder, id]);
+  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, sortOrder, id]);
 
   return toOffer(r.rows[0]);
 }

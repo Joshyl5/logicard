@@ -9,10 +9,12 @@ function renderTable(offers) {
   const count = document.getElementById('tableCount');
 
   if (!offers.length) {
-    tbody.innerHTML = '<tr><td colspan="10" class="table-empty">No offers found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11" class="table-empty">No offers found.</td></tr>';
     count.textContent = '';
     return;
   }
+
+  const GENDER_LABELS = { M: 'Male only', F: 'Female only', Other: 'Other only' };
 
   tbody.innerHTML = offers.map(o => `
     <tr>
@@ -24,6 +26,7 @@ function renderTable(offers) {
       <td>${o.codesTotal ? `${o.codesAvailable.toLocaleString()} / ${o.codesTotal.toLocaleString()} left` : '—'}</td>
       <td>${o.isActive ? 'Yes' : 'No'}</td>
       <td>${o.isFeatured ? 'Yes' : 'No'}</td>
+      <td>${o.targetGender ? (GENDER_LABELS[o.targetGender] || o.targetGender) : 'Everyone'}</td>
       <td>${o.clickCount || 0}</td>
       <td>
         <button type="button" class="table-link offer-edit-btn" data-id="${o.id}" style="margin-right:10px;background:none;border:none;cursor:pointer;">Edit</button>
@@ -68,6 +71,7 @@ function openModal(id) {
   document.getElementById('offerId').value       = '';
   document.getElementById('offerIsActive').checked = true;
   document.getElementById('offerIsFeatured').checked = false;
+  document.getElementById('offerTargetGender').value = '';
   document.getElementById('offerSortOrder').value  = 0;
 
   if (id) {
@@ -86,6 +90,7 @@ function openModal(id) {
       document.getElementById('offerSortOrder').value      = offer.sortOrder || 0;
       document.getElementById('offerIsActive').checked     = !!offer.isActive;
       document.getElementById('offerIsFeatured').checked   = !!offer.isFeatured;
+      document.getElementById('offerTargetGender').value   = offer.targetGender || '';
     }
   } else {
     offerModalTitle.textContent = 'Add Offer';
@@ -117,6 +122,7 @@ offerForm.addEventListener('submit', async e => {
     sortOrder:    Number(document.getElementById('offerSortOrder').value) || 0,
     isActive:     document.getElementById('offerIsActive').checked,
     isFeatured:   document.getElementById('offerIsFeatured').checked,
+    targetGender: document.getElementById('offerTargetGender').value || null,
   };
 
   offerSubmitBtn.disabled    = true;
