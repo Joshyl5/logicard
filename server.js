@@ -514,6 +514,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/e-learning.html',             changefreq: 'monthly', priority: '0.6' },
   { path: '/workforce-recognition.html',  changefreq: 'monthly', priority: '0.7' },
   { path: '/deals.html',                  changefreq: 'monthly', priority: '0.7' },
+  { path: '/brands/initial',              changefreq: 'weekly',  priority: '0.7' },
   { path: '/login.html',                  changefreq: 'monthly', priority: '0.5' },
   { path: '/privacy.html',                changefreq: 'yearly',  priority: '0.3' },
   { path: '/t&cs',                        changefreq: 'yearly',  priority: '0.3' },
@@ -608,6 +609,12 @@ app.get('/report', requireAuth, (_req, res) => {
 
 app.get('/edit-details', requireAuth, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'edit-details.html'));
+});
+
+// Public SEO page — deliberately not behind requireAuth, since the whole
+// point is to be crawlable/indexable by search engines.
+app.get('/brands/initial', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'brands-initial.html'));
 });
 
 app.get('/verify', requireAuth, (_req, res) => {

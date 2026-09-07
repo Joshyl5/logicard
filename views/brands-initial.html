@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brand Partner Directory — Affiliate Deals & Discounts | Logicard</title>
+  <meta name="description" content="Browse every brand Logicard members get exclusive discounts and affiliate deals with, from EE Mobile to Waterstones — over 400 partner brands across fashion, travel, fitness, home and more." />
+  <link rel="canonical" href="https://logicard.co.uk/brands/initial" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Brand Partner Directory \u2014 Affiliate Deals & Discounts",
+    "url": "https://logicard.co.uk/brands/initial",
+    "description": "Every brand Logicard members get exclusive discounts and affiliate deals with.",
+    "isPartOf": { "@id": "https://logicard.co.uk/#website" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --gold: #FFB300; --gold-dark: #E09A00;
+      --navy: #071d40; --navy-mid: #0d3b80;
+      --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: #fff; min-height: 100vh; }
+
+    .site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 40px; background: var(--navy); border-bottom: 1px solid rgba(255,179,0,0.15); position: sticky; top: 0; z-index: 100; }
+    .site-header-logo { display: inline-flex; align-items: center; border: 2.5px solid rgba(255,179,0,0.55); padding: 9px 18px; border-radius: 6px; background: rgba(255,255,255,0.05); text-decoration: none; font-size: 24px; font-weight: 900; letter-spacing: -1px; }
+    .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--gold); }
+    .site-header-actions { display: flex; align-items: center; gap: 16px; }
+    .site-header-signin { font-size: 14px; font-weight: 600; color: #fff; text-decoration: none; }
+    .site-header-join { background: var(--gold); color: var(--navy); font-weight: 800; font-size: 13px; padding: 9px 18px; border-radius: 6px; text-decoration: none; }
+    @media (max-width: 640px) { .site-header { padding: 14px 20px; } }
+
+    .hero { text-align: center; padding: 64px 24px 40px; max-width: 780px; margin: 0 auto; }
+    .eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 2.5px; color: var(--gold); text-transform: uppercase; margin-bottom: 18px; }
+    .hero h1 { font-family: 'Raleway', sans-serif; font-size: clamp(30px, 4.5vw, 48px); font-weight: 900; line-height: 1.1; margin-bottom: 18px; }
+    .hero p { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+
+    .jump-nav { max-width: 1100px; margin: 0 auto 8px; padding: 0 24px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .jump-nav a { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 6px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--gold); font-size: 12.5px; font-weight: 700; text-decoration: none; transition: background 0.15s; }
+    .jump-nav a:hover { background: rgba(255,179,0,0.15); }
+
+    .directory { max-width: 1100px; margin: 40px auto 0; padding: 0 24px 80px; }
+    .letter-section { margin-bottom: 40px; scroll-margin-top: 90px; }
+    .letter-heading { font-family: 'Raleway', sans-serif; font-size: 28px; font-weight: 900; color: var(--gold); border-bottom: 2px solid rgba(255,179,0,0.25); padding-bottom: 8px; margin-bottom: 20px; }
+    .brand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 14px; }
+    .brand-card { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px 18px; }
+    .brand-name { font-family: 'Raleway', sans-serif; font-size: 15.5px; font-weight: 800; margin-bottom: 2px; }
+    .brand-seo { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold); opacity: 0.85; margin-bottom: 8px; }
+    .brand-desc { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.55; }
+
+    .cta-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 48px 24px; text-align: center; }
+    .cta-band h2 { font-family: 'Raleway', sans-serif; font-size: clamp(24px, 3.5vw, 34px); font-weight: 900; color: var(--navy); margin-bottom: 14px; }
+    .cta-band p { color: rgba(7,29,64,0.75); font-size: 15px; margin-bottom: 24px; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .cta-btn { display: inline-block; background: var(--navy); color: #fff; font-weight: 800; font-size: 15px; padding: 15px 34px; border-radius: 100px; text-decoration: none; }
+
+    .site-footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.07); font-size: 12px; color: rgba(255,255,255,0.35); }
+    .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
+    <div class="site-header-actions">
+      <a href="/login.html" class="site-header-signin">Log In</a>
+      <a href="/signup.html" class="site-header-join">Sign Up</a>
+    </div>
+  </header>
+
+  <div class="hero">
+    <span class="eyebrow">Brand Partners</span>
+    <h1>Every brand Logicard members save with</h1>
+    <p>From EE Mobile to Waterstones, we've secured affiliate discount partnerships with over 400 brands across fashion, travel, fitness, home and more \u2014 so our members save on the things they already buy.</p>
+  </div>
+
+  <nav class="jump-nav" aria-label="Jump to letter">
+<a class="jump-link" href="#letter-A">A</a> <a class="jump-link" href="#letter-B">B</a> <a class="jump-link" href="#letter-C">C</a> <a class="jump-link" href="#letter-D">D</a> <a class="jump-link" href="#letter-E">E</a> <a class="jump-link" href="#letter-F">F</a> <a class="jump-link" href="#letter-G">G</a> <a class="jump-link" href="#letter-H">H</a> <a class="jump-link" href="#letter-I">I</a> <a class="jump-link" href="#letter-J">J</a> <a class="jump-link" href="#letter-K">K</a> <a class="jump-link" href="#letter-L">L</a> <a class="jump-link" href="#letter-M">M</a> <a class="jump-link" href="#letter-N">N</a> <a class="jump-link" href="#letter-O">O</a> <a class="jump-link" href="#letter-P">P</a> <a class="jump-link" href="#letter-Q">Q</a> <a class="jump-link" href="#letter-R">R</a> <a class="jump-link" href="#letter-S">S</a> <a class="jump-link" href="#letter-T">T</a> <a class="jump-link" href="#letter-U">U</a> <a class="jump-link" href="#letter-V">V</a> <a class="jump-link" href="#letter-W">W</a> <a class="jump-link" href="#letter-X">X</a> <a class="jump-link" href="#letter-Y">Y</a> <a class="jump-link" href="#letter-Z">Z</a> <a class="jump-link" href="#letter-num">0-9</a>
+  </nav>
+
+  <div class="directory">
+<section class="letter-section" id="letter-A">
+      <h2 class="letter-heading">A</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Access a GP</h3>
+        <p class="brand-seo">Access a GP Affiliate Deals</p>
+        <p class="brand-desc">Private online GP consultations and healthcare access.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Acer Gadget Parner</h3>
+        <p class="brand-seo">Acer Gadget Parner Affiliate Deals</p>
+        <p class="brand-desc">Acer laptops, monitors and computing gadgets.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Aeternum</h3>
+        <p class="brand-seo">Aeternum Affiliate Deals</p>
+        <p class="brand-desc">Jewellery and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Affordable Golf</h3>
+        <p class="brand-seo">Affordable Golf Affiliate Deals</p>
+        <p class="brand-desc">Golf equipment and accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Airparks</h3>
+        <p class="brand-seo">Airparks Affiliate Deals</p>
+        <p class="brand-desc">Pre-booked airport parking with a price-match guarantee.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">AKKO</h3>
+        <p class="brand-seo">AKKO Affiliate Deals</p>
+        <p class="brand-desc">Phone and gadget insurance.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Alfredo</h3>
+        <p class="brand-seo">Alfredo Affiliate Deals</p>
+        <p class="brand-desc">Food and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Allbranded</h3>
+        <p class="brand-seo">Allbranded Affiliate Deals</p>
+        <p class="brand-desc">Personalised and branded promotional products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Alpha Biolabs</h3>
+        <p class="brand-seo">Alpha Biolabs Affiliate Deals</p>
+        <p class="brand-desc">At-home DNA and health testing kits.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Alphagenix</h3>
+        <p class="brand-seo">Alphagenix Affiliate Deals</p>
+        <p class="brand-desc">Health and wellness supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Alpine Trek</h3>
+        <p class="brand-seo">Alpine Trek Affiliate Deals</p>
+        <p class="brand-desc">Outdoor, hiking and mountaineering equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">AML Travel &amp; Tours</h3>
+        <p class="brand-seo">AML Travel &amp; Tours Affiliate Deals</p>
+        <p class="brand-desc">Travel bookings and holiday packages.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Android Homme</h3>
+        <p class="brand-seo">Android Homme Affiliate Deals</p>
+        <p class="brand-desc">Men&#x27;s trainers and footwear brand.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">APE Born fitness</h3>
+        <p class="brand-seo">APE Born fitness Affiliate Deals</p>
+        <p class="brand-desc">Fitness apparel and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Appliance Centre</h3>
+        <p class="brand-seo">Appliance Centre Affiliate Deals</p>
+        <p class="brand-desc">Home appliances retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Aquatics Shop</h3>
+        <p class="brand-seo">Aquatics Shop Affiliate Deals</p>
+        <p class="brand-desc">Aquarium and fish-keeping supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Arlo Security</h3>
+        <p class="brand-seo">Arlo Security Affiliate Deals</p>
+        <p class="brand-desc">Wire-free home security cameras and smart monitoring systems.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Artificial Grass Direct</h3>
+        <p class="brand-seo">Artificial Grass Direct Affiliate Deals</p>
+        <p class="brand-desc">Artificial grass and lawn products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">AttractionTix</h3>
+        <p class="brand-seo">AttractionTix Affiliate Deals</p>
+        <p class="brand-desc">Discounted tickets to UK theme parks, attractions and days out, from Alton Towers to Warner Bros Studio Tour.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Austens Jewellers</h3>
+        <p class="brand-seo">Austens Jewellers Affiliate Deals</p>
+        <p class="brand-desc">Fine jewellery and watches.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-B">
+      <h2 class="letter-heading">B</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Back to the Office</h3>
+        <p class="brand-seo">Back to the Office Affiliate Deals</p>
+        <p class="brand-desc">Office supplies and workwear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Baker Ross</h3>
+        <p class="brand-seo">Baker Ross Affiliate Deals</p>
+        <p class="brand-desc">Arts, crafts and party supplies for kids — craft kits, stationery and classroom resources.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">BareKind Bamboo Socks</h3>
+        <p class="brand-seo">BareKind Bamboo Socks Affiliate Deals</p>
+        <p class="brand-desc">Bamboo socks — a portion of profits donated to animal charities.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bays Kitchen</h3>
+        <p class="brand-seo">Bays Kitchen Affiliate Deals</p>
+        <p class="brand-desc">Kitchen sauces and cooking ingredients.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bbox LP</h3>
+        <p class="brand-seo">Bbox LP Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Beaverbrooks</h3>
+        <p class="brand-seo">Beaverbrooks Affiliate Deals</p>
+        <p class="brand-desc">British jewellery retailer for watches, engagement rings and fine jewellery.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bedding Envy</h3>
+        <p class="brand-seo">Bedding Envy Affiliate Deals</p>
+        <p class="brand-desc">Bedding and home textiles.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bedman</h3>
+        <p class="brand-seo">Bedman Affiliate Deals</p>
+        <p class="brand-desc">Beds and mattresses.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Beds.co.uk</h3>
+        <p class="brand-seo">Beds.co.uk Affiliate Deals</p>
+        <p class="brand-desc">Beds, mattresses and bedroom furniture.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bennie n Dom</h3>
+        <p class="brand-seo">Bennie n Dom Affiliate Deals</p>
+        <p class="brand-desc">Fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bern Helmets</h3>
+        <p class="brand-seo">Bern Helmets Affiliate Deals</p>
+        <p class="brand-desc">Cycling and sports helmets.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Betting on the wedding</h3>
+        <p class="brand-seo">Betting on the wedding Affiliate Deals</p>
+        <p class="brand-desc">Wedding planning products and services.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Beyond Shakers</h3>
+        <p class="brand-seo">Beyond Shakers Affiliate Deals</p>
+        <p class="brand-desc">Protein shakers and fitness accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">BigDUG</h3>
+        <p class="brand-seo">BigDUG Affiliate Deals</p>
+        <p class="brand-desc">Storage, shelving and warehouse equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bio-Synergy</h3>
+        <p class="brand-seo">Bio-Synergy Affiliate Deals</p>
+        <p class="brand-desc">Sports nutrition and performance supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">BLD Bro</h3>
+        <p class="brand-seo">BLD Bro Affiliate Deals</p>
+        <p class="brand-desc">Building and DIY products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Blueperry Tool &amp; BM</h3>
+        <p class="brand-seo">Blueperry Tool &amp; BM Affiliate Deals</p>
+        <p class="brand-desc">Tools, equipment and building supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Boogie Bounce Fitness</h3>
+        <p class="brand-seo">Boogie Bounce Fitness Affiliate Deals</p>
+        <p class="brand-desc">Rebounder trampoline fitness equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Book Shop.org</h3>
+        <p class="brand-seo">Book Shop.org Affiliate Deals</p>
+        <p class="brand-desc">Books, magazines and reading subscriptions.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Box an event</h3>
+        <p class="brand-seo">Box an event Affiliate Deals</p>
+        <p class="brand-desc">Event planning and party supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Box.co.uk</h3>
+        <p class="brand-seo">Box.co.uk Affiliate Deals</p>
+        <p class="brand-desc">Computing hardware and tech.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Breakfree Holidays</h3>
+        <p class="brand-seo">Breakfree Holidays Affiliate Deals</p>
+        <p class="brand-desc">Package holidays and short breaks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Brickdeals.com</h3>
+        <p class="brand-seo">Brickdeals.com Affiliate Deals</p>
+        <p class="brand-desc">Deals and discounts across a range of products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Brickzone Hub</h3>
+        <p class="brand-seo">Brickzone Hub Affiliate Deals</p>
+        <p class="brand-desc">Building materials and supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Brisks Outdoors</h3>
+        <p class="brand-seo">Brisks Outdoors Affiliate Deals</p>
+        <p class="brand-desc">Garden and outdoor furniture.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">BSTN</h3>
+        <p class="brand-seo">BSTN Affiliate Deals</p>
+        <p class="brand-desc">Sneaker and streetwear retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Buddylicious</h3>
+        <p class="brand-seo">Buddylicious Affiliate Deals</p>
+        <p class="brand-desc">Pet food and treats.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bulk UK</h3>
+        <p class="brand-seo">Bulk UK Affiliate Deals</p>
+        <p class="brand-desc">Bulk Powders — sports nutrition, protein and supplements retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bunches.co.uk</h3>
+        <p class="brand-seo">Bunches.co.uk Affiliate Deals</p>
+        <p class="brand-desc">Flowers and floral gifts delivered by post.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Bundle Baby</h3>
+        <p class="brand-seo">Bundle Baby Affiliate Deals</p>
+        <p class="brand-desc">Baby products and essentials.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Buture</h3>
+        <p class="brand-seo">Buture Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle gadgets.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Buxton Brewery</h3>
+        <p class="brand-seo">Buxton Brewery Affiliate Deals</p>
+        <p class="brand-desc">Craft beer brewery.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Buy Fencing Direct</h3>
+        <p class="brand-seo">Buy Fencing Direct Affiliate Deals</p>
+        <p class="brand-desc">Garden fencing.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-C">
+      <h2 class="letter-heading">C</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Cadbury Gifts Direct</h3>
+        <p class="brand-seo">Cadbury Gifts Direct Affiliate Deals</p>
+        <p class="brand-desc">Personalised Cadbury chocolate hampers and gift boxes for every occasion.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Caesers Rewards</h3>
+        <p class="brand-seo">Caesers Rewards Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from Caesers Rewards for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Campbells Meat</h3>
+        <p class="brand-seo">Campbells Meat Affiliate Deals</p>
+        <p class="brand-desc">Meat and butchery delivery.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Camper Nation</h3>
+        <p class="brand-seo">Camper Nation Affiliate Deals</p>
+        <p class="brand-desc">Motorhome, campervan and caravan accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Candles Direct</h3>
+        <p class="brand-seo">Candles Direct Affiliate Deals</p>
+        <p class="brand-desc">Candles and home fragrance.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Car Audio Centre</h3>
+        <p class="brand-seo">Car Audio Centre Affiliate Deals</p>
+        <p class="brand-desc">In-car audio, sat nav and dash cams.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cardfactory</h3>
+        <p class="brand-seo">Cardfactory Affiliate Deals</p>
+        <p class="brand-desc">UK&#x27;s largest specialist retailer of greetings cards, gifts and celebration essentials.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Carnival Internet</h3>
+        <p class="brand-seo">Carnival Internet Affiliate Deals</p>
+        <p class="brand-desc">Broadband and internet deals.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Carpets Online</h3>
+        <p class="brand-seo">Carpets Online Affiliate Deals</p>
+        <p class="brand-desc">Flooring and home renovation products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cartridge People</h3>
+        <p class="brand-seo">Cartridge People Affiliate Deals</p>
+        <p class="brand-desc">Printer ink and toner cartridges.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">CasaLatina</h3>
+        <p class="brand-seo">CasaLatina Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Case Luggage</h3>
+        <p class="brand-seo">Case Luggage Affiliate Deals</p>
+        <p class="brand-desc">Suitcases and travel luggage.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cashback Remortgage</h3>
+        <p class="brand-seo">Cashback Remortgage Affiliate Deals</p>
+        <p class="brand-desc">Mortgage and remortgage comparison with cashback.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Castle Heaters</h3>
+        <p class="brand-seo">Castle Heaters Affiliate Deals</p>
+        <p class="brand-desc">Electric heaters and home heating.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Castore</h3>
+        <p class="brand-seo">Castore Affiliate Deals</p>
+        <p class="brand-desc">British performance sportswear brand, official kit supplier to several sports teams.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Chalkys</h3>
+        <p class="brand-seo">Chalkys Affiliate Deals</p>
+        <p class="brand-desc">Lifestyle and gift products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Chargrilled</h3>
+        <p class="brand-seo">Chargrilled Affiliate Deals</p>
+        <p class="brand-desc">Barbecues, grills and outdoor cooking equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cheap Furniture Warehouse</h3>
+        <p class="brand-seo">Cheap Furniture Warehouse Affiliate Deals</p>
+        <p class="brand-desc">Budget furniture for the home.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Chefs for Foodies</h3>
+        <p class="brand-seo">Chefs for Foodies Affiliate Deals</p>
+        <p class="brand-desc">Cookware and kitchen equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Childrens Football</h3>
+        <p class="brand-seo">Childrens Football Affiliate Deals</p>
+        <p class="brand-desc">Football kits and equipment for children.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Choice Furniture</h3>
+        <p class="brand-seo">Choice Furniture Affiliate Deals</p>
+        <p class="brand-desc">Furniture retailer for the home.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Clean Me</h3>
+        <p class="brand-seo">Clean Me Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from Clean Me for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">ClearanceXL</h3>
+        <p class="brand-seo">ClearanceXL Affiliate Deals</p>
+        <p class="brand-desc">Clearance and discounted stock.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Clever Fox</h3>
+        <p class="brand-seo">Clever Fox Affiliate Deals</p>
+        <p class="brand-desc">Planners, journals and productivity products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Click Pharmacy</h3>
+        <p class="brand-seo">Click Pharmacy Affiliate Deals</p>
+        <p class="brand-desc">Online pharmacy for prescriptions and healthcare.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cocktail Crates</h3>
+        <p class="brand-seo">Cocktail Crates Affiliate Deals</p>
+        <p class="brand-desc">Cocktail-making kits and gift sets.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Coco &amp; Coir</h3>
+        <p class="brand-seo">Coco &amp; Coir Affiliate Deals</p>
+        <p class="brand-desc">Gardening and plant-growing supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cold Case Inc</h3>
+        <p class="brand-seo">Cold Case Inc Affiliate Deals</p>
+        <p class="brand-desc">Mini fridges and drinks cooling products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cold Town Beer</h3>
+        <p class="brand-seo">Cold Town Beer Affiliate Deals</p>
+        <p class="brand-desc">Craft beer retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Collagen Superdose</h3>
+        <p class="brand-seo">Collagen Superdose Affiliate Deals</p>
+        <p class="brand-desc">Collagen supplements for skin and joint health.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Compare my Parking deals</h3>
+        <p class="brand-seo">Compare my Parking deals Affiliate Deals</p>
+        <p class="brand-desc">Airport and event parking comparison service.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Compare Parking</h3>
+        <p class="brand-seo">Compare Parking Affiliate Deals</p>
+        <p class="brand-desc">Airport and event parking comparison service.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Connie Gray</h3>
+        <p class="brand-seo">Connie Gray Affiliate Deals</p>
+        <p class="brand-desc">Fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cotswold Shoes</h3>
+        <p class="brand-seo">Cotswold Shoes Affiliate Deals</p>
+        <p class="brand-desc">Footwear retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Covers and All</h3>
+        <p class="brand-seo">Covers and All Affiliate Deals</p>
+        <p class="brand-desc">Custom-made covers for furniture and outdoor items.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Craft Buddy</h3>
+        <p class="brand-seo">Craft Buddy Affiliate Deals</p>
+        <p class="brand-desc">Diamond painting and craft kits for adults and kids.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Craft Coffee Club</h3>
+        <p class="brand-seo">Craft Coffee Club Affiliate Deals</p>
+        <p class="brand-desc">Coffee subscription boxes.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Craftiosity</h3>
+        <p class="brand-seo">Craftiosity Affiliate Deals</p>
+        <p class="brand-desc">Monthly craft project boxes and kits.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cronjager</h3>
+        <p class="brand-seo">Cronjager Affiliate Deals</p>
+        <p class="brand-desc">Lifestyle and gift products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cruise Nation</h3>
+        <p class="brand-seo">Cruise Nation Affiliate Deals</p>
+        <p class="brand-desc">UK cruise holiday specialist, with deals across major cruise lines worldwide.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Crystal Life Wills</h3>
+        <p class="brand-seo">Crystal Life Wills Affiliate Deals</p>
+        <p class="brand-desc">Will-writing and estate planning services.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Curo Skin</h3>
+        <p class="brand-seo">Curo Skin Affiliate Deals</p>
+        <p class="brand-desc">Skincare and dermatology-led beauty products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cuvva</h3>
+        <p class="brand-seo">Cuvva Affiliate Deals</p>
+        <p class="brand-desc">Flexible, pay-by-the-hour or day car insurance.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">CV Villas</h3>
+        <p class="brand-seo">CV Villas Affiliate Deals</p>
+        <p class="brand-desc">Luxury villa holiday rentals.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cybex</h3>
+        <p class="brand-seo">Cybex Affiliate Deals</p>
+        <p class="brand-desc">Baby and child car seats, pushchairs and safety equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Cyclestore</h3>
+        <p class="brand-seo">Cyclestore Affiliate Deals</p>
+        <p class="brand-desc">Bikes, cycling clothing and accessories retailer.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-D">
+      <h2 class="letter-heading">D</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">D Franklin</h3>
+        <p class="brand-seo">D Franklin Affiliate Deals</p>
+        <p class="brand-desc">Trainers and casual footwear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">DailyDiet.online</h3>
+        <p class="brand-seo">DailyDiet.online Affiliate Deals</p>
+        <p class="brand-desc">Meal plans and diet-focused food delivery.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Dame</h3>
+        <p class="brand-seo">Dame Affiliate Deals</p>
+        <p class="brand-desc">Wellness and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Dash Water</h3>
+        <p class="brand-seo">Dash Water Affiliate Deals</p>
+        <p class="brand-desc">Sparkling flavoured water.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">DB Shoes</h3>
+        <p class="brand-seo">DB Shoes Affiliate Deals</p>
+        <p class="brand-desc">Footwear retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Dean Morris Cards</h3>
+        <p class="brand-seo">Dean Morris Cards Affiliate Deals</p>
+        <p class="brand-desc">Greetings cards, gifts and stationery.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Debenhams UK</h3>
+        <p class="brand-seo">Debenhams UK Affiliate Deals</p>
+        <p class="brand-desc">Long-standing British retailer now trading online — fashion, homeware and beauty.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Decorating Centre Online</h3>
+        <p class="brand-seo">Decorating Centre Online Affiliate Deals</p>
+        <p class="brand-desc">Home decorating and DIY supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Decorative Aggregates</h3>
+        <p class="brand-seo">Decorative Aggregates Affiliate Deals</p>
+        <p class="brand-desc">Garden and landscaping aggregates.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Deer Run</h3>
+        <p class="brand-seo">Deer Run Affiliate Deals</p>
+        <p class="brand-desc">Outdoor and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Designer Sofa 4 U</h3>
+        <p class="brand-seo">Designer Sofa 4 U Affiliate Deals</p>
+        <p class="brand-desc">Sofas and living room furniture.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Desktronic</h3>
+        <p class="brand-seo">Desktronic Affiliate Deals</p>
+        <p class="brand-desc">Standing desks and office furniture.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Detrash</h3>
+        <p class="brand-seo">Detrash Affiliate Deals</p>
+        <p class="brand-desc">Sustainable and eco-friendly products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">DeubaXXL</h3>
+        <p class="brand-seo">DeubaXXL Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from DeubaXXL for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Devola</h3>
+        <p class="brand-seo">Devola Affiliate Deals</p>
+        <p class="brand-desc">Heaters and home climate control appliances.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Dexam</h3>
+        <p class="brand-seo">Dexam Affiliate Deals</p>
+        <p class="brand-desc">Kitchenware, cookware and homeware.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Diamond Rocks</h3>
+        <p class="brand-seo">Diamond Rocks Affiliate Deals</p>
+        <p class="brand-desc">Diamond jewellery and engagement rings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Didrikson</h3>
+        <p class="brand-seo">Didrikson Affiliate Deals</p>
+        <p class="brand-desc">Scandinavian outerwear and rainwear brand.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Direct 365</h3>
+        <p class="brand-seo">Direct 365 Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from Direct 365 for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Direct Fireplaces</h3>
+        <p class="brand-seo">Direct Fireplaces Affiliate Deals</p>
+        <p class="brand-desc">Fireplaces, stoves and home heating.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Direct Save Telecom</h3>
+        <p class="brand-seo">Direct Save Telecom Affiliate Deals</p>
+        <p class="brand-desc">Landline and broadband telecom deals.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Direnza</h3>
+        <p class="brand-seo">Direnza Affiliate Deals</p>
+        <p class="brand-desc">Car performance parts and accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Display Wizard</h3>
+        <p class="brand-seo">Display Wizard Affiliate Deals</p>
+        <p class="brand-desc">Exhibition stands and display equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">DIY Refurb</h3>
+        <p class="brand-seo">DIY Refurb Affiliate Deals</p>
+        <p class="brand-desc">DIY and home renovation supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Doctor Seaweed</h3>
+        <p class="brand-seo">Doctor Seaweed Affiliate Deals</p>
+        <p class="brand-desc">Seaweed-based skincare and bath products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Dog and Hat Coffee club</h3>
+        <p class="brand-seo">Dog and Hat Coffee club Affiliate Deals</p>
+        <p class="brand-desc">Coffee, tea and hot drinks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Doulton</h3>
+        <p class="brand-seo">Doulton Affiliate Deals</p>
+        <p class="brand-desc">Royal Doulton — fine china, tableware and homeware.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Dream Homestore</h3>
+        <p class="brand-seo">Dream Homestore Affiliate Deals</p>
+        <p class="brand-desc">Homeware and furniture for the home.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Drink Nonni</h3>
+        <p class="brand-seo">Drink Nonni Affiliate Deals</p>
+        <p class="brand-desc">Soft drinks and beverages.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Dulux</h3>
+        <p class="brand-seo">Dulux Affiliate Deals</p>
+        <p class="brand-desc">One of the UK&#x27;s best-known paint and home decorating brands.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">DUSK</h3>
+        <p class="brand-seo">DUSK Affiliate Deals</p>
+        <p class="brand-desc">Beds, mattresses and bedroom furniture retailer.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-E">
+      <h2 class="letter-heading">E</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Eco Ride Zone</h3>
+        <p class="brand-seo">Eco Ride Zone Affiliate Deals</p>
+        <p class="brand-desc">Electric bikes and eco-friendly transport.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Ecoflow</h3>
+        <p class="brand-seo">Ecoflow Affiliate Deals</p>
+        <p class="brand-desc">Portable power stations and solar generators for home backup and outdoor use.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Ecovacs</h3>
+        <p class="brand-seo">Ecovacs Affiliate Deals</p>
+        <p class="brand-desc">Robot vacuum cleaners and smart home cleaning devices.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">EcoWise</h3>
+        <p class="brand-seo">EcoWise Affiliate Deals</p>
+        <p class="brand-desc">Eco-friendly home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Edeniste</h3>
+        <p class="brand-seo">Edeniste Affiliate Deals</p>
+        <p class="brand-desc">Fragrance and home scent products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">EE Mobile</h3>
+        <p class="brand-seo">EE Mobile Affiliate Deals</p>
+        <p class="brand-desc">Pay monthly and SIM-only mobile deals from EE, the UK&#x27;s largest 4G/5G network.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">EE Pay As You Go</h3>
+        <p class="brand-seo">EE Pay As You Go Affiliate Deals</p>
+        <p class="brand-desc">Pay as you go SIM deals from EE, the UK&#x27;s largest 4G/5G network.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Electric Shop</h3>
+        <p class="brand-seo">Electric Shop Affiliate Deals</p>
+        <p class="brand-desc">Electrical appliances and home tech.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Electrical Discount</h3>
+        <p class="brand-seo">Electrical Discount Affiliate Deals</p>
+        <p class="brand-desc">Discounted electrical appliances for the home.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Elixir Garden Supplies</h3>
+        <p class="brand-seo">Elixir Garden Supplies Affiliate Deals</p>
+        <p class="brand-desc">Garden supplies and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Emma UK</h3>
+        <p class="brand-seo">Emma UK Affiliate Deals</p>
+        <p class="brand-desc">Emma — sleep and mattress specialist, known for its memory foam mattresses.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">EMP</h3>
+        <p class="brand-seo">EMP Affiliate Deals</p>
+        <p class="brand-desc">Music, film and gaming merchandise retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Energyperformancecerts</h3>
+        <p class="brand-seo">Energyperformancecerts Affiliate Deals</p>
+        <p class="brand-desc">Energy Performance Certificate (EPC) assessments for properties.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Enjoy The Wood</h3>
+        <p class="brand-seo">Enjoy The Wood Affiliate Deals</p>
+        <p class="brand-desc">Wooden gifts and homeware.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">ESR Tech</h3>
+        <p class="brand-seo">ESR Tech Affiliate Deals</p>
+        <p class="brand-desc">Phone and tablet cases and tech accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Eurosender</h3>
+        <p class="brand-seo">Eurosender Affiliate Deals</p>
+        <p class="brand-desc">Parcel and courier delivery comparison.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">EV King</h3>
+        <p class="brand-seo">EV King Affiliate Deals</p>
+        <p class="brand-desc">Electric vehicle charging cables and accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Everyday Blinds</h3>
+        <p class="brand-seo">Everyday Blinds Affiliate Deals</p>
+        <p class="brand-desc">Made-to-measure blinds.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Evolve Clothing</h3>
+        <p class="brand-seo">Evolve Clothing Affiliate Deals</p>
+        <p class="brand-desc">Clothing and fashion.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">EXG Pro</h3>
+        <p class="brand-seo">EXG Pro Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from EXG Pro for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Explorer Travel Insurance</h3>
+        <p class="brand-seo">Explorer Travel Insurance Affiliate Deals</p>
+        <p class="brand-desc">Travel insurance policies.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-F">
+      <h2 class="letter-heading">F</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">F1 Autocentres</h3>
+        <p class="brand-seo">F1 Autocentres Affiliate Deals</p>
+        <p class="brand-desc">Car servicing, MOT and tyres.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fans Jersey Hub</h3>
+        <p class="brand-seo">Fans Jersey Hub Affiliate Deals</p>
+        <p class="brand-desc">Clothing and fashion.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Faretti</h3>
+        <p class="brand-seo">Faretti Affiliate Deals</p>
+        <p class="brand-desc">Fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Farmfetch</h3>
+        <p class="brand-seo">Farmfetch Affiliate Deals</p>
+        <p class="brand-desc">Fresh food and farm produce delivery.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fast Technology</h3>
+        <p class="brand-seo">Fast Technology Affiliate Deals</p>
+        <p class="brand-desc">Computing hardware and tech accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fidelis</h3>
+        <p class="brand-seo">Fidelis Affiliate Deals</p>
+        <p class="brand-desc">Insurance and financial products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fila UK</h3>
+        <p class="brand-seo">Fila UK Affiliate Deals</p>
+        <p class="brand-desc">Global sportswear and lifestyle apparel brand.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Findra</h3>
+        <p class="brand-seo">Findra Affiliate Deals</p>
+        <p class="brand-desc">Scottish outdoor and adventure clothing brand.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fishing Tackle &amp; Bait</h3>
+        <p class="brand-seo">Fishing Tackle &amp; Bait Affiliate Deals</p>
+        <p class="brand-desc">Fishing tackle, bait and angling equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fitimins</h3>
+        <p class="brand-seo">Fitimins Affiliate Deals</p>
+        <p class="brand-desc">Health and fitness supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fitjeans</h3>
+        <p class="brand-seo">Fitjeans Affiliate Deals</p>
+        <p class="brand-desc">Activewear and fitness clothing.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fitness Options</h3>
+        <p class="brand-seo">Fitness Options Affiliate Deals</p>
+        <p class="brand-desc">Home gym and fitness equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Five Star Direct</h3>
+        <p class="brand-seo">Five Star Direct Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fix-a-Floor</h3>
+        <p class="brand-seo">Fix-a-Floor Affiliate Deals</p>
+        <p class="brand-desc">Flooring repair products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Flava Car Scents</h3>
+        <p class="brand-seo">Flava Car Scents Affiliate Deals</p>
+        <p class="brand-desc">Car air fresheners and scents.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fleurwear</h3>
+        <p class="brand-seo">Fleurwear Affiliate Deals</p>
+        <p class="brand-desc">Clothing and fashion retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Flibco Global</h3>
+        <p class="brand-seo">Flibco Global Affiliate Deals</p>
+        <p class="brand-desc">Airport shuttle and transfer bookings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Flower Station Ltd</h3>
+        <p class="brand-seo">Flower Station Ltd Affiliate Deals</p>
+        <p class="brand-desc">Flowers and floral gifts.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fold Reformer</h3>
+        <p class="brand-seo">Fold Reformer Affiliate Deals</p>
+        <p class="brand-desc">Pilates reformer machines and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Football Ticket Net</h3>
+        <p class="brand-seo">Football Ticket Net Affiliate Deals</p>
+        <p class="brand-desc">Football match ticket bookings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">For Play</h3>
+        <p class="brand-seo">For Play Affiliate Deals</p>
+        <p class="brand-desc">Games and entertainment products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Foreo (Sweden)</h3>
+        <p class="brand-seo">Foreo (Sweden) Affiliate Deals</p>
+        <p class="brand-desc">Swedish beauty-tech brand — facial cleansing devices and skincare tools.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Forever Feeling</h3>
+        <p class="brand-seo">Forever Feeling Affiliate Deals</p>
+        <p class="brand-desc">Wellness and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fragrance Click</h3>
+        <p class="brand-seo">Fragrance Click Affiliate Deals</p>
+        <p class="brand-desc">Perfume and fragrance retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Fred Olsen Cruise Lines</h3>
+        <p class="brand-seo">Fred Olsen Cruise Lines Affiliate Deals</p>
+        <p class="brand-desc">Small-ship cruises from UK ports, known for a relaxed, traditional cruising style.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Free Soul</h3>
+        <p class="brand-seo">Free Soul Affiliate Deals</p>
+        <p class="brand-desc">Health and wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Frenzy Clothing</h3>
+        <p class="brand-seo">Frenzy Clothing Affiliate Deals</p>
+        <p class="brand-desc">Clothing and fashion retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Furniture Box</h3>
+        <p class="brand-seo">Furniture Box Affiliate Deals</p>
+        <p class="brand-desc">Furniture retailer for the home.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Furniture in Fashion</h3>
+        <p class="brand-seo">Furniture in Fashion Affiliate Deals</p>
+        <p class="brand-desc">Furniture retailer for home and office.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Furniture48</h3>
+        <p class="brand-seo">Furniture48 Affiliate Deals</p>
+        <p class="brand-desc">Furniture retailer for the home.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-G">
+      <h2 class="letter-heading">G</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Gael force Group</h3>
+        <p class="brand-seo">Gael force Group Affiliate Deals</p>
+        <p class="brand-desc">Marine and outdoor equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gains Nutrition</h3>
+        <p class="brand-seo">Gains Nutrition Affiliate Deals</p>
+        <p class="brand-desc">Sports nutrition and protein supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Galop-Store</h3>
+        <p class="brand-seo">Galop-Store Affiliate Deals</p>
+        <p class="brand-desc">General merchandise.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Game Over</h3>
+        <p class="brand-seo">Game Over Affiliate Deals</p>
+        <p class="brand-desc">Gaming gear and accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gaming Kit</h3>
+        <p class="brand-seo">Gaming Kit Affiliate Deals</p>
+        <p class="brand-desc">Gaming accessories and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Garden Bird</h3>
+        <p class="brand-seo">Garden Bird Affiliate Deals</p>
+        <p class="brand-desc">Bird feeders and garden wildlife products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Garden Stone</h3>
+        <p class="brand-seo">Garden Stone Affiliate Deals</p>
+        <p class="brand-desc">Garden landscaping and stone products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gardening Naturally</h3>
+        <p class="brand-seo">Gardening Naturally Affiliate Deals</p>
+        <p class="brand-desc">Garden supplies and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gardenista</h3>
+        <p class="brand-seo">Gardenista Affiliate Deals</p>
+        <p class="brand-desc">Garden, plant and outdoor living products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Geek Crate</h3>
+        <p class="brand-seo">Geek Crate Affiliate Deals</p>
+        <p class="brand-desc">Collectable and geek-culture subscription boxes.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gemo Global</h3>
+        <p class="brand-seo">Gemo Global Affiliate Deals</p>
+        <p class="brand-desc">General merchandise.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Get Over It</h3>
+        <p class="brand-seo">Get Over It Affiliate Deals</p>
+        <p class="brand-desc">Lifestyle and gift products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Ghostbikes</h3>
+        <p class="brand-seo">Ghostbikes Affiliate Deals</p>
+        <p class="brand-desc">Motorcycle clothing, helmets and accessories retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">GI Cognition</h3>
+        <p class="brand-seo">GI Cognition Affiliate Deals</p>
+        <p class="brand-desc">Cognitive health and brain supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gilbert Rugby</h3>
+        <p class="brand-seo">Gilbert Rugby Affiliate Deals</p>
+        <p class="brand-desc">Rugby balls, kit and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Giraffe Tools</h3>
+        <p class="brand-seo">Giraffe Tools Affiliate Deals</p>
+        <p class="brand-desc">Tools, equipment and building supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Glasses2You</h3>
+        <p class="brand-seo">Glasses2You Affiliate Deals</p>
+        <p class="brand-desc">Glasses and eyewear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Go Ape</h3>
+        <p class="brand-seo">Go Ape Affiliate Deals</p>
+        <p class="brand-desc">Treetop adventure courses, zip wires and forest activity days across the UK.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gousto</h3>
+        <p class="brand-seo">Gousto Affiliate Deals</p>
+        <p class="brand-desc">Recipe box delivery — fresh ingredients and chef-designed recipes delivered weekly.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Grace &amp; Stella</h3>
+        <p class="brand-seo">Grace &amp; Stella Affiliate Deals</p>
+        <p class="brand-desc">Skincare and beauty accessories, including eye masks and self-care sets.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Grade Mobile</h3>
+        <p class="brand-seo">Grade Mobile Affiliate Deals</p>
+        <p class="brand-desc">Refurbished and used mobile phones.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gravity Performance</h3>
+        <p class="brand-seo">Gravity Performance Affiliate Deals</p>
+        <p class="brand-desc">Fitness and strength training equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Grays Hockey</h3>
+        <p class="brand-seo">Grays Hockey Affiliate Deals</p>
+        <p class="brand-desc">Hockey equipment and sticks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Great Magazines</h3>
+        <p class="brand-seo">Great Magazines Affiliate Deals</p>
+        <p class="brand-desc">Magazine subscriptions across a wide range of titles.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Grenade</h3>
+        <p class="brand-seo">Grenade Affiliate Deals</p>
+        <p class="brand-desc">Sports nutrition brand known for protein bars and pre-workout supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">GS Equestrian</h3>
+        <p class="brand-seo">GS Equestrian Affiliate Deals</p>
+        <p class="brand-desc">Equestrian equipment and horse riding gear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">GSF Car</h3>
+        <p class="brand-seo">GSF Car Affiliate Deals</p>
+        <p class="brand-desc">Car parts and motor factor supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Gtech</h3>
+        <p class="brand-seo">Gtech Affiliate Deals</p>
+        <p class="brand-desc">British-designed cordless vacuums, garden tools and home appliances.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-H">
+      <h2 class="letter-heading">H</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">H2O for you</h3>
+        <p class="brand-seo">H2O for you Affiliate Deals</p>
+        <p class="brand-desc">Water filtration and hydration products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Hamleys</h3>
+        <p class="brand-seo">Hamleys Affiliate Deals</p>
+        <p class="brand-desc">One of the world&#x27;s oldest and largest toy retailers, on London&#x27;s Regent Street and online.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Hayloft Plants</h3>
+        <p class="brand-seo">Hayloft Plants Affiliate Deals</p>
+        <p class="brand-desc">Plants, bulbs and gardening supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Hera</h3>
+        <p class="brand-seo">Hera Affiliate Deals</p>
+        <p class="brand-desc">Beauty and skincare products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Highland Broadband</h3>
+        <p class="brand-seo">Highland Broadband Affiliate Deals</p>
+        <p class="brand-desc">Broadband internet provider.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Hip Pop</h3>
+        <p class="brand-seo">Hip Pop Affiliate Deals</p>
+        <p class="brand-desc">Snack food and drinks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Holy Drinks</h3>
+        <p class="brand-seo">Holy Drinks Affiliate Deals</p>
+        <p class="brand-desc">Non-alcoholic and low-alcohol drinks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Homespace Direct</h3>
+        <p class="brand-seo">Homespace Direct Affiliate Deals</p>
+        <p class="brand-desc">Home and garden furniture.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Hoppa UK</h3>
+        <p class="brand-seo">Hoppa UK Affiliate Deals</p>
+        <p class="brand-desc">Airport transfer bookings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">House of Grey Wolfe</h3>
+        <p class="brand-seo">House of Grey Wolfe Affiliate Deals</p>
+        <p class="brand-desc">Fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">House of Watches</h3>
+        <p class="brand-seo">House of Watches Affiliate Deals</p>
+        <p class="brand-desc">Retailer of luxury and fashion watches from major brands.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Hoxton Spirits</h3>
+        <p class="brand-seo">Hoxton Spirits Affiliate Deals</p>
+        <p class="brand-desc">Spirits and cocktail ingredients.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">HSS</h3>
+        <p class="brand-seo">HSS Affiliate Deals</p>
+        <p class="brand-desc">Tool and equipment hire for trade and DIY, with branches nationwide.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Hughes</h3>
+        <p class="brand-seo">Hughes Affiliate Deals</p>
+        <p class="brand-desc">Independent electrical retailer for TVs, appliances and home tech, with expert advice.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Humax</h3>
+        <p class="brand-seo">Humax Affiliate Deals</p>
+        <p class="brand-desc">Freeview and satellite set-top boxes and home entertainment recorders.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-I">
+      <h2 class="letter-heading">I</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Ideal World</h3>
+        <p class="brand-seo">Ideal World Affiliate Deals</p>
+        <p class="brand-desc">UK shopping channel and online retailer for homeware, beauty and gadgets.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">iHeat</h3>
+        <p class="brand-seo">iHeat Affiliate Deals</p>
+        <p class="brand-desc">Electric heaters and home heating.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Imagine Experiences</h3>
+        <p class="brand-seo">Imagine Experiences Affiliate Deals</p>
+        <p class="brand-desc">Gift experiences and days out.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">io Gut Health</h3>
+        <p class="brand-seo">io Gut Health Affiliate Deals</p>
+        <p class="brand-desc">Gut health and digestive supplements.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-J">
+      <h2 class="letter-heading">J</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Japspeed UK</h3>
+        <p class="brand-seo">Japspeed UK Affiliate Deals</p>
+        <p class="brand-desc">Performance parts and accessories for Japanese cars.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Java Whiskers</h3>
+        <p class="brand-seo">Java Whiskers Affiliate Deals</p>
+        <p class="brand-desc">Pet products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Jungle Culture</h3>
+        <p class="brand-seo">Jungle Culture Affiliate Deals</p>
+        <p class="brand-desc">Health and wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Just Go Holidays</h3>
+        <p class="brand-seo">Just Go Holidays Affiliate Deals</p>
+        <p class="brand-desc">UK coach holidays and short breaks to destinations across Britain and Europe.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-K">
+      <h2 class="letter-heading">K</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">KF Social</h3>
+        <p class="brand-seo">KF Social Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from KF Social for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">KitBrix</h3>
+        <p class="brand-seo">KitBrix Affiliate Deals</p>
+        <p class="brand-desc">Sports kit bags and storage.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Krunk Bar</h3>
+        <p class="brand-seo">Krunk Bar Affiliate Deals</p>
+        <p class="brand-desc">Snack bars and food products.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-L">
+      <h2 class="letter-heading">L</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Lakeland Fashion</h3>
+        <p class="brand-seo">Lakeland Fashion Affiliate Deals</p>
+        <p class="brand-desc">Clothing and fashion retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">LateRooms.com</h3>
+        <p class="brand-seo">LateRooms.com Affiliate Deals</p>
+        <p class="brand-desc">Late hotel deals and discounted UK and worldwide accommodation bookings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Legal Muscle Anabolics</h3>
+        <p class="brand-seo">Legal Muscle Anabolics Affiliate Deals</p>
+        <p class="brand-desc">Legal sports supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Let&#x27;s buy books</h3>
+        <p class="brand-seo">Let&#x27;s buy books Affiliate Deals</p>
+        <p class="brand-desc">Books across a range of genres.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lights 4 Living</h3>
+        <p class="brand-seo">Lights 4 Living Affiliate Deals</p>
+        <p class="brand-desc">Lighting for home and garden.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lingzio / New Learning Network</h3>
+        <p class="brand-seo">Lingzio / New Learning Network Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from Lingzio / New Learning Network for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lloyds Pharmacy</h3>
+        <p class="brand-seo">Lloyds Pharmacy Affiliate Deals</p>
+        <p class="brand-desc">Online pharmacy for prescriptions, health advice and everyday healthcare essentials.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Loch Electronics</h3>
+        <p class="brand-seo">Loch Electronics Affiliate Deals</p>
+        <p class="brand-desc">Consumer electronics retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">London box Office</h3>
+        <p class="brand-seo">London box Office Affiliate Deals</p>
+        <p class="brand-desc">Theatre and event ticket bookings in London.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lord of the Beards</h3>
+        <p class="brand-seo">Lord of the Beards Affiliate Deals</p>
+        <p class="brand-desc">Beard grooming and men&#x27;s care products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lovense</h3>
+        <p class="brand-seo">Lovense Affiliate Deals</p>
+        <p class="brand-desc">Wellness and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lovereading</h3>
+        <p class="brand-seo">Lovereading Affiliate Deals</p>
+        <p class="brand-desc">Book recommendations and reading subscriptions.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">LovetoVisit</h3>
+        <p class="brand-seo">LovetoVisit Affiliate Deals</p>
+        <p class="brand-desc">UK days out and short breaks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Luxe Mattress</h3>
+        <p class="brand-seo">Luxe Mattress Affiliate Deals</p>
+        <p class="brand-desc">Mattresses and bedding.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Luxefashion</h3>
+        <p class="brand-seo">Luxefashion Affiliate Deals</p>
+        <p class="brand-desc">Fashion and clothing retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lyca Mobile</h3>
+        <p class="brand-seo">Lyca Mobile Affiliate Deals</p>
+        <p class="brand-desc">Low-cost SIM-only and international calling mobile plans.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lyco</h3>
+        <p class="brand-seo">Lyco Affiliate Deals</p>
+        <p class="brand-desc">Lighting retailer for home, garden and commercial lighting.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Lyle &amp; Scott</h3>
+        <p class="brand-seo">Lyle &amp; Scott Affiliate Deals</p>
+        <p class="brand-desc">British heritage clothing brand, famous for its golden eagle logo knitwear and polos.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-M">
+      <h2 class="letter-heading">M</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Macback</h3>
+        <p class="brand-seo">Macback Affiliate Deals</p>
+        <p class="brand-desc">Refurbished Apple Mac computers.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">MacDonald Hotels</h3>
+        <p class="brand-seo">MacDonald Hotels Affiliate Deals</p>
+        <p class="brand-desc">UK hotel group with properties across Scotland, England and Wales, including spa breaks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Masterchef UK</h3>
+        <p class="brand-seo">Masterchef UK Affiliate Deals</p>
+        <p class="brand-desc">MasterChef-branded kitchenware and cookbooks.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">MaxiNutrition</h3>
+        <p class="brand-seo">MaxiNutrition Affiliate Deals</p>
+        <p class="brand-desc">Sports nutrition and protein supplements for training and recovery.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Mindful Chef</h3>
+        <p class="brand-seo">Mindful Chef Affiliate Deals</p>
+        <p class="brand-desc">Recipe box delivery focused on healthy, calorie-counted meals.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Mint Outdoor</h3>
+        <p class="brand-seo">Mint Outdoor Affiliate Deals</p>
+        <p class="brand-desc">Outdoor garden furniture.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Modmo</h3>
+        <p class="brand-seo">Modmo Affiliate Deals</p>
+        <p class="brand-desc">Laptops and computing devices.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Momcozy UK</h3>
+        <p class="brand-seo">Momcozy UK Affiliate Deals</p>
+        <p class="brand-desc">Baby feeding and maternity products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Mone UK</h3>
+        <p class="brand-seo">Mone UK Affiliate Deals</p>
+        <p class="brand-desc">Fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Morish Snacks</h3>
+        <p class="brand-seo">Morish Snacks Affiliate Deals</p>
+        <p class="brand-desc">Snack food subscriptions and treats.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Move pre workout</h3>
+        <p class="brand-seo">Move pre workout Affiliate Deals</p>
+        <p class="brand-desc">Pre-workout sports supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">MRDrippz</h3>
+        <p class="brand-seo">MRDrippz Affiliate Deals</p>
+        <p class="brand-desc">Fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">MyCord</h3>
+        <p class="brand-seo">MyCord Affiliate Deals</p>
+        <p class="brand-desc">Phone and tech accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Mylee</h3>
+        <p class="brand-seo">Mylee Affiliate Deals</p>
+        <p class="brand-desc">Nail care and at-home gel manicure products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">MyMoneyComparison</h3>
+        <p class="brand-seo">MyMoneyComparison Affiliate Deals</p>
+        <p class="brand-desc">Financial products comparison service.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-N">
+      <h2 class="letter-heading">N</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Navimov</h3>
+        <p class="brand-seo">Navimov Affiliate Deals</p>
+        <p class="brand-desc">Health and wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Needs no Label</h3>
+        <p class="brand-seo">Needs no Label Affiliate Deals</p>
+        <p class="brand-desc">Ethical and sustainable clothing.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">NeuroScent</h3>
+        <p class="brand-seo">NeuroScent Affiliate Deals</p>
+        <p class="brand-desc">Fragrance and wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">New Era Cap</h3>
+        <p class="brand-seo">New Era Cap Affiliate Deals</p>
+        <p class="brand-desc">Official supplier of MLB, NBA and streetwear-style fitted and snapback caps.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Newblinds</h3>
+        <p class="brand-seo">Newblinds Affiliate Deals</p>
+        <p class="brand-desc">Made-to-measure blinds.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Nextbase</h3>
+        <p class="brand-seo">Nextbase Affiliate Deals</p>
+        <p class="brand-desc">Dash cams and driving safety technology.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">NMN Bio</h3>
+        <p class="brand-seo">NMN Bio Affiliate Deals</p>
+        <p class="brand-desc">Longevity and anti-ageing supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">No 98 Beauty</h3>
+        <p class="brand-seo">No 98 Beauty Affiliate Deals</p>
+        <p class="brand-desc">Beauty products and cosmetics.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Norigaze</h3>
+        <p class="brand-seo">Norigaze Affiliate Deals</p>
+        <p class="brand-desc">Health and wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Northline Home</h3>
+        <p class="brand-seo">Northline Home Affiliate Deals</p>
+        <p class="brand-desc">Home and interiors products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Nourish London</h3>
+        <p class="brand-seo">Nourish London Affiliate Deals</p>
+        <p class="brand-desc">Health food and wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Nutrinixity</h3>
+        <p class="brand-seo">Nutrinixity Affiliate Deals</p>
+        <p class="brand-desc">Sports nutrition and supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">NYSM Fit</h3>
+        <p class="brand-seo">NYSM Fit Affiliate Deals</p>
+        <p class="brand-desc">Fitness clothing and activewear.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-O">
+      <h2 class="letter-heading">O</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Ophelia Eternity Jewellery</h3>
+        <p class="brand-seo">Ophelia Eternity Jewellery Affiliate Deals</p>
+        <p class="brand-desc">Jewellery and fine gifts.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Optimum Nutrition</h3>
+        <p class="brand-seo">Optimum Nutrition Affiliate Deals</p>
+        <p class="brand-desc">One of the world&#x27;s best-known sports nutrition brands — protein powders, bars and supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Oxford Online Pharmacy</h3>
+        <p class="brand-seo">Oxford Online Pharmacy Affiliate Deals</p>
+        <p class="brand-desc">Online pharmacy for prescriptions and healthcare.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-P">
+      <h2 class="letter-heading">P</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Paco Perfumerias</h3>
+        <p class="brand-seo">Paco Perfumerias Affiliate Deals</p>
+        <p class="brand-desc">Perfume and fragrance retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Padeldogs</h3>
+        <p class="brand-seo">Padeldogs Affiliate Deals</p>
+        <p class="brand-desc">Padel racquets and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Palm Tree Skin</h3>
+        <p class="brand-seo">Palm Tree Skin Affiliate Deals</p>
+        <p class="brand-desc">Skincare and beauty products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Papersmiths</h3>
+        <p class="brand-seo">Papersmiths Affiliate Deals</p>
+        <p class="brand-desc">Stationery, notebooks and desk accessories retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Parcel ABC</h3>
+        <p class="brand-seo">Parcel ABC Affiliate Deals</p>
+        <p class="brand-desc">Parcel delivery comparison service.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Park BCP</h3>
+        <p class="brand-seo">Park BCP Affiliate Deals</p>
+        <p class="brand-desc">Airport parking bookings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Park Holidays</h3>
+        <p class="brand-seo">Park Holidays Affiliate Deals</p>
+        <p class="brand-desc">UK holiday park breaks and static caravan holidays by the coast.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Pathedits</h3>
+        <p class="brand-seo">Pathedits Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from Pathedits for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Patrol Store</h3>
+        <p class="brand-seo">Patrol Store Affiliate Deals</p>
+        <p class="brand-desc">Outdoor and tactical-style clothing and gear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">PAWD Drinks</h3>
+        <p class="brand-seo">PAWD Drinks Affiliate Deals</p>
+        <p class="brand-desc">Soft drinks and beverages.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Pharmacy First</h3>
+        <p class="brand-seo">Pharmacy First Affiliate Deals</p>
+        <p class="brand-desc">Online pharmacy for prescriptions and healthcare.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Pixie Dixie</h3>
+        <p class="brand-seo">Pixie Dixie Affiliate Deals</p>
+        <p class="brand-desc">Gifts and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">PlusShop</h3>
+        <p class="brand-seo">PlusShop Affiliate Deals</p>
+        <p class="brand-desc">General merchandise and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Pott&#x27;d</h3>
+        <p class="brand-seo">Pott&#x27;d Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Power Tools Direct</h3>
+        <p class="brand-seo">Power Tools Direct Affiliate Deals</p>
+        <p class="brand-desc">Tools, equipment and building supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Professional Building Supplies</h3>
+        <p class="brand-seo">Professional Building Supplies Affiliate Deals</p>
+        <p class="brand-desc">Building and trade supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Proviz</h3>
+        <p class="brand-seo">Proviz Affiliate Deals</p>
+        <p class="brand-desc">High-visibility cycling and running gear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Purple Parking</h3>
+        <p class="brand-seo">Purple Parking Affiliate Deals</p>
+        <p class="brand-desc">Pre-booked airport parking across UK airports, with meet-and-greet options.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Purr and Mutt</h3>
+        <p class="brand-seo">Purr and Mutt Affiliate Deals</p>
+        <p class="brand-desc">Pet food, accessories and supplies.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">PVC Cladding</h3>
+        <p class="brand-seo">PVC Cladding Affiliate Deals</p>
+        <p class="brand-desc">PVC cladding and building materials.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-Q">
+      <h2 class="letter-heading">Q</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Quickplay UK</h3>
+        <p class="brand-seo">Quickplay UK Affiliate Deals</p>
+        <p class="brand-desc">Playground and outdoor play equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Quzo</h3>
+        <p class="brand-seo">Quzo Affiliate Deals</p>
+        <p class="brand-desc">Drinks and spirits.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-R">
+      <h2 class="letter-heading">R</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Raw Beauty Lab</h3>
+        <p class="brand-seo">Raw Beauty Lab Affiliate Deals</p>
+        <p class="brand-desc">Natural and organic beauty products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Ready Steady Bed</h3>
+        <p class="brand-seo">Ready Steady Bed Affiliate Deals</p>
+        <p class="brand-desc">Beds and mattresses.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">RecoSauna</h3>
+        <p class="brand-seo">RecoSauna Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from RecoSauna for Logicard members.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Reef Sandals</h3>
+        <p class="brand-seo">Reef Sandals Affiliate Deals</p>
+        <p class="brand-desc">Beach and outdoor sandals and footwear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Renogy</h3>
+        <p class="brand-seo">Renogy Affiliate Deals</p>
+        <p class="brand-desc">Solar panels and portable power equipment for home, van and off-grid use.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Rentaroof</h3>
+        <p class="brand-seo">Rentaroof Affiliate Deals</p>
+        <p class="brand-desc">Roofing services and materials.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Reward Flight Finder</h3>
+        <p class="brand-seo">Reward Flight Finder Affiliate Deals</p>
+        <p class="brand-desc">Flight comparison and reward flight bookings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Ribble Cycles</h3>
+        <p class="brand-seo">Ribble Cycles Affiliate Deals</p>
+        <p class="brand-desc">British bicycle manufacturer, known for made-to-order road, gravel and e-bikes.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Ritual and Flow</h3>
+        <p class="brand-seo">Ritual and Flow Affiliate Deals</p>
+        <p class="brand-desc">Wellness and self-care products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">River Island</h3>
+        <p class="brand-seo">River Island Affiliate Deals</p>
+        <p class="brand-desc">British high street fashion retailer for women&#x27;s, men&#x27;s and kids&#x27; clothing.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Road Angelo</h3>
+        <p class="brand-seo">Road Angelo Affiliate Deals</p>
+        <p class="brand-desc">Motoring accessories and products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Rocket Expresso</h3>
+        <p class="brand-seo">Rocket Expresso Affiliate Deals</p>
+        <p class="brand-desc">Italian-made espresso machines and coffee equipment.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-S">
+      <h2 class="letter-heading">S</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Scottish Fine Soaps</h3>
+        <p class="brand-seo">Scottish Fine Soaps Affiliate Deals</p>
+        <p class="brand-desc">Bath and shower essentials.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Scribbler</h3>
+        <p class="brand-seo">Scribbler Affiliate Deals</p>
+        <p class="brand-desc">Cards, gifts and stationery known for bold, funny and unconventional designs.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Sedley</h3>
+        <p class="brand-seo">Sedley Affiliate Deals</p>
+        <p class="brand-desc">Homeware and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Shake that Weight</h3>
+        <p class="brand-seo">Shake that Weight Affiliate Deals</p>
+        <p class="brand-desc">Weight-loss shakes and meal replacements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Shark</h3>
+        <p class="brand-seo">Shark Affiliate Deals</p>
+        <p class="brand-desc">Vacuum cleaners, steam mops and home cleaning appliances.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Shespot Sexual Wellness</h3>
+        <p class="brand-seo">Shespot Sexual Wellness Affiliate Deals</p>
+        <p class="brand-desc">Sexual wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Showerblocks</h3>
+        <p class="brand-seo">Showerblocks Affiliate Deals</p>
+        <p class="brand-desc">Bathroom and shower fittings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">SimplyExcess.com</h3>
+        <p class="brand-seo">SimplyExcess.com Affiliate Deals</p>
+        <p class="brand-desc">Clearance and excess stock deals.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">SIRUI</h3>
+        <p class="brand-seo">SIRUI Affiliate Deals</p>
+        <p class="brand-desc">Camera tripods and photography equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Skin Deep</h3>
+        <p class="brand-seo">Skin Deep Affiliate Deals</p>
+        <p class="brand-desc">Skincare products and treatments.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Smile White</h3>
+        <p class="brand-seo">Smile White Affiliate Deals</p>
+        <p class="brand-desc">Teeth whitening products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">SoSoftBeds</h3>
+        <p class="brand-seo">SoSoftBeds Affiliate Deals</p>
+        <p class="brand-desc">Beds and mattresses.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Spabreaks</h3>
+        <p class="brand-seo">Spabreaks Affiliate Deals</p>
+        <p class="brand-desc">Spa day and spa break bookings at hotels and resorts across the UK.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Spice Kitchen</h3>
+        <p class="brand-seo">Spice Kitchen Affiliate Deals</p>
+        <p class="brand-desc">Spices, spice blends and cooking kits.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Sport It First</h3>
+        <p class="brand-seo">Sport It First Affiliate Deals</p>
+        <p class="brand-desc">Sports equipment and clothing.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Spotlight Oral Care</h3>
+        <p class="brand-seo">Spotlight Oral Care Affiliate Deals</p>
+        <p class="brand-desc">Oral care and teeth whitening products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Squiggle will</h3>
+        <p class="brand-seo">Squiggle will Affiliate Deals</p>
+        <p class="brand-desc">Will-writing services.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Stand 4 Socks</h3>
+        <p class="brand-seo">Stand 4 Socks Affiliate Deals</p>
+        <p class="brand-desc">Socks and clothing accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Starlight Beds</h3>
+        <p class="brand-seo">Starlight Beds Affiliate Deals</p>
+        <p class="brand-desc">Beds and mattresses.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Starselect</h3>
+        <p class="brand-seo">Starselect Affiliate Deals</p>
+        <p class="brand-desc">Lifestyle and gift products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Stattics</h3>
+        <p class="brand-seo">Stattics Affiliate Deals</p>
+        <p class="brand-desc">Lifestyle and gift products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Stormforce Gaming</h3>
+        <p class="brand-seo">Stormforce Gaming Affiliate Deals</p>
+        <p class="brand-desc">Gaming PCs and computer hardware.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Sunjoy UK</h3>
+        <p class="brand-seo">Sunjoy UK Affiliate Deals</p>
+        <p class="brand-desc">Garden shelters, gazebos, pergolas and carports for year-round outdoor living.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Superbreak</h3>
+        <p class="brand-seo">Superbreak Affiliate Deals</p>
+        <p class="brand-desc">UK short breaks, hotel stays and city getaways.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Supplements Sanctuary</h3>
+        <p class="brand-seo">Supplements Sanctuary Affiliate Deals</p>
+        <p class="brand-desc">Sports nutrition, vitamins and supplements.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Susamusa</h3>
+        <p class="brand-seo">Susamusa Affiliate Deals</p>
+        <p class="brand-desc">Handmade jewellery.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-T">
+      <h2 class="letter-heading">T</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Tails</h3>
+        <p class="brand-seo">Tails Affiliate Deals</p>
+        <p class="brand-desc">Tailored pet food subscriptions.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Tantaly</h3>
+        <p class="brand-seo">Tantaly Affiliate Deals</p>
+        <p class="brand-desc">Adult lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Team RH</h3>
+        <p class="brand-seo">Team RH Affiliate Deals</p>
+        <p class="brand-desc">Fitness apparel and equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Tenth Muse</h3>
+        <p class="brand-seo">Tenth Muse Affiliate Deals</p>
+        <p class="brand-desc">Gifts and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Beauty Store</h3>
+        <p class="brand-seo">The Beauty Store Affiliate Deals</p>
+        <p class="brand-desc">Beauty products, makeup and skincare.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Bottle Club</h3>
+        <p class="brand-seo">The Bottle Club Affiliate Deals</p>
+        <p class="brand-desc">Spirits, wine and gift sets — including personalised and branded bottles.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Care Pharmacy</h3>
+        <p class="brand-seo">The Care Pharmacy Affiliate Deals</p>
+        <p class="brand-desc">Online pharmacy for prescriptions and healthcare.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Foam People</h3>
+        <p class="brand-seo">The Foam People Affiliate Deals</p>
+        <p class="brand-desc">Foam and cushioning products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Fold London</h3>
+        <p class="brand-seo">The Fold London Affiliate Deals</p>
+        <p class="brand-desc">Furniture, homeware and interiors.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Happy Puzzle</h3>
+        <p class="brand-seo">The Happy Puzzle Affiliate Deals</p>
+        <p class="brand-desc">Jigsaw puzzles and brain teasers.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Leveraged Years</h3>
+        <p class="brand-seo">The Leveraged Years Affiliate Deals</p>
+        <p class="brand-desc">Financial education and coaching.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Outlet Shop</h3>
+        <p class="brand-seo">The Outlet Shop Affiliate Deals</p>
+        <p class="brand-desc">Discounted fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The SABI</h3>
+        <p class="brand-seo">The SABI Affiliate Deals</p>
+        <p class="brand-desc">Fashion and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Shirt Company</h3>
+        <p class="brand-seo">The Shirt Company Affiliate Deals</p>
+        <p class="brand-desc">Shirts and formalwear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Storage Bay</h3>
+        <p class="brand-seo">The Storage Bay Affiliate Deals</p>
+        <p class="brand-desc">Storage solutions for home and office.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">The Towel Shop</h3>
+        <p class="brand-seo">The Towel Shop Affiliate Deals</p>
+        <p class="brand-desc">Towels and home textiles.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Theatre Tickets Direct</h3>
+        <p class="brand-seo">Theatre Tickets Direct Affiliate Deals</p>
+        <p class="brand-desc">Discounted tickets for West End and UK theatre shows.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Thompson &amp; Morgan</h3>
+        <p class="brand-seo">Thompson &amp; Morgan Affiliate Deals</p>
+        <p class="brand-desc">British seed, plant and gardening specialist with over 160 years of history.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Tinney&#x27;s Toys</h3>
+        <p class="brand-seo">Tinney&#x27;s Toys Affiliate Deals</p>
+        <p class="brand-desc">Toys and games for children.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Tiny Lux</h3>
+        <p class="brand-seo">Tiny Lux Affiliate Deals</p>
+        <p class="brand-desc">Fine jewellery and accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Tirendo</h3>
+        <p class="brand-seo">Tirendo Affiliate Deals</p>
+        <p class="brand-desc">Online tyre retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Today&#x27;s Lifestyle</h3>
+        <p class="brand-seo">Today&#x27;s Lifestyle Affiliate Deals</p>
+        <p class="brand-desc">Lifestyle products and deals.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Toputure</h3>
+        <p class="brand-seo">Toputure Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Tower Housewares</h3>
+        <p class="brand-seo">Tower Housewares Affiliate Deals</p>
+        <p class="brand-desc">Kitchen and home appliances.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Trek Expert</h3>
+        <p class="brand-seo">Trek Expert Affiliate Deals</p>
+        <p class="brand-desc">Outdoor, hiking and camping gear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Trusty</h3>
+        <p class="brand-seo">Trusty Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Ttfone</h3>
+        <p class="brand-seo">Ttfone Affiliate Deals</p>
+        <p class="brand-desc">Mobile phones designed for older or vulnerable users.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Turbopass UK</h3>
+        <p class="brand-seo">Turbopass UK Affiliate Deals</p>
+        <p class="brand-desc">City tourist passes and attraction bundles.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Two Wombats</h3>
+        <p class="brand-seo">Two Wombats Affiliate Deals</p>
+        <p class="brand-desc">Children&#x27;s clothing and accessories.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-U">
+      <h2 class="letter-heading">U</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Ultrahuman Healthcare</h3>
+        <p class="brand-seo">Ultrahuman Healthcare Affiliate Deals</p>
+        <p class="brand-desc">Health tracking wearables and metabolic health products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Urban Sunglasses</h3>
+        <p class="brand-seo">Urban Sunglasses Affiliate Deals</p>
+        <p class="brand-desc">Sunglasses and eyewear.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-V">
+      <h2 class="letter-heading">V</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Vanotiumshop</h3>
+        <p class="brand-seo">Vanotiumshop Affiliate Deals</p>
+        <p class="brand-desc">Home fragrance and candle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Vape Sourcing Direct</h3>
+        <p class="brand-seo">Vape Sourcing Direct Affiliate Deals</p>
+        <p class="brand-desc">Vaping products and e-liquids.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Vapoholic</h3>
+        <p class="brand-seo">Vapoholic Affiliate Deals</p>
+        <p class="brand-desc">Vaping products and e-liquids.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Vegums</h3>
+        <p class="brand-seo">Vegums Affiliate Deals</p>
+        <p class="brand-desc">Vegan supplements and wellness products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Vintage Wine Gifts</h3>
+        <p class="brand-seo">Vintage Wine Gifts Affiliate Deals</p>
+        <p class="brand-desc">Personalised and vintage-dated wine, champagne and spirit gifts.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">VIP Cars</h3>
+        <p class="brand-seo">VIP Cars Affiliate Deals</p>
+        <p class="brand-desc">Airport car hire comparison and booking service.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Virtual College</h3>
+        <p class="brand-seo">Virtual College Affiliate Deals</p>
+        <p class="brand-desc">Online training courses and qualifications.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Vivere London</h3>
+        <p class="brand-seo">Vivere London Affiliate Deals</p>
+        <p class="brand-desc">Hammocks and outdoor relaxation furniture.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-W">
+      <h2 class="letter-heading">W</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Warranty Wise</h3>
+        <p class="brand-seo">Warranty Wise Affiliate Deals</p>
+        <p class="brand-desc">Extended warranty cover for appliances and electronics.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Watch &amp; Watch</h3>
+        <p class="brand-seo">Watch &amp; Watch Affiliate Deals</p>
+        <p class="brand-desc">Watches and accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Watch Enclave</h3>
+        <p class="brand-seo">Watch Enclave Affiliate Deals</p>
+        <p class="brand-desc">Pre-owned and luxury watch retailer.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Waterdrop Filter</h3>
+        <p class="brand-seo">Waterdrop Filter Affiliate Deals</p>
+        <p class="brand-desc">Water filtration systems and filter jugs.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Waterstones</h3>
+        <p class="brand-seo">Waterstones Affiliate Deals</p>
+        <p class="brand-desc">The UK&#x27;s largest dedicated book retailer, in stores and online.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Waterworld Sports</h3>
+        <p class="brand-seo">Waterworld Sports Affiliate Deals</p>
+        <p class="brand-desc">Watersports equipment.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Webbs Motorcycles</h3>
+        <p class="brand-seo">Webbs Motorcycles Affiliate Deals</p>
+        <p class="brand-desc">Motorcycle dealer and accessories.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Weightworld</h3>
+        <p class="brand-seo">Weightworld Affiliate Deals</p>
+        <p class="brand-desc">Online retailer of vitamins, supplements and weight-management products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Weird Fish</h3>
+        <p class="brand-seo">Weird Fish Affiliate Deals</p>
+        <p class="brand-desc">British lifestyle clothing brand for men and women.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Willow Parking</h3>
+        <p class="brand-seo">Willow Parking Affiliate Deals</p>
+        <p class="brand-desc">Airport parking bookings.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Workout for less</h3>
+        <p class="brand-seo">Workout for less Affiliate Deals</p>
+        <p class="brand-desc">Fitness equipment and activewear.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">World Businesses for Sale</h3>
+        <p class="brand-seo">World Businesses for Sale Affiliate Deals</p>
+        <p class="brand-desc">Business-for-sale listings and marketplace.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">WorldSIM</h3>
+        <p class="brand-seo">WorldSIM Affiliate Deals</p>
+        <p class="brand-desc">International SIM cards and roaming plans.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-X">
+      <h2 class="letter-heading">X</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Xshred</h3>
+        <p class="brand-seo">Xshred Affiliate Deals</p>
+        <p class="brand-desc">Fitness and supplement products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">XY London</h3>
+        <p class="brand-seo">XY London Affiliate Deals</p>
+        <p class="brand-desc">Jewellery and accessories.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-Y">
+      <h2 class="letter-heading">Y</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Yale Store</h3>
+        <p class="brand-seo">Yale Store Affiliate Deals</p>
+        <p class="brand-desc">Yale — home security, locks and smart alarm systems.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Your Co-op phone broadband</h3>
+        <p class="brand-seo">Your Co-op phone broadband Affiliate Deals</p>
+        <p class="brand-desc">Mobile and broadband deals.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Your Parking Space</h3>
+        <p class="brand-seo">Your Parking Space Affiliate Deals</p>
+        <p class="brand-desc">Marketplace for pre-booking parking spaces near airports, stations and events.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Your Pet Nutrition</h3>
+        <p class="brand-seo">Your Pet Nutrition Affiliate Deals</p>
+        <p class="brand-desc">Pet food and nutrition.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">YourHeights</h3>
+        <p class="brand-seo">YourHeights Affiliate Deals</p>
+        <p class="brand-desc">Exclusive discounts and offers from YourHeights for Logicard members.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-Z">
+      <h2 class="letter-heading">Z</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">Zabble</h3>
+        <p class="brand-seo">Zabble Affiliate Deals</p>
+        <p class="brand-desc">Lifestyle and general merchandise.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">Zonky</h3>
+        <p class="brand-seo">Zonky Affiliate Deals</p>
+        <p class="brand-desc">Loans and personal finance.</p>
+      </div>
+      </div>
+    </section>
+
+    <section class="letter-section" id="letter-num">
+      <h2 class="letter-heading">0-9</h2>
+      <div class="brand-grid">
+      <div class="brand-card">
+        <h3 class="brand-name">47 Skin</h3>
+        <p class="brand-seo">47 Skin Affiliate Deals</p>
+        <p class="brand-desc">Skincare products designed for active lifestyles.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">5pm.co.uk</h3>
+        <p class="brand-seo">5pm.co.uk Affiliate Deals</p>
+        <p class="brand-desc">Home and lifestyle products.</p>
+      </div>
+      <div class="brand-card">
+        <h3 class="brand-name">8 Wines</h3>
+        <p class="brand-seo">8 Wines Affiliate Deals</p>
+        <p class="brand-desc">Wine subscription and retailer.</p>
+      </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="cta-band">
+    <h2>Not a Logicard member yet?</h2>
+    <p>Join free and start unlocking discounts across every brand on this page.</p>
+    <a href="/signup.html" class="cta-btn">Join Logicard Free</a>
+  </div>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">Join Free</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+  </footer>
+
+</body>
+</html>
