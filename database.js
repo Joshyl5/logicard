@@ -4,9 +4,26 @@ const bcrypt   = require('bcryptjs');
 const MEMBERSHIP_START = 10010121;
 
 // ── Connection pool ────────────────────────────────────────────
+// max: how many simultaneous DB connections this one server instance may
+// open. Default (unset) is only 10, which queues up fast under real traffic
+// (e.g. many members loading the dashboard/offers around the same time).
+// Override via DB_POOL_MAX in Railway if the Postgres plan's own connection
+// ceiling allows more headroom (check plan limits before raising further —
+// this number times the number of app instances must stay under that).
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false,
+  max: parseInt(process.env.DB_POOL_MAX, 10) || 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
+});
+
+// Without this handler, an idle pooled connection that drops (network blip,
+// DB restart/failover) throws an *uncaught* error that crashes the entire
+// Node process — not just the one request using it. Logging it here instead
+// keeps the server up; the pool transparently replaces the dead connection.
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle Postgres client:', err);
 });
 
 // ── Schema setup (runs once on start) ─────────────────────────
