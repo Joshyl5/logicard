@@ -558,6 +558,14 @@ const NAV_OPTIONS_BY_PAGE = {
   '/food-drink.html':          { activeDropdown: 'food-drink' },
   '/fashion.html':             { activeDropdown: 'fashion' },
   '/gifts-flowers.html':       { activeDropdown: 'gifts-flowers' },
+  '/login.html':                {},
+  '/signup.html':               {},
+  '/forgot-password.html':      {},
+  '/reset-password.html':       {},
+  '/deals.html':                {},
+  '/privacy.html':              {},
+  '/terms.html':                {},
+  '/workforce-recognition.html': {},
 };
 
 app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
@@ -936,6 +944,14 @@ app.delete('/api/admin/adverts/:id', requireAdmin, async (req, res) => {
 });
 
 // ── Export OTP gate ────────────────────────────────────────────
+const publicOffersLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please try again shortly.' },
+});
+
 const exportOtpLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 3,
@@ -1419,6 +1435,19 @@ function filterOffersForMember(offers, memberGender) {
   if (!memberGender) return offers;
   return offers.filter(o => !o.targetGender || o.targetGender === memberGender);
 }
+
+// ── Public deal teasers (homepage "Member Deals" section) ────────
+// Unlike the closed-group /api/offers below, this exposes a public
+// preview of featured offers for logged-out visitors — merchant, title,
+// category, discount headline and image only. No voucher code or
+// affiliate URL is ever returned here, and claiming still requires
+// signing up and verifying, same as it always has.
+app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
+  const offers = (await getFeaturedOffers()).filter(o => !o.targetGender);
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl }) => ({
+    id, merchantName, title, description, category, discountText, imageUrl,
+  })));
+});
 
 // ── Offers (closed-group — verified members only) ───────────────
 app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {

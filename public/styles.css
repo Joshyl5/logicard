@@ -587,107 +587,18 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   min-height: 100vh;
 }
 
-/* ── Site header (shared across every page) ──────────────────── */
-.site-header-wrap {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-}
-.site-header {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 24px;
-  padding: 16px 40px;
-  background: #071d40;
-  border-bottom: 1px solid rgba(255,179,0,0.15);
-  box-shadow: 0 2px 16px rgba(0,0,0,0.35);
-}
-.site-header-logo {
-  grid-column: 1;
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  border: 2.5px solid rgba(255,179,0,0.55);
-  padding: 9px 18px;
-  border-radius: 6px;
-  background: rgba(255,255,255,0.05);
-  box-shadow: 0 0 14px rgba(255,179,0,0.12);
-  text-decoration: none;
-  font-size: 26px;
-  font-weight: 900;
-  letter-spacing: -1px;
-  line-height: 1;
-}
-.site-header-logo .logi { color: #fff; }
-.site-header-logo .card { color: #FFB300; }
-.site-header-tagline {
-  grid-column: 2;
-  justify-self: stretch;
-  text-align: center;
-  font-size: 14px;
-  color: rgba(255,255,255,0.6);
-  white-space: nowrap;
-  overflow: hidden;
-  min-width: 0;
-  text-overflow: ellipsis;
-}
-.site-header-divider { color: rgba(255,179,0,0.5); margin: 0 8px; }
-.site-header-actions {
-  grid-column: 3;
-  justify-self: end;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
-}
-.site-header-signin {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.75);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.site-header-signin:hover { color: var(--white); }
-.site-header-join {
-  background: #FFB300;
-  color: #071d40;
-  font-weight: 800;
-  font-size: 13px;
-  padding: 9px 18px;
-  border-radius: 6px;
-  text-decoration: none;
-  transition: background 0.15s;
-}
-.site-header-join:hover { background: #E09A00; }
-.site-subbar {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 8px 40px;
-  background: rgba(255,255,255,0.03);
-  border-bottom: 1px solid rgba(255,179,0,0.08);
-}
-.site-subbar-back {
-  font-size: 13px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.6);
-  text-decoration: none;
-  transition: color 0.15s;
-}
-.site-subbar-back:hover { color: var(--white); }
-@media (max-width: 700px) {
-  .site-header { padding: 12px 20px; }
-  .site-header-tagline { display: none; }
-  .site-header-actions { gap: 10px; }
-  .site-subbar { padding: 8px 20px; }
-}
-@media (max-width: 380px) {
-  .site-header-logo { font-size: 22px; padding: 7px 14px; }
-  .site-header-join { padding: 8px 14px; font-size: 12px; }
-  .site-header-signin { font-size: 13px; }
-}
+/* ── Site header ── moved to /nav.css (single source, see templates/nav.js).
+   Pages using SHARED_NAV must also <link rel="stylesheet" href="/nav.css">.
+
+   nav.css defaults the header to position:sticky, which is right for a
+   normal top-to-bottom page. The pages that load THIS stylesheet
+   (login/signup/forgot/reset-password/admin) are different: .login-page
+   below centers its content with display:flex, which would drag a
+   sticky (in-flow) header down into the middle of the viewport with it.
+   The original design avoided that by taking the header out of flow
+   entirely with position:fixed — restore that here, scoped to these
+   pages only, rather than changing nav.css's default for everyone. */
+.site-header-wrap { position: fixed; left: 0; right: 0; }
 
 .back-link {
   display: flex;
@@ -767,7 +678,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 135px 24px 24px;
+  padding: 118px 24px 24px; /* clears the fixed header+subbar (~110px) above */
   overflow: hidden;
 }
 

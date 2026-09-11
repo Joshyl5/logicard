@@ -1,35 +1,81 @@
-/* ── Shared site header / category nav / mobile menu ──
+/* ── Shared site header ──
    Single source for the block templates/nav.js renders server-side into
-   every page that includes <!-- SHARED_NAV -->. Edit once, applies everywhere. */
+   every page that includes <!-- SHARED_NAV -->. Edit once, applies everywhere.
+   Single-row layout, styled after TYC's nav pattern (logo · tabs · Login/Join)
+   in Logicard's own navy/gold palette. */
 
 .site-header-wrap { position: sticky; top: 0; z-index: 100; }
-.site-header { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 24px; padding: 16px 40px; background: var(--navy); border-bottom: 1px solid rgba(255,179,0,0.15); box-shadow: 0 2px 16px rgba(0,0,0,0.35); }
-.site-header-logo { grid-column: 1; justify-self: start; display: inline-flex; align-items: center; flex-shrink: 0; border: 2.5px solid rgba(255,179,0,0.55); padding: 9px 18px; border-radius: 6px; background: rgba(255,255,255,0.05); box-shadow: 0 0 14px rgba(255,179,0,0.12); text-decoration: none; font-size: 26px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
-.site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--orange); }
-.site-header-tagline { grid-column: 2; justify-self: stretch; text-align: center; font-size: 14px; color: var(--white); white-space: nowrap; overflow: hidden; min-width: 0; text-overflow: ellipsis; }
-.site-header-divider { color: rgba(255,179,0,0.5); margin: 0 8px; }
-.site-header-actions { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
-.site-header-signin { font-size: 14px; font-weight: 600; color: var(--white); text-decoration: none; transition: color 0.15s; }
-.site-header-signin:hover { color: var(--white); }
-.site-header-join { background: var(--orange); color: var(--navy-deep); font-weight: 800; font-size: 13px; padding: 9px 18px; border-radius: 6px; text-decoration: none; transition: background 0.15s; }
-.site-header-join:hover { background: var(--orange-dark); }
-.category-nav { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); border-bottom: 1px solid rgba(7,29,64,0.15); padding: 10px 40px; min-height: 56px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 6px; }
-.category-nav a { color: var(--navy); text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 14px; border-radius: 6px; white-space: nowrap; transition: background 0.15s, color 0.15s; }
-.category-nav a:hover { background: rgba(7,29,64,0.08); }
-.category-nav a.cat-nav-cta { display: inline-flex; align-items: center; gap: 6px; background: #1a9c4a; border: 1px solid #14853d; color: var(--white); padding: 8px 16px; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); } .category-nav a.cat-nav-cta:hover { background: #159141; } .category-nav a.cat-nav-cta.active { background: #1a9c4a; color: var(--white); }
-.category-nav a.active { background: rgba(7,29,64,0.15); color: var(--navy); }
-.category-nav-item { position: relative; }
-.category-nav-item:hover > a, .category-nav-item:focus-within > a { background: rgba(7,29,64,0.15); color: var(--navy); }
-.category-dropdown { display: none; position: absolute; top: 100%; left: 0; margin-top: 4px; background: var(--navy); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.35); padding: 16px 20px; grid-template-columns: repeat(2, minmax(170px, 1fr)); grid-auto-flow: column; grid-template-rows: repeat(5, auto); gap: 2px 28px; z-index: 200; }
-.category-nav-item:hover .category-dropdown, .category-nav-item:focus-within .category-dropdown { display: grid; }
-.category-dropdown a { padding: 7px 8px; font-size: 13.5px; font-weight: 600; color: var(--white); text-align: center; }
-.category-dropdown a:hover { color: var(--orange-dark); background: rgba(255,179,0,0.08); }
-.category-dropdown a.active { color: var(--orange-dark); }
-@media (max-width: 700px) {
-  .site-header { padding: 14px 20px; }
-  .site-header-tagline { display: none; }
-  .site-header-actions { gap: 10px; }
-  .category-nav { padding: 10px 12px; gap: 4px; }
-  .category-nav a { padding: 7px 10px; font-size: 13px; }
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 14px 40px;
+  background: var(--navy, #071d40);
+  border-bottom: 1px solid rgba(255,179,0,0.15);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.35);
 }
-@media (max-width: 380px) { .site-header-logo { font-size: 22px; padding: 7px 14px; } .site-header-join { padding: 8px 14px; font-size: 12px; } .site-header-signin { font-size: 13px; } }
+
+.site-header-logo { flex-shrink: 0; display: inline-flex; align-items: center; border: 2.5px solid rgba(255,179,0,0.55); padding: 8px 16px; border-radius: 6px; background: rgba(255,255,255,0.05); box-shadow: 0 0 14px rgba(255,179,0,0.12); text-decoration: none; font-size: 23px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+.site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--orange, #FFB300); }
+
+/* ── Nav tabs ── */
+.site-header-nav { flex: 1; display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.site-header-nav::-webkit-scrollbar { display: none; }
+.nav-item { position: relative; flex-shrink: 0; }
+.nav-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--white, #ffffff); text-decoration: none;
+  font-weight: 700; font-size: 14px; letter-spacing: 0.1px;
+  padding: 9px 16px; border-radius: 8px; white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-link:hover { background: rgba(255,255,255,0.07); }
+.nav-link.active { background: rgba(255,179,0,0.16); color: var(--orange, #FFB300); }
+.nav-chevron { transition: transform 0.15s ease; flex-shrink: 0; }
+.nav-item:hover .nav-chevron, .nav-item:focus-within .nav-chevron { transform: rotate(180deg); }
+
+/* ── Dropdowns ── */
+.nav-dropdown {
+  display: none;
+  position: absolute; top: 100%; left: 0; margin-top: 6px;
+  background: var(--navy, #071d40); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  padding: 14px; z-index: 200;
+  grid-template-columns: repeat(2, minmax(170px, 1fr));
+  gap: 2px 24px;
+}
+.nav-item:hover .nav-dropdown, .nav-item:focus-within .nav-dropdown { display: grid; }
+.nav-dropdown--single { grid-template-columns: 1fr; min-width: 210px; }
+.nav-dropdown a { padding: 8px 10px; font-size: 13.5px; font-weight: 600; color: var(--white, #ffffff); text-decoration: none; border-radius: 6px; white-space: nowrap; }
+.nav-dropdown a:hover { color: var(--orange-dark, #E09A00); background: rgba(255,179,0,0.08); }
+.nav-dropdown a.active { color: var(--orange-dark, #E09A00); }
+
+/* ── Right-hand actions ──
+   margin-left: auto pushes these to the right edge even on the minimal
+   headers (admin/checkout) that omit .site-header-nav entirely. */
+.site-header-actions { flex-shrink: 0; margin-left: auto; display: flex; align-items: center; gap: 16px; }
+.site-header-signin { font-size: 14px; font-weight: 600; color: var(--white, #ffffff); text-decoration: none; transition: color 0.15s; }
+.site-header-signin:hover { color: var(--orange, #FFB300); }
+.site-header-join { background: var(--orange, #FFB300); color: var(--navy-deep, #071d40); font-weight: 800; font-size: 13px; padding: 10px 20px; border-radius: 100px; text-decoration: none; transition: background 0.15s; }
+.site-header-join:hover { background: var(--orange-dark, #E09A00); }
+
+/* ── Sub-bar (optional page-specific "< Back" strip, placed right after
+   SHARED_NAV — used by login/signup/checkout and other narrow-flow pages) ── */
+.site-subbar { display: flex; justify-content: flex-end; align-items: center; padding: 8px 40px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,179,0,0.08); }
+.site-subbar-back { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; }
+.site-subbar-back:hover { color: var(--white, #ffffff); }
+
+@media (max-width: 900px) {
+  .site-header { gap: 16px; padding: 12px 20px; }
+  .nav-link { padding: 8px 12px; font-size: 13.5px; }
+}
+
+@media (max-width: 700px) {
+  .site-header { padding: 12px 16px; }
+  .site-header-logo { font-size: 19px; padding: 6px 12px; }
+  .site-header-actions { gap: 10px; }
+  .site-header-signin { display: none; }
+  .site-header-join { padding: 9px 16px; font-size: 12.5px; }
+  .nav-link { padding: 7px 10px; font-size: 13px; }
+  .site-subbar { padding: 8px 20px; }
+}
