@@ -10,6 +10,7 @@ const crypto    = require('crypto');
 const path      = require('path');
 const fs        = require('fs');
 const multer    = require('multer');
+const jwt       = require('jsonwebtoken');
 const { Resend } = require('resend');
 const {
   createMember, emailExists, findMemberByEmail,
@@ -404,6 +405,14 @@ const loginLimiter = rateLimit({
   message: { error: 'Too many login attempts. Please wait 15 minutes and try again.' },
 });
 
+const mobileLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Please wait 15 minutes and try again.' },
+});
+
 const signupLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
   max: 5,
@@ -587,6 +596,34 @@ function requireAdmin(req, res, next) {
   if (req.session && req.session.isAdmin) return next();
   if (req.path.startsWith('/api/')) return res.status(401).json({ error: 'Admin access required' });
   res.redirect('/admin-login.html');
+}
+
+// ── Mobile auth (JWT, separate from the web session/cookie auth above) ──
+// The React Native app has no cookie jar shared with the web, so it
+// authenticates with a bearer token instead. This intentionally does not
+// touch req.session at all — it's a parallel path that reuses the same
+// bcrypt password check and DB helpers, keyed by membershipNumber like
+// everywhere else. See SECURITY.md: session/cookie config is locked, so
+// mobile auth lives entirely alongside it, not inside it.
+const JWT_SECRET = process.env.JWT_SECRET || 'logicard-dev-jwt-secret';
+const MOBILE_TOKEN_EXPIRY = '30d';
+
+function requireMobileAuth(req, res, next) {
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Bearer ')) return res.status(401).json({ error: 'Not authenticated' });
+  try {
+    const payload = jwt.verify(auth.slice(7), JWT_SECRET);
+    req.membershipNumber = payload.sub;
+    next();
+  } catch (e) {
+    res.status(401).json({ error: 'Session expired. Please log in again.' });
+  }
+}
+
+async function requireMobileVerified(req, res, next) {
+  const member = await getMemberByNumber(req.membershipNumber);
+  if (member && member.verified) return next();
+  res.status(403).json({ error: 'pending_verification' });
 }
 
 // ── Member pages ───────────────────────────────────────────────
@@ -1473,6 +1510,105 @@ app.get('/api/adverts/:id/go', requireAuth, async (req, res) => {
   incrementAdvertClicks(id).catch(err => console.error('Advert click tracking failed:', err.message));
 });
 
+// ── Mobile API (React Native app) ─────────────────────────────────
+// Same underlying data/DB helpers as the web routes above, re-exposed under
+// /api/mobile/* with JWT auth instead of session cookies. Kept as separate
+// routes (rather than teaching requireAuth two auth styles) so the existing
+// web routes/tests are untouched and this can be reviewed/rate-limited on
+// its own.
+app.post('/api/mobile/login', mobileLoginLimiter, async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: 'Email and password are required.' });
+
+  const member = await findMemberByEmail(email);
+  if (!member || !member.passwordHash) return res.status(401).json({ error: 'Invalid email or password.' });
+  if (!bcrypt.compareSync(password, member.passwordHash)) return res.status(401).json({ error: 'Invalid email or password.' });
+
+  const token = jwt.sign({ sub: member.membershipNumber }, JWT_SECRET, { expiresIn: MOBILE_TOKEN_EXPIRY });
+  res.json({
+    token,
+    firstName: member.firstName,
+    verified: member.verified,
+  });
+});
+
+app.get('/api/mobile/me', requireMobileAuth, async (req, res) => {
+  const member = await getMemberByNumber(req.membershipNumber);
+  if (!member) return res.status(404).json({ error: 'Member not found' });
+  res.json({
+    membershipNumber:   member.membershipNumber,
+    firstName:          member.firstName,
+    lastName:           member.lastName,
+    email:              member.email,
+    verified:           member.verified,
+    verificationStatus: member.verificationStatus,
+  });
+});
+
+app.get('/api/mobile/offer-categories', requireMobileAuth, (_req, res) => res.json(OFFER_CATEGORIES));
+
+app.get('/api/mobile/offers', requireMobileAuth, requireMobileVerified, async (req, res) => {
+  const member = await getMemberByNumber(req.membershipNumber);
+  const offers = filterOffersForMember(await getActiveOffers(), member ? member.gender : null);
+  const offerIds = offers.map(o => o.id);
+  const [statsMap, myCodes, waitlisted] = await Promise.all([
+    getCouponStatsForOffers(offerIds),
+    getMemberClaimedCodes(req.membershipNumber, offerIds),
+    getMemberWaitlistedOfferIds(req.membershipNumber, offerIds),
+  ]);
+
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl }) => {
+    const stats = statsMap[id];
+    return {
+      id, merchantName, title, description, category, discountText, imageUrl,
+      voucherCode:    stats ? undefined : voucherCode,
+      hasCodePool:    !!stats,
+      codesAvailable: stats ? stats.available : null,
+      myCode:         myCodes[id] || null,
+      onWaitlist:     waitlisted.has(id),
+    };
+  }));
+});
+
+app.post('/api/mobile/offers/:id/claim', requireMobileAuth, requireMobileVerified, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer.' });
+
+  const offer = await getOfferById(id);
+  if (!offer || !offer.isActive) return res.status(404).json({ error: 'This offer is no longer available.' });
+
+  const result = await claimCouponCode(id, req.membershipNumber);
+  if (result.outOfStock) return res.status(410).json({ error: 'All codes for this offer have been claimed — check back soon.' });
+  res.json({ code: result.code });
+});
+
+app.post('/api/mobile/offers/:id/waitlist', requireMobileAuth, requireMobileVerified, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer.' });
+
+  const offer = await getOfferById(id);
+  if (!offer || !offer.isActive) return res.status(404).json({ error: 'This offer is no longer available.' });
+
+  await registerOfferInterest(id, req.membershipNumber);
+  res.json({ success: true });
+});
+
+// Mobile gets the affiliate URL back as JSON (instead of a redirect) so the
+// app can open it via the OS browser/Linking API — a bare fetch() in the app
+// can't follow a redirect out to an external site the way a <a href> can.
+app.get('/api/mobile/offers/:id/go', requireMobileAuth, requireMobileVerified, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer.' });
+
+  const offer = await getOfferById(id);
+  if (!offer || !offer.isActive) return res.status(404).json({ error: 'This offer is no longer available.' });
+
+  res.json({ url: offer.affiliateUrl });
+
+  incrementOfferClicks(id).catch(err => console.error('Offer click tracking failed:', err.message));
+  recordOfferRedemption(id, req.membershipNumber).catch(err => console.error('Offer redemption tracking failed:', err.message));
+});
+
 // ── Signup field validation ──────────────────────────────────────
 // Allowlists shaped to what each field can legitimately contain — this is a
 // defense-in-depth layer alongside output escaping (not a replacement for
@@ -1645,6 +1781,7 @@ const PURGE_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
 app.listen(PORT, () => {
   console.log(`Logicard running at http://localhost:${PORT}`);
   if (!process.env.SESSION_SECRET)      console.warn('  > SESSION_SECRET not set — using insecure default. Set this in Railway Variables.');
+  if (!process.env.JWT_SECRET)          console.warn('  > JWT_SECRET not set — using insecure default. Set this in Railway Variables before the mobile app goes live.');
   if (!process.env.ADMIN_EMAIL)         console.warn('  > ADMIN_EMAIL not set — admin OTP and member reports will not be delivered.');
   if (!process.env.ADMIN_PASSWORD)      console.warn('  > ADMIN_PASSWORD not set — admin panel is inaccessible.');
   if (!process.env.R2_BUCKET_NAME)      console.warn('  > R2_* env vars not set — verification documents are being saved to local disk (not persistent on Railway).');

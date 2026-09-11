@@ -47,6 +47,13 @@ Every sensitive endpoint has its own tuned limiter — not one generic limiter r
 **Payments**
 - Stripe PaymentIntents are created server-side; the server re-verifies `status === 'succeeded'` directly against Stripe's API before creating a member — client-reported success is never trusted on its own.
 
+**Mobile API (JWT auth, added for the React Native app)**
+- The web app authenticates with session cookies (above); the mobile app has no shared cookie jar, so `/api/mobile/*` routes authenticate with a `Authorization: Bearer <jwt>` header instead — a parallel path, not a change to the session/cookie config.
+- `requireMobileAuth` verifies the JWT (`jsonwebtoken`, `JWT_SECRET` env var) and sets `req.membershipNumber`; `requireMobileVerified` mirrors `requireVerified`. Every `/api/mobile/*` handler reuses the exact same DB helpers and bcrypt check as its web counterpart — no parallel business logic, only a parallel entry point.
+- Tokens are long-lived (30 days) and there is no refresh/rotation or server-side revocation list yet — logging out on mobile just discards the token client-side. Acceptable for an MVP single-device app; revisit if the app needs "log out all devices" or faster-expiring sessions.
+- `mobileLoginLimiter` mirrors the web `loginLimiter` (5 attempts / 15 min).
+- `JWT_SECRET` falls back to an insecure dev default with a boot warning if unset, matching `SESSION_SECRET`'s existing pattern — must be set in Railway before real members use the app.
+
 **Secrets**
 - `.env` is gitignored and has never been committed.
 - All credentials (`SESSION_SECRET`, `ADMIN_PASSWORD`, `RESEND_API_KEY`, `R2_*`, `STRIPE_SECRET_KEY`, `DATABASE_URL`) are Railway environment variables, never hardcoded.
