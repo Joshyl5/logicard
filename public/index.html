@@ -123,14 +123,25 @@
       text-transform: uppercase;
     }
     .hero h1 {
-      font-size: clamp(40px, 5.5vw, 76px);
+      font-size: clamp(34px, 4.6vw, 64px);
       font-weight: 900;
       color: var(--white);
-      line-height: 1.04;
+      line-height: 1.12;
       margin-bottom: 24px;
       letter-spacing: -1px;
     }
     .hero h1 .yellow { color: var(--orange); }
+    .hero h1 .hero-rotate-line { display: block; }
+    .hero-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.82em;
+      margin-left: 4px;
+      vertical-align: -0.08em;
+      background: var(--orange);
+      animation: hero-blink 0.9s step-end infinite;
+    }
+    @keyframes hero-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     .hero-sub {
       font-size: 19px;
       color: rgba(255,255,255,0.72);
@@ -971,10 +982,47 @@
   <!-- Hero -->
   <section class="hero">
     <div class="hero-content">
-      <h1>If you work in logistics, <span class="yellow">Logicard is for you.</span></h1>
+      <h1><span class="hero-rotate-line">Logicard is built for:</span><span class="hero-rotate-line yellow" id="heroRotateText">HGV Drivers</span><span class="hero-cursor" aria-hidden="true"></span></h1>
       <p class="hero-sub">The UK's dedicated rewards and discount service for those working and retired from, the logistics industry, which includes; Warehousing, Transport, Storage of goods &amp; more.</p>
     </div>
   </section>
+  <script>
+    (function () {
+      var roles = ['HGV Drivers', 'Transport Ops Teams', 'Warehouse Workers', 'Sea Freight Workers', 'Air Freight Workers', 'E-Commerce', '3PL'];
+      var el = document.getElementById('heroRotateText');
+      if (!el) return;
+      var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) return; // leave the first role static, no animation
+
+      var roleIndex = 0, charIndex = 0, deleting = false;
+      var TYPE_MS = 65, DELETE_MS = 32, HOLD_MS = 1800, NEXT_PAUSE_MS = 350;
+
+      function tick() {
+        var current = roles[roleIndex];
+        if (!deleting) {
+          charIndex++;
+          el.textContent = current.slice(0, charIndex);
+          if (charIndex === current.length) {
+            deleting = false;
+            setTimeout(function () { deleting = true; tick(); }, HOLD_MS);
+            return;
+          }
+          setTimeout(tick, TYPE_MS);
+        } else {
+          charIndex--;
+          el.textContent = current.slice(0, charIndex);
+          if (charIndex === 0) {
+            deleting = false;
+            roleIndex = (roleIndex + 1) % roles.length;
+            setTimeout(tick, NEXT_PAUSE_MS);
+            return;
+          }
+          setTimeout(tick, DELETE_MS);
+        }
+      }
+      setTimeout(tick, HOLD_MS);
+    })();
+  </script>
 
   <!-- Photo Wall -->
   <section class="photo-wall-section">
