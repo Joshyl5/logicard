@@ -58,12 +58,32 @@
 .site-header-signin:hover { color: var(--orange, #FFB300); }
 .site-header-join { background: var(--orange, #FFB300); color: var(--navy-deep, #071d40); font-weight: 800; font-size: 13px; padding: 10px 20px; border-radius: 100px; text-decoration: none; transition: background 0.15s; }
 .site-header-join:hover { background: var(--orange-dark, #E09A00); }
+.site-header-cta {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #1a9c4a; border: 1px solid #14853d; color: var(--white, #ffffff);
+  font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 100px;
+  text-decoration: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: background 0.15s;
+}
+.site-header-cta:hover, .site-header-cta.active { background: #159141; }
 
-/* ── Sub-bar (optional page-specific "< Back" strip, placed right after
-   SHARED_NAV — used by login/signup/checkout and other narrow-flow pages) ── */
-.site-subbar { display: flex; justify-content: flex-end; align-items: center; padding: 8px 40px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,179,0,0.08); }
-.site-subbar-back { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.15s; }
-.site-subbar-back:hover { color: var(--white, #ffffff); }
+/* ── Back link (optional, placed right after SHARED_NAV — used by
+   login/signup/checkout and other narrow-flow pages). A bold standalone
+   link, not a full-width banner — a whole coloured strip for one small
+   link read as wasted chrome. ── */
+.site-subbar { display: flex; justify-content: flex-end; padding: 16px 40px 0; }
+.site-subbar-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 14px; font-weight: 800; color: var(--white, #ffffff);
+  text-decoration: none; transition: color 0.15s;
+}
+.site-subbar-back:hover { color: var(--orange, #FFB300); }
+
+@media (max-width: 1100px) {
+  /* The green CTA repeats "Who Qualifies?" in the About dropdown, so it's
+     the first thing to go when space gets tight. */
+  .site-header-cta { display: none; }
+}
 
 @media (max-width: 900px) {
   .site-header { gap: 16px; padding: 12px 20px; }
@@ -77,5 +97,5 @@
   .site-header-signin { display: none; }
   .site-header-join { padding: 9px 16px; font-size: 12.5px; }
   .nav-link { padding: 7px 10px; font-size: 13px; }
-  .site-subbar { padding: 8px 20px; }
+  .site-subbar { padding: 12px 20px 0; }
 }

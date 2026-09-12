@@ -3,7 +3,7 @@ function cls(active, key) {
 }
 
 // active: 'categories' | 'things-to-do' | 'shopping-cards' | 'e-learning' |
-//         'financial-wellbeing' | 'mental-wellbeing' | 'qualify' | null
+//         'financial-wellbeing' | 'mental-wellbeing' | 'qualify' | 'about' | null
 // activeDropdown: 'food-drink' | 'fashion' (the 2 shop-category pages
 //                 represented in the Deals dropdown) | null
 // tagline: unused — kept as an accepted option so existing call sites
@@ -15,11 +15,12 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
   // Top-level tabs: which group is "active" bundles several `active` values
   // into one parent tab, same way TYC highlights DEALS/ABOUT/MORE as a whole.
   const dealsTabCls = active === 'categories' ? ' active' : '';
-  const aboutTabCls = active === 'qualify' ? ' active' : '';
+  const aboutTabCls = (active === 'about' || active === 'qualify') ? ' active' : '';
   const moreKeys = ['things-to-do', 'shopping-cards', 'e-learning', 'financial-wellbeing', 'mental-wellbeing'];
   const moreTabCls = moreKeys.includes(active) ? ' active' : '';
 
   const chevronSvg = '<svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
+  const checkSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
   return `
   <div class="site-header-wrap">
@@ -43,8 +44,9 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
         </div>
 
         <div class="nav-item">
-          <a href="/qualify.html" class="nav-link${aboutTabCls}">About${chevronSvg}</a>
+          <a href="/about.html" class="nav-link${aboutTabCls}">About${chevronSvg}</a>
           <div class="nav-dropdown nav-dropdown--single">
+            <a href="/about.html"${cls(active, 'about')}>About Us</a>
             <a href="/#how-it-works">How It Works</a>
             <a href="/qualify.html"${cls(active, 'qualify')}>Who Qualifies?</a>
             <a href="/#our-story">Our Story</a>
@@ -68,6 +70,7 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
       </div>
 
       <div class="site-header-actions">
+        <a href="/qualify.html" class="site-header-cta${active === 'qualify' ? ' active' : ''}">${checkSvg}Check Your Eligibility Now</a>
         <a href="/login.html" class="site-header-signin">Log In</a>
         <a href="/signup.html" class="site-header-join">Join Now</a>
       </div>

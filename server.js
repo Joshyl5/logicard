@@ -510,6 +510,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/',                            changefreq: 'weekly',  priority: '1.0' },
   { path: '/signup.html',                 changefreq: 'monthly', priority: '0.9' },
   { path: '/qualify.html',                changefreq: 'monthly', priority: '0.8' },
+  { path: '/about.html',                  changefreq: 'monthly', priority: '0.7' },
   { path: '/categories.html',             changefreq: 'monthly', priority: '0.7' },
   { path: '/beauty-wellness.html',        changefreq: 'monthly', priority: '0.6' },
   { path: '/children-baby.html',          changefreq: 'monthly', priority: '0.6' },
@@ -566,6 +567,7 @@ const NAV_OPTIONS_BY_PAGE = {
   '/privacy.html':              {},
   '/terms.html':                {},
   '/workforce-recognition.html': {},
+  '/about.html':                 { active: 'about' },
 };
 
 app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
