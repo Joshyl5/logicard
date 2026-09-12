@@ -14,12 +14,12 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --orange: #FFB300;
-      --navy-deep: #04040d;
+      --navy-deep: #071d40; /* alias of --navy, per BRAND.md */
       --navy: #071d40;
     }
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(160deg, #04040d 0%, #071d40 60%, #04040d 100%);
+      background: var(--navy);
       color: #fff;
       min-height: 100vh;
     }
@@ -69,7 +69,7 @@
       border-bottom: 1px solid rgba(255,179,0,0.2);
     }
     .p-section h3 {
-      font-size: 14px; font-weight: 700; color: var(--orange);
+      font-size: 16px; font-weight: 700; color: var(--orange);
       margin: 18px 0 8px;
     }
     .p-section p {

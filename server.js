@@ -20,6 +20,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -511,6 +512,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/signup.html',                 changefreq: 'monthly', priority: '0.9' },
   { path: '/qualify.html',                changefreq: 'monthly', priority: '0.8' },
   { path: '/about.html',                  changefreq: 'monthly', priority: '0.7' },
+  { path: '/partnerships.html',           changefreq: 'monthly', priority: '0.7' },
   { path: '/categories.html',             changefreq: 'monthly', priority: '0.7' },
   { path: '/beauty-wellness.html',        changefreq: 'monthly', priority: '0.6' },
   { path: '/children-baby.html',          changefreq: 'monthly', priority: '0.6' },
@@ -568,6 +570,7 @@ const NAV_OPTIONS_BY_PAGE = {
   '/terms.html':                {},
   '/workforce-recognition.html': {},
   '/about.html':                 { active: 'about' },
+  '/partnerships.html':          { active: 'partnerships' },
 };
 
 app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
@@ -679,6 +682,10 @@ app.get('/admin/offers', requireAdmin, (_req, res) => {
 
 app.get('/admin/adverts', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-adverts.html'));
+});
+
+app.get('/admin/partner-brands', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-partner-brands.html'));
 });
 
 app.get('/admin/verifications', requireAdmin, (_req, res) => {
@@ -944,6 +951,50 @@ app.delete('/api/admin/adverts/:id', requireAdmin, async (req, res) => {
   if (!deleted) return res.status(404).json({ error: 'Advert not found.' });
   res.json({ success: true });
 });
+
+// ── Partner brands (Partnerships page "Our Partners" grid) ───────
+// Deliberately lighter than an offer — just a name and a logo, no deal
+// fields required. Use this to show a brand is a confirmed partner before
+// there's a live discount to attach; add a proper offer once there is one.
+function validPartnerBrandPayload(body) {
+  const { brandName, logoUrl } = body;
+  if (!brandName || !String(brandName).trim()) return 'Brand name is required.';
+  if (!logoUrl || !String(logoUrl).trim()) return 'Logo URL is required.';
+  if (!/^https?:\/\//i.test(logoUrl)) return 'Logo URL must start with http:// or https://.';
+  return null;
+}
+
+app.get('/api/admin/partner-brands', requireAdmin, async (_req, res) => {
+  res.json(await getAllPartnerBrands());
+});
+
+app.post('/api/admin/partner-brands', requireAdmin, async (req, res) => {
+  const error = validPartnerBrandPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  const brand = await createPartnerBrand(req.body);
+  res.json(brand);
+});
+
+app.put('/api/admin/partner-brands/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid brand id.' });
+  const error = validPartnerBrandPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  const brand = await updatePartnerBrand(id, req.body);
+  if (!brand) return res.status(404).json({ error: 'Partner brand not found.' });
+  res.json(brand);
+});
+
+app.delete('/api/admin/partner-brands/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid brand id.' });
+  const deleted = await deletePartnerBrand(id);
+  if (!deleted) return res.status(404).json({ error: 'Partner brand not found.' });
+  res.json({ success: true });
+});
+// (its public GET counterpart, /api/public/partner-brands, lives further
+// down next to /api/public/featured-offers — both need publicOffersLimiter,
+// declared below)
 
 // ── Export OTP gate ────────────────────────────────────────────
 const publicOffersLimiter = rateLimit({
@@ -1449,6 +1500,13 @@ app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) =>
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl }) => ({
     id, merchantName, title, description, category, discountText, imageUrl,
   })));
+});
+
+// Powers the "Our Partners" grid on partnerships.html — same public,
+// no-auth pattern as the deal teasers above.
+app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
+  const brands = await getActivePartnerBrands();
+  res.json(brands.map(({ id, brandName, logoUrl }) => ({ id, brandName, logoUrl })));
 });
 
 // ── Offers (closed-group — verified members only) ───────────────

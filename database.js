@@ -229,6 +229,24 @@ async function initDb() {
       updated_at   TIMESTAMPTZ DEFAULT NOW()
     )
   `);
+
+  // Partner brand logos shown on the public Partnerships page's "Our
+  // Partners" grid — just a name and a logo, no deal attached. Deliberately
+  // separate from `offers`, which always requires deal-shaped fields
+  // (discount text, affiliate URL). Use this for "brand is confirmed but
+  // there's no live offer yet"; once there's a real deal, add it as a
+  // proper offer instead.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS partner_brands (
+      id           SERIAL PRIMARY KEY,
+      brand_name   TEXT NOT NULL,
+      logo_url     TEXT NOT NULL,
+      is_active    BOOLEAN DEFAULT TRUE,
+      sort_order   INTEGER DEFAULT 0,
+      created_at   TIMESTAMPTZ DEFAULT NOW(),
+      updated_at   TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -331,6 +349,19 @@ function toAdvert(row) {
     clickCount: row.click_count,
     createdAt:  row.created_at,
     updatedAt:  row.updated_at,
+  };
+}
+
+function toPartnerBrand(row) {
+  if (!row) return null;
+  return {
+    id:        row.id,
+    brandName: row.brand_name,
+    logoUrl:   row.logo_url,
+    isActive:  row.is_active,
+    sortOrder: row.sort_order,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
   };
 }
 
@@ -572,6 +603,54 @@ async function deleteAdvert(id) {
 
 async function incrementAdvertClicks(id) {
   await pool.query('UPDATE adverts SET click_count = click_count + 1 WHERE id = $1', [id]);
+}
+
+// ── Partner brands (Partnerships page "Our Partners" grid) ───────
+async function getActivePartnerBrands() {
+  const r = await pool.query(
+    'SELECT * FROM partner_brands WHERE is_active = true ORDER BY sort_order ASC, created_at DESC, id ASC'
+  );
+  return r.rows.map(toPartnerBrand);
+}
+
+async function getAllPartnerBrands() {
+  const r = await pool.query('SELECT * FROM partner_brands ORDER BY sort_order ASC, created_at DESC, id ASC');
+  return r.rows.map(toPartnerBrand);
+}
+
+async function getPartnerBrandById(id) {
+  const r = await pool.query('SELECT * FROM partner_brands WHERE id = $1', [id]);
+  return toPartnerBrand(r.rows[0]);
+}
+
+async function createPartnerBrand(data) {
+  const { brandName, logoUrl, isActive = true, sortOrder = 0 } = data;
+
+  const r = await pool.query(`
+    INSERT INTO partner_brands (brand_name, logo_url, is_active, sort_order)
+    VALUES ($1,$2,$3,$4)
+    RETURNING *
+  `, [brandName, logoUrl, !!isActive, sortOrder]);
+
+  return toPartnerBrand(r.rows[0]);
+}
+
+async function updatePartnerBrand(id, data) {
+  const { brandName, logoUrl, isActive = true, sortOrder = 0 } = data;
+
+  const r = await pool.query(`
+    UPDATE partner_brands SET
+      brand_name = $1, logo_url = $2, is_active = $3, sort_order = $4, updated_at = NOW()
+    WHERE id = $5
+    RETURNING *
+  `, [brandName, logoUrl, !!isActive, sortOrder, id]);
+
+  return toPartnerBrand(r.rows[0]);
+}
+
+async function deletePartnerBrand(id) {
+  const r = await pool.query('DELETE FROM partner_brands WHERE id = $1', [id]);
+  return r.rowCount > 0;
 }
 
 // ── Offer redemption tracking ────────────────────────────────────
@@ -850,6 +929,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,

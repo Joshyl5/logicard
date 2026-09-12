@@ -3,7 +3,8 @@ function cls(active, key) {
 }
 
 // active: 'categories' | 'things-to-do' | 'shopping-cards' | 'e-learning' |
-//         'financial-wellbeing' | 'mental-wellbeing' | 'qualify' | 'about' | null
+//         'financial-wellbeing' | 'mental-wellbeing' | 'qualify' | 'about' |
+//         'partnerships' | null
 // activeDropdown: 'food-drink' | 'fashion' (the 2 shop-category pages
 //                 represented in the Deals dropdown) | null
 // tagline: unused — kept as an accepted option so existing call sites
@@ -54,7 +55,7 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
           </div>
         </div>
 
-        <a href="/signup.html" class="nav-link">Partnerships</a>
+        <a href="/partnerships.html" class="nav-link${active === 'partnerships' ? ' active' : ''}">Partnerships</a>
         <a href="/signup.html" class="nav-link">Join Logicard</a>
 
         <div class="nav-item">
