@@ -155,8 +155,8 @@
     .deals-cats-heading { font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
     .deals-cats-sub { color: rgba(255,255,255,0.55); font-size: 15px; margin-bottom: 40px; }
     .deals-cats-grid {
-      max-width: 1160px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+      max-width: 1400px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(9, 1fr); gap: 14px;
     }
     .deals-cat-tile {
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
@@ -225,6 +225,9 @@
     footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.5); }
     footer a { color: rgba(255,255,255,0.5); }
 
+    @media (max-width: 1300px) {
+      .deals-cats-grid { grid-template-columns: repeat(6, 1fr); }
+    }
     @media (max-width: 1100px) {
       .deals-cats-grid { grid-template-columns: repeat(4, 1fr); }
     }
@@ -314,64 +317,40 @@
     <p class="deals-cats-sub">Everything available through your Logicard membership, in one place.</p>
     <div class="deals-cats-grid">
       <a class="deals-cat-tile" href="/signup.html">
+        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94z"/></svg></span>
+        <span>Trade Supplies &amp; Tools</span>
+      </a>
+      <a class="deals-cat-tile" href="/signup.html">
+        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 13l1.5-5A2 2 0 016.4 6.5h11.2a2 2 0 011.9 1.5L21 13"/><rect x="2" y="13" width="20" height="6" rx="1"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span>
+        <span>Vehicles &amp; Motoring</span>
+      </a>
+      <a class="deals-cat-tile" href="/signup.html">
+        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 18h20"/></svg></span>
+        <span>Technology &amp; Office</span>
+      </a>
+      <a class="deals-cat-tile" href="/signup.html">
         <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
         <span>Home &amp; Garden</span>
-      </a>
-      <a class="deals-cat-tile" href="/fashion.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 001 .84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.14a1 1 0 001-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg></span>
-        <span>Fashion</span>
       </a>
       <a class="deals-cat-tile" href="/food-drink.html">
         <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M6 2v6M4 2v4a2 2 0 004 0V2M6 10v12"/><path d="M17 2c-1.7 1.5-3 4-3 6.5S15.3 12 17 12M17 2v20"/></svg></span>
         <span>Food &amp; Drink</span>
       </a>
-      <a class="deals-cat-tile" href="/signup.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg></span>
-        <span>Business</span>
-      </a>
-      <a class="deals-cat-tile" href="/signup.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="8" y1="16" x2="16" y2="8"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/></svg></span>
-        <span>Benefits</span>
+      <a class="deals-cat-tile" href="/fashion.html">
+        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 001 .84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.14a1 1 0 001-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg></span>
+        <span>Fashion &amp; Lifestyle</span>
       </a>
       <a class="deals-cat-tile" href="/signup.html">
         <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
-        <span>Travel</span>
-      </a>
-      <a class="deals-cat-tile" href="/beauty-wellness.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span>
-        <span>Health &amp; Beauty</span>
-      </a>
-      <a class="deals-cat-tile" href="/gifts-flowers.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M19 8v13H5V8"/><path d="M12 8c-1.5-4-6-4-6 0M12 8c1.5-4 6-4 6 0"/></svg></span>
-        <span>Gifting</span>
+        <span>Family, Leisure &amp; Travel</span>
       </a>
       <a class="deals-cat-tile" href="/signup.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M5 11l1.5-4.5A2 2 0 018.4 5h7.2a2 2 0 011.9 1.5L19 11"/><rect x="3" y="11" width="18" height="6" rx="1"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg></span>
-        <span>Motoring</span>
-      </a>
-      <a class="deals-cat-tile" href="/e-learning.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M12 3L1 8l11 5 9-4.1V15h2V8z"/><path d="M5 10.5V15c0 1.7 3.1 3 7 3s7-1.3 7-3v-4.5"/></svg></span>
-        <span>E-learning</span>
-      </a>
-      <a class="deals-cat-tile" href="/signup.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 18h20"/></svg></span>
-        <span>Tech &amp; Electronic</span>
+        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg></span>
+        <span>Business Services</span>
       </a>
       <a class="deals-cat-tile" href="/things-to-do.html">
         <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 012-2h14a2 2 0 012 2v2a2 2 0 000 4v2a2 2 0 01-2 2H5a2 2 0 01-2-2v-2a2 2 0 000-4z"/><path d="M9 6v12" stroke-dasharray="2 2"/></svg></span>
-        <span>Days Out &amp; Entertainment</span>
-      </a>
-      <a class="deals-cat-tile" href="/financial-wellbeing.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
-        <span>Finance &amp; Insurance</span>
-      </a>
-      <a class="deals-cat-tile" href="/signup.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M4 8v8M2 10v4M20 8v8M22 10v4M6 12h12"/></svg></span>
-        <span>Sport &amp; Fitness</span>
-      </a>
-      <a class="deals-cat-tile" href="/mental-wellbeing.html">
-        <span class="deals-cat-tile-icon"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></span>
-        <span>Advice</span>
+        <span>Events &amp; Experiences</span>
       </a>
     </div>
   </section>
