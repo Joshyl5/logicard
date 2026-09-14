@@ -87,18 +87,22 @@ function renderBrandPage({ brand, offers }) {
     .bp-hero p { font-size: 16px; color: rgba(255,255,255,0.6); }
 
     .bp-offers { padding: 0 24px 88px; max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-    .bp-offer-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 28px; }
+    /* Gold band around the offers/coming-soon content — alternates with
+       the navy hero above and navy back-link area below, matching the
+       site-wide section-banding rule (homepage is the reference). */
+    .bp-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 8px 0 56px; }
+    .bp-offer-card { background: rgba(255,255,255,0.9); border: 1px solid rgba(7,29,64,0.1); border-radius: 16px; padding: 28px; }
     .bp-offer-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .bp-badge { font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75); padding: 5px 10px; border-radius: 100px; }
-    .bp-badge--exclusive { background: rgba(255,179,0,0.15); color: var(--orange); }
-    .bp-offer-title { font-size: 16px; color: rgba(255,255,255,0.85); line-height: 1.5; margin-bottom: 10px; }
-    .bp-offer-discount { font-size: 18px; font-weight: 800; color: var(--orange); margin-bottom: 20px; }
+    .bp-badge { font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px; background: rgba(7,29,64,0.06); color: rgba(7,29,64,0.75); padding: 5px 10px; border-radius: 100px; }
+    .bp-badge--exclusive { background: var(--navy); color: var(--orange); }
+    .bp-offer-title { font-size: 16px; color: rgba(7,29,64,0.85); line-height: 1.5; margin-bottom: 10px; }
+    .bp-offer-discount { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 20px; }
 
     .bp-soon-card {
       max-width: 560px; margin: 0 auto 88px; padding: 0 24px; text-align: center;
     }
-    .bp-soon-card h2 { font-size: 24px; font-weight: 900; margin-bottom: 14px; letter-spacing: -0.3px; }
-    .bp-soon-card p { font-size: 15.5px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 28px; }
+    .bp-soon-card h2 { font-size: 24px; font-weight: 900; margin-bottom: 14px; letter-spacing: -0.3px; color: var(--navy); }
+    .bp-soon-card p { font-size: 15.5px; color: rgba(7,29,64,0.7); line-height: 1.7; margin-bottom: 28px; }
 
     .bp-back { display: block; text-align: center; padding: 0 24px 56px; color: rgba(255,255,255,0.4); text-decoration: none; font-size: 14px; font-weight: 600; }
     .bp-back:hover { color: var(--white); }
@@ -114,7 +118,9 @@ function renderBrandPage({ brand, offers }) {
     <p>${offers.length ? 'Exclusive member deals, only for Logicard members.' : 'Confirmed Logicard partner — deal coming soon.'}</p>
   </div>
 
+  <section class="bp-gold-band">
   ${body}
+  </section>
 
   <a href="/partnerships.html" class="bp-back">&larr; Back to Partnerships</a>
 

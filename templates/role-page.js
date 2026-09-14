@@ -8,15 +8,19 @@ const NAV_HEAD = `
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     :root{--orange:#FFB300;--orange-dark:#E09A00;--navy:#071d40;--navy-deep:#04040d;--navy-mid:#0d3b80;--white:#fff;--text-muted:#666}
-    body{font-family:'Inter',Arial,sans-serif;color:var(--navy);background:var(--white)}
+    /* Navy hero -> gold body, matching the site-wide section-banding rule
+       (homepage is the reference). The body's text was already navy, which
+       turns out to already be the correct contrast color for a gold
+       background — only the background and CTA needed flipping. */
+    body{font-family:'Inter',Arial,sans-serif;color:var(--navy);background:linear-gradient(135deg,#FF8C00 0%,#FFB800 55%,#FF9200 100%)}
     .rp-hero{background:linear-gradient(140deg,#04040d 0%,#071d40 45%,#0d3b80 100%);color:#fff;padding:64px 24px;text-align:center}
     .rp-hero .eyebrow{color:var(--orange);font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:13px}
     .rp-hero h1{font-size:clamp(28px,4vw,42px);font-weight:900;margin:12px 0;letter-spacing:-0.5px}
     .rp-hero p{color:rgba(255,255,255,0.75);font-size:17px;max-width:640px;margin:0 auto}
     .rp-body{max-width:720px;margin:0 auto;padding:48px 24px;line-height:1.7;font-size:16px}
-    .rp-cta{display:inline-block;background:var(--orange);color:var(--navy);font-weight:800;padding:16px 36px;border-radius:6px;text-decoration:none;margin-top:16px}
-    .rp-cta:hover{background:var(--orange-dark)}
-    .rp-back{display:block;text-align:center;padding:24px;color:var(--text-muted);text-decoration:none}
+    .rp-cta{display:inline-block;background:var(--navy);color:var(--white);font-weight:800;padding:16px 36px;border-radius:6px;text-decoration:none;margin-top:16px}
+    .rp-cta:hover{background:var(--navy-mid)}
+    .rp-back{display:block;text-align:center;padding:24px;color:rgba(7,29,64,0.6);text-decoration:none}
   </style>`;
 
 function renderRolePage({ role, category }) {
