@@ -591,6 +591,9 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/signup.html',                 changefreq: 'monthly', priority: '0.9' },
   { path: '/qualify.html',                changefreq: 'monthly', priority: '0.8' },
   { path: '/about.html',                  changefreq: 'monthly', priority: '0.7' },
+  { path: '/how-it-works.html',           changefreq: 'monthly', priority: '0.6' },
+  { path: '/our-story.html',              changefreq: 'monthly', priority: '0.6' },
+  { path: '/faqs.html',                   changefreq: 'monthly', priority: '0.6' },
   { path: '/partnerships.html',           changefreq: 'monthly', priority: '0.7' },
   { path: '/categories.html',             changefreq: 'monthly', priority: '0.7' },
   { path: '/beauty-wellness.html',        changefreq: 'monthly', priority: '0.6' },
@@ -675,6 +678,9 @@ const NAV_OPTIONS_BY_PAGE = {
   '/terms.html':                {},
   '/workforce-recognition.html': {},
   '/about.html':                 { active: 'about' },
+  '/how-it-works.html':          { active: 'how-it-works' },
+  '/our-story.html':             { active: 'our-story' },
+  '/faqs.html':                  { active: 'faqs' },
   '/partnerships.html':          { active: 'partnerships' },
 };
 

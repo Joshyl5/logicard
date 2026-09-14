@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.8" />
+  <title>FAQs — Logicard</title>
+  <meta name="description" content="Frequently asked questions about Logicard — what it is, how to join, who qualifies, how eligibility is verified, and what discounts members can access." />
+  <link rel="canonical" href="https://logicard.co.uk/faqs.html" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Logicard?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Logicard is a discount membership card built exclusively for logistics workers, giving access to exclusive discounts across fuel, hotels, food, tech and more." }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I join?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sign up online in under 2 minutes, verify your eligibility, and get instant access to your membership and discounts." }
+      },
+      {
+        "@type": "Question",
+        "name": "Who can apply?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Logicard is open to anyone working in logistics, including drivers, warehouse staff, fleet managers, support staff and more." }
+      },
+      {
+        "@type": "Question",
+        "name": "How will my eligibility be verified?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Most members are verified instantly via a work email address. If you don't have one, you can upload a document instead, which is reviewed within around 7 days." }
+      },
+      {
+        "@type": "Question",
+        "name": "What discounts can I access with Logicard?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Members get access to over 150 discounts across categories including fuel, hotels, food, tech, fleet maintenance and more." }
+      }
+    ]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/nav.css?v=5" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy: #071d40; --navy-mid: #0d3b80; --orange: #FFB300; --orange-dark: #E09A00;
+      --white: #ffffff; --text-muted: #5b6577;
+      --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--orange); color: var(--navy);
+      padding: 16px 34px; font-weight: 900; font-size: 15px; letter-spacing: 0.3px;
+      text-decoration: none; border-radius: 4px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    /* Hero — navy */
+    .faq-hero { padding: 96px 24px 56px; text-align: center; }
+    .faq-hero h1 { font-size: clamp(32px, 4.8vw, 52px); font-weight: 900; letter-spacing: -1px; margin-bottom: 16px; }
+    .faq-hero p { font-size: 16.5px; color: rgba(255,255,255,0.65); max-width: 560px; margin: 0 auto; line-height: 1.65; }
+
+    /* Accordion — gold */
+    .faq-section { padding: 64px 24px 96px; background: var(--gold-grad); }
+    .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+    .faq-item {
+      background: var(--white); border-radius: 14px; overflow: hidden;
+      border: 1px solid rgba(7,29,64,0.06);
+    }
+    .faq-item summary {
+      list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 22px 26px; font-size: 16px; font-weight: 800; color: var(--navy); letter-spacing: -0.1px;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary .faq-plus {
+      flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(7,29,64,0.06); display: flex; align-items: center; justify-content: center;
+      position: relative; transition: transform 0.2s ease, background 0.2s ease;
+    }
+    .faq-item summary .faq-plus::before, .faq-item summary .faq-plus::after {
+      content: ''; position: absolute; background: var(--navy); border-radius: 2px;
+    }
+    .faq-item summary .faq-plus::before { width: 11px; height: 2px; }
+    .faq-item summary .faq-plus::after { width: 2px; height: 11px; }
+    .faq-item[open] summary .faq-plus { transform: rotate(45deg); background: rgba(255,179,0,0.18); }
+    .faq-item-body { padding: 0 26px 24px; font-size: 14.5px; color: var(--text-muted); line-height: 1.7; }
+    .faq-item-body a { color: var(--orange-dark); font-weight: 700; text-decoration: none; }
+    .faq-item-body a:hover { text-decoration: underline; }
+
+    /* CTA — navy */
+    .faq-cta { text-align: center; padding: 88px 24px; }
+    .faq-cta h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.6px; }
+    .faq-cta p { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 32px; }
+
+    .faq-footer { text-align: center; padding: 32px 24px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: rgba(255,255,255,0.35); }
+    .faq-footer a { text-decoration: none; color: rgba(255,255,255,0.5); }
+    .faq-footer a:hover { color: rgba(255,255,255,0.8); }
+
+    @media (max-width: 600px) {
+      .faq-hero { padding: 60px 20px 40px; }
+      .faq-section { padding: 48px 16px 72px; }
+      .faq-item summary { padding: 18px 20px; font-size: 15px; }
+      .faq-item-body { padding: 0 20px 20px; }
+      .faq-cta { padding: 56px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SHARED_NAV -->
+  <div class="site-subbar">
+    <a href="/" class="site-subbar-back">&lt; Back</a>
+  </div>
+
+  <div class="faq-hero">
+    <h1>FAQs</h1>
+    <p>Everything you need to know about joining and using Logicard. Can't find your answer? Get in touch and we'll help.</p>
+  </div>
+
+  <section class="faq-section">
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary>What is Logicard?<span class="faq-plus"></span></summary>
+        <div class="faq-item-body">Logicard is a discount membership card built exclusively for logistics workers, giving access to exclusive discounts across fuel, hotels, food, tech and more.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How do I join?<span class="faq-plus"></span></summary>
+        <div class="faq-item-body">Sign up online in under 2 minutes, verify your eligibility, and get instant access to your membership and discounts. <a href="/signup.html">Create your account →</a></div>
+      </details>
+      <details class="faq-item">
+        <summary>Who can apply?<span class="faq-plus"></span></summary>
+        <div class="faq-item-body">Logicard is open to anyone working in logistics, including drivers, warehouse staff, fleet managers, support staff and more. <a href="/qualify.html">See who qualifies →</a></div>
+      </details>
+      <details class="faq-item">
+        <summary>How will my eligibility be verified?<span class="faq-plus"></span></summary>
+        <div class="faq-item-body">Most members are verified instantly via a work email address. If you don't have one, you can upload a document instead — such as a payslip or company ID — which is reviewed within around 7 days.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What discounts can I access with Logicard?<span class="faq-plus"></span></summary>
+        <div class="faq-item-body">Members get access to over 150 discounts across categories including fuel, hotels, food, tech, fleet maintenance and more.</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="faq-cta">
+    <h2>Still have questions?</h2>
+    <p>Join Logicard today and start saving as a verified logistics worker.</p>
+    <a href="/signup.html" class="btn-primary">
+      Get Free Membership
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </section>
+
+  <footer class="faq-footer">
+    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">Join Free</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+  </footer>
+
+</body>
+</html>

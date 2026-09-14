@@ -4,7 +4,8 @@ function cls(active, key) {
 
 // active: 'categories' | 'things-to-do' | 'shopping-cards' | 'e-learning' |
 //         'financial-wellbeing' | 'mental-wellbeing' | 'logistics-news' |
-//         'qualify' | 'about' | 'partnerships' | null
+//         'qualify' | 'about' | 'how-it-works' | 'our-story' | 'faqs' |
+//         'partnerships' | null
 // activeDropdown: 'trade-supplies-tools' | 'vehicles-motoring' |
 //                 'technology-office' | 'home-garden' | 'food-drink' |
 //                 'fashion' | 'family-leisure-travel' | 'utilities-mobile' |
@@ -19,7 +20,8 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
   // Top-level tabs: which group is "active" bundles several `active` values
   // into one parent tab, same way TYC highlights DEALS/ABOUT/MORE as a whole.
   const dealsTabCls = active === 'categories' ? ' active' : '';
-  const aboutTabCls = (active === 'about' || active === 'qualify') ? ' active' : '';
+  const aboutKeys = ['about', 'qualify', 'how-it-works', 'our-story', 'faqs'];
+  const aboutTabCls = aboutKeys.includes(active) ? ' active' : '';
   const moreKeys = ['things-to-do', 'shopping-cards', 'e-learning', 'financial-wellbeing', 'mental-wellbeing', 'logistics-news'];
   const moreTabCls = moreKeys.includes(active) ? ' active' : '';
 
@@ -51,10 +53,10 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
           <a href="/about.html" class="nav-link${aboutTabCls}">About${chevronSvg}</a>
           <div class="nav-dropdown nav-dropdown--single">
             <a href="/about.html"${cls(active, 'about')}>About Us</a>
-            <a href="/#how-it-works">How It Works</a>
+            <a href="/how-it-works.html"${cls(active, 'how-it-works')}>How It Works</a>
             <a href="/qualify.html"${cls(active, 'qualify')}>Who Qualifies?</a>
-            <a href="/#our-story">Our Story</a>
-            <a href="/#faqs">FAQs</a>
+            <a href="/our-story.html"${cls(active, 'our-story')}>Our Story</a>
+            <a href="/faqs.html"${cls(active, 'faqs')}>FAQs</a>
           </div>
         </div>
 

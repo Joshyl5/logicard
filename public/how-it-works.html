@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=0.8" />
+  <title>How It Works — Logicard</title>
+  <meta name="description" content="How Logicard works — sign up free, join a genuinely closed group of verified logistics workers, and see how economies of scale get you real discounts other cards can't." />
+  <link rel="canonical" href="https://logicard.co.uk/how-it-works.html" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "How It Works — Logicard",
+    "url": "https://logicard.co.uk/how-it-works.html",
+    "description": "How Logicard works — sign up, join a closed group of verified logistics workers, and save through economies of scale.",
+    "isPartOf": { "@id": "https://logicard.co.uk/#website" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/nav.css?v=5" />
+  <style>
+    /* Flat navy / flat-gold only, per BRAND.md — same component system as
+       about.html / partnerships.html. Sections strictly alternate
+       navy -> gold, starting navy at the hero. The one photograph on this
+       page (economies-of-scale ecosystem shot) sits inside a contained,
+       rounded image card on a flat navy section rather than as a section
+       background, so the flat-fill rule for section backgrounds still holds. */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy: #071d40; --navy-mid: #0d3b80; --orange: #FFB300; --orange-dark: #E09A00;
+      --white: #ffffff; --text-muted: #5b6577;
+      --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--orange); color: var(--navy);
+      padding: 16px 34px; font-weight: 900; font-size: 15px; letter-spacing: 0.3px;
+      text-decoration: none; border-radius: 4px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .btn-primary.on-gold { background: var(--navy); color: var(--white); }
+    .btn-primary.on-gold:hover { background: var(--navy-mid); }
+
+    /* Hero — navy */
+    .hiw-hero { padding: 96px 24px 72px; text-align: center; }
+    .hiw-hero h1 { font-size: clamp(36px, 5.4vw, 60px); font-weight: 900; letter-spacing: -1.2px; margin-bottom: 18px; text-wrap: balance; }
+    .hiw-hero p { font-size: 17px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 620px; margin: 0 auto; }
+
+    /* ── Shared "eyebrow + h2 + lead" header used by the gold sections ── */
+    .section-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); opacity: 0.65; margin-bottom: 16px; }
+    .gold-section h2 { font-size: clamp(28px, 3.8vw, 42px); font-weight: 900; color: var(--navy); letter-spacing: -0.8px; margin-bottom: 18px; text-wrap: balance; }
+    .gold-section .lead { font-size: 16px; color: rgba(7,29,64,0.72); line-height: 1.75; max-width: 680px; margin: 0 auto 56px; }
+
+    /* ── Closed Group section — gold ── */
+    .cg-section { padding: 88px 24px 96px; background: var(--gold-grad); text-align: center; }
+    .cg-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; text-align: left; }
+    .cg-card { background: var(--white); border-radius: 20px; padding: 36px 30px; }
+    .cg-card-icon { width: 52px; height: 52px; border-radius: 14px; margin-bottom: 20px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); display: flex; align-items: center; justify-content: center; }
+    .cg-card-icon svg { width: 24px; height: 24px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .cg-card h3 { font-size: 17.5px; font-weight: 800; color: var(--navy); margin-bottom: 10px; letter-spacing: -0.2px; }
+    .cg-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+
+    /* ── Steps section — navy (cards stay white per the site's card system) ── */
+    .hiw-section { padding: 72px 24px 96px; background: var(--navy); }
+    .hiw-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
+    .hiw-step {
+      background: var(--white); border-radius: 20px; padding: 44px 32px 36px;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .hiw-step--featured { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); border: 1px solid rgba(255,179,0,0.25); }
+    .hiw-step-num { position: absolute; top: 16px; right: 22px; font-size: 64px; font-weight: 900; line-height: 1; color: rgba(7,29,64,0.06); letter-spacing: -2px; }
+    .hiw-step--featured .hiw-step-num { color: rgba(255,255,255,0.06); }
+    .hiw-step-icon {
+      width: 60px; height: 60px; border-radius: 16px; margin: 0 auto 24px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hiw-step--featured .hiw-step-icon { background: rgba(255,179,0,0.16); border: 1px solid rgba(255,179,0,0.35); }
+    .hiw-step-icon svg { width: 28px; height: 28px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hiw-step--featured .hiw-step-icon svg { stroke: var(--orange); }
+    .hiw-step h3 { font-size: 19px; font-weight: 800; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.2px; }
+    .hiw-step--featured h3 { color: var(--white); }
+    .hiw-step p { font-size: 14.5px; color: var(--text-muted); line-height: 1.65; margin-bottom: 22px; }
+    .hiw-step--featured p { color: rgba(255,255,255,0.6); }
+    .hiw-step-link { font-size: 14px; font-weight: 700; color: var(--orange-dark); text-decoration: none; }
+    .hiw-step--featured .hiw-step-link { color: var(--orange); }
+    .hiw-step-link:hover { text-decoration: underline; }
+
+    /* ── Economies of scale infographic — gold ── */
+    .eco-section { padding: 88px 24px 96px; background: var(--gold-grad); text-align: center; }
+    .eco-flow { display: flex; align-items: stretch; justify-content: center; gap: 0; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
+    .eco-node { background: var(--white); border-radius: 16px; padding: 26px 18px; width: 174px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .eco-node-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 14px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); display: flex; align-items: center; justify-content: center; }
+    .eco-node-icon svg { width: 20px; height: 20px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .eco-node-num { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: var(--orange-dark); text-transform: uppercase; margin-bottom: 6px; }
+    .eco-node h3 { font-size: 14.5px; font-weight: 800; color: var(--navy); margin-bottom: 6px; line-height: 1.3; }
+    .eco-node p { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
+    .eco-arrow { display: flex; align-items: center; justify-content: center; width: 34px; flex-shrink: 0; color: var(--navy); opacity: 0.4; }
+    .eco-arrow svg { width: 22px; height: 22px; stroke: var(--navy); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .eco-footnote { margin: 44px auto 0; font-size: 14.5px; color: rgba(7,29,64,0.65); max-width: 620px; line-height: 1.7; font-weight: 600; }
+
+    /* ── Ecosystem photo section — navy, photo in a contained card ── */
+    .epx-section { padding: 88px 24px 96px; background: var(--navy); }
+    .epx-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    .epx-text h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--white); letter-spacing: -0.6px; margin-bottom: 18px; text-wrap: balance; }
+    .epx-text p { font-size: 15.5px; color: rgba(255,255,255,0.65); line-height: 1.75; margin-bottom: 16px; }
+    .epx-photo { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+    .epx-photo img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 5; }
+    .epx-credit {
+      position: absolute; bottom: 12px; right: 14px; font-size: 10.5px;
+      color: rgba(255,255,255,0.6); background: rgba(7,29,64,0.55);
+      padding: 4px 10px; border-radius: 100px; text-decoration: none;
+    }
+    .epx-credit:hover { color: #fff; }
+
+    /* ── Final CTA — gold ── */
+    .hiw-cta { text-align: center; padding: 88px 24px; background: var(--gold-grad); }
+    .hiw-cta h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.6px; color: var(--navy); }
+    .hiw-cta p { font-size: 16px; color: rgba(7,29,64,0.7); margin-bottom: 32px; }
+
+    .hiw-footer { text-align: center; padding: 32px 24px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: rgba(255,255,255,0.35); }
+    .hiw-footer a { text-decoration: none; color: rgba(255,255,255,0.5); }
+    .hiw-footer a:hover { color: rgba(255,255,255,0.8); }
+
+    @media (max-width: 900px) {
+      .hiw-steps, .cg-cards { grid-template-columns: 1fr; gap: 18px; }
+      .hiw-section, .cg-section, .eco-section, .epx-section { padding: 56px 24px 72px; }
+      .epx-grid { grid-template-columns: 1fr; gap: 32px; }
+      .epx-photo img { aspect-ratio: 16 / 10; }
+      .eco-flow { flex-direction: column; }
+      .eco-arrow { transform: rotate(90deg); width: auto; height: 30px; margin: 2px 0; }
+      .eco-node { width: 100%; max-width: 320px; margin: 0 auto; }
+    }
+    @media (max-width: 600px) {
+      .hiw-hero { padding: 60px 20px 48px; }
+      .hiw-cta { padding: 56px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SHARED_NAV -->
+  <div class="site-subbar">
+    <a href="/" class="site-subbar-back">&lt; Back</a>
+  </div>
+
+  <div class="hiw-hero">
+    <h1>How It Works</h1>
+    <p>Join thousands of logistics workers already saving money on fuel, hotels, dining and more. It takes under 2 minutes to sign up — just £10/year. Use promo code FREE at checkout for your first year at £0.</p>
+  </div>
+
+  <!-- Closed Group explainer -->
+  <section class="cg-section gold-section">
+    <div class="section-eyebrow">Why we verify every member</div>
+    <h2>A closed group, by design</h2>
+    <p class="lead">Logicard isn't open to everyone — and that's deliberate. Keeping membership genuinely closed to verified logistics workers is what makes the discounts real, not just another public voucher code. It's a small trade that pays off for the people who keep the world moving.</p>
+    <div class="cg-cards">
+      <div class="cg-card">
+        <div class="cg-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <h3>Verified, not assumed</h3>
+        <p>Every member proves they work in logistics — instantly via a work email address, or through a quick document check. No public sign-up, no loopholes.</p>
+      </div>
+      <div class="cg-card">
+        <div class="cg-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v18"/>
+            <path d="M5 7l-3 7a4 4 0 008 0l-3-7"/>
+            <path d="M19 7l-3 7a4 4 0 008 0l-3-7"/>
+            <path d="M5 7h14"/>
+            <path d="M9 21h6"/>
+          </svg>
+        </div>
+        <h3>Trusted by our partners</h3>
+        <p>Because every member is genuinely verified, brands know exactly who they're reaching — and that trust is what lets them offer real, meaningful discounts.</p>
+      </div>
+      <div class="cg-card">
+        <div class="cg-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+            <path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        <h3>Built for the people who move everything</h3>
+        <p>Drivers, warehouse teams, fleet managers, support staff — Logicard exists for the people who keep the country's goods, and the wider world, moving.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hiw-section">
+    <div class="hiw-steps">
+      <div class="hiw-step">
+        <span class="hiw-step-num">01</span>
+        <div class="hiw-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+            <polyline points="17 21 12 16 7 21"/>
+            <line x1="12" y1="16" x2="12" y2="8"/>
+            <polyline points="8 12 12 8 16 12"/>
+          </svg>
+        </div>
+        <h3>Sign up free</h3>
+        <p>Create your Logicard account in under 2 minutes. Just £10/year — or use promo code FREE at checkout for your first year at no cost.</p>
+        <a href="/signup.html" class="hiw-step-link">Create account →</a>
+      </div>
+
+      <div class="hiw-step hiw-step--featured">
+        <span class="hiw-step-num">02</span>
+        <div class="hiw-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="7" width="20" height="14" rx="2"/>
+            <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
+            <line x1="12" y1="12" x2="12" y2="16"/>
+            <line x1="10" y1="14" x2="14" y2="14"/>
+          </svg>
+        </div>
+        <h3>Browse your deals</h3>
+        <p>Explore hundreds of exclusive offers across fuel, hotels, food, tech, fleet maintenance and more — all in one place, updated daily for Logicard members.</p>
+        <a href="/categories.html" class="hiw-step-link">See deals →</a>
+      </div>
+
+      <div class="hiw-step">
+        <span class="hiw-step-num">03</span>
+        <div class="hiw-step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
+          </svg>
+        </div>
+        <h3>Start saving</h3>
+        <p>Redeem deals instantly using your unique Logicard membership number. Save on every journey, every fill-up and every stay — every single day.</p>
+        <a href="/signup.html" class="hiw-step-link">Join today →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Economies of scale infographic -->
+  <section class="eco-section gold-section">
+    <div class="section-eyebrow">Economies of scale</div>
+    <h2>Why joining together gets you more</h2>
+    <p class="lead">A single logistics worker asking a national brand for a discount has almost no leverage. Thousands of verified members, negotiating as one, do. That's the whole idea behind Logicard.</p>
+
+    <div class="eco-flow">
+      <div class="eco-node">
+        <span class="eco-node-num">01</span>
+        <div class="eco-node-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+            <path d="M16 3.13a4 4 0 010 7.75"/>
+          </svg>
+        </div>
+        <h3>Thousands join</h3>
+        <p>Verified logistics workers sign up individually, one at a time.</p>
+      </div>
+      <div class="eco-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+      <div class="eco-node">
+        <span class="eco-node-num">02</span>
+        <div class="eco-node-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3>One closed group</h3>
+        <p>Every member is pooled into a single, verified, trusted audience.</p>
+      </div>
+      <div class="eco-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+      <div class="eco-node">
+        <span class="eco-node-num">03</span>
+        <div class="eco-node-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v18"/>
+            <path d="M5 7l-3 7a4 4 0 008 0l-3-7"/>
+            <path d="M19 7l-3 7a4 4 0 008 0l-3-7"/>
+            <path d="M5 7h14"/>
+            <path d="M9 21h6"/>
+          </svg>
+        </div>
+        <h3>We negotiate together</h3>
+        <p>Logicard bargains on your behalf — real buying power, not one voucher code.</p>
+      </div>
+      <div class="eco-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+      <div class="eco-node">
+        <span class="eco-node-num">04</span>
+        <div class="eco-node-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="5" x2="5" y2="19"/>
+            <circle cx="6.5" cy="6.5" r="2.5"/>
+            <circle cx="17.5" cy="17.5" r="2.5"/>
+          </svg>
+        </div>
+        <h3>Partners unlock better rates</h3>
+        <p>Brands offer rates they'd never give the public, because the audience and volume are guaranteed.</p>
+      </div>
+      <div class="eco-arrow"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+
+      <div class="eco-node">
+        <span class="eco-node-num">05</span>
+        <div class="eco-node-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <ellipse cx="12" cy="6" rx="7" ry="3"/>
+            <path d="M5 6v6c0 1.66 3.13 3 7 3s7-1.34 7-3V6"/>
+            <path d="M5 12v6c0 1.66 3.13 3 7 3s7-1.34 7-3v-6"/>
+          </svg>
+        </div>
+        <h3>Every member saves more</h3>
+        <p>The bigger the group gets, the stronger our position — and the better the deals get for everyone.</p>
+      </div>
+    </div>
+
+    <p class="eco-footnote">The more logistics workers who join, the more negotiating power Logicard has with national and global brands — every new member makes the group's next deal a little bit stronger.</p>
+  </section>
+
+  <!-- Ecosystem photo -->
+  <section class="epx-section">
+    <div class="epx-grid">
+      <div class="epx-text">
+        <div class="section-eyebrow" style="color: var(--orange); opacity: 1;">One connected industry</div>
+        <h2>The whole logistics ecosystem, working as one</h2>
+        <p>Ports, warehouses, depots, delivery routes and the people who run them — logistics is one connected system, and every part of it depends on the people who show up and keep it moving.</p>
+        <p>Logicard exists inside that same ecosystem — built to give something back to the workforce that keeps it running, and to grow stronger on their behalf the more of them who join.</p>
+      </div>
+      <div class="epx-photo">
+        <img src="https://images.unsplash.com/photo-1494412519320-aa613dfb7738?auto=format&fit=crop&w=1600&q=70" alt="Aerial view of a container port, part of the wider global logistics ecosystem" loading="lazy" width="1600" height="2000" />
+        <a class="epx-credit" href="https://unsplash.com/@chuttersnap?utm_source=logicard&utm_medium=referral" target="_blank" rel="noopener">Photo: CHUTTERSNAP / Unsplash</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="hiw-cta">
+    <h2>Ready to start saving?</h2>
+    <p>Join Logicard for free today and unlock hundreds of exclusive discounts built for logistics workers.</p>
+    <a href="/signup.html" class="btn-primary on-gold">
+      Get Free Membership
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </section>
+
+  <footer class="hiw-footer">
+    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">Join Free</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+  </footer>
+
+</body>
+</html>
