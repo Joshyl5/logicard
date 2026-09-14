@@ -554,6 +554,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/family-leisure-travel.html',  changefreq: 'monthly', priority: '0.6' },
   { path: '/utilities-mobile.html',       changefreq: 'monthly', priority: '0.6' },
   { path: '/pets.html',                   changefreq: 'monthly', priority: '0.6' },
+  { path: '/logistics-news.html',         changefreq: 'weekly',  priority: '0.6' },
   { path: '/events-experiences.html',     changefreq: 'monthly', priority: '0.6' },
   { path: '/things-to-do.html',           changefreq: 'monthly', priority: '0.6' },
   { path: '/financial-wellbeing.html',    changefreq: 'monthly', priority: '0.6' },
@@ -612,6 +613,7 @@ const NAV_OPTIONS_BY_PAGE = {
   '/family-leisure-travel.html':  { activeDropdown: 'family-leisure-travel' },
   '/utilities-mobile.html':       { activeDropdown: 'utilities-mobile' },
   '/pets.html':                   {},
+  '/logistics-news.html':         { active: 'logistics-news' },
   '/events-experiences.html':     { activeDropdown: 'events-experiences' },
   '/login.html':                {},
   '/signup.html':               {},
@@ -711,6 +713,20 @@ app.get('/members', requireAuth, (_req, res) => res.redirect('/member-offers'));
 
 // "Business Services" was renamed to "Utilities & Mobile" shortly after launch.
 app.get('/business-services.html', (_req, res) => res.redirect(301, '/utilities-mobile.html'));
+
+// Age-restricted section — clean URL (no .html), not in NAV_OPTIONS_BY_PAGE
+// (that mechanism assumes path === filename) and deliberately excluded from
+// the sitemap/main nav so it's only reached via the explicit "Adult" link,
+// never crawled or casually stumbled into. See SECURITY.md-style note
+// inside adult.html itself: the age gate there is a scaffold, not a
+// compliant age-verification method — do not add real explicit content or
+// real gambling affiliate links until that's replaced with a real
+// third-party verification provider and gambling-advertising compliance
+// has been checked.
+app.get('/adult', (_req, res) => {
+  const html = fs.readFileSync(path.join(__dirname, 'public', 'adult.html'), 'utf8');
+  res.type('html').send(html.replace('<!-- SHARED_NAV -->', renderNav({})));
+});
 
 app.get('/api/offer-categories', requireAuth, (_req, res) => res.json(OFFER_CATEGORIES));
 

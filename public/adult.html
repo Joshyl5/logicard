@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adult — Logicard Member Discounts (18+)</title>
+  <meta name="description" content="Age-restricted member offers — 18+ only." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="https://logicard.co.uk/adult" />
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/nav.css?v=4" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --orange: #FFB300; --orange-dark: #E09A00; --navy: #071d40; --navy-deep: #04040d;
+      --navy-mid: #0d3b80; --white: #ffffff; --text-muted: #666666;
+    }
+    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
+
+    /* ══════════════════════════════════════════════════════════════
+       AGE GATE — SCAFFOLD ONLY, NOT A COMPLIANT AGE-VERIFICATION METHOD.
+
+       Self-declared date of birth (like a checkbox) does NOT meet the UK
+       Online Safety Act 2023 / Ofcom "highly effective age assurance"
+       bar required for pages of this nature, and does not by itself
+       satisfy UK gambling-advertising rules either. This only blocks
+       casual/accidental access and remembers the choice for the
+       browser session (sessionStorage) — it stops here on purpose.
+
+       Before this page carries real explicit content or real gambling
+       affiliate links:
+       1. Replace this gate with a real third-party age-verification
+          provider (e.g. Yoti, Veriff, AgeChecked, OneID) — a paid
+          service/business relationship, not something addable by code
+          alone.
+       2. Get UK gambling-advertising compliance (ASA CAP/BCAP codes,
+          UKGC-licensed operators only) checked by someone qualified in
+          that area before linking any gambling operator.
+       ══════════════════════════════════════════════════════════════ */
+    .age-gate {
+      position: fixed; inset: 0; z-index: 1000;
+      background: var(--navy-deep);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .age-gate-card {
+      max-width: 440px; width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 20px;
+      padding: 40px 32px;
+      text-align: center;
+    }
+    .age-gate-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,179,0,0.12); border: 1px solid rgba(255,179,0,0.3);
+      font-size: 22px; font-weight: 900; color: var(--orange);
+      margin: 0 auto 20px;
+    }
+    .age-gate-card h1 { font-size: 22px; font-weight: 900; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .age-gate-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 24px; }
+    .age-gate-dob { display: flex; gap: 10px; margin-bottom: 18px; }
+    .age-gate-dob select {
+      flex: 1; background: rgba(4,14,34,0.8); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 8px; color: var(--white); font-family: inherit; font-size: 14px;
+      padding: 11px 8px; outline: none;
+    }
+    .age-gate-dob select:focus { border-color: var(--orange); }
+    .age-gate-error {
+      display: none; font-size: 13px; color: #ff7070;
+      background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.22);
+      border-radius: 8px; padding: 10px 14px; margin-bottom: 16px;
+    }
+    .age-gate-error.visible { display: block; }
+    .age-gate-actions { display: flex; flex-direction: column; gap: 10px; }
+    .age-gate-enter {
+      background: var(--orange); color: var(--navy); border: none;
+      font-weight: 800; font-size: 15px; padding: 14px; border-radius: 8px;
+      cursor: pointer; font-family: inherit; transition: background 0.15s ease;
+    }
+    .age-gate-enter:hover { background: var(--orange-dark); }
+    .age-gate-leave {
+      color: rgba(255,255,255,0.5); font-size: 13.5px; text-decoration: none;
+      padding: 6px;
+    }
+    .age-gate-leave:hover { color: var(--white); }
+    .age-gate-legal { margin-top: 20px; font-size: 11.5px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+
+    /* Page content (hidden behind the gate until confirmed) */
+    #pageContent { display: none; }
+
+
+    .page-hero { background: var(--navy); color: var(--white); padding: 64px 24px; text-align: center; }
+    .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
+    .page-hero p { color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
+    .age-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
+      color: var(--white); font-weight: 800; font-size: 12.5px; letter-spacing: 0.5px;
+      padding: 7px 16px; border-radius: 100px; margin-bottom: 18px;
+    }
+
+    .verify-banner { display: flex; align-items: center; justify-content: center; gap: 6px; width: fit-content; margin: 0 auto 40px; background: #1a9c4a; border: 1px solid #14853d; color: var(--white); font-weight: 800; font-size: 14px; padding: 9px 20px; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+    .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 24px; }
+    .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; text-align: center; }
+    .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
+    .category-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
+    .category-card .soon-badge {
+      display: inline-block; background: rgba(7,29,64,0.08); color: rgba(7,29,64,0.55);
+      font-weight: 700; font-size: 12.5px; padding: 8px 16px; border-radius: 100px;
+    }
+
+    .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); }
+    .cat-gold-band .category-card { background: rgba(255,255,255,0.9); border-color: rgba(7,29,64,0.12); }
+    .cat-gold-band .category-card h2 { color: var(--navy); }
+    .cat-gold-band .category-card p { color: rgba(7,29,64,0.7); }
+
+    .responsible-note {
+      max-width: 720px; margin: 0 auto; padding: 0 24px 56px; text-align: center;
+    }
+    .responsible-note p { font-size: 13px; color: rgba(7,29,64,0.6); line-height: 1.7; }
+    .responsible-note a { color: var(--navy); font-weight: 700; }
+
+    .bottom-cta { text-align: center; padding: 56px 24px 80px; }
+    .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
+    .cta-btn:hover { background: var(--orange-dark); }
+
+    footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.5); }
+    footer a { color: rgba(255,255,255,0.5); }
+
+  </style>
+</head>
+<body>
+
+  <!-- Age gate — blocks everything below until a plausible DOB is entered.
+       See the SCAFFOLD ONLY comment above: this is not a compliant
+       age-verification method on its own. -->
+  <div class="age-gate" id="ageGate">
+    <div class="age-gate-card">
+      <div class="age-gate-badge">18+</div>
+      <h1>Age-restricted section</h1>
+      <p>This part of Logicard contains offers only suitable for adults. Please confirm your date of birth to continue.</p>
+
+      <div class="age-gate-dob">
+        <select id="dobDay" aria-label="Day"><option value="">Day</option></select>
+        <select id="dobMonth" aria-label="Month"><option value="">Month</option></select>
+        <select id="dobYear" aria-label="Year"><option value="">Year</option></select>
+      </div>
+      <p class="age-gate-error" id="ageGateError">You must be 18 or over to view this section.</p>
+
+      <div class="age-gate-actions">
+        <button type="button" class="age-gate-enter" id="ageGateEnter">Enter</button>
+        <a href="/" class="age-gate-leave">Leave this site</a>
+      </div>
+
+      <p class="age-gate-legal">By entering you confirm the date of birth given is accurate. Logicard does not store or transmit this date of birth anywhere.</p>
+    </div>
+  </div>
+
+  <div id="pageContent">
+
+  <!-- SHARED_NAV -->
+
+  <section class="page-hero">
+    <span class="age-pill">18+ Age-Restricted</span>
+    <h1>Adult</h1>
+    <p>Member offers on adult products and gambling brands — for verified adults only.</p>
+  </section>
+
+
+  <section class="cat-gold-band">
+  <div class="category-grid">
+    <div class="category-card">
+      <h2>Adult Toys &amp; Wellness</h2>
+      <p>Discreet discounts on adult products from trusted retailers.</p>
+      <span class="soon-badge">Coming soon</span>
+    </div>
+    <div class="category-card">
+      <h2>Gambling &amp; Betting</h2>
+      <p>Offers from licensed UK gambling and betting operators.</p>
+      <span class="soon-badge">Coming soon</span>
+    </div>
+  </div>
+  </section>
+
+  <div class="responsible-note">
+    <p>Gambling should be fun, not a way to make money, and should never negatively impact your life. If gambling is affecting you or someone you know, free confidential support is available from <a href="https://www.begambleaware.org" target="_blank" rel="noopener">BeGambleAware</a> or <a href="https://www.gamcare.org.uk" target="_blank" rel="noopener">GamCare</a> (0808 8020 133).</p>
+  </div>
+
+  <p class="verify-banner"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified Logistics workers only</p>
+
+  <div class="bottom-cta">
+    <a href="/signup.html" class="cta-btn">Join Logicard free →</a>
+  </div>
+
+  <footer>
+    <p>© 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">Sign Up</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+  </footer>
+
+  </div>
+
+  <script>
+    (function () {
+      var GATE_KEY = 'logicard_adult_gate_ok';
+      var gate = document.getElementById('ageGate');
+      var content = document.getElementById('pageContent');
+
+      function showContent() {
+        gate.style.display = 'none';
+        content.style.display = 'block';
+      }
+
+      try {
+        if (sessionStorage.getItem(GATE_KEY) === '1') { showContent(); return; }
+      } catch (e) { /* sessionStorage unavailable — always show the gate */ }
+
+      var dayEl = document.getElementById('dobDay');
+      var monthEl = document.getElementById('dobMonth');
+      var yearEl = document.getElementById('dobYear');
+      var errorEl = document.getElementById('ageGateError');
+
+      for (var d = 1; d <= 31; d++) dayEl.insertAdjacentHTML('beforeend', '<option value="' + d + '">' + d + '</option>');
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      months.forEach(function (m, i) { monthEl.insertAdjacentHTML('beforeend', '<option value="' + (i + 1) + '">' + m + '</option>'); });
+      var thisYear = new Date().getFullYear();
+      for (var y = thisYear; y >= thisYear - 100; y--) yearEl.insertAdjacentHTML('beforeend', '<option value="' + y + '">' + y + '</option>');
+
+      document.getElementById('ageGateEnter').addEventListener('click', function () {
+        errorEl.classList.remove('visible');
+        var day = parseInt(dayEl.value, 10), month = parseInt(monthEl.value, 10), year = parseInt(yearEl.value, 10);
+        if (!day || !month || !year) { errorEl.textContent = 'Please enter your full date of birth.'; errorEl.classList.add('visible'); return; }
+
+        var dob = new Date(year, month - 1, day);
+        var today = new Date();
+        var age = today.getFullYear() - dob.getFullYear();
+        var hasHadBirthdayThisYear = (today.getMonth() > dob.getMonth()) || (today.getMonth() === dob.getMonth() && today.getDate() >= dob.getDate());
+        if (!hasHadBirthdayThisYear) age--;
+
+        if (age < 18) { errorEl.textContent = 'You must be 18 or over to view this section.'; errorEl.classList.add('visible'); return; }
+
+        try { sessionStorage.setItem(GATE_KEY, '1'); } catch (e) { /* ignore */ }
+        showContent();
+      });
+    })();
+  </script>
+
+</body>
+</html>
