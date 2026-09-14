@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=0.8" />
   <title>How It Works — Logicard</title>
-  <meta name="description" content="How Logicard works — sign up free, join a genuinely closed group of verified logistics workers, and see how economies of scale get you real discounts other cards can't." />
+  <meta name="description" content="How Logicard works — sign up free in under 2 minutes, see how economies of scale get you real discounts other cards can't, and start saving straight away." />
   <link rel="canonical" href="https://logicard.co.uk/how-it-works.html" />
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
   <script type="application/ld+json">
@@ -13,13 +13,13 @@
     "@type": "WebPage",
     "name": "How It Works — Logicard",
     "url": "https://logicard.co.uk/how-it-works.html",
-    "description": "How Logicard works — sign up, join a closed group of verified logistics workers, and save through economies of scale.",
+    "description": "How Logicard works — sign up, see how economies of scale get real discounts, and save.",
     "isPartOf": { "@id": "https://logicard.co.uk/#website" }
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=5" />
+  <link rel="stylesheet" href="/nav.css?v=6" />
   <style>
     /* Flat navy / flat-gold only, per BRAND.md — same component system as
        about.html / partnerships.html. Sections strictly alternate
@@ -53,22 +53,12 @@
     .hiw-hero h1 { font-size: clamp(36px, 5.4vw, 60px); font-weight: 900; letter-spacing: -1.2px; margin-bottom: 18px; text-wrap: balance; }
     .hiw-hero p { font-size: 17px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 620px; margin: 0 auto; }
 
-    /* ── Shared "eyebrow + h2 + lead" header used by the gold sections ── */
+    /* ── Shared "eyebrow" style — base is navy-on-gold; sections on a
+       navy background override it locally. ── */
     .section-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); opacity: 0.65; margin-bottom: 16px; }
-    .gold-section h2 { font-size: clamp(28px, 3.8vw, 42px); font-weight: 900; color: var(--navy); letter-spacing: -0.8px; margin-bottom: 18px; text-wrap: balance; }
-    .gold-section .lead { font-size: 16px; color: rgba(7,29,64,0.72); line-height: 1.75; max-width: 680px; margin: 0 auto 56px; }
 
-    /* ── Closed Group section — gold ── */
-    .cg-section { padding: 88px 24px 96px; background: var(--gold-grad); text-align: center; }
-    .cg-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; text-align: left; }
-    .cg-card { background: var(--white); border-radius: 20px; padding: 36px 30px; }
-    .cg-card-icon { width: 52px; height: 52px; border-radius: 14px; margin-bottom: 20px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); display: flex; align-items: center; justify-content: center; }
-    .cg-card-icon svg { width: 24px; height: 24px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .cg-card h3 { font-size: 17.5px; font-weight: 800; color: var(--navy); margin-bottom: 10px; letter-spacing: -0.2px; }
-    .cg-card p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
-
-    /* ── Steps section — navy (cards stay white per the site's card system) ── */
-    .hiw-section { padding: 72px 24px 96px; background: var(--navy); }
+    /* ── Steps section — gold (cards stay white per the site's card system) ── */
+    .hiw-section { padding: 72px 24px 96px; background: var(--gold-grad); }
     .hiw-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
     .hiw-step {
       background: var(--white); border-radius: 20px; padding: 44px 32px 36px;
@@ -93,8 +83,11 @@
     .hiw-step--featured .hiw-step-link { color: var(--orange); }
     .hiw-step-link:hover { text-decoration: underline; }
 
-    /* ── Economies of scale infographic — gold ── */
-    .eco-section { padding: 88px 24px 96px; background: var(--gold-grad); text-align: center; }
+    /* ── Economies of scale infographic — navy ── */
+    .eco-section { padding: 88px 24px 96px; background: var(--navy); text-align: center; }
+    .eco-section .section-eyebrow { color: var(--orange); opacity: 1; }
+    .eco-section h2 { font-size: clamp(28px, 3.8vw, 42px); font-weight: 900; color: var(--white); letter-spacing: -0.8px; margin-bottom: 18px; text-wrap: balance; }
+    .eco-section .lead { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.75; max-width: 680px; margin: 0 auto 56px; }
     .eco-flow { display: flex; align-items: stretch; justify-content: center; gap: 0; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
     .eco-node { background: var(--white); border-radius: 16px; padding: 26px 18px; width: 174px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .eco-node-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 14px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); display: flex; align-items: center; justify-content: center; }
@@ -102,15 +95,15 @@
     .eco-node-num { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: var(--orange-dark); text-transform: uppercase; margin-bottom: 6px; }
     .eco-node h3 { font-size: 14.5px; font-weight: 800; color: var(--navy); margin-bottom: 6px; line-height: 1.3; }
     .eco-node p { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
-    .eco-arrow { display: flex; align-items: center; justify-content: center; width: 34px; flex-shrink: 0; color: var(--navy); opacity: 0.4; }
-    .eco-arrow svg { width: 22px; height: 22px; stroke: var(--navy); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .eco-footnote { margin: 44px auto 0; font-size: 14.5px; color: rgba(7,29,64,0.65); max-width: 620px; line-height: 1.7; font-weight: 600; }
+    .eco-arrow { display: flex; align-items: center; justify-content: center; width: 34px; flex-shrink: 0; }
+    .eco-arrow svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
+    .eco-footnote { margin: 44px auto 0; font-size: 14.5px; color: rgba(255,255,255,0.55); max-width: 620px; line-height: 1.7; font-weight: 600; }
 
-    /* ── Ecosystem photo section — navy, photo in a contained card ── */
-    .epx-section { padding: 88px 24px 96px; background: var(--navy); }
+    /* ── Ecosystem photo section — gold, photo in a contained card ── */
+    .epx-section { padding: 88px 24px 96px; background: var(--gold-grad); }
     .epx-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
-    .epx-text h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--white); letter-spacing: -0.6px; margin-bottom: 18px; text-wrap: balance; }
-    .epx-text p { font-size: 15.5px; color: rgba(255,255,255,0.65); line-height: 1.75; margin-bottom: 16px; }
+    .epx-text h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--navy); letter-spacing: -0.6px; margin-bottom: 18px; text-wrap: balance; }
+    .epx-text p { font-size: 15.5px; color: rgba(7,29,64,0.72); line-height: 1.75; margin-bottom: 16px; }
     .epx-photo { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
     .epx-photo img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 5; }
     .epx-credit {
@@ -120,18 +113,18 @@
     }
     .epx-credit:hover { color: #fff; }
 
-    /* ── Final CTA — gold ── */
-    .hiw-cta { text-align: center; padding: 88px 24px; background: var(--gold-grad); }
-    .hiw-cta h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.6px; color: var(--navy); }
-    .hiw-cta p { font-size: 16px; color: rgba(7,29,64,0.7); margin-bottom: 32px; }
+    /* ── Final CTA — navy ── */
+    .hiw-cta { text-align: center; padding: 88px 24px; }
+    .hiw-cta h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.6px; color: var(--white); }
+    .hiw-cta p { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 32px; }
 
     .hiw-footer { text-align: center; padding: 32px 24px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 12px; color: rgba(255,255,255,0.35); }
     .hiw-footer a { text-decoration: none; color: rgba(255,255,255,0.5); }
     .hiw-footer a:hover { color: rgba(255,255,255,0.8); }
 
     @media (max-width: 900px) {
-      .hiw-steps, .cg-cards { grid-template-columns: 1fr; gap: 18px; }
-      .hiw-section, .cg-section, .eco-section, .epx-section { padding: 56px 24px 72px; }
+      .hiw-steps { grid-template-columns: 1fr; gap: 18px; }
+      .hiw-section, .eco-section, .epx-section { padding: 56px 24px 72px; }
       .epx-grid { grid-template-columns: 1fr; gap: 32px; }
       .epx-photo img { aspect-ratio: 16 / 10; }
       .eco-flow { flex-direction: column; }
@@ -155,50 +148,6 @@
     <h1>How It Works</h1>
     <p>Join thousands of logistics workers already saving money on fuel, hotels, dining and more. It takes under 2 minutes to sign up — just £10/year. Use promo code FREE at checkout for your first year at £0.</p>
   </div>
-
-  <!-- Closed Group explainer -->
-  <section class="cg-section gold-section">
-    <div class="section-eyebrow">Why we verify every member</div>
-    <h2>A closed group, by design</h2>
-    <p class="lead">Logicard isn't open to everyone — and that's deliberate. Keeping membership genuinely closed to verified logistics workers is what makes the discounts real, not just another public voucher code. It's a small trade that pays off for the people who keep the world moving.</p>
-    <div class="cg-cards">
-      <div class="cg-card">
-        <div class="cg-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-            <path d="M9 12l2 2 4-4"/>
-          </svg>
-        </div>
-        <h3>Verified, not assumed</h3>
-        <p>Every member proves they work in logistics — instantly via a work email address, or through a quick document check. No public sign-up, no loopholes.</p>
-      </div>
-      <div class="cg-card">
-        <div class="cg-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3v18"/>
-            <path d="M5 7l-3 7a4 4 0 008 0l-3-7"/>
-            <path d="M19 7l-3 7a4 4 0 008 0l-3-7"/>
-            <path d="M5 7h14"/>
-            <path d="M9 21h6"/>
-          </svg>
-        </div>
-        <h3>Trusted by our partners</h3>
-        <p>Because every member is genuinely verified, brands know exactly who they're reaching — and that trust is what lets them offer real, meaningful discounts.</p>
-      </div>
-      <div class="cg-card">
-        <div class="cg-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
-            <path d="M16 3.13a4 4 0 010 7.75"/>
-          </svg>
-        </div>
-        <h3>Built for the people who move everything</h3>
-        <p>Drivers, warehouse teams, fleet managers, support staff — Logicard exists for the people who keep the country's goods, and the wider world, moving.</p>
-      </div>
-    </div>
-  </section>
 
   <section class="hiw-section">
     <div class="hiw-steps">
@@ -248,7 +197,7 @@
   </section>
 
   <!-- Economies of scale infographic -->
-  <section class="eco-section gold-section">
+  <section class="eco-section">
     <div class="section-eyebrow">Economies of scale</div>
     <h2>Why joining together gets you more</h2>
     <p class="lead">A single logistics worker asking a national brand for a discount has almost no leverage. Thousands of verified members, negotiating as one, do. That's the whole idea behind Logicard.</p>
@@ -332,7 +281,7 @@
   <section class="epx-section">
     <div class="epx-grid">
       <div class="epx-text">
-        <div class="section-eyebrow" style="color: var(--orange); opacity: 1;">One connected industry</div>
+        <div class="section-eyebrow">One connected industry</div>
         <h2>The whole logistics ecosystem, working as one</h2>
         <p>Ports, warehouses, depots, delivery routes and the people who run them — logistics is one connected system, and every part of it depends on the people who show up and keep it moving.</p>
         <p>Logicard exists inside that same ecosystem — built to give something back to the workforce that keeps it running, and to grow stronger on their behalf the more of them who join.</p>
@@ -347,7 +296,7 @@
   <section class="hiw-cta">
     <h2>Ready to start saving?</h2>
     <p>Join Logicard for free today and unlock hundreds of exclusive discounts built for logistics workers.</p>
-    <a href="/signup.html" class="btn-primary on-gold">
+    <a href="/signup.html" class="btn-primary">
       Get Free Membership
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
