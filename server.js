@@ -21,7 +21,7 @@ const {
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
-  getPartnerBrandBySlug, getActiveOffersByMerchant,
+  getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferByMerchantSlug,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -30,10 +30,11 @@ const {
   getDocumentsDueForPurge, markDocumentPurged,
 } = require('./database');
 const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT } = require('./storage');
-const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
+const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES, slugify } = require('./job-roles');
 const { UK_TOWNS } = require('./uk-towns');
 const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
 const { renderBrandPage, renderBrandNotFound } = require('./templates/brand-page');
+const { renderOfferPage, renderOfferNotFound } = require('./templates/offer-page');
 const { renderNav } = require('./templates/nav');
 
 const app    = express();
@@ -1622,6 +1623,7 @@ app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) =>
   const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender);
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl }) => ({
     id, merchantName, title, description, category, discountText, imageUrl,
+    slug: slugify(merchantName), // powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
   })));
 });
 
@@ -1985,6 +1987,36 @@ app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
   } catch (err) {
     console.error('Checkout complete error:', err.message);
     res.status(500).json({ error: 'Account setup failed. Please contact support.' });
+  }
+});
+
+// ── Per-offer pages at the site root (e.g. /gousto) ─────────────────
+// Registered LAST, deliberately: this only runs if no earlier route or
+// static file already matched, so it can never shadow an existing page.
+// Single path segment, no admin setup required — every active offer's
+// merchant gets a page automatically, keyed by slugify(merchantName)
+// (see getActiveOfferByMerchantSlug in database.js). Public/pre-login,
+// same data shape as the homepage's Featured Deals — no voucher code or
+// affiliate URL exposed here.
+const RESERVED_ROOT_SLUGS = new Set(['api', 'admin', 'local-uploads', 'deals', 'logistics-rewards', 'images', 'icons', 'adult']);
+app.get('/:slug', async (req, res, next) => {
+  const slug = req.params.slug;
+  // A dot means this was almost certainly an unmatched static asset request
+  // (e.g. a typo'd image path), not an offer slug — let it 404 normally.
+  if (slug.includes('.') || RESERVED_ROOT_SLUGS.has(slug)) return next();
+
+  try {
+    const offer = await getActiveOfferByMerchantSlug(slug);
+    if (!offer) return next();
+
+    const publicOffer = {
+      merchantName: offer.merchantName, title: offer.title, description: offer.description,
+      category: offer.category, discountText: offer.discountText, imageUrl: offer.imageUrl, slug,
+    };
+    res.send(renderOfferPage({ offer: publicOffer }).replace('<!-- SHARED_NAV -->', renderNav({})));
+  } catch (err) {
+    console.error('Offer page error:', err.message);
+    next();
   }
 });
 

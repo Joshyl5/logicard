@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const bcrypt   = require('bcryptjs');
+const { slugify } = require('./job-roles');
 
 const MEMBERSHIP_START = 10010121;
 
@@ -715,6 +716,18 @@ async function getActiveOffersByMerchant(merchantName) {
   return r.rows.map(toOffer);
 }
 
+// Powers the public per-offer pages at the site root (e.g. /gousto) — one
+// auto-generated page per merchant with an active offer, keyed by
+// slugify(merchantName), no admin setup required (unlike partner_brands'
+// /deals/:slug, which needs a manually-created entry with its own slug).
+// If a merchant somehow has more than one active offer, returns the first
+// by the same ordering used everywhere else (sort_order, then newest).
+async function getActiveOfferByMerchantSlug(slug) {
+  const r = await pool.query('SELECT * FROM offers WHERE is_active = true ORDER BY sort_order ASC, created_at DESC, id ASC');
+  const match = r.rows.find(row => slugify(row.merchant_name) === slug);
+  return toOffer(match);
+}
+
 // ── Offer redemption tracking ────────────────────────────────────
 async function recordOfferRedemption(offerId, membershipNumber) {
   await pool.query(
@@ -992,7 +1005,7 @@ module.exports = {
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
-  getPartnerBrandBySlug, getActiveOffersByMerchant,
+  getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferByMerchantSlug,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
