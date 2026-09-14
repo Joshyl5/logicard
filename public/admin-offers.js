@@ -4,6 +4,38 @@ function escapeHtml(str) {
   return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 }
 
+function slugify(str) {
+  return String(str || '').trim().toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+// ── Slug: auto-fills from the merchant name, but stops once the admin has
+// typed in the slug field themselves, so it never silently overwrites a
+// deliberate edit (same pattern as the partner-brands admin page). ──
+let offerSlugTouched = false;
+const offerMerchantInput = document.getElementById('offerMerchant');
+const offerSlugInput = document.getElementById('offerSlug');
+const offerSlugPreview = document.getElementById('offerSlugPreview');
+
+function updateOfferSlugPreview() {
+  offerSlugPreview.textContent = offerSlugInput.value.trim() || '…';
+}
+
+offerMerchantInput.addEventListener('input', () => {
+  if (!offerSlugTouched) {
+    offerSlugInput.value = slugify(offerMerchantInput.value);
+    updateOfferSlugPreview();
+  }
+});
+offerSlugInput.addEventListener('input', () => {
+  offerSlugTouched = true;
+  offerSlugInput.value = slugify(offerSlugInput.value);
+  updateOfferSlugPreview();
+});
+
 function renderTable(offers) {
   const tbody = document.getElementById('offersBody');
   const count = document.getElementById('tableCount');
@@ -111,6 +143,7 @@ function openModal(id) {
   document.getElementById('offerTargetGender').value = '';
   document.getElementById('offerPlatform').value = 'AWIN';
   document.getElementById('offerSortOrder').value  = 0;
+  offerSlugTouched = false;
 
   if (id) {
     const offer = allOffers.find(o => o.id === id);
@@ -131,11 +164,14 @@ function openModal(id) {
       document.getElementById('offerFeaturedPublic').checked    = !!offer.featuredPublic;
       document.getElementById('offerTargetGender').value   = offer.targetGender || '';
       document.getElementById('offerPlatform').value       = offer.platform || 'AWIN';
+      offerSlugInput.value = offer.slug || '';
+      offerSlugTouched = !!offer.slug; // don't clobber an existing slug on a merchant-name edit
     }
   } else {
     offerModalTitle.textContent = 'Add Offer';
   }
 
+  updateOfferSlugPreview();
   offerModal.style.display = 'flex';
 }
 
@@ -165,6 +201,7 @@ offerForm.addEventListener('submit', async e => {
     featuredPublic:    document.getElementById('offerFeaturedPublic').checked,
     targetGender: document.getElementById('offerTargetGender').value || null,
     platform:     document.getElementById('offerPlatform').value || 'AWIN',
+    slug:         offerSlugInput.value.trim() || null,
   };
 
   offerSubmitBtn.disabled    = true;

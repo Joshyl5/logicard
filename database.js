@@ -175,6 +175,19 @@ async function initDb() {
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS platform TEXT`);
   await pool.query(`UPDATE offers SET platform = 'AWIN' WHERE platform IS NULL`);
 
+  // Each offer's own public page at the site root (e.g. /gousto,
+  // /gousto-2 if a second offer from the same merchant needs its own
+  // page too) — see getActiveOfferBySlug / generateUniqueOfferSlug
+  // below. A partial unique index (not a plain UNIQUE column) so
+  // multiple NULLs are allowed while it's being backfilled.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS slug TEXT`);
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS offers_slug_idx ON offers (slug) WHERE slug IS NOT NULL`);
+  const unslugged = await pool.query('SELECT id, merchant_name FROM offers WHERE slug IS NULL ORDER BY id ASC');
+  for (const row of unslugged.rows) {
+    const slug = await generateUniqueOfferSlug(row.merchant_name, row.id);
+    await pool.query('UPDATE offers SET slug = $1 WHERE id = $2', [slug, row.id]);
+  }
+
   // One-time-use coupon pool — lets marketing hand over a batch of unique
   // codes per offer instead of one shared code that can leak publicly.
   await pool.query(`
@@ -355,6 +368,7 @@ function toOffer(row) {
     featuredPublic:    !!row.featured_public,
     targetGender:  row.target_gender,
     platform:      row.platform,
+    slug:          row.slug,
     sortOrder:     row.sort_order,
     clickCount:    row.click_count,
     createdAt:     row.created_at,
@@ -547,20 +561,20 @@ async function createOffer(data) {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
     isActive = true, featuredDashboard = false, featuredPublic = false,
-    targetGender = null, platform = 'AWIN', sortOrder = 0,
+    targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     INSERT INTO offers (
       merchant_name, title, description, category, discount_text,
       voucher_code, affiliate_url, image_url, is_active, is_featured,
-      featured_dashboard, featured_public, target_gender, platform, sort_order
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+      featured_dashboard, featured_public, target_gender, platform, slug, sort_order
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
-    targetGender || null, platform || null, sortOrder,
+    targetGender || null, platform || null, slug || slugify(merchantName), sortOrder,
   ]);
 
   return toOffer(r.rows[0]);
@@ -571,7 +585,7 @@ async function updateOffer(id, data) {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
     isActive = true, featuredDashboard = false, featuredPublic = false,
-    targetGender = null, platform = 'AWIN', sortOrder = 0,
+    targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
@@ -579,13 +593,13 @@ async function updateOffer(id, data) {
       merchant_name = $1, title = $2, description = $3, category = $4,
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
       is_active = $9, is_featured = $10, featured_dashboard = $11, featured_public = $12,
-      target_gender = $13, platform = $14, sort_order = $15, updated_at = NOW()
-    WHERE id = $16
+      target_gender = $13, platform = $14, slug = $15, sort_order = $16, updated_at = NOW()
+    WHERE id = $17
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
-    targetGender || null, platform || null, sortOrder, id,
+    targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, id,
   ]);
 
   return toOffer(r.rows[0]);
@@ -716,16 +730,34 @@ async function getActiveOffersByMerchant(merchantName) {
   return r.rows.map(toOffer);
 }
 
-// Powers the public per-offer pages at the site root (e.g. /gousto) — one
-// auto-generated page per merchant with an active offer, keyed by
-// slugify(merchantName), no admin setup required (unlike partner_brands'
-// /deals/:slug, which needs a manually-created entry with its own slug).
-// If a merchant somehow has more than one active offer, returns the first
-// by the same ordering used everywhere else (sort_order, then newest).
-async function getActiveOfferByMerchantSlug(slug) {
-  const r = await pool.query('SELECT * FROM offers WHERE is_active = true ORDER BY sort_order ASC, created_at DESC, id ASC');
-  const match = r.rows.find(row => slugify(row.merchant_name) === slug);
-  return toOffer(match);
+// Powers the public per-offer pages at the site root (e.g. /gousto) —
+// every offer has its own persisted slug (set at creation, editable
+// after), so two offers from the same merchant each get their own page
+// (e.g. /gousto and /gousto-2) instead of the second one having nowhere
+// to live. No admin setup beyond adding the offer itself is required,
+// unlike partner_brands' /deals/:slug, which needs a manually-created
+// entry with its own slug.
+async function getActiveOfferBySlug(slug) {
+  const r = await pool.query('SELECT * FROM offers WHERE is_active = true AND slug = $1', [slug]);
+  return toOffer(r.rows[0]);
+}
+
+// Picks a slug for a new (or re-slugged) offer: slugify(merchantName),
+// falling back to -2, -3, etc. if that's already taken by a different
+// offer — this is what lets a second offer from the same merchant get
+// its own page instead of colliding with the first one's.
+async function generateUniqueOfferSlug(merchantName, excludeId = null) {
+  const base = slugify(merchantName) || 'offer';
+  let candidate = base;
+  let n = 2;
+  for (;;) {
+    const query = excludeId ? 'SELECT id FROM offers WHERE slug = $1 AND id != $2' : 'SELECT id FROM offers WHERE slug = $1';
+    const params = excludeId ? [candidate, excludeId] : [candidate];
+    const r = await pool.query(query, params);
+    if (r.rows.length === 0) return candidate;
+    candidate = `${base}-${n}`;
+    n++;
+  }
 }
 
 // ── Offer redemption tracking ────────────────────────────────────
@@ -1005,7 +1037,7 @@ module.exports = {
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
-  getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferByMerchantSlug,
+  getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,

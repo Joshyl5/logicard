@@ -21,7 +21,7 @@ const {
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
-  getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferByMerchantSlug,
+  getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -30,7 +30,7 @@ const {
   getDocumentsDueForPurge, markDocumentPurged,
 } = require('./database');
 const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT } = require('./storage');
-const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES, slugify } = require('./job-roles');
+const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
 const { UK_TOWNS } = require('./uk-towns');
 const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
 const { renderBrandPage, renderBrandNotFound } = require('./templates/brand-page');
@@ -931,13 +931,14 @@ const GENDER_VALUES = ['M', 'F', 'Other'];
 const OFFER_PLATFORMS = ['AWIN', 'Rakuten Advertising', 'Impact', 'Partnerize', 'CJ Affiliate', 'TradeDoubler', 'Direct', 'Other'];
 
 function validOfferPayload(body) {
-  const { merchantName, title, affiliateUrl, category, targetGender, platform } = body;
+  const { merchantName, title, affiliateUrl, category, targetGender, platform, slug } = body;
   if (!merchantName || !String(merchantName).trim()) return 'Merchant name is required.';
   if (!title || !String(title).trim()) return 'Title is required.';
   if (!affiliateUrl || !/^https?:\/\//i.test(affiliateUrl)) return 'Affiliate URL must start with http:// or https://.';
   if (category && !OFFER_CATEGORIES.includes(category)) return 'Invalid category.';
   if (targetGender && !GENDER_VALUES.includes(targetGender)) return 'Invalid target gender.';
   if (platform && !OFFER_PLATFORMS.includes(platform)) return 'Invalid platform.';
+  if (slug && !/^[a-z0-9-]+$/.test(slug)) return 'Page URL slug can only contain lowercase letters, numbers and hyphens.';
   return null;
 }
 
@@ -976,8 +977,14 @@ app.post('/api/admin/offers/:id/codes', requireAdmin, async (req, res) => {
 app.post('/api/admin/offers', requireAdmin, async (req, res) => {
   const error = validOfferPayload(req.body);
   if (error) return res.status(400).json({ error });
-  const offer = await createOffer(req.body);
-  res.json(offer);
+  try {
+    const offer = await createOffer(req.body);
+    res.json(offer);
+  } catch (err) {
+    if (err.code === '23505') return res.status(400).json({ error: 'That page URL slug is already in use by another offer — try adding "-2" or similar.' });
+    console.error('Create offer error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
 });
 
 app.put('/api/admin/offers/:id', requireAdmin, async (req, res) => {
@@ -985,9 +992,15 @@ app.put('/api/admin/offers/:id', requireAdmin, async (req, res) => {
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer id.' });
   const error = validOfferPayload(req.body);
   if (error) return res.status(400).json({ error });
-  const offer = await updateOffer(id, req.body);
-  if (!offer) return res.status(404).json({ error: 'Offer not found.' });
-  res.json(offer);
+  try {
+    const offer = await updateOffer(id, req.body);
+    if (!offer) return res.status(404).json({ error: 'Offer not found.' });
+    res.json(offer);
+  } catch (err) {
+    if (err.code === '23505') return res.status(400).json({ error: 'That page URL slug is already in use by another offer — try adding "-2" or similar.' });
+    console.error('Update offer error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
 });
 
 app.delete('/api/admin/offers/:id', requireAdmin, async (req, res) => {
@@ -1621,9 +1634,8 @@ function filterOffersForMember(offers, memberGender) {
 // signing up and verifying, same as it always has.
 app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
   const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender);
-  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl }) => ({
-    id, merchantName, title, description, category, discountText, imageUrl,
-    slug: slugify(merchantName), // powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, slug }) => ({
+    id, merchantName, title, description, category, discountText, imageUrl, slug, // slug powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
   })));
 });
 
@@ -1993,10 +2005,11 @@ app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
 // ── Per-offer pages at the site root (e.g. /gousto) ─────────────────
 // Registered LAST, deliberately: this only runs if no earlier route or
 // static file already matched, so it can never shadow an existing page.
-// Single path segment, no admin setup required — every active offer's
-// merchant gets a page automatically, keyed by slugify(merchantName)
-// (see getActiveOfferByMerchantSlug in database.js). Public/pre-login,
-// same data shape as the homepage's Featured Deals — no voucher code or
+// Single path segment. Every offer has its own persisted slug (set at
+// creation from the merchant name, deduped with -2/-3 etc. if a second
+// offer from the same merchant needs one too, editable after) — see
+// getActiveOfferBySlug in database.js. Public/pre-login, same data
+// shape as the homepage's Featured Deals — no voucher code or
 // affiliate URL exposed here.
 const RESERVED_ROOT_SLUGS = new Set(['api', 'admin', 'local-uploads', 'deals', 'logistics-rewards', 'images', 'icons', 'adult']);
 app.get('/:slug', async (req, res, next) => {
@@ -2006,7 +2019,7 @@ app.get('/:slug', async (req, res, next) => {
   if (slug.includes('.') || RESERVED_ROOT_SLUGS.has(slug)) return next();
 
   try {
-    const offer = await getActiveOfferByMerchantSlug(slug);
+    const offer = await getActiveOfferBySlug(slug);
     if (!offer) return next();
 
     const publicOffer = {

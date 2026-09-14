@@ -96,6 +96,13 @@
           <input id="offerMerchant" type="text" required />
         </div>
         <div class="lfield" style="margin-bottom:14px;">
+          <label for="offerSlug">Page URL Slug</label>
+          <input id="offerSlug" type="text" placeholder="e.g. gousto" pattern="[a-z0-9-]+" />
+          <p style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.4);">
+            This offer's public page: logicard.co.uk/<span id="offerSlugPreview">…</span> — auto-filled from the merchant name. If another offer from the same merchant already uses that page, add "-2" or similar to give this one its own.
+          </p>
+        </div>
+        <div class="lfield" style="margin-bottom:14px;">
           <label for="offerTitle">Title</label>
           <input id="offerTitle" type="text" required />
         </div>
