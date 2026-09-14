@@ -299,6 +299,13 @@ async function initDb() {
       fetched_at    TIMESTAMPTZ DEFAULT NOW()
     )
   `);
+  // Manually-added items (Manage News admin page) — for sources with no
+  // usable RSS feed (checked and confirmed absent/empty/discontinued as of
+  // Sep 2026: Logistics UK, FleetNews, Motor Transport). Same table and
+  // public feed as the auto-pulled items; this flag just distinguishes them
+  // for the admin list so they can be edited/removed independently of the
+  // scheduled fetch job, which never touches manual rows.
+  await pool.query(`ALTER TABLE news_items ADD COLUMN IF NOT EXISTS is_manual BOOLEAN DEFAULT FALSE`);
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -741,6 +748,7 @@ function toNewsItem(row) {
   return {
     id: row.id, title: row.title, link: row.link, source: row.source,
     summary: row.summary, publishedAt: row.published_at, fetchedAt: row.fetched_at,
+    isManual: row.is_manual,
   };
 }
 
@@ -761,6 +769,42 @@ async function getRecentNewsItems(limit = 30) {
     [limit]
   );
   return r.rows.map(toNewsItem);
+}
+
+// ── Manage News (admin) — full list + manual add/edit/delete ─────────
+// Covers both auto-pulled and manually-added rows so the admin page is one
+// place to see/manage everything in the public feed.
+async function getAllNewsItems() {
+  const r = await pool.query(
+    'SELECT * FROM news_items ORDER BY published_at DESC NULLS LAST, fetched_at DESC, id DESC'
+  );
+  return r.rows.map(toNewsItem);
+}
+
+async function createManualNewsItem({ title, link, source, summary = null, publishedAt = null }) {
+  const r = await pool.query(
+    `INSERT INTO news_items (title, link, source, summary, published_at, is_manual)
+     VALUES ($1,$2,$3,$4,$5,TRUE)
+     RETURNING *`,
+    [title, link, source, summary || null, publishedAt || null]
+  );
+  return toNewsItem(r.rows[0]);
+}
+
+async function updateNewsItem(id, { title, link, source, summary = null, publishedAt = null }) {
+  const r = await pool.query(
+    `UPDATE news_items SET
+       title = $1, link = $2, source = $3, summary = $4, published_at = $5
+     WHERE id = $6
+     RETURNING *`,
+    [title, link, source, summary || null, publishedAt || null, id]
+  );
+  return toNewsItem(r.rows[0]);
+}
+
+async function deleteNewsItem(id) {
+  const r = await pool.query('DELETE FROM news_items WHERE id = $1', [id]);
+  return r.rowCount > 0;
 }
 
 // Offers shown on a brand's /deals/:slug page — matched by merchant name,
@@ -1082,7 +1126,7 @@ module.exports = {
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
-  upsertNewsItem, getRecentNewsItems,
+  upsertNewsItem, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,

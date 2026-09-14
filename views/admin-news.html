@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Manage News</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="admin-page">
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-logo">
+        <img src="/logicard-logo-hero.png" alt="Logicard" class="admin-logo-img" />
+        <span class="admin-panel-badge">Manage News</span>
+      </div>
+      <div class="admin-header-right">
+        <a href="/admin" class="admin-user-label" style="text-decoration:none">← Back to Dashboard</a>
+        <button class="signout-btn" id="adminSignout">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+
+    <!-- Controls -->
+    <div class="admin-controls">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="8"/>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input id="searchInput" type="text" class="search-input" placeholder="Search by title or source…" />
+      </div>
+      <button class="export-btn" id="addNewsBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        Add News Item
+      </button>
+    </div>
+
+    <p style="color:rgba(255,255,255,0.5);font-size:13px;margin:-4px 0 20px;">
+      Most headlines are pulled in automatically from The Loadstar, Logistics Manager and Transport News — no action needed for those.
+      Use this to add stories from sources with no usable RSS feed (checked directly: Logistics UK's feeds return 0 items and their site has no
+      auto-discoverable feed; FleetNews's feed returns 410 Gone — deliberately discontinued by them; Motor Transport has no feed at all).
+      Always credit the outlet that actually published the story in the Source field — e.g. use "Fleet News" or "Motor Transport" for their own
+      reporting, and "Logistics UK" only for content Logistics UK itself published (such as their own press releases).
+    </p>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table class="members-table" id="newsTable">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Source</th>
+            <th>Published</th>
+            <th>Origin</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="newsBody">
+          <tr><td colspan="5" class="table-loading">Loading news items…</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="table-count" id="tableCount"></p>
+
+  </main>
+
+  <footer class="footer">
+    <p>© 2026 Logicard Admin Panel</p>
+  </footer>
+
+  <!-- Add / Edit News Item Modal -->
+  <div id="newsModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;overflow-y:auto;">
+    <div style="background:#0d1a2e;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:36px;max-width:520px;width:90%;margin:40px auto;">
+      <h2 id="newsModalTitle" style="color:#fff;font-size:20px;font-weight:800;margin:0 0 20px;">Add News Item</h2>
+
+      <form id="newsForm">
+        <input type="hidden" id="newsId" />
+
+        <div class="lfield" style="margin-bottom:14px;">
+          <label for="newsTitle">Headline</label>
+          <input id="newsTitle" type="text" placeholder="e.g. Logistics UK calls for fuel duty freeze in Budget submission" required />
+        </div>
+        <div class="lfield" style="margin-bottom:14px;">
+          <label for="newsLink">Article Link</label>
+          <input id="newsLink" type="url" placeholder="https://…" required />
+        </div>
+        <div class="lfield" style="margin-bottom:14px;">
+          <label for="newsSource">Source</label>
+          <input id="newsSource" type="text" placeholder="e.g. Logistics UK, Fleet News, Motor Transport" required />
+        </div>
+        <div class="lfield" style="margin-bottom:14px;">
+          <label for="newsSummary">Summary (optional)</label>
+          <textarea id="newsSummary" rows="3" placeholder="Short excerpt shown under the headline…" style="width:100%;resize:vertical;font-family:inherit;"></textarea>
+        </div>
+        <div class="lfield" style="margin-bottom:20px;">
+          <label for="newsPublishedAt">Published Date (optional)</label>
+          <input id="newsPublishedAt" type="date" />
+        </div>
+
+        <div id="newsFormError" class="form-error" role="alert" style="margin-bottom:14px;"></div>
+
+        <div style="display:flex;gap:10px;">
+          <button type="button" id="newsCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:600;cursor:pointer;">Cancel</button>
+          <button type="submit" id="newsSubmitBtn" style="flex:2;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Save News Item</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/admin-news.js"></script>
+</body>
+</html>

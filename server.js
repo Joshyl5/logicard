@@ -23,7 +23,7 @@ const {
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
-  upsertNewsItem, getRecentNewsItems,
+  upsertNewsItem, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -826,6 +826,10 @@ app.get('/admin/verifications', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-verifications.html'));
 });
 
+app.get('/admin/news', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-news.html'));
+});
+
 // ── Member auth ────────────────────────────────────────────────
 app.post('/api/login', loginLimiter, async (req, res) => {
   const { email, password } = req.body;
@@ -1102,6 +1106,64 @@ app.delete('/api/admin/adverts/:id', requireAdmin, async (req, res) => {
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid advert id.' });
   const deleted = await deleteAdvert(id);
   if (!deleted) return res.status(404).json({ error: 'Advert not found.' });
+  res.json({ success: true });
+});
+
+// ── Manage News (Logistics News feed) ─────────────────────────────
+// Most sources here are auto-pulled from RSS (see LOGISTICS_NEWS_FEEDS
+// above) and need no admin action. This is for the sources that were
+// requested but don't have a usable feed to automate — checked directly as
+// of Sep 2026: Logistics UK's feeds exist but return 0 items and their
+// press-releases page has no RSS auto-discovery tag; FleetNews returns 410
+// Gone (feed deliberately discontinued by them, so not worth working
+// around); Motor Transport has no discoverable feed at all. Add those
+// stories here by hand, crediting whichever outlet actually published them.
+function validNewsItemPayload(body) {
+  const { title, link, source } = body;
+  if (!title || !String(title).trim()) return 'Title is required.';
+  if (!link || !/^https:\/\//i.test(String(link).trim())) return 'Link must be a full https:// URL.';
+  if (!source || !String(source).trim()) return 'Source is required.';
+  return null;
+}
+
+app.get('/api/admin/news-items', requireAdmin, async (_req, res) => {
+  res.json(await getAllNewsItems());
+});
+
+app.post('/api/admin/news-items', requireAdmin, async (req, res) => {
+  const error = validNewsItemPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  try {
+    const item = await createManualNewsItem(req.body);
+    res.json(item);
+  } catch (err) {
+    if (err.code === '23505') return res.status(400).json({ error: 'A news item with that link already exists.' });
+    console.error('Create news item error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+app.put('/api/admin/news-items/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid news item id.' });
+  const error = validNewsItemPayload(req.body);
+  if (error) return res.status(400).json({ error });
+  try {
+    const item = await updateNewsItem(id, req.body);
+    if (!item) return res.status(404).json({ error: 'News item not found.' });
+    res.json(item);
+  } catch (err) {
+    if (err.code === '23505') return res.status(400).json({ error: 'A news item with that link already exists.' });
+    console.error('Update news item error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+app.delete('/api/admin/news-items/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid news item id.' });
+  const deleted = await deleteNewsItem(id);
+  if (!deleted) return res.status(404).json({ error: 'News item not found.' });
   res.json({ success: true });
 });
 
