@@ -22,7 +22,12 @@
    Centered as a group in the space between the logo and Login/Join — not
    left-aligned right after the logo — to match the reference layout the
    site's nav pattern is based on. */
-.site-header-nav { flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+/* overflow-x here (not set by default) would implicitly clip overflow-y
+   too, per the CSS spec — cutting off every dropdown, since they're
+   position:absolute and meant to render below this row. Scrolling is only
+   needed once the row doesn't fit anyway, so it's scoped to the narrow
+   media query below instead of living on the base rule. */
+.site-header-nav { flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; }
 .site-header-nav::-webkit-scrollbar { display: none; }
 .nav-item { position: relative; flex-shrink: 0; }
 .nav-link {
@@ -92,6 +97,11 @@
 @media (max-width: 900px) {
   .site-header { gap: 16px; padding: 12px 20px; }
   .nav-link { padding: 8px 12px; font-size: 13.5px; }
+  /* Below this width the row can outgrow the header — scroll to reach
+     every item takes priority over dropdowns staying visible, since
+     hover-based dropdowns are already unreliable on touch screens at
+     this size anyway. */
+  .site-header-nav { overflow-x: auto; scrollbar-width: none; }
 }
 
 @media (max-width: 700px) {
