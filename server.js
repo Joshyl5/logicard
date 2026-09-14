@@ -17,7 +17,7 @@ const {
   getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
-  getActiveOffers, getAllOffers, getFeaturedOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
@@ -1584,7 +1584,7 @@ function filterOffersForMember(offers, memberGender) {
 // affiliate URL is ever returned here, and claiming still requires
 // signing up and verifying, same as it always has.
 app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await getFeaturedOffers()).filter(o => !o.targetGender);
+  const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender);
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl }) => ({
     id, merchantName, title, description, category, discountText, imageUrl,
   })));
@@ -1625,7 +1625,7 @@ app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
 // lightweight slice of the same offers data, not a separate content type.
 app.get('/api/offers/featured', requireAuth, requireVerified, async (req, res) => {
   const member = await getMemberByNumber(req.session.membershipNumber);
-  const offers = filterOffersForMember(await getFeaturedOffers(), member ? member.gender : null);
+  const offers = filterOffersForMember(await getFeaturedOffersForDashboard(), member ? member.gender : null);
   res.json(offers.map(({ id, merchantName, title, imageUrl }) => ({ id, merchantName, title, imageUrl })));
 });
 

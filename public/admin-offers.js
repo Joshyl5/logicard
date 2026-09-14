@@ -15,6 +15,12 @@ function renderTable(offers) {
   }
 
   const GENDER_LABELS = { M: 'Male only', F: 'Female only', Other: 'Other only' };
+  const featuredLabel = (o) => {
+    if (o.featuredDashboard && o.featuredPublic) return 'Dashboard + Public';
+    if (o.featuredDashboard) return 'Dashboard only';
+    if (o.featuredPublic) return 'Public only';
+    return '—';
+  };
 
   tbody.innerHTML = offers.map(o => `
     <tr>
@@ -26,7 +32,7 @@ function renderTable(offers) {
       <td>${escapeHtml(o.voucherCode) || '—'}</td>
       <td>${o.codesTotal ? `${o.codesAvailable.toLocaleString()} / ${o.codesTotal.toLocaleString()} left` : '—'}</td>
       <td>${o.isActive ? 'Yes' : 'No'}</td>
-      <td>${o.isFeatured ? 'Yes' : 'No'}</td>
+      <td>${featuredLabel(o)}</td>
       <td>${o.targetGender ? (GENDER_LABELS[o.targetGender] || o.targetGender) : 'Everyone'}</td>
       <td>${o.clickCount || 0}</td>
       <td>
@@ -100,7 +106,8 @@ function openModal(id) {
   offerForm.reset();
   document.getElementById('offerId').value       = '';
   document.getElementById('offerIsActive').checked = true;
-  document.getElementById('offerIsFeatured').checked = false;
+  document.getElementById('offerFeaturedDashboard').checked = false;
+  document.getElementById('offerFeaturedPublic').checked = false;
   document.getElementById('offerTargetGender').value = '';
   document.getElementById('offerPlatform').value = 'AWIN';
   document.getElementById('offerSortOrder').value  = 0;
@@ -120,7 +127,8 @@ function openModal(id) {
       document.getElementById('offerImageUrl').value       = offer.imageUrl || '';
       document.getElementById('offerSortOrder').value      = offer.sortOrder || 0;
       document.getElementById('offerIsActive').checked     = !!offer.isActive;
-      document.getElementById('offerIsFeatured').checked   = !!offer.isFeatured;
+      document.getElementById('offerFeaturedDashboard').checked = !!offer.featuredDashboard;
+      document.getElementById('offerFeaturedPublic').checked    = !!offer.featuredPublic;
       document.getElementById('offerTargetGender').value   = offer.targetGender || '';
       document.getElementById('offerPlatform').value       = offer.platform || 'AWIN';
     }
@@ -153,7 +161,8 @@ offerForm.addEventListener('submit', async e => {
     imageUrl:     document.getElementById('offerImageUrl').value.trim() || null,
     sortOrder:    Number(document.getElementById('offerSortOrder').value) || 0,
     isActive:     document.getElementById('offerIsActive').checked,
-    isFeatured:   document.getElementById('offerIsFeatured').checked,
+    featuredDashboard: document.getElementById('offerFeaturedDashboard').checked,
+    featuredPublic:    document.getElementById('offerFeaturedPublic').checked,
     targetGender: document.getElementById('offerTargetGender').value || null,
     platform:     document.getElementById('offerPlatform').value || 'AWIN',
   };

@@ -152,6 +152,16 @@ async function initDb() {
   // Lets a normal category offer also appear as a "Featured Partner" tile
   // on the member dashboard, instead of maintaining a separate advert entry.
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE`);
+  // Splits the single "featured" flag above into two independent
+  // placements — an offer can be featured on the member dashboard, the
+  // public homepage/Deals page, both, or neither, instead of being forced
+  // into "both or neither" together. Backfilled once from is_featured so
+  // existing featured offers keep showing in both places exactly as
+  // before; only fills gaps (WHERE ... IS NULL), never overwrites a value
+  // set independently afterward.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS featured_dashboard BOOLEAN`);
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS featured_public BOOLEAN`);
+  await pool.query(`UPDATE offers SET featured_dashboard = is_featured, featured_public = is_featured WHERE featured_dashboard IS NULL`);
   // NULL = shown to everyone. 'M'/'F'/'Other' restricts the offer to members
   // who set the matching gender — members with no gender on file always see
   // every offer regardless of this field.
@@ -339,8 +349,9 @@ function toOffer(row) {
     voucherCode:   row.voucher_code,
     affiliateUrl:  row.affiliate_url,
     imageUrl:      row.image_url,
-    isActive:      row.is_active,
-    isFeatured:    row.is_featured,
+    isActive:          row.is_active,
+    featuredDashboard: !!row.featured_dashboard,
+    featuredPublic:    !!row.featured_public,
     targetGender:  row.target_gender,
     platform:      row.platform,
     sortOrder:     row.sort_order,
@@ -509,9 +520,18 @@ async function getAllOffers() {
   return r.rows.map(toOffer);
 }
 
-async function getFeaturedOffers() {
+// Member dashboard's "Featured Partners" tiles.
+async function getFeaturedOffersForDashboard() {
   const r = await pool.query(
-    'SELECT * FROM offers WHERE is_active = true AND is_featured = true ORDER BY sort_order ASC, created_at DESC, id ASC LIMIT 6'
+    'SELECT * FROM offers WHERE is_active = true AND featured_dashboard = true ORDER BY sort_order ASC, created_at DESC, id ASC LIMIT 6'
+  );
+  return r.rows.map(toOffer);
+}
+
+// Public homepage's + Deals page's "Featured Deals" teasers.
+async function getFeaturedOffersForPublic() {
+  const r = await pool.query(
+    'SELECT * FROM offers WHERE is_active = true AND featured_public = true ORDER BY sort_order ASC, created_at DESC, id ASC LIMIT 6'
   );
   return r.rows.map(toOffer);
 }
@@ -525,16 +545,22 @@ async function createOffer(data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, isFeatured = false, targetGender = null, platform = 'AWIN', sortOrder = 0,
+    isActive = true, featuredDashboard = false, featuredPublic = false,
+    targetGender = null, platform = 'AWIN', sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     INSERT INTO offers (
       merchant_name, title, description, category, discount_text,
-      voucher_code, affiliate_url, image_url, is_active, is_featured, target_gender, platform, sort_order
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+      voucher_code, affiliate_url, image_url, is_active, is_featured,
+      featured_dashboard, featured_public, target_gender, platform, sort_order
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, platform || null, sortOrder]);
+  `, [
+    merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
+    !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
+    targetGender || null, platform || null, sortOrder,
+  ]);
 
   return toOffer(r.rows[0]);
 }
@@ -543,17 +569,23 @@ async function updateOffer(id, data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, isFeatured = false, targetGender = null, platform = 'AWIN', sortOrder = 0,
+    isActive = true, featuredDashboard = false, featuredPublic = false,
+    targetGender = null, platform = 'AWIN', sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     UPDATE offers SET
       merchant_name = $1, title = $2, description = $3, category = $4,
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
-      is_active = $9, is_featured = $10, target_gender = $11, platform = $12, sort_order = $13, updated_at = NOW()
-    WHERE id = $14
+      is_active = $9, is_featured = $10, featured_dashboard = $11, featured_public = $12,
+      target_gender = $13, platform = $14, sort_order = $15, updated_at = NOW()
+    WHERE id = $16
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, platform || null, sortOrder, id]);
+  `, [
+    merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
+    !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
+    targetGender || null, platform || null, sortOrder, id,
+  ]);
 
   return toOffer(r.rows[0]);
 }
@@ -673,7 +705,7 @@ async function getPartnerBrandBySlug(slug) {
 }
 
 // Offers shown on a brand's /deals/:slug page — matched by merchant name,
-// same public-teaser shape as getFeaturedOffers's public route (no voucher
+// same public-teaser shape as getFeaturedOffersForPublic (no voucher
 // code or affiliate URL; claiming still requires signing up and verifying).
 async function getActiveOffersByMerchant(merchantName) {
   const r = await pool.query(
@@ -956,7 +988,7 @@ module.exports = {
   createMember, emailExists, findMemberByEmail, getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
-  getActiveOffers, getAllOffers, getFeaturedOffers, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
