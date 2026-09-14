@@ -40,20 +40,51 @@
     .filter-tab:hover { border-color: rgba(255,179,0,0.5); }
     .filter-tab.active { background: var(--orange); border-color: var(--orange); color: var(--navy); }
 
-    .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 24px; }
-    .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; text-align: center; }
-    .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
-    .category-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
+    /* Gold band — alternates with the navy hero above and the navy
+       bottom-cta below (navy, gold, navy), matching the homepage's
+       section-banding pattern. */
+    .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 56px 24px 80px; }
 
-    /* Gold band around the category grid — alternates with the navy hero
-       above and the navy bottom-cta below (navy, gold, navy), matching
-       the homepage's section-banding pattern. Cards flip to a light,
-       navy-text treatment on the gold band, same inverse-contrast
-       convention the homepage's .how-card uses on its own gold section. */
-    .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); }
-    .cat-gold-band .category-card { background: rgba(255,255,255,0.9); border-color: rgba(7,29,64,0.12); }
-    .cat-gold-band .category-card h2 { color: var(--navy); }
-    .cat-gold-band .category-card p { color: rgba(7,29,64,0.7); }
+    /* Placeholder deal cards — same component/size as the site's real
+       Featured Deals cards (categories.html/index.html), so when real
+       Fashion & Lifestyle offers are added later they drop in at the
+       exact same dimensions, no layout change needed. Flipped to a
+       light/navy-text treatment here since they sit on the gold band,
+       same inversion .category-card used before it. */
+    .deals-placeholder-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+      max-width: 1320px; margin: 0 auto;
+    }
+    .deal-card {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(7,29,64,0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .deal-card-image { aspect-ratio: 16 / 9; background: rgba(7,29,64,0.06); overflow: hidden; }
+    .deal-card-image-fallback {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 34px; font-weight: 900; color: rgba(7,29,64,0.2);
+    }
+    .deal-card-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+    .deal-card-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .deal-card-badge {
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px;
+      background: rgba(7,29,64,0.06); color: rgba(7,29,64,0.75);
+      padding: 5px 10px; border-radius: 100px;
+    }
+    .deal-card-badge--exclusive { background: var(--navy); color: var(--orange); }
+    .deal-card-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+    .deal-card-sub { font-size: 13.5px; color: rgba(7,29,64,0.6); line-height: 1.5; margin-bottom: 18px; flex: 1; }
+    .deal-card-soon {
+      display: inline-block; align-self: flex-start;
+      background: rgba(7,29,64,0.08); color: rgba(7,29,64,0.55);
+      font-weight: 700; font-size: 12.5px; padding: 9px 16px; border-radius: 100px;
+    }
+    @media (max-width: 1100px) { .deals-placeholder-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 700px)  { .deals-placeholder-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 480px)  { .deals-placeholder-grid { grid-template-columns: 1fr; } }
 
     .bottom-cta { text-align: center; padding: 0 24px 80px; }
     .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
@@ -87,14 +118,70 @@
   </div>
 
   <section class="cat-gold-band">
-  <div class="category-grid">
-    <div class="category-card" data-cat="mens"><h2>Men's Clothing</h2><p>Savings on men's everyday and formal wear.</p></div>
-    <div class="category-card" data-cat="womens"><h2>Women's Clothing</h2><p>Discounts across women's clothing for every occasion.</p></div>
-    <div class="category-card" data-cat="kids"><h2>Kids' Clothing</h2><p>Discounted clothing for kids of all ages.</p></div>
-    <div class="category-card" data-cat="footwear"><h2>Footwear</h2><p>Discounted footwear for work, rest and everything between.</p></div>
-    <div class="category-card" data-cat="sportswear"><h2>Sportswear</h2><p>Savings on activewear and sports clothing.</p></div>
-    <div class="category-card" data-cat="accessories"><h2>Accessories</h2><p>Save on bags, jewellery and everyday accessories.</p></div>
-    <div class="category-card" data-cat="beauty"><h2>Health, Grooming &amp; Beauty</h2><p>Discounts on grooming, skincare and personal care.</p></div>
+  <div class="deals-placeholder-grid">
+    <div class="deal-card" data-cat="mens">
+      <div class="deal-card-image"><div class="deal-card-image-fallback">M</div></div>
+      <div class="deal-card-body">
+        <div class="deal-card-badges"><span class="deal-card-badge">Men's Clothing</span><span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>
+        <p class="deal-card-title">Men's clothing deals</p>
+        <p class="deal-card-sub">Savings on men's everyday and formal wear — landing soon.</p>
+        <span class="deal-card-soon">Coming soon</span>
+      </div>
+    </div>
+    <div class="deal-card" data-cat="womens">
+      <div class="deal-card-image"><div class="deal-card-image-fallback">W</div></div>
+      <div class="deal-card-body">
+        <div class="deal-card-badges"><span class="deal-card-badge">Women's Clothing</span><span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>
+        <p class="deal-card-title">Women's clothing deals</p>
+        <p class="deal-card-sub">Discounts across women's clothing for every occasion — landing soon.</p>
+        <span class="deal-card-soon">Coming soon</span>
+      </div>
+    </div>
+    <div class="deal-card" data-cat="kids">
+      <div class="deal-card-image"><div class="deal-card-image-fallback">K</div></div>
+      <div class="deal-card-body">
+        <div class="deal-card-badges"><span class="deal-card-badge">Kids' Clothing</span><span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>
+        <p class="deal-card-title">Kids' clothing deals</p>
+        <p class="deal-card-sub">Discounted clothing for kids of all ages — landing soon.</p>
+        <span class="deal-card-soon">Coming soon</span>
+      </div>
+    </div>
+    <div class="deal-card" data-cat="footwear">
+      <div class="deal-card-image"><div class="deal-card-image-fallback">F</div></div>
+      <div class="deal-card-body">
+        <div class="deal-card-badges"><span class="deal-card-badge">Footwear</span><span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>
+        <p class="deal-card-title">Footwear deals</p>
+        <p class="deal-card-sub">Discounted footwear for work, rest and everything between — landing soon.</p>
+        <span class="deal-card-soon">Coming soon</span>
+      </div>
+    </div>
+    <div class="deal-card" data-cat="sportswear">
+      <div class="deal-card-image"><div class="deal-card-image-fallback">S</div></div>
+      <div class="deal-card-body">
+        <div class="deal-card-badges"><span class="deal-card-badge">Sportswear</span><span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>
+        <p class="deal-card-title">Sportswear deals</p>
+        <p class="deal-card-sub">Savings on activewear and sports clothing — landing soon.</p>
+        <span class="deal-card-soon">Coming soon</span>
+      </div>
+    </div>
+    <div class="deal-card" data-cat="accessories">
+      <div class="deal-card-image"><div class="deal-card-image-fallback">A</div></div>
+      <div class="deal-card-body">
+        <div class="deal-card-badges"><span class="deal-card-badge">Accessories</span><span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>
+        <p class="deal-card-title">Accessories deals</p>
+        <p class="deal-card-sub">Save on bags, jewellery and everyday accessories — landing soon.</p>
+        <span class="deal-card-soon">Coming soon</span>
+      </div>
+    </div>
+    <div class="deal-card" data-cat="beauty">
+      <div class="deal-card-image"><div class="deal-card-image-fallback">H</div></div>
+      <div class="deal-card-body">
+        <div class="deal-card-badges"><span class="deal-card-badge">Health, Grooming &amp; Beauty</span><span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>
+        <p class="deal-card-title">Health, grooming &amp; beauty deals</p>
+        <p class="deal-card-sub">Discounts on grooming, skincare and personal care — landing soon.</p>
+        <span class="deal-card-soon">Coming soon</span>
+      </div>
+    </div>
   </div>
   </section>
 
@@ -115,7 +202,7 @@
       document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       const cat = tab.dataset.cat;
-      document.querySelectorAll('.category-card').forEach(card => {
+      document.querySelectorAll('.deal-card').forEach(card => {
         card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
       });
     });
