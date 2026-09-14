@@ -552,7 +552,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/technology-office.html',      changefreq: 'monthly', priority: '0.6' },
   { path: '/home-garden.html',            changefreq: 'monthly', priority: '0.6' },
   { path: '/family-leisure-travel.html',  changefreq: 'monthly', priority: '0.6' },
-  { path: '/business-services.html',      changefreq: 'monthly', priority: '0.6' },
+  { path: '/utilities-mobile.html',       changefreq: 'monthly', priority: '0.6' },
   { path: '/events-experiences.html',     changefreq: 'monthly', priority: '0.6' },
   { path: '/things-to-do.html',           changefreq: 'monthly', priority: '0.6' },
   { path: '/financial-wellbeing.html',    changefreq: 'monthly', priority: '0.6' },
@@ -609,7 +609,7 @@ const NAV_OPTIONS_BY_PAGE = {
   '/technology-office.html':      { activeDropdown: 'technology-office' },
   '/home-garden.html':            { activeDropdown: 'home-garden' },
   '/family-leisure-travel.html':  { activeDropdown: 'family-leisure-travel' },
-  '/business-services.html':      { activeDropdown: 'business-services' },
+  '/utilities-mobile.html':       { activeDropdown: 'utilities-mobile' },
   '/events-experiences.html':     { activeDropdown: 'events-experiences' },
   '/login.html':                {},
   '/signup.html':               {},
@@ -706,6 +706,9 @@ app.get('/member-dashboard', requireAuth, (_req, res) => {
 
 // Old URL, kept as a redirect so nothing already bookmarked/emailed breaks.
 app.get('/members', requireAuth, (_req, res) => res.redirect('/member-offers'));
+
+// "Business Services" was renamed to "Utilities & Mobile" shortly after launch.
+app.get('/business-services.html', (_req, res) => res.redirect(301, '/utilities-mobile.html'));
 
 app.get('/api/offer-categories', requireAuth, (_req, res) => res.json(OFFER_CATEGORIES));
 

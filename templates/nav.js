@@ -7,7 +7,7 @@ function cls(active, key) {
 //         'partnerships' | null
 // activeDropdown: 'trade-supplies-tools' | 'vehicles-motoring' |
 //                 'technology-office' | 'home-garden' | 'food-drink' |
-//                 'fashion' | 'family-leisure-travel' | 'business-services' |
+//                 'fashion' | 'family-leisure-travel' | 'utilities-mobile' |
 //                 'events-experiences' (the 9 pages represented in the
 //                 Deals dropdown) | null
 // tagline: unused — kept as an accepted option so existing call sites
@@ -42,7 +42,7 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
             <a href="/food-drink.html"${dropdownCls('food-drink')}>Food &amp; Drink</a>
             <a href="/fashion.html"${dropdownCls('fashion')}>Fashion &amp; Lifestyle</a>
             <a href="/family-leisure-travel.html"${dropdownCls('family-leisure-travel')}>Family, Leisure &amp; Travel</a>
-            <a href="/business-services.html"${dropdownCls('business-services')}>Business Services</a>
+            <a href="/utilities-mobile.html"${dropdownCls('utilities-mobile')}>Utilities &amp; Mobile</a>
             <a href="/events-experiences.html"${dropdownCls('events-experiences')}>Events &amp; Experiences</a>
           </div>
         </div>
