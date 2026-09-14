@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=0.8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>About Us — Logicard</title>
   <meta name="description" content="Logicard was built by logistics workers, for logistics workers — because the people who keep Britain moving deserve to feel valued, recognised, and rewarded with real savings." />
   <link rel="canonical" href="https://logicard.co.uk/about.html" />
@@ -134,10 +134,18 @@
     .ab-story-text p { font-size: 16.5px; line-height: 1.85; color: rgba(7,29,64,0.85); margin-bottom: 18px; }
     .ab-story-text p:last-child { margin-bottom: 0; }
     .ab-story-card {
+      position: relative; overflow: hidden;
       background: var(--white); border-radius: 18px; padding: 36px 32px;
       box-shadow: 0 12px 40px rgba(7,29,64,0.18);
     }
+    .ab-story-card-bg {
+      position: absolute; right: -18px; bottom: -22px;
+      width: 210px; height: 178px;
+      opacity: 0.07; pointer-events: none; z-index: 0;
+    }
+    .ab-story-card-bg svg { width: 100%; height: 100%; display: block; }
     .ab-shift-row {
+      position: relative; z-index: 1;
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
       padding: 16px 0; border-bottom: 1px solid rgba(7,29,64,0.1);
     }
@@ -145,7 +153,10 @@
     .ab-shift-row:last-child { border-bottom: none; padding-bottom: 0; }
     .ab-shift-row .was { font-size: 15px; color: rgba(7,29,64,0.35); text-decoration: line-through; }
     .ab-shift-row .arrow { color: rgba(7,29,64,0.25); flex-shrink: 0; }
+    .ab-shift-row .now-group { display: flex; align-items: center; gap: 8px; }
     .ab-shift-row .now { font-size: 16px; font-weight: 800; color: var(--navy); }
+    .ab-shift-row .tick { width: 19px; height: 19px; flex-shrink: 0; }
+    .ab-shift-row .tick svg { width: 100%; height: 100%; display: block; }
 
     /* ── Card grid (used on both navy and gold sections) ── */
     .ab-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
@@ -269,9 +280,24 @@
           </div>
         </div>
         <div class="ab-story-card">
-          <div class="ab-shift-row"><span class="was">Overworked</span><span class="arrow">&rarr;</span><span class="now">Valued</span></div>
-          <div class="ab-shift-row"><span class="was">Underpaid</span><span class="arrow">&rarr;</span><span class="now">Rewarded</span></div>
-          <div class="ab-shift-row"><span class="was">Overlooked</span><span class="arrow">&rarr;</span><span class="now">Recognised</span></div>
+          <div class="ab-story-card-bg" aria-hidden="true">
+            <svg viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 200V80a20 20 0 0 1 20-20h140a20 20 0 0 1 20 20v120" stroke="var(--navy)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M20 122h200" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
+              <rect x="8" y="90" width="16" height="24" rx="4" stroke="var(--navy)" stroke-width="5"/>
+              <circle cx="120" cy="96" r="46" stroke="var(--navy)" stroke-width="6"/>
+              <path d="M78 79a42 42 0 0 1 84 0" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M74 81h92" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="102" cy="101" r="5" fill="var(--navy)"/>
+              <circle cx="138" cy="101" r="5" fill="var(--navy)"/>
+              <path d="M100 116q20 18 40 0" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
+              <circle cx="62" cy="200" r="20" stroke="var(--navy)" stroke-width="6"/>
+              <circle cx="198" cy="200" r="20" stroke="var(--navy)" stroke-width="6"/>
+            </svg>
+          </div>
+          <div class="ab-shift-row"><span class="was">Overworked</span><span class="arrow">&rarr;</span><span class="now-group"><span class="now">Valued</span><span class="tick" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></div>
+          <div class="ab-shift-row"><span class="was">Underpaid</span><span class="arrow">&rarr;</span><span class="now-group"><span class="now">Rewarded</span><span class="tick" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></div>
+          <div class="ab-shift-row"><span class="was">Overlooked</span><span class="arrow">&rarr;</span><span class="now-group"><span class="now">Recognised</span><span class="tick" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></div>
         </div>
       </div>
     </div>

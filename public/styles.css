@@ -590,15 +590,15 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 /* ── Site header ── moved to /nav.css (single source, see templates/nav.js).
    Pages using SHARED_NAV must also <link rel="stylesheet" href="/nav.css">.
 
-   nav.css defaults the header to position:sticky, which is right for a
-   normal top-to-bottom page. The pages that load THIS stylesheet
-   (login/signup/forgot/reset-password/admin) are different: .login-page
-   below centers its content with display:flex, which would drag a
-   sticky (in-flow) header down into the middle of the viewport with it.
-   The original design avoided that by taking the header out of flow
-   entirely with position:fixed — restore that here, scoped to these
-   pages only, rather than changing nav.css's default for everyone. */
-.site-header-wrap { position: fixed; left: 0; right: 0; }
+   NOTE: there used to be a `.site-header-wrap { position: fixed; }` override
+   attempted here, meant to pull the header out of flow specifically on the
+   centered auth pages below. It never actually worked — every page that
+   loads SHARED_NAV links styles.css BEFORE nav.css, so nav.css's later,
+   equal-specificity `position: sticky` rule always wins the cascade
+   regardless of what's written here. Rather than fight that (e.g. with
+   !important, which would just break the header on every other page), the
+   fix is in .login-page/.login-wrap below: they no longer assume the header
+   is out of flow at all, so it doesn't matter whether it's sticky or fixed. */
 
 .back-link {
   display: flex;
@@ -672,13 +672,14 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .pw-toggle svg   { width: 18px; height: 18px; display: block; }
 
 /* ── LOGIN PAGE ──────────────────────────────────────────────── */
+/* The header is position:sticky (nav.css), so it's a normal in-flow
+   element that already pushes this content down on its own — this page
+   must NOT also be display:flex on <body>, or the sticky header and the
+   .site-subbar "< Back" link become flex-row siblings of .login-wrap and
+   get centered as a scattered group instead of stacking normally. */
 .login-page {
   background: radial-gradient(ellipse at 50% 40%, #1a5fad 0%, #0d3b80 35%, #071d40 70%, #040e22 100%);
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 118px 24px 24px; /* clears the fixed header+subbar (~110px) above */
   overflow: hidden;
 }
 
@@ -694,9 +695,13 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 24px;
   width: 100%;
   max-width: 460px;
+  margin: 0 auto;
+  min-height: calc(100vh - 130px); /* fills the space below the sticky header+subbar so the card centers in it, not the whole viewport */
+  padding: 24px 24px 48px;
 }
 
 /* Card */
