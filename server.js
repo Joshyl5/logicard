@@ -38,6 +38,7 @@ const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
 const { renderBrandPage, renderBrandNotFound } = require('./templates/brand-page');
 const { renderOfferPage, renderOfferNotFound } = require('./templates/offer-page');
 const { renderNav } = require('./templates/nav');
+const { renderFooter } = require('./templates/footer');
 
 const app    = express();
 const PORT   = process.env.PORT || 3000;
@@ -687,7 +688,13 @@ const NAV_OPTIONS_BY_PAGE = {
 app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
   const file = req.path === '/' ? 'index.html' : req.path.slice(1);
   const html = fs.readFileSync(path.join(__dirname, 'public', file), 'utf8');
-  res.type('html').send(html.replace('<!-- SHARED_NAV -->', renderNav(NAV_OPTIONS_BY_PAGE[req.path])));
+  // .replace() on a marker the page doesn't have is a harmless no-op, so
+  // pages that haven't adopted <!-- SHARED_FOOTER --> yet (the narrow
+  // auth-flow pages: login/signup/forgot/reset-password) are unaffected.
+  const out = html
+    .replace('<!-- SHARED_NAV -->', renderNav(NAV_OPTIONS_BY_PAGE[req.path]))
+    .replace('<!-- SHARED_FOOTER -->', renderFooter());
+  res.type('html').send(out);
 });
 
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -782,7 +789,10 @@ app.get('/business-services.html', (_req, res) => res.redirect(301, '/utilities-
 // has been checked.
 app.get('/adult', (_req, res) => {
   const html = fs.readFileSync(path.join(__dirname, 'public', 'adult.html'), 'utf8');
-  res.type('html').send(html.replace('<!-- SHARED_NAV -->', renderNav({})));
+  const out = html
+    .replace('<!-- SHARED_NAV -->', renderNav({}))
+    .replace('<!-- SHARED_FOOTER -->', renderFooter());
+  res.type('html').send(out);
 });
 
 app.get('/api/offer-categories', requireAuth, (_req, res) => res.json(OFFER_CATEGORIES));
