@@ -93,6 +93,24 @@
 
     /* Sections */
     .wr-section { padding: 72px 24px; max-width: 1100px; margin: 0 auto; }
+
+    /* Gold panels — alternates navy,navy,gold,navy,gold (hero + Why stay
+       navy, How It Works and the form panel go gold), matching the
+       homepage's section-banding pattern. Rounded/inset rather than
+       full-bleed since every section on this page is already a boxed
+       max-width column, not an edge-to-edge band like the homepage's. */
+    #wr-how, #wr-form {
+      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      border-radius: 28px;
+      color: var(--navy);
+    }
+    #wr-how .wr-section-title, #wr-form .wr-section-title { color: var(--navy); }
+    #wr-how .wr-section-sub, #wr-form .wr-section-sub { color: rgba(7,29,64,0.7); }
+    #wr-how .wr-section-eyebrow, #wr-form .wr-section-eyebrow { color: var(--navy); opacity: 0.75; }
+    #wr-how .wr-step { background: rgba(255,255,255,0.9); border-color: rgba(7,29,64,0.1); }
+    #wr-how .wr-step h3 { color: var(--navy); }
+    #wr-how .wr-step p { color: rgba(7,29,64,0.7); }
+    #wr-how .wr-step-num { background: var(--navy); color: var(--white); }
     .wr-section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
     .wr-section-eyebrow {
       display: block; font-size: 11px; font-weight: 800; letter-spacing: 2px;

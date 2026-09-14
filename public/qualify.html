@@ -102,15 +102,18 @@
     .q-browse-hint { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 16px; }
     .q-browse-hint a { color: rgba(255,255,255,0.55); }
 
-    /* Sectors */
+    /* Sectors — gold band (alternates with the navy hero above and navy
+       bottom CTA below, matching the homepage's section-banding pattern).
+       The sector cards are already white/navy-text, so they sit on gold
+       with no further color changes needed. */
     .q-sectors {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 0 24px 100px;
+      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      padding: 48px 24px 72px;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-start;
+      align-content: center;
       gap: 12px;
     }
     .q-sector {

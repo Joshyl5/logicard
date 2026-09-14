@@ -33,6 +33,16 @@
     .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
     .category-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
 
+    /* Gold band around the category grid — alternates with the navy hero
+       above and the navy bottom-cta below (navy, gold, navy), matching
+       the homepage's section-banding pattern. Cards flip to a light,
+       navy-text treatment on the gold band, same inverse-contrast
+       convention the homepage's .how-card uses on its own gold section. */
+    .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); }
+    .cat-gold-band .category-card { background: rgba(255,255,255,0.9); border-color: rgba(7,29,64,0.12); }
+    .cat-gold-band .category-card h2 { color: var(--navy); }
+    .cat-gold-band .category-card p { color: rgba(7,29,64,0.7); }
+
     .bottom-cta { text-align: center; padding: 0 24px 80px; }
     .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
     .cta-btn:hover { background: var(--orange-dark); }
@@ -53,6 +63,7 @@
 
   <p class="hero-gold-bar">Discounts &bull; Giveaways &bull; Rewards &bull; Recognition <span class="hero-gold-divider">|</span> for the people who keep Britain moving</p>
 
+  <section class="cat-gold-band">
   <div class="category-grid">
     <div class="category-card"><h2>Casual Dining</h2><p>Discounts at sit-down restaurants for every taste.</p></div>
     <div class="category-card"><h2>Pubs &amp; Bars</h2><p>Savings on food and drinks at pubs and bars nationwide.</p></div>
@@ -62,6 +73,7 @@
     <div class="category-card"><h2>Meal Delivery</h2><p>Save on takeaway and meal delivery services.</p></div>
     <div class="category-card"><h2>Home Cooking</h2><p>Discounts on groceries and meal kits for cooking at home.</p></div>
   </div>
+  </section>
 
   <p class="verify-banner"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified Logistics workers only</p>
 
