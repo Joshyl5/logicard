@@ -3,8 +3,8 @@ function cls(active, key) {
 }
 
 // active: 'categories' | 'things-to-do' | 'shopping-cards' | 'e-learning' |
-//         'financial-wellbeing' | 'mental-wellbeing' | 'qualify' | 'about' |
-//         'partnerships' | null
+//         'financial-wellbeing' | 'mental-wellbeing' | 'logistics-news' |
+//         'qualify' | 'about' | 'partnerships' | null
 // activeDropdown: 'trade-supplies-tools' | 'vehicles-motoring' |
 //                 'technology-office' | 'home-garden' | 'food-drink' |
 //                 'fashion' | 'family-leisure-travel' | 'utilities-mobile' |
@@ -20,7 +20,7 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
   // into one parent tab, same way TYC highlights DEALS/ABOUT/MORE as a whole.
   const dealsTabCls = active === 'categories' ? ' active' : '';
   const aboutTabCls = (active === 'about' || active === 'qualify') ? ' active' : '';
-  const moreKeys = ['things-to-do', 'shopping-cards', 'e-learning', 'financial-wellbeing', 'mental-wellbeing'];
+  const moreKeys = ['things-to-do', 'shopping-cards', 'e-learning', 'financial-wellbeing', 'mental-wellbeing', 'logistics-news'];
   const moreTabCls = moreKeys.includes(active) ? ' active' : '';
 
   const chevronSvg = '<svg class="nav-chevron" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
@@ -64,6 +64,7 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
         <div class="nav-item">
           <a href="#" class="nav-link${moreTabCls}" onclick="return false;">More${chevronSvg}</a>
           <div class="nav-dropdown nav-dropdown--single">
+            <a href="/logistics-news.html"${cls(active, 'logistics-news')}>Logistics News</a>
             <a href="/things-to-do.html"${cls(active, 'things-to-do')}>Things to Do</a>
             <a href="/shopping-cards.html"${cls(active, 'shopping-cards')}>Shopping Cards</a>
             <a href="/e-learning.html"${cls(active, 'e-learning')}>E-learning</a>
