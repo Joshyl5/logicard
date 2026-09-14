@@ -68,10 +68,11 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
             <a href="/mental-wellbeing.html"${cls(active, 'mental-wellbeing')}>Mental Wellbeing</a>
           </div>
         </div>
+
+        <a href="/qualify.html" class="site-header-cta${active === 'qualify' ? ' active' : ''}">${checkSvg}Check Your Eligibility Now</a>
       </div>
 
       <div class="site-header-actions">
-        <a href="/qualify.html" class="site-header-cta${active === 'qualify' ? ' active' : ''}">${checkSvg}Check Your Eligibility Now</a>
         <a href="/login.html" class="site-header-signin">Log In</a>
         <a href="/signup.html" class="site-header-join">Join Now</a>
       </div>

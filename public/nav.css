@@ -18,8 +18,11 @@
 .site-header-logo { flex-shrink: 0; display: inline-flex; align-items: center; border: 2.5px solid rgba(255,179,0,0.55); padding: 8px 16px; border-radius: 6px; background: rgba(255,255,255,0.05); box-shadow: 0 0 14px rgba(255,179,0,0.12); text-decoration: none; font-size: 23px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
 .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--orange, #FFB300); }
 
-/* ── Nav tabs ── */
-.site-header-nav { flex: 1; display: flex; align-items: center; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+/* ── Nav tabs ──
+   Centered as a group in the space between the logo and Login/Join — not
+   left-aligned right after the logo — to match the reference layout the
+   site's nav pattern is based on. */
+.site-header-nav { flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px; overflow-x: auto; scrollbar-width: none; }
 .site-header-nav::-webkit-scrollbar { display: none; }
 .nav-item { position: relative; flex-shrink: 0; }
 .nav-link {
@@ -64,6 +67,7 @@
   font-weight: 700; font-size: 13px; padding: 9px 16px; border-radius: 100px;
   text-decoration: none; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   transition: background 0.15s;
+  margin-left: 14px; /* breathing room from the plain-text tabs beside it */
 }
 .site-header-cta:hover, .site-header-cta.active { background: #159141; }
 
