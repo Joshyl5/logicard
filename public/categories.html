@@ -174,6 +174,50 @@
     .deals-cat-tile-icon svg { width: 22px; height: 22px; fill: none; stroke: var(--orange); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .deals-cat-tile span { font-size: 13.5px; font-weight: 700; color: var(--white); line-height: 1.3; }
 
+    /* ── Featured Deals — same component/API as the homepage's, so a
+       deal admin marks "Featured" shows up in both places automatically. ── */
+    .featured-deals-section { padding: 8px 24px 76px; }
+    .featured-deals-head { text-align: center; margin-bottom: 40px; }
+    .featured-deals-heading { font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .featured-deals-subtitle { font-size: 15px; color: rgba(255,255,255,0.55); }
+    .featured-deals-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+      max-width: 1160px; margin: 0 auto;
+    }
+    .featured-deals-empty { text-align: center; color: rgba(255,255,255,0.55); font-size: 15px; padding: 20px 0 0; }
+    .deal-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .deal-card:hover { transform: translateY(-4px); border-color: rgba(255,179,0,0.35); }
+    .deal-card-image { aspect-ratio: 16 / 9; background: rgba(255,255,255,0.06); overflow: hidden; }
+    .deal-card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .deal-card-image-fallback {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      font-size: 34px; font-weight: 900; color: rgba(255,179,0,0.5);
+    }
+    .deal-card-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
+    .deal-card-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+    .deal-card-badge {
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px;
+      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75);
+      padding: 5px 10px; border-radius: 100px;
+    }
+    .deal-card-badge--exclusive { background: rgba(255,179,0,0.15); color: var(--orange); }
+    .deal-card-brand { font-size: 15px; font-weight: 800; color: var(--white); margin-bottom: 4px; }
+    .deal-card-title { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 10px; flex: 1; }
+    .deal-card-discount { font-size: 15px; font-weight: 800; color: var(--orange); margin-bottom: 18px; }
+    .deal-card-footer { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .deal-card-claim {
+      background: var(--orange); color: var(--navy); font-weight: 800; font-size: 13px;
+      padding: 10px 18px; border-radius: 100px; text-decoration: none; transition: background 0.15s;
+    }
+    .deal-card-claim:hover { background: var(--orange-dark); }
+
     .bottom-cta { text-align: center; padding: 0 24px 80px; }
     .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
     .cta-btn:hover { background: var(--orange-dark); }
@@ -193,6 +237,7 @@
     }
     @media (max-width: 700px) {
       .deals-cats-grid { grid-template-columns: repeat(3, 1fr); }
+      .featured-deals-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 600px) {
       .deals-hero { padding: 44px 20px 40px; }
@@ -206,6 +251,8 @@
       .deals-cat-tile-icon { width: 38px; height: 38px; }
       .deals-cat-tile-icon svg { width: 18px; height: 18px; }
       .deals-cat-tile span { font-size: 12.5px; }
+      .featured-deals-section { padding: 8px 20px 56px; }
+      .featured-deals-grid { grid-template-columns: 1fr; gap: 16px; }
     }
   </style>
 </head>
@@ -328,6 +375,61 @@
       </a>
     </div>
   </section>
+
+  <!-- Featured Deals -->
+  <section class="featured-deals-section" id="featured-deals">
+    <div class="featured-deals-head">
+      <h2 class="featured-deals-heading">Featured Deals</h2>
+      <p class="featured-deals-subtitle">Hand-picked by the Logicard team</p>
+    </div>
+    <div class="featured-deals-grid" id="featuredDealsGrid"></div>
+    <p class="featured-deals-empty" id="featuredDealsEmpty" hidden>New featured deals are on their way — check back soon.</p>
+  </section>
+  <script>
+    (function () {
+      var grid = document.getElementById('featuredDealsGrid');
+      var empty = document.getElementById('featuredDealsEmpty');
+      if (!grid) return;
+
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+      function isSafeImageUrl(u) {
+        return typeof u === 'string' && /^https:\/\//i.test(u);
+      }
+
+      fetch('/api/public/featured-offers')
+        .then(function (r) { if (!r.ok) throw new Error('bad response'); return r.json(); })
+        .then(function (offers) {
+          if (!Array.isArray(offers) || offers.length === 0) { empty.hidden = false; return; }
+          grid.innerHTML = offers.map(function (o) {
+            var img = isSafeImageUrl(o.imageUrl)
+              ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />'
+              : '<div class="deal-card-image-fallback">' + esc((o.merchantName || 'Deal').charAt(0)) + '</div>';
+            return (
+              '<div class="deal-card">' +
+                '<div class="deal-card-image">' + img + '</div>' +
+                '<div class="deal-card-body">' +
+                  '<div class="deal-card-badges">' +
+                    (o.category ? '<span class="deal-card-badge">' + esc(o.category) + '</span>' : '') +
+                    '<span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span>' +
+                  '</div>' +
+                  '<h3 class="deal-card-brand">' + esc(o.merchantName) + '</h3>' +
+                  '<p class="deal-card-title">' + esc(o.title) + '</p>' +
+                  (o.discountText ? '<p class="deal-card-discount">' + esc(o.discountText) + '</p>' : '') +
+                  '<div class="deal-card-footer">' +
+                    '<a href="/signup.html" class="deal-card-claim">Join to Claim</a>' +
+                  '</div>' +
+                '</div>' +
+              '</div>'
+            );
+          }).join('');
+        })
+        .catch(function () { empty.hidden = false; });
+    })();
+  </script>
 
   <div class="bottom-cta">
     <a href="/signup.html" class="cta-btn">Join Logicard free →</a>
