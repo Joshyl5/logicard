@@ -5,8 +5,11 @@ function cls(active, key) {
 // active: 'categories' | 'things-to-do' | 'shopping-cards' | 'e-learning' |
 //         'financial-wellbeing' | 'mental-wellbeing' | 'qualify' | 'about' |
 //         'partnerships' | null
-// activeDropdown: 'food-drink' | 'fashion' (the 2 shop-category pages
-//                 represented in the Deals dropdown) | null
+// activeDropdown: 'trade-supplies-tools' | 'vehicles-motoring' |
+//                 'technology-office' | 'home-garden' | 'food-drink' |
+//                 'fashion' | 'family-leisure-travel' | 'business-services' |
+//                 'events-experiences' (the 9 pages represented in the
+//                 Deals dropdown) | null
 // tagline: unused — kept as an accepted option so existing call sites
 //          (NAV_OPTIONS_BY_PAGE in server.js) don't need to change; the
 //          single-row TYC-style header has no room for the tagline strip.
@@ -32,15 +35,15 @@ function renderNav({ active = null, activeDropdown = null } = {}) {
         <div class="nav-item">
           <a href="/categories.html" class="nav-link${dealsTabCls}">Deals</a>
           <div class="nav-dropdown">
-            <a href="/signup.html">Trade Supplies &amp; Tools</a>
-            <a href="/signup.html">Vehicles &amp; Motoring</a>
-            <a href="/signup.html">Technology &amp; Office</a>
-            <a href="/signup.html">Home &amp; Garden</a>
+            <a href="/trade-supplies-tools.html"${dropdownCls('trade-supplies-tools')}>Trade Supplies &amp; Tools</a>
+            <a href="/vehicles-motoring.html"${dropdownCls('vehicles-motoring')}>Vehicles &amp; Motoring</a>
+            <a href="/technology-office.html"${dropdownCls('technology-office')}>Technology &amp; Office</a>
+            <a href="/home-garden.html"${dropdownCls('home-garden')}>Home &amp; Garden</a>
             <a href="/food-drink.html"${dropdownCls('food-drink')}>Food &amp; Drink</a>
             <a href="/fashion.html"${dropdownCls('fashion')}>Fashion &amp; Lifestyle</a>
-            <a href="/signup.html">Family, Leisure &amp; Travel</a>
-            <a href="/signup.html">Business Services</a>
-            <a href="/signup.html">Events &amp; Experiences</a>
+            <a href="/family-leisure-travel.html"${dropdownCls('family-leisure-travel')}>Family, Leisure &amp; Travel</a>
+            <a href="/business-services.html"${dropdownCls('business-services')}>Business Services</a>
+            <a href="/events-experiences.html"${dropdownCls('events-experiences')}>Events &amp; Experiences</a>
           </div>
         </div>
 
