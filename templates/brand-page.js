@@ -58,7 +58,7 @@ function renderBrandPage({ brand, offers }) {
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=3" />
+  <link rel="stylesheet" href="/nav.css?v=4" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -130,7 +130,7 @@ function renderBrandNotFound() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brand Not Found — Logicard</title>
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="stylesheet" href="/nav.css?v=3" />
+  <link rel="stylesheet" href="/nav.css?v=4" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #071d40; color: #fff; }
