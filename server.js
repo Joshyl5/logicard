@@ -888,14 +888,20 @@ app.get('/api/admin/members', requireAdmin, async (_req, res) => {
 
 // ── Admin offers ───────────────────────────────────────────────
 const GENDER_VALUES = ['M', 'F', 'Other'];
+// Every offer added before this field existed was sourced through AWIN
+// (backfilled in database.js's initDb) — keep it a fixed list rather than
+// free text so sorting/filtering in Manage Offers stays reliable ("Awin"
+// vs "AWIN" vs "awin" would otherwise split into three groups).
+const OFFER_PLATFORMS = ['AWIN', 'Rakuten Advertising', 'Impact', 'Partnerize', 'CJ Affiliate', 'TradeDoubler', 'Direct', 'Other'];
 
 function validOfferPayload(body) {
-  const { merchantName, title, affiliateUrl, category, targetGender } = body;
+  const { merchantName, title, affiliateUrl, category, targetGender, platform } = body;
   if (!merchantName || !String(merchantName).trim()) return 'Merchant name is required.';
   if (!title || !String(title).trim()) return 'Title is required.';
   if (!affiliateUrl || !/^https?:\/\//i.test(affiliateUrl)) return 'Affiliate URL must start with http:// or https://.';
   if (category && !OFFER_CATEGORIES.includes(category)) return 'Invalid category.';
   if (targetGender && !GENDER_VALUES.includes(targetGender)) return 'Invalid target gender.';
+  if (platform && !OFFER_PLATFORMS.includes(platform)) return 'Invalid platform.';
   return null;
 }
 

@@ -9,7 +9,7 @@ function renderTable(offers) {
   const count = document.getElementById('tableCount');
 
   if (!offers.length) {
-    tbody.innerHTML = '<tr><td colspan="11" class="table-empty">No offers found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="12" class="table-empty">No offers found.</td></tr>';
     count.textContent = '';
     return;
   }
@@ -21,6 +21,7 @@ function renderTable(offers) {
       <td>${escapeHtml(o.merchantName)}</td>
       <td>${escapeHtml(o.title)}</td>
       <td>${escapeHtml(o.category) || '—'}</td>
+      <td>${escapeHtml(o.platform) || '—'}</td>
       <td>${escapeHtml(o.discountText) || '—'}</td>
       <td>${escapeHtml(o.voucherCode) || '—'}</td>
       <td>${o.codesTotal ? `${o.codesAvailable.toLocaleString()} / ${o.codesTotal.toLocaleString()} left` : '—'}</td>
@@ -58,6 +59,35 @@ function filterOffers(query) {
   );
 }
 
+// Sorts a copy — never mutates the array passed in, since that's usually
+// either allOffers itself or the live result of filterOffers().
+function sortOffers(offers, sortKey) {
+  const sorted = [...offers];
+  switch (sortKey) {
+    case 'oldest':
+      return sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    case 'az':
+      return sorted.sort((a, b) => (a.merchantName || '').localeCompare(b.merchantName || ''));
+    case 'platform':
+      return sorted.sort((a, b) =>
+        (a.platform || '').localeCompare(b.platform || '') || (a.merchantName || '').localeCompare(b.merchantName || '')
+      );
+    case 'newest':
+    default:
+      return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }
+}
+
+function currentSortKey() {
+  return document.getElementById('sortSelect').value;
+}
+
+function refreshTable() {
+  const query    = document.getElementById('searchInput').value.trim();
+  const filtered = filterOffers(query);
+  renderTable(sortOffers(filtered, currentSortKey()));
+}
+
 // ── Modal ─────────────────────────────────────────────────────
 const offerModal      = document.getElementById('offerModal');
 const offerModalTitle = document.getElementById('offerModalTitle');
@@ -72,6 +102,7 @@ function openModal(id) {
   document.getElementById('offerIsActive').checked = true;
   document.getElementById('offerIsFeatured').checked = false;
   document.getElementById('offerTargetGender').value = '';
+  document.getElementById('offerPlatform').value = 'AWIN';
   document.getElementById('offerSortOrder').value  = 0;
 
   if (id) {
@@ -91,6 +122,7 @@ function openModal(id) {
       document.getElementById('offerIsActive').checked     = !!offer.isActive;
       document.getElementById('offerIsFeatured').checked   = !!offer.isFeatured;
       document.getElementById('offerTargetGender').value   = offer.targetGender || '';
+      document.getElementById('offerPlatform').value       = offer.platform || 'AWIN';
     }
   } else {
     offerModalTitle.textContent = 'Add Offer';
@@ -123,6 +155,7 @@ offerForm.addEventListener('submit', async e => {
     isActive:     document.getElementById('offerIsActive').checked,
     isFeatured:   document.getElementById('offerIsFeatured').checked,
     targetGender: document.getElementById('offerTargetGender').value || null,
+    platform:     document.getElementById('offerPlatform').value || 'AWIN',
   };
 
   offerSubmitBtn.disabled    = true;
@@ -239,7 +272,7 @@ async function loadOffers() {
   const res = await fetch('/api/admin/offers');
   if (!res.ok) { window.location.href = '/admin-login.html'; return; }
   allOffers = await res.json();
-  renderTable(allOffers);
+  refreshTable();
 }
 
 async function init() {
@@ -249,9 +282,8 @@ async function init() {
     window.location.href = '/admin-login.html';
   }
 
-  document.getElementById('searchInput').addEventListener('input', e => {
-    renderTable(filterOffers(e.target.value.trim()));
-  });
+  document.getElementById('searchInput').addEventListener('input', refreshTable);
+  document.getElementById('sortSelect').addEventListener('change', refreshTable);
 
   document.getElementById('adminSignout').addEventListener('click', async () => {
     await fetch('/api/admin/logout', { method: 'POST' });

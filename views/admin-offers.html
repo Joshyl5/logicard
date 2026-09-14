@@ -35,6 +35,12 @@
         </svg>
         <input id="searchInput" type="text" class="search-input" placeholder="Search by merchant, title or category…" />
       </div>
+      <select id="sortSelect" style="background:rgba(4,14,34,0.8);border:1px solid rgba(79,163,247,0.2);border-radius:8px;color:#fff;padding:10px 13px;font-size:0.9rem;">
+        <option value="newest">Sort: Newest first</option>
+        <option value="oldest">Sort: Oldest first</option>
+        <option value="az">Sort: A–Z (merchant)</option>
+        <option value="platform">Sort: Platform</option>
+      </select>
       <button class="export-btn" id="addOfferBtn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" width="16" height="16">
           <line x1="12" y1="5" x2="12" y2="19"/>
@@ -52,6 +58,7 @@
             <th>Merchant</th>
             <th>Title</th>
             <th>Category</th>
+            <th>Platform</th>
             <th>Discount</th>
             <th>Voucher Code</th>
             <th>Unique Codes</th>
@@ -63,7 +70,7 @@
           </tr>
         </thead>
         <tbody id="offersBody">
-          <tr><td colspan="11" class="table-loading">Loading offers…</td></tr>
+          <tr><td colspan="12" class="table-loading">Loading offers…</td></tr>
         </tbody>
       </table>
     </div>
@@ -115,6 +122,19 @@
             <option>Finance &amp; Insurance</option>
             <option>Sport &amp; Fitness</option>
             <option>Advice</option>
+          </select>
+        </div>
+        <div class="lfield" style="margin-bottom:14px;">
+          <label for="offerPlatform">Platform</label>
+          <select id="offerPlatform">
+            <option>AWIN</option>
+            <option>Rakuten Advertising</option>
+            <option>Impact</option>
+            <option>Partnerize</option>
+            <option>CJ Affiliate</option>
+            <option>TradeDoubler</option>
+            <option>Direct</option>
+            <option>Other</option>
           </select>
         </div>
         <div class="lfield" style="margin-bottom:14px;">

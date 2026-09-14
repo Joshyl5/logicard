@@ -156,6 +156,13 @@ async function initDb() {
   // who set the matching gender — members with no gender on file always see
   // every offer regardless of this field.
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS target_gender TEXT`);
+  // Which affiliate network the offer's link goes through — admin-facing
+  // only (sorting/filtering in Manage Offers), never shown to members.
+  // Every offer added before this column existed came from AWIN, so backfill
+  // it once rather than leaving them NULL; this only ever fills gaps and
+  // never overwrites a value a later offer was given intentionally.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS platform TEXT`);
+  await pool.query(`UPDATE offers SET platform = 'AWIN' WHERE platform IS NULL`);
 
   // One-time-use coupon pool — lets marketing hand over a batch of unique
   // codes per offer instead of one shared code that can leak publicly.
@@ -335,6 +342,7 @@ function toOffer(row) {
     isActive:      row.is_active,
     isFeatured:    row.is_featured,
     targetGender:  row.target_gender,
+    platform:      row.platform,
     sortOrder:     row.sort_order,
     clickCount:    row.click_count,
     createdAt:     row.created_at,
@@ -517,16 +525,16 @@ async function createOffer(data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, isFeatured = false, targetGender = null, sortOrder = 0,
+    isActive = true, isFeatured = false, targetGender = null, platform = 'AWIN', sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     INSERT INTO offers (
       merchant_name, title, description, category, discount_text,
-      voucher_code, affiliate_url, image_url, is_active, is_featured, target_gender, sort_order
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+      voucher_code, affiliate_url, image_url, is_active, is_featured, target_gender, platform, sort_order
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, sortOrder]);
+  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, platform || null, sortOrder]);
 
   return toOffer(r.rows[0]);
 }
@@ -535,17 +543,17 @@ async function updateOffer(id, data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
-    isActive = true, isFeatured = false, targetGender = null, sortOrder = 0,
+    isActive = true, isFeatured = false, targetGender = null, platform = 'AWIN', sortOrder = 0,
   } = data;
 
   const r = await pool.query(`
     UPDATE offers SET
       merchant_name = $1, title = $2, description = $3, category = $4,
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
-      is_active = $9, is_featured = $10, target_gender = $11, sort_order = $12, updated_at = NOW()
-    WHERE id = $13
+      is_active = $9, is_featured = $10, target_gender = $11, platform = $12, sort_order = $13, updated_at = NOW()
+    WHERE id = $14
     RETURNING *
-  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, sortOrder, id]);
+  `, [merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl, !!isActive, !!isFeatured, targetGender || null, platform || null, sortOrder, id]);
 
   return toOffer(r.rows[0]);
 }
