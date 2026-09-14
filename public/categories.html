@@ -150,33 +150,45 @@
     .deals-stat strong { display: block; font-size: 14px; font-weight: 800; margin-bottom: 4px; }
     .deals-stat span { display: block; font-size: 11.5px; color: rgba(255,255,255,0.6); line-height: 1.4; }
 
-    /* ── Browse by category — icon tiles, Logicard's full category list ── */
-    .deals-cats-section { padding: 64px 24px 76px; text-align: center; }
-    .deals-cats-heading { font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
-    .deals-cats-sub { color: rgba(255,255,255,0.55); font-size: 15px; margin-bottom: 40px; }
+    /* ── Browse by category — icon tiles, Logicard's full category list.
+       Gold band (matches the homepage's hero-navy -> gold -> navy -> gold
+       section rhythm — this page was flat navy throughout before, which
+       is what broke that established pattern). White cards + navy content
+       here, same inverse-contrast convention the homepage's .how-card
+       uses on its own gold section. ── */
+    .deals-cats-section {
+      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      color: var(--navy);
+      padding: 64px 24px 76px; text-align: center;
+    }
+    .deals-cats-heading { color: var(--navy); font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
+    .deals-cats-sub { color: rgba(7,29,64,0.7); font-size: 15px; margin-bottom: 40px; }
     .deals-cats-grid {
       max-width: 1400px; margin: 0 auto;
       display: grid; grid-template-columns: repeat(9, 1fr); gap: 14px;
     }
     .deals-cat-tile {
       display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 14px;
+      background: var(--white);
+      border: 1px solid rgba(7,29,64,0.1); border-radius: 14px;
       padding: 26px 12px;
       text-decoration: none; color: inherit;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+      box-shadow: 0 1px 2px rgba(7,29,64,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
-    .deals-cat-tile:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(0,0,0,0.25); border-color: rgba(255,179,0,0.4); background: rgba(255,255,255,0.03); }
+    .deals-cat-tile:hover { transform: translateY(-4px); box-shadow: 0 14px 32px rgba(7,29,64,0.18); border-color: var(--navy); }
     .deals-cat-tile-icon {
       width: 46px; height: 46px; flex-shrink: 0;
-      background: rgba(255,179,0,0.12); border: 1px solid rgba(255,179,0,0.25);
+      background: rgba(7,29,64,0.06); border: 1px solid rgba(7,29,64,0.12);
       border-radius: 12px; display: flex; align-items: center; justify-content: center;
     }
-    .deals-cat-tile-icon svg { width: 22px; height: 22px; fill: none; stroke: var(--orange); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .deals-cat-tile span { font-size: 13.5px; font-weight: 700; color: var(--white); line-height: 1.3; }
+    .deals-cat-tile-icon svg { width: 22px; height: 22px; fill: none; stroke: var(--navy); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .deals-cat-tile span { font-size: 13.5px; font-weight: 700; color: var(--navy); line-height: 1.3; }
 
-    /* ── Featured Deals — same component/API as the homepage's, so a
-       deal admin marks "Featured" shows up in both places automatically. ── */
-    .featured-deals-section { padding: 8px 24px 76px; }
+    /* ── Featured Deals — navy band (middle of the gold/navy/gold rhythm).
+       Same component/API as the homepage's, so a deal admin marks
+       "Featured" shows up in both places automatically. ── */
+    .featured-deals-section { background: var(--navy); padding: 64px 24px 76px; }
     .featured-deals-head { text-align: center; margin-bottom: 40px; }
     .featured-deals-heading { font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
     .featured-deals-subtitle { font-size: 15px; color: rgba(255,255,255,0.55); }
@@ -218,9 +230,12 @@
     }
     .deal-card-claim:hover { background: var(--orange-dark); }
 
-    .bottom-cta { text-align: center; padding: 0 24px 80px; }
-    .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
-    .cta-btn:hover { background: var(--orange-dark); }
+    .bottom-cta {
+      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      text-align: center; padding: 56px 24px;
+    }
+    .cta-btn { display: inline-block; background: var(--navy); color: var(--white); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
+    .cta-btn:hover { background: var(--navy-mid); }
 
     footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.5); }
     footer a { color: rgba(255,255,255,0.5); }
