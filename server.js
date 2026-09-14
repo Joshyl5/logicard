@@ -21,6 +21,7 @@ const {
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
+  getPartnerBrandBySlug, getActiveOffersByMerchant,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -28,10 +29,11 @@ const {
   getVerificationDocument, reviewVerificationDocument, setWorkEmailToken, confirmWorkEmailToken,
   getDocumentsDueForPurge, markDocumentPurged,
 } = require('./database');
-const { uploadVerificationFile, getSignedViewUrl, readLocalFile, deleteFile } = require('./storage');
+const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT } = require('./storage');
 const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
 const { UK_TOWNS } = require('./uk-towns');
 const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
+const { renderBrandPage, renderBrandNotFound } = require('./templates/brand-page');
 const { renderNav } = require('./templates/nav');
 
 const app    = express();
@@ -74,6 +76,17 @@ const upload = multer({
   },
 });
 const VALID_DOC_TYPES = ['uniform', 'badge', 'payslip', 'work_email_screenshot', 'other'];
+
+// ── Public image uploads (partner brand logos, etc.) ──────────────
+const LOGO_MIME_EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+const logoUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 4 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (!LOGO_MIME_EXT[file.mimetype]) return cb(new Error('Only JPG, PNG or WEBP images are allowed.'));
+    cb(null, true);
+  },
+});
 
 // Proof-of-employment files are deleted 20 days after an admin approves/rejects
 // them — UK GDPR storage-limitation: no ongoing purpose to keep the document
@@ -506,6 +519,21 @@ app.get('/logistics-rewards/:slug', (req, res) => {
   res.send(renderRolePage(entry));
 });
 
+// ── Partner brand pages — reached by clicking a logo on Partnerships ──
+app.get('/deals/:slug', async (req, res) => {
+  try {
+    const brand = await getPartnerBrandBySlug(req.params.slug);
+    if (!brand) return res.status(404).send(renderBrandNotFound().replace('<!-- SHARED_NAV -->', renderNav({})));
+
+    const offers = await getActiveOffersByMerchant(brand.brandName);
+    const publicOffers = offers.map(({ id, title, category, discountText }) => ({ id, title, category, discountText }));
+    res.send(renderBrandPage({ brand, offers: publicOffers }).replace('<!-- SHARED_NAV -->', renderNav({})));
+  } catch (err) {
+    console.error('Brand page error:', err.message);
+    res.status(500).send('Something went wrong loading this page. Please try again.');
+  }
+});
+
 // ── Dynamic sitemap (static pages + one URL per job role) ────────
 const STATIC_SITEMAP_PAGES = [
   { path: '/',                            changefreq: 'weekly',  priority: '1.0' },
@@ -532,11 +560,19 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/t&cs',                        changefreq: 'yearly',  priority: '0.3' },
 ];
 
-app.get('/sitemap.xml', (_req, res) => {
+app.get('/sitemap.xml', async (_req, res) => {
   const roleUrls = Object.keys(JOB_ROLE_BY_SLUG).map(slug => `  <url><loc>https://logicard.co.uk/logistics-rewards/${slug}</loc><changefreq>monthly</changefreq><priority>0.4</priority></url>`);
   const staticUrls = STATIC_SITEMAP_PAGES.map(p => `  <url><loc>https://logicard.co.uk${p.path.replace(/&/g, '&amp;')}</loc><changefreq>${p.changefreq}</changefreq><priority>${p.priority}</priority></url>`);
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...staticUrls, ...roleUrls].join('\n')}\n</urlset>`;
+  let brandUrls = [];
+  try {
+    const brands = await getActivePartnerBrands();
+    brandUrls = brands.filter(b => b.slug).map(b => `  <url><loc>https://logicard.co.uk/deals/${b.slug}</loc><changefreq>weekly</changefreq><priority>0.5</priority></url>`);
+  } catch (err) {
+    console.error('Sitemap: failed to load partner brands:', err.message);
+  }
+
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${[...staticUrls, ...roleUrls, ...brandUrls].join('\n')}\n</urlset>`;
   res.setHeader('Content-Type', 'application/xml');
   res.send(xml);
 });
@@ -589,6 +625,12 @@ app.use(express.static(path.join(__dirname, 'public'), {
     }
   },
 }));
+
+// Serves uploadPublicFile's local-disk fallback (reachable whenever R2
+// isn't configured). This is a real, permanent public URL as long as
+// PUBLIC_ROOT sits on a Railway Volume (UPLOADS_DIR set) — otherwise it's
+// only for local testing, since it won't survive a Railway redeploy.
+app.use('/local-uploads', express.static(PUBLIC_ROOT));
 
 function requireAuth(req, res, next) {
   if (req.session && req.session.membershipNumber) return next();
@@ -957,10 +999,17 @@ app.delete('/api/admin/adverts/:id', requireAdmin, async (req, res) => {
 // fields required. Use this to show a brand is a confirmed partner before
 // there's a live discount to attach; add a proper offer once there is one.
 function validPartnerBrandPayload(body) {
-  const { brandName, logoUrl } = body;
+  const { brandName, logoUrl, slug } = body;
   if (!brandName || !String(brandName).trim()) return 'Brand name is required.';
   if (!logoUrl || !String(logoUrl).trim()) return 'Logo URL is required.';
-  if (!/^https?:\/\//i.test(logoUrl)) return 'Logo URL must start with http:// or https://.';
+  // Accept a full URL (pasted directly, or an R2 upload) or the root-relative
+  // path the local-disk upload fallback returns (e.g. /local-uploads/...).
+  if (!/^https?:\/\//i.test(logoUrl) && !logoUrl.startsWith('/')) {
+    return 'Logo URL must start with http://, https://, or / (from Upload Logo).';
+  }
+  if (slug && !/^[a-z0-9-]+$/.test(slug)) {
+    return 'Slug can only contain lowercase letters, numbers and hyphens.';
+  }
   return null;
 }
 
@@ -971,8 +1020,14 @@ app.get('/api/admin/partner-brands', requireAdmin, async (_req, res) => {
 app.post('/api/admin/partner-brands', requireAdmin, async (req, res) => {
   const error = validPartnerBrandPayload(req.body);
   if (error) return res.status(400).json({ error });
-  const brand = await createPartnerBrand(req.body);
-  res.json(brand);
+  try {
+    const brand = await createPartnerBrand(req.body);
+    res.json(brand);
+  } catch (err) {
+    if (err.code === '23505') return res.status(400).json({ error: 'That slug is already in use by another brand.' });
+    console.error('Create partner brand error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
 });
 
 app.put('/api/admin/partner-brands/:id', requireAdmin, async (req, res) => {
@@ -980,9 +1035,36 @@ app.put('/api/admin/partner-brands/:id', requireAdmin, async (req, res) => {
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid brand id.' });
   const error = validPartnerBrandPayload(req.body);
   if (error) return res.status(400).json({ error });
-  const brand = await updatePartnerBrand(id, req.body);
-  if (!brand) return res.status(404).json({ error: 'Partner brand not found.' });
-  res.json(brand);
+  try {
+    const brand = await updatePartnerBrand(id, req.body);
+    if (!brand) return res.status(404).json({ error: 'Partner brand not found.' });
+    res.json(brand);
+  } catch (err) {
+    if (err.code === '23505') return res.status(400).json({ error: 'That slug is already in use by another brand.' });
+    console.error('Update partner brand error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+// Uploads a logo image and returns its URL — the admin form then submits
+// that URL as normal via the create/update routes above. Kept as a
+// separate step so "paste a URL" and "upload a file" share the same
+// downstream save logic.
+app.post('/api/admin/partner-brands/upload', requireAdmin, (req, res) => {
+  logoUpload.single('file')(req, res, async (err) => {
+    if (err) return res.status(400).json({ error: err.message || 'Upload failed.' });
+    if (!req.file) return res.status(400).json({ error: 'Please choose an image to upload.' });
+
+    const extension = LOGO_MIME_EXT[req.file.mimetype];
+    try {
+      const { url } = await uploadPublicFile(req.file.buffer, { mimeType: req.file.mimetype, extension, keyPrefix: 'partner-brands' });
+      if (!url) return res.status(500).json({ error: 'File was uploaded but no public URL could be built. Set R2_PUBLIC_URL_BASE.' });
+      res.json({ url });
+    } catch (e) {
+      console.error('Partner brand logo upload error:', e.message);
+      res.status(500).json({ error: 'Upload failed. Please try again.' });
+    }
+  });
 });
 
 app.delete('/api/admin/partner-brands/:id', requireAdmin, async (req, res) => {
@@ -1506,7 +1588,7 @@ app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) =>
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
   const brands = await getActivePartnerBrands();
-  res.json(brands.map(({ id, brandName, logoUrl }) => ({ id, brandName, logoUrl })));
+  res.json(brands.map(({ id, brandName, logoUrl, slug }) => ({ id, brandName, logoUrl, slug })));
 });
 
 // ── Offers (closed-group — verified members only) ───────────────
@@ -1874,6 +1956,8 @@ app.listen(PORT, () => {
   if (!process.env.ADMIN_EMAIL)         console.warn('  > ADMIN_EMAIL not set — admin OTP and member reports will not be delivered.');
   if (!process.env.ADMIN_PASSWORD)      console.warn('  > ADMIN_PASSWORD not set — admin panel is inaccessible.');
   if (!process.env.R2_BUCKET_NAME)      console.warn('  > R2_* env vars not set — verification documents are being saved to local disk (not persistent on Railway).');
+  if (!process.env.R2_BUCKET_NAME && !UPLOADS_PERSISTENT) console.warn('  > UPLOADS_DIR not set either — public uploads (e.g. partner brand logos) will be LOST on the next deploy. Set UPLOADS_DIR to a Railway Volume mount path, or configure R2_*.');
+  if (!process.env.R2_BUCKET_NAME && UPLOADS_PERSISTENT)  console.log('  > Public uploads are stored at UPLOADS_DIR (persistent, assuming it\'s a mounted Railway Volume).');
 
   verifyResendConnection();
 

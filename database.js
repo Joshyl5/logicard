@@ -247,6 +247,11 @@ async function initDb() {
       updated_at   TIMESTAMPTZ DEFAULT NOW()
     )
   `);
+
+  // Clicking a partner logo goes to /deals/:slug — a page showing that
+  // brand's live offers (or a "coming soon" state if there aren't any yet).
+  await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS slug TEXT`);
+  await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS partner_brands_slug_idx ON partner_brands (slug) WHERE slug IS NOT NULL`);
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -358,6 +363,7 @@ function toPartnerBrand(row) {
     id:        row.id,
     brandName: row.brand_name,
     logoUrl:   row.logo_url,
+    slug:      row.slug,
     isActive:  row.is_active,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
@@ -624,26 +630,26 @@ async function getPartnerBrandById(id) {
 }
 
 async function createPartnerBrand(data) {
-  const { brandName, logoUrl, isActive = true, sortOrder = 0 } = data;
+  const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0 } = data;
 
   const r = await pool.query(`
-    INSERT INTO partner_brands (brand_name, logo_url, is_active, sort_order)
-    VALUES ($1,$2,$3,$4)
+    INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order)
+    VALUES ($1,$2,$3,$4,$5)
     RETURNING *
-  `, [brandName, logoUrl, !!isActive, sortOrder]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder]);
 
   return toPartnerBrand(r.rows[0]);
 }
 
 async function updatePartnerBrand(id, data) {
-  const { brandName, logoUrl, isActive = true, sortOrder = 0 } = data;
+  const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0 } = data;
 
   const r = await pool.query(`
     UPDATE partner_brands SET
-      brand_name = $1, logo_url = $2, is_active = $3, sort_order = $4, updated_at = NOW()
-    WHERE id = $5
+      brand_name = $1, logo_url = $2, slug = $3, is_active = $4, sort_order = $5, updated_at = NOW()
+    WHERE id = $6
     RETURNING *
-  `, [brandName, logoUrl, !!isActive, sortOrder, id]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id]);
 
   return toPartnerBrand(r.rows[0]);
 }
@@ -651,6 +657,22 @@ async function updatePartnerBrand(id, data) {
 async function deletePartnerBrand(id) {
   const r = await pool.query('DELETE FROM partner_brands WHERE id = $1', [id]);
   return r.rowCount > 0;
+}
+
+async function getPartnerBrandBySlug(slug) {
+  const r = await pool.query('SELECT * FROM partner_brands WHERE slug = $1 AND is_active = true', [slug]);
+  return toPartnerBrand(r.rows[0]);
+}
+
+// Offers shown on a brand's /deals/:slug page — matched by merchant name,
+// same public-teaser shape as getFeaturedOffers's public route (no voucher
+// code or affiliate URL; claiming still requires signing up and verifying).
+async function getActiveOffersByMerchant(merchantName) {
+  const r = await pool.query(
+    'SELECT * FROM offers WHERE is_active = true AND lower(merchant_name) = lower($1) ORDER BY sort_order ASC, created_at DESC, id ASC',
+    [merchantName]
+  );
+  return r.rows.map(toOffer);
 }
 
 // ── Offer redemption tracking ────────────────────────────────────
@@ -930,6 +952,7 @@ module.exports = {
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
+  getPartnerBrandBySlug, getActiveOffersByMerchant,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,

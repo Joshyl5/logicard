@@ -9,7 +9,7 @@ function renderTable(brands) {
   const count = document.getElementById('tableCount');
 
   if (!brands.length) {
-    tbody.innerHTML = '<tr><td colspan="5" class="table-empty">No partner brands found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No partner brands found.</td></tr>';
     count.textContent = '';
     return;
   }
@@ -18,6 +18,7 @@ function renderTable(brands) {
     <tr>
       <td><img src="${escapeHtml(b.logoUrl)}" alt="" style="width:60px;height:40px;object-fit:contain;background:#fff;border-radius:4px;display:block;" /></td>
       <td>${escapeHtml(b.brandName)}</td>
+      <td>${b.slug ? `<a href="/deals/${escapeHtml(b.slug)}" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5);font-size:12px;">/deals/${escapeHtml(b.slug)}</a>` : '—'}</td>
       <td>${b.sortOrder || 0}</td>
       <td>${b.isActive ? 'Yes' : 'No'}</td>
       <td>
@@ -42,6 +43,83 @@ function filterBrands(query) {
   return allBrands.filter(b => (b.brandName || '').toLowerCase().includes(q));
 }
 
+function slugify(str) {
+  return String(str || '').trim().toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+// ── Slug: auto-fills from the brand name, but stops once the admin has
+// typed in the slug field themselves, so it never silently overwrites a
+// deliberate edit. ──
+let slugTouched = false;
+const brandNameInput = document.getElementById('brandName');
+const brandSlugInput = document.getElementById('brandSlug');
+const brandSlugPreview = document.getElementById('brandSlugPreview');
+
+function updateSlugPreview() {
+  brandSlugPreview.textContent = brandSlugInput.value.trim() || '…';
+}
+
+brandNameInput.addEventListener('input', () => {
+  if (!slugTouched) {
+    brandSlugInput.value = slugify(brandNameInput.value);
+    updateSlugPreview();
+  }
+});
+brandSlugInput.addEventListener('input', () => {
+  slugTouched = true;
+  brandSlugInput.value = slugify(brandSlugInput.value);
+  updateSlugPreview();
+});
+
+// ── Logo upload ──
+const brandLogoFile    = document.getElementById('brandLogoFile');
+const brandLogoUrl     = document.getElementById('brandLogoUrl');
+const brandLogoPreview = document.getElementById('brandLogoPreview');
+const brandUploadBtn   = document.getElementById('brandUploadBtn');
+const brandUploadStatus = document.getElementById('brandUploadStatus');
+
+function showLogoPreview(src) {
+  if (!src) { brandLogoPreview.style.display = 'none'; return; }
+  brandLogoPreview.src = src;
+  brandLogoPreview.style.display = 'block';
+}
+
+brandUploadBtn.addEventListener('click', async () => {
+  const file = brandLogoFile.files[0];
+  if (!file) { brandUploadStatus.textContent = 'Choose an image file first.'; return; }
+
+  brandUploadBtn.disabled = true;
+  brandUploadBtn.textContent = 'Uploading…';
+  brandUploadStatus.textContent = '';
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch('/api/admin/partner-brands/upload', { method: 'POST', body: formData });
+    const json = await res.json();
+
+    if (!res.ok) {
+      brandUploadStatus.textContent = json.error || 'Upload failed.';
+      return;
+    }
+
+    brandLogoUrl.value = json.url;
+    showLogoPreview(json.url);
+    brandUploadStatus.textContent = 'Uploaded — Logo Image field filled in below.';
+  } catch {
+    brandUploadStatus.textContent = 'Network error — please try again.';
+  } finally {
+    brandUploadBtn.disabled = false;
+    brandUploadBtn.textContent = 'Upload';
+  }
+});
+
+brandLogoUrl.addEventListener('input', () => showLogoPreview(brandLogoUrl.value.trim()));
+
 // ── Modal ─────────────────────────────────────────────────────
 const brandModal      = document.getElementById('brandModal');
 const brandModalTitle = document.getElementById('brandModalTitle');
@@ -51,10 +129,13 @@ const brandSubmitBtn  = document.getElementById('brandSubmitBtn');
 
 function openModal(id) {
   brandFormError.textContent = '';
+  brandUploadStatus.textContent = '';
   brandForm.reset();
   document.getElementById('brandId').value        = '';
   document.getElementById('brandIsActive').checked = true;
   document.getElementById('brandSortOrder').value  = 0;
+  slugTouched = false;
+  showLogoPreview('');
 
   if (id) {
     const brand = allBrands.find(b => b.id === id);
@@ -65,11 +146,15 @@ function openModal(id) {
       document.getElementById('brandLogoUrl').value   = brand.logoUrl || '';
       document.getElementById('brandSortOrder').value = brand.sortOrder || 0;
       document.getElementById('brandIsActive').checked = !!brand.isActive;
+      brandSlugInput.value = brand.slug || '';
+      slugTouched = !!brand.slug; // don't clobber an existing slug on name edit
+      showLogoPreview(brand.logoUrl || '');
     }
   } else {
     brandModalTitle.textContent = 'Add Brand';
   }
 
+  updateSlugPreview();
   brandModal.style.display = 'flex';
 }
 
@@ -87,6 +172,7 @@ brandForm.addEventListener('submit', async e => {
   const payload = {
     brandName: document.getElementById('brandName').value.trim(),
     logoUrl:   document.getElementById('brandLogoUrl').value.trim(),
+    slug:      brandSlugInput.value.trim() || null,
     sortOrder: Number(document.getElementById('brandSortOrder').value) || 0,
     isActive:  document.getElementById('brandIsActive').checked,
   };

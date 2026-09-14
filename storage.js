@@ -41,7 +41,15 @@ const R2_CONFIGURED = !!(
   process.env.R2_BUCKET_NAME
 );
 
-const LOCAL_ROOT = path.join(__dirname, 'uploads');
+// UPLOADS_DIR lets local-disk storage point at a Railway Volume mount
+// (e.g. /data) instead of the app's own ephemeral container filesystem —
+// a volume survives redeploys/restarts, so this is a genuine alternative
+// to R2, not just a local-dev convenience. Unset, it falls back to a
+// folder inside the app itself, which does NOT survive a Railway redeploy.
+const UPLOADS_ROOT = process.env.UPLOADS_DIR ? path.resolve(process.env.UPLOADS_DIR) : path.join(__dirname, 'uploads');
+const UPLOADS_PERSISTENT = !!process.env.UPLOADS_DIR;
+const LOCAL_ROOT  = UPLOADS_ROOT;
+const PUBLIC_ROOT = path.join(UPLOADS_ROOT, 'public');
 
 let s3Client = null;
 if (R2_CONFIGURED) {
@@ -56,6 +64,7 @@ if (R2_CONFIGURED) {
   });
 } else {
   fs.mkdirSync(LOCAL_ROOT, { recursive: true });
+  fs.mkdirSync(PUBLIC_ROOT, { recursive: true });
 }
 
 // path.join alone doesn't stop a key like "../../../etc/passwd" from resolving
@@ -86,10 +95,49 @@ async function uploadVerificationFile(buffer, { membershipNumber, mimeType, exte
     const dest = localPathFor(key);
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.writeFileSync(dest, optimizedBuffer);
-    console.warn('[storage] R2 not configured — file saved to local disk. This is NOT persistent on Railway; set R2_ACCOUNT_ID / R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY / R2_BUCKET_NAME before going live.');
+    if (!UPLOADS_PERSISTENT) {
+      console.warn('[storage] R2 not configured and UPLOADS_DIR not set — file saved to a folder that does NOT survive a Railway redeploy. Either configure R2_* or set UPLOADS_DIR to a Railway Volume mount path.');
+    }
   }
 
   return key;
+}
+
+// Unlike uploadVerificationFile, this bucket path is meant to be PUBLIC —
+// brand logos are shown to every visitor on the Partnerships page, not
+// gated behind a signed URL. Requires R2_PUBLIC_URL_BASE (the bucket's
+// public r2.dev URL or a connected custom domain) to construct a usable
+// link; without R2 configured at all, falls back to local disk and warns
+// loudly, since that fallback does NOT survive a Railway redeploy.
+async function uploadPublicFile(buffer, { mimeType, extension, keyPrefix = 'public' }) {
+  const optimizedBuffer = await optimizeImage(buffer, mimeType);
+  const key = `${keyPrefix}/${Date.now()}-${crypto.randomBytes(6).toString('hex')}.${extension}`;
+
+  if (R2_CONFIGURED) {
+    const { PutObjectCommand } = require('@aws-sdk/client-s3');
+    await s3Client.send(new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME,
+      Key: key,
+      Body: optimizedBuffer,
+      ContentType: mimeType,
+    }));
+    const base = process.env.R2_PUBLIC_URL_BASE;
+    if (!base) {
+      console.warn('[storage] R2_PUBLIC_URL_BASE not set — file uploaded to R2 but its public URL cannot be constructed. Set it to the bucket\'s r2.dev URL or custom domain.');
+      return { key, url: null };
+    }
+    return { key, url: `${base.replace(/\/$/, '')}/${key}` };
+  }
+
+  const dest = path.join(PUBLIC_ROOT, key);
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  fs.writeFileSync(dest, optimizedBuffer);
+  if (UPLOADS_PERSISTENT) {
+    console.log('[storage] R2 not configured — public file saved to the UPLOADS_DIR volume instead. Served at /local-uploads/' + key + '.');
+  } else {
+    console.warn('[storage] R2 not configured and UPLOADS_DIR not set — public file saved to a folder that does NOT survive a Railway redeploy. Either configure R2_* or set UPLOADS_DIR to a Railway Volume mount path.');
+  }
+  return { key, url: `/local-uploads/${key}` };
 }
 
 // Short-lived signed URL — only ever handed to an authenticated admin, never stored or emailed.
@@ -117,4 +165,4 @@ async function deleteFile(key) {
   }
 }
 
-module.exports = { uploadVerificationFile, getSignedViewUrl, readLocalFile, deleteFile, R2_CONFIGURED };
+module.exports = { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, R2_CONFIGURED, UPLOADS_PERSISTENT, PUBLIC_ROOT };

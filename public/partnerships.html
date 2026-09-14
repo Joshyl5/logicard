@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=0.8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Partner With Logicard</title>
   <meta name="description" content="Partner with Logicard to reach the UK's logistics workforce — drivers, warehouse teams, freight and supply chain staff who trust Logicard for real savings." />
   <link rel="canonical" href="https://logicard.co.uk/partnerships.html" />
@@ -316,7 +316,12 @@
         });
       }
       function isSafeImageUrl(u) {
-        return typeof u === 'string' && /^https:\/\//i.test(u);
+        // Accepts a full https:// URL (R2 or a pasted link) or a same-origin
+        // root-relative path (the local-disk upload fallback).
+        return typeof u === 'string' && (/^https:\/\//i.test(u) || u.startsWith('/'));
+      }
+      function isSafeSlug(s) {
+        return typeof s === 'string' && /^[a-z0-9-]+$/.test(s);
       }
 
       fetch('/api/public/partner-brands')
@@ -324,7 +329,10 @@
         .then(function (brands) {
           if (!Array.isArray(brands) || brands.length === 0) return; // keep the static placeholders
           var cards = brands.filter(function (b) { return isSafeImageUrl(b.logoUrl); }).map(function (b) {
-            return '<div class="pt-partner-card"><img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" /></div>';
+            var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" />';
+            return isSafeSlug(b.slug)
+              ? '<a class="pt-partner-card" href="/deals/' + esc(b.slug) + '">' + img + '</a>'
+              : '<div class="pt-partner-card">' + img + '</div>';
           });
           var remaining = Math.max(0, 4 - cards.length);
           for (var i = 0; i < remaining; i++) {
