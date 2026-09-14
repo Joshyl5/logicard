@@ -283,6 +283,22 @@ async function initDb() {
   // brand's live offers (or a "coming soon" state if there aren't any yet).
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS slug TEXT`);
   await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS partner_brands_slug_idx ON partner_brands (slug) WHERE slug IS NOT NULL`);
+
+  // Headlines pulled periodically from curated UK logistics/freight trade
+  // RSS feeds (see LOGISTICS_NEWS_FEEDS in server.js) — headline, excerpt
+  // and a link back to the original source only, never the full article
+  // text. Powers /logistics-news.html.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS news_items (
+      id            SERIAL PRIMARY KEY,
+      title         TEXT NOT NULL,
+      link          TEXT NOT NULL UNIQUE,
+      source        TEXT NOT NULL,
+      summary       TEXT,
+      published_at  TIMESTAMPTZ,
+      fetched_at    TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -719,6 +735,34 @@ async function getPartnerBrandBySlug(slug) {
   return toPartnerBrand(r.rows[0]);
 }
 
+// ── Logistics news (RSS headlines) ────────────────────────────────
+function toNewsItem(row) {
+  if (!row) return null;
+  return {
+    id: row.id, title: row.title, link: row.link, source: row.source,
+    summary: row.summary, publishedAt: row.published_at, fetchedAt: row.fetched_at,
+  };
+}
+
+// One row per article link — re-fetching the same feed just skips anything
+// already stored (ON CONFLICT DO NOTHING), so this is safe to run on a
+// timer without growing duplicates or needing to track what's new itself.
+async function upsertNewsItem({ title, link, source, summary, publishedAt }) {
+  await pool.query(
+    `INSERT INTO news_items (title, link, source, summary, published_at)
+     VALUES ($1,$2,$3,$4,$5) ON CONFLICT (link) DO NOTHING`,
+    [title, link, source, summary || null, publishedAt || null]
+  );
+}
+
+async function getRecentNewsItems(limit = 30) {
+  const r = await pool.query(
+    'SELECT * FROM news_items ORDER BY published_at DESC NULLS LAST, fetched_at DESC LIMIT $1',
+    [limit]
+  );
+  return r.rows.map(toNewsItem);
+}
+
 // Offers shown on a brand's /deals/:slug page — matched by merchant name,
 // same public-teaser shape as getFeaturedOffersForPublic (no voucher
 // code or affiliate URL; claiming still requires signing up and verifying).
@@ -1038,6 +1082,7 @@ module.exports = {
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
+  upsertNewsItem, getRecentNewsItems,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,

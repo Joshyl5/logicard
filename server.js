@@ -11,6 +11,7 @@ const path      = require('path');
 const fs        = require('fs');
 const multer    = require('multer');
 const jwt       = require('jsonwebtoken');
+const RssParser = require('rss-parser');
 const { Resend } = require('resend');
 const {
   createMember, emailExists, findMemberByEmail,
@@ -22,6 +23,7 @@ const {
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
+  upsertNewsItem, getRecentNewsItems,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -115,6 +117,54 @@ async function runVerificationPurge() {
 
   if (due.length) console.log(`[purge] Deleted ${due.length} verification document file(s) past the ${VERIFICATION_PURGE_DAYS}-day retention window.`);
 }
+
+// ── Logistics news feed ──────────────────────────────────────────
+// Pulls headline + excerpt + a link back to the original article from a
+// curated list of UK logistics/freight trade RSS feeds — deliberately
+// never the full article body, both to respect each publisher's own
+// content and because most RSS feeds only expose a summary anyway.
+// Powers /logistics-news.html (under More). Verified working and on-topic
+// as of 2026-09 — if a feed goes stale or 404s, it's skipped (logged),
+// not fatal to the others.
+const LOGISTICS_NEWS_FEEDS = [
+  { url: 'https://theloadstar.com/feed/', source: 'The Loadstar' },
+  { url: 'https://www.logisticsmanager.com/feed/', source: 'Logistics Manager' },
+  { url: 'https://www.transportnews.co.uk/feed', source: 'Transport News' },
+];
+const rssParser = new RssParser({ timeout: 10000 });
+
+// Some WordPress-based feeds put their own "The post X appeared first on
+// Site Name." boilerplate where the excerpt should be, instead of real
+// article text — strip that off rather than showing it as the summary.
+function cleanNewsSummary(snippet) {
+  if (!snippet) return null;
+  const cleaned = snippet.replace(/\s*The post .*? appeared first on .*?\.\s*$/i, '').trim();
+  return cleaned ? cleaned.slice(0, 400) : null;
+}
+
+async function fetchLogisticsNews() {
+  let totalNew = 0;
+  for (const feed of LOGISTICS_NEWS_FEEDS) {
+    try {
+      const parsed = await rssParser.parseURL(feed.url);
+      for (const item of (parsed.items || []).slice(0, 15)) {
+        if (!item.link || !item.title) continue;
+        await upsertNewsItem({
+          title: item.title,
+          link: item.link,
+          source: feed.source,
+          summary: cleanNewsSummary(item.contentSnippet),
+          publishedAt: item.isoDate || item.pubDate || null,
+        });
+        totalNew++;
+      }
+    } catch (err) {
+      console.error(`[news] Failed to fetch ${feed.source} (${feed.url}):`, err.message);
+    }
+  }
+  if (totalNew) console.log(`[news] Checked ${totalNew} article(s) across ${LOGISTICS_NEWS_FEEDS.length} feed(s) (duplicates skipped automatically).`);
+}
+
 const FREE_EMAIL_DOMAINS = new Set([
   'gmail.com', 'googlemail.com', 'yahoo.com', 'yahoo.co.uk', 'outlook.com', 'hotmail.com',
   'hotmail.co.uk', 'live.com', 'icloud.com', 'me.com', 'aol.com', 'protonmail.com',
@@ -1639,6 +1689,14 @@ app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) =>
   })));
 });
 
+// Powers /logistics-news.html — headline, excerpt, source and a link out
+// to the original article only (see fetchLogisticsNews above). Same
+// public, no-auth pattern as the deal teasers above.
+app.get('/api/public/logistics-news', publicOffersLimiter, async (_req, res) => {
+  const items = await getRecentNewsItems(30);
+  res.json(items.map(({ title, link, source, summary, publishedAt }) => ({ title, link, source, summary, publishedAt })));
+});
+
 // Powers the "Our Partners" grid on partnerships.html — same public,
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
@@ -2034,6 +2092,7 @@ app.get('/:slug', async (req, res, next) => {
 });
 
 const PURGE_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
+const NEWS_FETCH_INTERVAL_MS  = 3 * 60 * 60 * 1000;  // every 3 hours
 
 app.listen(PORT, () => {
   console.log(`Logicard running at http://localhost:${PORT}`);
@@ -2050,4 +2109,7 @@ app.listen(PORT, () => {
   // Give the DB pool a moment on cold start, then run daily thereafter.
   setTimeout(runVerificationPurge, 60 * 1000);
   setInterval(runVerificationPurge, PURGE_SWEEP_INTERVAL_MS);
+
+  setTimeout(fetchLogisticsNews, 90 * 1000);
+  setInterval(fetchLogisticsNews, NEWS_FETCH_INTERVAL_MS);
 });
