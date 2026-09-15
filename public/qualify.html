@@ -134,6 +134,26 @@
       font-size: 15px; line-height: 1.75; color: rgba(7,29,64,0.75);
     }
 
+    /* Globe graphic — every sector orbiting a globe, built as inline SVG
+       (positions computed so visual gaps between labels stay even, since
+       the labels vary a lot in length — equal angles alone would crowd
+       the longer ones like "Business Services"). Hidden below 760px:
+       it's decorative on top of the fully-accessible pill grid below,
+       not the only way to reach that content, so it's fine to drop
+       rather than render illegibly small. */
+    .q-globe-wrap { max-width: 780px; margin: 40px auto 0; }
+    .gl-svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .gl-globe circle:first-child, .gl-globe ellipse { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 1.5; }
+    .gl-globe circle:first-child { fill: url(#glGlobeFill); stroke: none; }
+    .gl-globe line { stroke: rgba(255,255,255,0.45); stroke-width: 1.5; }
+    .gl-globe-outline { fill: none; stroke: var(--navy); stroke-width: 2; opacity: 0.15; }
+    .gl-orbit { fill: none; stroke: var(--navy); stroke-width: 1.5; stroke-dasharray: 3 9; opacity: 0.2; }
+    .gl-pill rect { fill: var(--white); stroke: rgba(7,29,64,0.1); }
+    .gl-pill text { font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 800; fill: var(--navy); text-anchor: middle; dominant-baseline: central; }
+    @media (max-width: 760px) {
+      .q-globe-wrap { display: none; }
+    }
+
     /* Sector cards grid — navy band (alternates with the gold intro
        above and the gold CTA below, keeping the site-wide rhythm going
        instead of stopping it at one gold band). The cards are already
@@ -292,6 +312,111 @@
       <div class="q-sectors-eyebrow">Every part of the industry</div>
       <h2>Built for everyone who keeps logistics moving</h2>
       <p>Logistics isn't just drivers and warehouses — it's everyone who keeps goods moving, from the boardroom to the loading bay. Logicard covers the whole industry: 3PL, Air Freight, Business Services, Customs, E-Commerce, Finance, Fleet Management, HR, Logistics Charity, Management, Operations, Procurement, Rail Freight, Sea Freight, Security, Self Employed, Stock Control, Supply Chain, Technology, Transport and Warehousing. If your role sits anywhere in that chain, you qualify.</p>
+    </div>
+
+    <div class="q-globe-wrap">
+      <svg class="gl-svg" viewBox="-532 -532 1064 1064" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A globe surrounded by every logistics sector Logicard covers: 3PL, Air Freight, Business Services, Customs, E-Commerce, Finance, Fleet Management, HR, Logistics Charity, Management, Operations, Procurement, Rail Freight, Sea Freight, Security, Self Employed, Stock Control, Supply Chain, Technology, Transport, Warehousing.">
+        <defs>
+          <linearGradient id="glGlobeFill" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#071d40" />
+            <stop offset="100%" stop-color="#0d3b80" />
+          </linearGradient>
+        </defs>
+        <circle class="gl-orbit" cx="0" cy="0" r="414" />
+        <g class="gl-globe">
+          <circle cx="0" cy="0" r="72" />
+          <ellipse cx="0" cy="0" rx="30" ry="72" />
+          <ellipse cx="0" cy="0" rx="58" ry="72" />
+          <line x1="-72" y1="0" x2="72" y2="0" />
+          <line x1="-62" y1="-36" x2="62" y2="-36" />
+          <line x1="-62" y1="36" x2="62" y2="36" />
+          <circle cx="0" cy="0" r="72" class="gl-globe-outline" />
+        </g>
+        <g class="gl-pill">
+          <rect x="0.0" y="-427.0" width="62" height="28" rx="14" />
+          <text x="31" y="-413">3PL</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="78.0" y="-407.0" width="108" height="28" rx="14" />
+          <text x="132" y="-393">Air Freight</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="185.0" y="-336.0" width="152" height="28" rx="14" />
+          <text x="261" y="-322">Business Services</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="309.5" y="-237.0" width="79" height="28" rx="14" />
+          <text x="349" y="-223">Customs</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="344.5" y="-139.0" width="101" height="28" rx="14" />
+          <text x="395" y="-125">E-Commerce</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="374.5" y="-33.0" width="79" height="28" rx="14" />
+          <text x="414" y="-19">Finance</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="326.5" y="95.0" width="145" height="28" rx="14" />
+          <text x="399" y="109">Fleet Management</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="320.0" y="206.0" width="62" height="28" rx="14" />
+          <text x="351" y="220">HR</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="193.0" y="300.0" width="152" height="28" rx="14" />
+          <text x="269" y="314">Logistics Charity</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="95.5" y="374.0" width="101" height="28" rx="14" />
+          <text x="146" y="388">Management</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-20.5" y="399.0" width="101" height="28" rx="14" />
+          <text x="30" y="413">Operations</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-146.0" y="390.0" width="108" height="28" rx="14" />
+          <text x="-92" y="404">Procurement</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-270.0" y="342.0" width="116" height="28" rx="14" />
+          <text x="-212" y="356">Rail Freight</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-365.0" y="259.0" width="108" height="28" rx="14" />
+          <text x="-311" y="273">Sea Freight</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-417.0" y="163.0" width="86" height="28" rx="14" />
+          <text x="-374" y="177">Security</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-471.5" y="46.0" width="123" height="28" rx="14" />
+          <text x="-410" y="60">Self Employed</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-467.5" y="-94.0" width="123" height="28" rx="14" />
+          <text x="-406" y="-80">Stock Control</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-416.0" y="-222.0" width="116" height="28" rx="14" />
+          <text x="-358" y="-208">Supply Chain</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-329.5" y="-320.0" width="101" height="28" rx="14" />
+          <text x="-279" y="-306">Technology</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-231.0" y="-385.0" width="94" height="28" rx="14" />
+          <text x="-184" y="-371">Transport</text>
+        </g>
+        <g class="gl-pill">
+          <rect x="-126.0" y="-422.0" width="108" height="28" rx="14" />
+          <text x="-72" y="-408">Warehousing</text>
+        </g>
+      </svg>
     </div>
   </section>
 
