@@ -103,30 +103,24 @@
     .q-browse-hint { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 16px; }
     .q-browse-hint a { color: rgba(255,255,255,0.55); }
 
-    /* Sectors — gold band (alternates with the navy hero above and navy
-       bottom CTA below, matching the homepage's section-banding pattern).
-       The sector cards are already white/navy-text, so they sit on gold
-       with no further color changes needed. A faint, mostly-obscured
-       warehouse photo sits under the gradient (10% let through via
-       background-blend-mode) for texture — the gradient itself stays the
-       dominant, on-brand fill. */
-    .q-sectors {
-      position: relative;
-      /* 90%-opaque gradient painted over the photo via plain alpha
-         compositing (no blend-mode — that needs a real backdrop colour
-         to blend against, and this layer has none below it, which can
-         render unpredictably darker in some browsers). The remaining
-         10% is enough for the photo to read as faint texture. */
+    /* Sectors intro — gold band (alternates with the navy hero above).
+       A faint, mostly-obscured warehouse photo sits under the gradient
+       for texture — the gradient itself stays the dominant, on-brand
+       fill. 90%-opaque gradient painted over the photo via plain alpha
+       compositing (no blend-mode — that needs a real backdrop colour to
+       blend against, and this layer has none below it, which can render
+       unpredictably darker in some browsers). The remaining 10% is
+       enough for the photo to read as faint texture. */
+    .q-sectors-intro-section {
       background-image:
         linear-gradient(135deg, rgba(255,140,0,0.9) 0%, rgba(255,184,0,0.9) 55%, rgba(255,146,0,0.9) 100%),
         url('https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1600&q=60');
       background-size: cover, cover;
       background-position: center, center;
-      padding: 64px 24px 72px;
+      padding: 64px 24px;
     }
     .q-sectors-intro {
-      max-width: 720px; margin: 0 auto 44px; text-align: center;
-      position: relative; z-index: 1;
+      max-width: 720px; margin: 0 auto; text-align: center;
     }
     .q-sectors-eyebrow {
       font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
@@ -139,14 +133,26 @@
     .q-sectors-intro p {
       font-size: 15px; line-height: 1.75; color: rgba(7,29,64,0.75);
     }
+
+    /* Sector cards grid — navy band (alternates with the gold intro
+       above and the gold CTA below, keeping the site-wide rhythm going
+       instead of stopping it at one gold band). The cards are already
+       white with navy text, which is the same card convention used
+       everywhere else on the site regardless of section colour, so
+       nothing about the cards themselves needs to change here. */
+    .q-sectors-grid-section {
+      background: var(--navy);
+      padding: 56px 24px 72px;
+    }
     .q-sectors-grid {
-      position: relative; z-index: 1;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: flex-start;
       align-content: center;
       gap: 12px;
+      max-width: 1280px;
+      margin: 0 auto;
     }
     .q-sector {
       border: 1px solid var(--gray-mid);
@@ -218,16 +224,23 @@
     }
     .q-roles-join a:hover { border-color: var(--orange-dark); }
 
-    /* Bottom CTA — generous top padding keeps clear breathing room off
-       the gold band above; without it the gold button (and its glow)
-       sat almost flush against the gold section's edge and read as a
-       clash rather than a clean navy/gold transition. */
+    /* Bottom CTA — gold, continuing the navy/gold alternation (hero navy
+       -> intro gold -> sectors navy -> here gold). The shared .q-cta-btn
+       is orange-on-navy for its other use in the hero's match box, so
+       it's overridden to navy-on-gold here to keep button-vs-section
+       contrast correct instead of an orange button on an orange band. */
     .q-bottom {
       text-align: center;
-      padding: 88px 24px 88px;
+      padding: 88px 24px;
+      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
     }
+    .q-bottom .q-cta-btn {
+      background: var(--navy); color: var(--white);
+      box-shadow: 0 6px 32px rgba(7,29,64,0.28);
+    }
+    .q-bottom .q-cta-btn:hover { background: var(--navy-mid); box-shadow: 0 10px 40px rgba(7,29,64,0.36); }
     .q-bottom p {
-      font-size: 14px; color: rgba(255,255,255,0.55);
+      font-size: 14px; color: rgba(7,29,64,0.65);
       margin-top: 14px;
     }
 
@@ -235,9 +248,9 @@
 
     @media (max-width: 600px) {
       .q-hero { padding: 56px 20px 48px; }
-      .q-sectors { padding: 48px 16px 56px; }
-      .q-sectors-intro { margin-bottom: 32px; }
-      .q-bottom { padding: 64px 20px 64px; }
+      .q-sectors-intro-section { padding: 48px 20px; }
+      .q-sectors-grid-section { padding: 40px 16px 56px; }
+      .q-bottom { padding: 64px 20px; }
       .q-sector-header { padding: 11px 16px; }
       .q-sector-icon { width: 30px; height: 30px; }
       .q-sector-icon svg { width: 16px; height: 16px; }
@@ -274,12 +287,15 @@
    </div>
   </div>
 
-  <section class="q-sectors" id="qSectors">
+  <section class="q-sectors-intro-section" id="qSectors">
     <div class="q-sectors-intro">
       <div class="q-sectors-eyebrow">Every part of the industry</div>
       <h2>Built for everyone who keeps logistics moving</h2>
       <p>Logistics isn't just drivers and warehouses — it's everyone who keeps goods moving, from the boardroom to the loading bay. Logicard covers the whole industry: 3PL, Air Freight, Business Services, Customs, E-Commerce, Finance, Fleet Management, HR, Logistics Charity, Management, Operations, Procurement, Rail Freight, Sea Freight, Security, Self Employed, Stock Control, Supply Chain, Technology, Transport and Warehousing. If your role sits anywhere in that chain, you qualify.</p>
     </div>
+  </section>
+
+  <section class="q-sectors-grid-section">
     <div class="q-sectors-grid" id="qSectorsGrid">
       <p style="text-align:center;color:rgba(255,255,255,0.55)">Loading roles…</p>
     </div>
