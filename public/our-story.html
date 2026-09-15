@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=0.8" />
   <title>Our Story — Logicard</title>
-  <meta name="description" content="Logicard was built by logistics workers, for logistics workers — a genuinely closed group, built with your day in mind, and a community rather than just a card." />
+  <meta name="description" content="Our CEO's story: why Logicard was built by logistics workers, for logistics workers — from conversations with HGV drivers and warehouse teams about an industry that wasn't giving much back." />
   <link rel="canonical" href="https://logicard.co.uk/our-story.html" />
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
   <script type="application/ld+json">
@@ -13,7 +13,7 @@
     "@type": "WebPage",
     "name": "Our Story — Logicard",
     "url": "https://logicard.co.uk/our-story.html",
-    "description": "Built by logistics workers, for logistics workers.",
+    "description": "Our CEO's story: why Logicard was built by logistics workers, for logistics workers.",
     "isPartOf": { "@id": "https://logicard.co.uk/#website" }
   }
   </script>
@@ -52,8 +52,45 @@
     .story-hero h1 { font-size: clamp(30px, 4.6vw, 48px); font-weight: 900; letter-spacing: -1px; line-height: 1.18; max-width: 780px; margin: 0 auto; text-wrap: balance; }
     .story-hero h1 .accent { color: var(--orange); }
 
-    /* Points — gold */
-    .story-section { padding: 72px 24px 96px; background: var(--gold-grad); }
+    /* CEO's Story — long-form narrative, alternating navy/gold like every
+       other multi-section page. Reading width is narrower (700px) than
+       the site's usual ~1100px sections since this is prose, not cards. */
+    .cs-section { padding: 80px 24px; }
+    .cs-section.navy { background: var(--navy); }
+    .cs-section.gold { background: var(--gold-grad); }
+    .cs-inner { max-width: 700px; margin: 0 auto; }
+    .cs-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 16px; text-align: center; }
+    .cs-section.navy .cs-eyebrow { color: var(--orange); }
+    .cs-section.gold .cs-eyebrow { color: var(--navy); opacity: 0.65; }
+    .cs-h2 { font-size: clamp(26px, 3.4vw, 36px); font-weight: 900; letter-spacing: -0.6px; margin-bottom: 28px; text-align: center; text-wrap: balance; }
+    .cs-section.navy .cs-h2 { color: var(--white); }
+    .cs-section.gold .cs-h2 { color: var(--navy); }
+    .cs-body p { font-size: 16.5px; line-height: 1.85; margin-bottom: 18px; }
+    .cs-section.navy .cs-body p { color: rgba(255,255,255,0.72); }
+    .cs-section.gold .cs-body p { color: rgba(7,29,64,0.78); }
+    .cs-beat-group { margin-bottom: 18px; }
+    .cs-beat { font-size: 16.5px; font-weight: 700; line-height: 1.55; margin-bottom: 4px; }
+    .cs-section.navy .cs-beat { color: var(--white); }
+    .cs-section.gold .cs-beat { color: var(--navy); }
+    .cs-quote-group { margin: 30px 0; }
+    .cs-quote {
+      font-size: clamp(19px, 2.2vw, 23px); font-weight: 800; line-height: 1.5;
+      border-left: 4px solid var(--orange); padding-left: 20px; letter-spacing: -0.2px;
+      margin-bottom: 12px;
+    }
+    .cs-quote:last-child { margin-bottom: 0; }
+    .cs-section.navy .cs-quote { color: var(--white); border-left-color: var(--orange); }
+    .cs-section.gold .cs-quote { color: var(--navy); border-left-color: var(--navy); }
+    .cs-signoff { text-align: center; margin-top: 40px; padding-top: 36px; border-top: 1px solid rgba(255,255,255,0.12); }
+    .cs-section.gold .cs-signoff { border-top-color: rgba(7,29,64,0.15); }
+    .cs-signoff-title { font-size: clamp(22px, 2.8vw, 28px); font-weight: 900; margin-bottom: 8px; }
+    .cs-signoff-sub { font-size: 16px; font-weight: 700; }
+    .cs-section.navy .cs-signoff-title, .cs-section.navy .cs-signoff-sub { color: var(--white); }
+    .cs-section.gold .cs-signoff-title, .cs-section.gold .cs-signoff-sub { color: var(--navy); }
+
+    /* Points — navy (continues the alternation after the gold CEO's
+       Story sections above) */
+    .story-section { padding: 72px 24px 96px; background: var(--navy); }
     .story-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
     .story-point { background: var(--white); border-radius: 20px; padding: 40px 32px; }
     .story-point-icon {
@@ -65,26 +102,26 @@
     .story-point h3 { font-size: 19px; font-weight: 800; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.2px; }
     .story-point p { font-size: 14.5px; color: var(--text-muted); line-height: 1.65; }
 
-    /* Mission statement — navy */
-    .story-mission { padding: 88px 24px; text-align: center; }
+    /* Mission statement — gold (continues the alternation after Points/navy) */
+    .story-mission { padding: 88px 24px; text-align: center; background: var(--gold-grad); }
     .story-mission-inner { max-width: 720px; margin: 0 auto; }
-    .story-mission-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 18px; }
-    .story-mission p { font-size: clamp(20px, 2.6vw, 27px); font-weight: 700; line-height: 1.55; color: rgba(255,255,255,0.92); letter-spacing: -0.3px; text-wrap: balance; }
+    .story-mission-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); opacity: 0.65; margin-bottom: 18px; }
+    .story-mission p { font-size: clamp(20px, 2.6vw, 27px); font-weight: 700; line-height: 1.55; color: var(--navy); letter-spacing: -0.3px; text-wrap: balance; }
 
-    /* CTA — gold */
-    .story-cta { padding: 72px 24px; text-align: center; background: var(--gold-grad); }
-    .story-cta h2 { font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.5px; }
-    .story-cta p { font-size: 15.5px; color: rgba(7,29,64,0.7); margin-bottom: 28px; }
-    .story-cta .btn-primary { background: var(--navy); color: var(--white); }
-    .story-cta .btn-primary:hover { background: var(--navy-mid); }
+    /* CTA — navy (continues the alternation after Mission/gold); button
+       reverts to the default gold-on-navy .btn-primary defined above. */
+    .story-cta { padding: 72px 24px; text-align: center; }
+    .story-cta h2 { font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--white); margin-bottom: 12px; letter-spacing: -0.5px; }
+    .story-cta p { font-size: 15.5px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
 
     @media (max-width: 900px) {
       .story-points { grid-template-columns: 1fr; gap: 18px; }
-      .story-section { padding: 56px 24px 72px; }
+      .story-section, .cs-section { padding: 56px 24px 72px; }
     }
     @media (max-width: 600px) {
       .story-hero { padding: 60px 20px 40px; }
       .story-mission, .story-cta { padding: 56px 20px; }
+      .cs-section { padding: 48px 20px; }
     }
   </style>
 </head>
@@ -99,6 +136,178 @@
     <span class="story-badge">Verified logistics workers only</span>
     <h1>Built <span class="accent">by</span> logistics workers, for logistics workers.</h1>
   </div>
+
+  <!-- CEO's Story — gold -->
+  <section class="cs-section gold">
+    <div class="cs-inner">
+      <div class="cs-eyebrow">Our CEO's Story</div>
+      <h2 class="cs-h2">Why We Built Logicard</h2>
+      <div class="cs-body">
+        <p>Before Logicard, Josh worked in Logistics.</p>
+        <p>It was there that we began to understand something that has stayed with us ever since.</p>
+        <p>Whenever Josh spoke to another HGV driver, the message was remarkably similar.</p>
+      </div>
+      <div class="cs-quote-group">
+        <p class="cs-quote">&ldquo;We are punished for working hard.&rdquo;</p>
+        <p class="cs-quote">&ldquo;We are scrutinised over everything.&rdquo;</p>
+        <p class="cs-quote">&ldquo;We are earning less, while everything costs more.&rdquo;</p>
+        <p class="cs-quote">&ldquo;There is nothing out there for Logistics workers.&rdquo;</p>
+      </div>
+      <div class="cs-body">
+        <p>These weren't the words of people who didn't want to work.</p>
+        <p>They were the words of people who were working incredibly hard — often under enormous pressure — and feeling that the industry they kept moving wasn't giving much back to them.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CEO's Story — navy -->
+  <section class="cs-section navy">
+    <div class="cs-inner">
+      <h2 class="cs-h2">The People Behind the Loads</h2>
+      <div class="cs-body">
+        <p>Working in Logistics opened our eyes to just how much is expected from the people behind the movement of goods.</p>
+        <p>HGV drivers can spend most of their working week on the road, away from their families and their normal lives.</p>
+        <p>They deal with traffic, deadlines, congestion, difficult deliveries, unpredictable conditions and the enormous responsibility that comes with driving a vehicle that can weigh up to 44 tonnes in Great Britain, depending on the vehicle and applicable weight limits.</p>
+        <p>Some drivers even referred to their HGVs as &ldquo;death machines.&rdquo;</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">Not because they wanted to cause harm.</p>
+        <p class="cs-beat">Quite the opposite.</p>
+      </div>
+      <div class="cs-body">
+        <p>They understood the responsibility they carried.</p>
+        <p>One mistake involving a vehicle of that size can have devastating consequences.</p>
+        <p>Yet despite that responsibility, many drivers were telling us that their wages had fallen since COVID, while the cost of living continued to rise.</p>
+        <p>At the same time, agencies were competing against each other on price, creating what many workers saw as a race to the bottom.</p>
+        <p>We also saw the growing use of LTD drivers and different employment arrangements. For workers, this could mean fewer of the protections and benefits associated with traditional employment, including holiday pay in circumstances where they were genuinely self-employed.</p>
+        <p>The people doing some of the hardest and most responsible work were increasingly asking:</p>
+      </div>
+      <div class="cs-quote-group">
+        <p class="cs-quote">&ldquo;What are we actually getting back?&rdquo;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CEO's Story — gold -->
+  <section class="cs-section gold">
+    <div class="cs-inner">
+      <h2 class="cs-h2">And It Isn't Just Drivers</h2>
+      <div class="cs-body">
+        <p>The challenges don't stop when the truck reaches the warehouse.</p>
+        <p>Warehouse workers face their own pressures.</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">Long shifts.</p>
+        <p class="cs-beat">Productivity targets.</p>
+        <p class="cs-beat">Repetitive work.</p>
+        <p class="cs-beat">Constant scrutiny.</p>
+      </div>
+      <div class="cs-body">
+        <p>And sometimes even the simplest things become difficult.</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">Getting to the toilet.</p>
+        <p class="cs-beat">Getting to the canteen.</p>
+        <p class="cs-beat">Having enough time to eat.</p>
+        <p class="cs-beat">Then getting back to the working position before you're expected to start again.</p>
+      </div>
+      <div class="cs-body">
+        <p>A legal minimum break isn't necessarily the same thing as a meaningful opportunity to recover.</p>
+        <p>And while a driver can experience the loneliness of being on the road, a warehouse worker can experience something different — being surrounded by people but still feeling like nobody has time to listen.</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">Different jobs.</p>
+        <p class="cs-beat">Different pressures.</p>
+      </div>
+      <div class="cs-quote-group">
+        <p class="cs-quote">The same underlying problem.</p>
+      </div>
+      <div class="cs-body">
+        <p>The people who keep Logistics moving were feeling increasingly disconnected from the industry around them.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CEO's Story — navy -->
+  <section class="cs-section navy">
+    <div class="cs-inner">
+      <h2 class="cs-h2">Logistics Keeps Britain Moving</h2>
+      <div class="cs-body">
+        <p>That stayed with us.</p>
+        <p>Because Logistics is essential.</p>
+        <p>Every day, thousands upon thousands of people get behind the wheel, walk onto warehouse floors, load vehicles, unload deliveries, pick orders, move stock and keep supply chains functioning.</p>
+        <p>They don't always get recognition.</p>
+        <p>But without them, the country stops.</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">The shelves don't get stocked.</p>
+        <p class="cs-beat">The deliveries don't arrive.</p>
+        <p class="cs-beat">The warehouses don't move.</p>
+        <p class="cs-beat">Businesses don't operate.</p>
+      </div>
+      <div class="cs-quote-group">
+        <p class="cs-quote">Logistics workers keep Britain moving.</p>
+      </div>
+      <div class="cs-body">
+        <p>And we began to believe that the industry needed to give something back.</p>
+      </div>
+
+      <h2 class="cs-h2" style="margin-top: 48px;">That's Where Logicard Began</h2>
+      <div class="cs-body">
+        <p>Logicard was born from that idea.</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">Not from a boardroom.</p>
+        <p class="cs-beat">Not from a marketing exercise.</p>
+      </div>
+      <div class="cs-body">
+        <p>From conversations with the people actually doing the work.</p>
+        <p>We wanted to create something that recognised Logistics workers as people — not simply as numbers, labour, drivers, pickers, loaders or delivery targets.</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">Something that could create a stronger sense of community.</p>
+        <p class="cs-beat">Something that could make people feel valued.</p>
+        <p class="cs-beat">Something that said:</p>
+      </div>
+      <div class="cs-quote-group">
+        <p class="cs-quote">&ldquo;We see you.&rdquo;</p>
+        <p class="cs-quote">&ldquo;We appreciate what you do.&rdquo;</p>
+        <p class="cs-quote">&ldquo;You deserve something back.&rdquo;</p>
+      </div>
+      <div class="cs-body">
+        <p>That is what Logicard is about.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CEO's Story — gold, closing -->
+  <section class="cs-section gold">
+    <div class="cs-inner">
+      <h2 class="cs-h2">The Future of Logistics Must Include Its People</h2>
+      <div class="cs-body">
+        <p>We believe the future of Logistics cannot simply be about moving more goods, faster and cheaper.</p>
+        <p>It has to be about the people who make that possible.</p>
+        <p>Because if we continue asking Logistics workers to give more while receiving less, eventually we have to ask ourselves what kind of industry we are building.</p>
+        <p>Logicard is our answer to that question.</p>
+        <p>We want to build something that belongs to the people who keep the country moving.</p>
+      </div>
+      <div class="cs-beat-group">
+        <p class="cs-beat">Something that recognises their contribution.</p>
+        <p class="cs-beat">Something that connects them.</p>
+        <p class="cs-beat">Something that gives them real value.</p>
+      </div>
+      <div class="cs-body">
+        <p>Because after everything Logistics workers give to the industry&hellip;</p>
+      </div>
+      <div class="cs-quote-group">
+        <p class="cs-quote">It's time something was given back.</p>
+      </div>
+      <div class="cs-signoff">
+        <div class="cs-signoff-title">Welcome to Logicard.</div>
+        <div class="cs-signoff-sub">Built for the people who keep Logistics moving.</div>
+      </div>
+    </div>
+  </section>
 
   <section class="story-section">
     <div class="story-points">
