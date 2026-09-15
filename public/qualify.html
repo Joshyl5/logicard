@@ -106,10 +106,41 @@
     /* Sectors — gold band (alternates with the navy hero above and navy
        bottom CTA below, matching the homepage's section-banding pattern).
        The sector cards are already white/navy-text, so they sit on gold
-       with no further color changes needed. */
+       with no further color changes needed. A faint, mostly-obscured
+       warehouse photo sits under the gradient (10% let through via
+       background-blend-mode) for texture — the gradient itself stays the
+       dominant, on-brand fill. */
     .q-sectors {
-      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
-      padding: 48px 24px 72px;
+      position: relative;
+      /* 90%-opaque gradient painted over the photo via plain alpha
+         compositing (no blend-mode — that needs a real backdrop colour
+         to blend against, and this layer has none below it, which can
+         render unpredictably darker in some browsers). The remaining
+         10% is enough for the photo to read as faint texture. */
+      background-image:
+        linear-gradient(135deg, rgba(255,140,0,0.9) 0%, rgba(255,184,0,0.9) 55%, rgba(255,146,0,0.9) 100%),
+        url('https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1600&q=60');
+      background-size: cover, cover;
+      background-position: center, center;
+      padding: 64px 24px 72px;
+    }
+    .q-sectors-intro {
+      max-width: 720px; margin: 0 auto 44px; text-align: center;
+      position: relative; z-index: 1;
+    }
+    .q-sectors-eyebrow {
+      font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--navy); opacity: 0.6; margin-bottom: 14px;
+    }
+    .q-sectors-intro h2 {
+      font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--navy);
+      letter-spacing: -0.6px; margin-bottom: 14px; text-wrap: balance;
+    }
+    .q-sectors-intro p {
+      font-size: 15px; line-height: 1.75; color: rgba(7,29,64,0.75);
+    }
+    .q-sectors-grid {
+      position: relative; z-index: 1;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -187,10 +218,13 @@
     }
     .q-roles-join a:hover { border-color: var(--orange-dark); }
 
-    /* Bottom CTA */
+    /* Bottom CTA — generous top padding keeps clear breathing room off
+       the gold band above; without it the gold button (and its glow)
+       sat almost flush against the gold section's edge and read as a
+       clash rather than a clean navy/gold transition. */
     .q-bottom {
       text-align: center;
-      padding: 0 24px 80px;
+      padding: 88px 24px 88px;
     }
     .q-bottom p {
       font-size: 14px; color: rgba(255,255,255,0.55);
@@ -201,7 +235,9 @@
 
     @media (max-width: 600px) {
       .q-hero { padding: 56px 20px 48px; }
-      .q-sectors { padding: 0 16px 72px; }
+      .q-sectors { padding: 48px 16px 56px; }
+      .q-sectors-intro { margin-bottom: 32px; }
+      .q-bottom { padding: 64px 20px 64px; }
       .q-sector-header { padding: 11px 16px; }
       .q-sector-icon { width: 30px; height: 30px; }
       .q-sector-icon svg { width: 16px; height: 16px; }
@@ -238,9 +274,16 @@
    </div>
   </div>
 
-  <div class="q-sectors" id="qSectors">
-    <p style="text-align:center;color:rgba(255,255,255,0.55)">Loading roles…</p>
-  </div><!-- /q-sectors -->
+  <section class="q-sectors" id="qSectors">
+    <div class="q-sectors-intro">
+      <div class="q-sectors-eyebrow">Every part of the industry</div>
+      <h2>Built for everyone who keeps logistics moving</h2>
+      <p>Logistics isn't just drivers and warehouses — it's everyone who keeps goods moving, from the boardroom to the loading bay. Logicard covers the whole industry: 3PL, Air Freight, Business Services, Customs, E-Commerce, Finance, Fleet Management, HR, Logistics Charity, Management, Operations, Procurement, Rail Freight, Sea Freight, Security, Self Employed, Stock Control, Supply Chain, Technology, Transport and Warehousing. If your role sits anywhere in that chain, you qualify.</p>
+    </div>
+    <div class="q-sectors-grid" id="qSectorsGrid">
+      <p style="text-align:center;color:rgba(255,255,255,0.55)">Loading roles…</p>
+    </div>
+  </section><!-- /q-sectors -->
 
   <div class="q-bottom">
     <a href="/signup.html" class="q-cta-btn">
@@ -291,7 +334,7 @@
     let allRoles = []; // flattened [{ role, category }], built once for search
 
     async function loadEligibility() {
-      const container = document.getElementById('qSectors');
+      const container = document.getElementById('qSectorsGrid');
       try {
         const res = await fetch('/api/job-roles');
         const { categories } = await res.json();
