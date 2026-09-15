@@ -39,6 +39,7 @@ const { renderBrandPage, renderBrandNotFound } = require('./templates/brand-page
 const { renderOfferPage, renderOfferNotFound } = require('./templates/offer-page');
 const { renderNav } = require('./templates/nav');
 const { renderFooter } = require('./templates/footer');
+const { renderNewsCards, renderNewsItemListJsonLd } = require('./templates/news-feed');
 
 const app    = express();
 const PORT   = process.env.PORT || 3000;
@@ -668,7 +669,6 @@ const NAV_OPTIONS_BY_PAGE = {
   '/family-leisure-travel.html':  { activeDropdown: 'family-leisure-travel' },
   '/utilities-mobile.html':       { activeDropdown: 'utilities-mobile' },
   '/pets.html':                   {},
-  '/logistics-news.html':         { active: 'logistics-news' },
   '/events-experiences.html':     { activeDropdown: 'events-experiences' },
   '/login.html':                {},
   '/signup.html':               {},
@@ -684,6 +684,28 @@ const NAV_OPTIONS_BY_PAGE = {
   '/faqs.html':                  { active: 'faqs' },
   '/partnerships.html':          { active: 'partnerships' },
 };
+
+// ── Logistics News page — server-rendered (see templates/news-feed.js) ──
+// Registered ahead of the bulk NAV_OPTIONS_BY_PAGE route (and deliberately
+// not one of its entries) because this one needs an async DB read: cards
+// are rendered into the HTML on every request instead of being fetched
+// client-side, so the page has real, crawlable content and each story
+// links to a relevant Logicard discount page, not just its source.
+app.get('/logistics-news.html', async (_req, res) => {
+  try {
+    const items = await getRecentNewsItems(30);
+    const html = fs.readFileSync(path.join(__dirname, 'public', 'logistics-news.html'), 'utf8');
+    const out = html
+      .replace('<!-- SHARED_NAV -->', renderNav({ active: 'logistics-news' }))
+      .replace('<!-- SHARED_FOOTER -->', renderFooter())
+      .replace('<!-- NEWS_LIST -->', renderNewsCards(items))
+      .replace('<!-- NEWS_JSONLD -->', renderNewsItemListJsonLd(items));
+    res.type('html').send(out);
+  } catch (err) {
+    console.error('Logistics news page error:', err.message);
+    res.status(500).send('Something went wrong loading the news page. Please try again shortly.');
+  }
+});
 
 app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
   const file = req.path === '/' ? 'index.html' : req.path.slice(1);
