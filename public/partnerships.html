@@ -136,33 +136,6 @@
     }
     .pt-partner-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-    /* ── Partnership enquiry form (navy card) ── */
-    .pt-form-card {
-      max-width: 640px; margin: 0 auto; background: var(--white); border-radius: 20px;
-      padding: 44px 44px; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-    }
-    .pt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    .pt-field { display: flex; flex-direction: column; gap: 6px; }
-    .pt-field label { font-size: 12.5px; font-weight: 700; color: var(--navy); }
-    .pt-field input, .pt-field textarea {
-      background: #f4f6f9; border: 1px solid rgba(7,29,64,0.15); border-radius: 8px;
-      color: var(--navy); font-family: inherit; font-size: 14px; padding: 12px 14px;
-      outline: none; transition: border-color 0.2s;
-    }
-    .pt-field input:focus, .pt-field textarea:focus { border-color: var(--orange); }
-    .pt-field textarea { resize: vertical; min-height: 90px; }
-    .pt-submit-btn {
-      width: 100%; background: var(--orange); color: var(--navy);
-      font-weight: 800; font-size: 14px; letter-spacing: 0.4px; text-transform: uppercase;
-      padding: 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px;
-      transition: background 0.15s;
-    }
-    .pt-submit-btn:hover:not(:disabled) { background: var(--orange-dark); }
-    .pt-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .pt-form-msg { font-size: 13px; margin-top: 14px; padding: 10px 14px; border-radius: 8px; display: none; text-align: left; }
-    .pt-form-msg.error { display: block; color: #b91c1c; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2); }
-    .pt-form-msg.success { display: block; color: #15803d; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); }
-
     /* ── Footer ── */
 
     @media (max-width: 900px) {
@@ -176,9 +149,8 @@
       .pt-stat { padding: 18px 22px; min-width: 140px; }
       .pt-section { padding: 52px 20px; }
       .pt-card { flex-direction: column; }
-      .pt-checklist-card, .pt-form-card { padding: 32px 24px; }
+      .pt-checklist-card { padding: 32px 24px; }
       .pt-checklist { grid-template-columns: 1fr; gap: 4px; }
-      .pt-form-row { grid-template-columns: 1fr; }
       .pt-partner-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -208,7 +180,7 @@
         <div class="pt-stat-label">Coverage</div>
       </div>
     </div>
-    <a href="#pt-form" class="btn-primary">
+    <a href="/partner" class="btn-primary">
       Become a Partner
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
@@ -338,92 +310,6 @@
     })();
   </script>
 
-  <!-- Partnership enquiry — navy -->
-  <section class="pt-section navy" id="pt-form">
-    <div class="pt-inner">
-      <div class="pt-section-head">
-        <span class="pt-eyebrow">Get In Touch</span>
-        <h2 class="pt-title">Become a Logicard partner</h2>
-        <p class="pt-sub">Tell us about your brand and how you'd like to work with our members.</p>
-      </div>
-      <div class="pt-form-card">
-        <form id="partnerForm" novalidate>
-          <div class="pt-form-row">
-            <div class="pt-field">
-              <label for="ptName">Full Name *</label>
-              <input id="ptName" type="text" required autocomplete="name" />
-            </div>
-            <div class="pt-field">
-              <label for="ptEmail">Work Email *</label>
-              <input id="ptEmail" type="email" required autocomplete="email" />
-            </div>
-          </div>
-          <div class="pt-form-row">
-            <div class="pt-field">
-              <label for="ptCompany">Company Name *</label>
-              <input id="ptCompany" type="text" required autocomplete="organization" />
-            </div>
-            <div class="pt-field">
-              <label for="ptTitle">Your Job Title</label>
-              <input id="ptTitle" type="text" autocomplete="organization-title" />
-            </div>
-          </div>
-          <div class="pt-field" style="margin-bottom: 16px;">
-            <label for="ptPhone">Phone Number</label>
-            <input id="ptPhone" type="tel" autocomplete="tel" />
-          </div>
-          <div class="pt-field" style="margin-bottom: 16px;">
-            <label for="ptMessage">Tell us about your brand</label>
-            <textarea id="ptMessage" placeholder="What you offer, and how you'd like to partner with Logicard members…"></textarea>
-          </div>
-          <button type="submit" class="pt-submit-btn" id="ptSubmitBtn">Send Enquiry</button>
-          <div class="pt-form-msg" id="ptFormMsg"></div>
-        </form>
-      </div>
-    </div>
-  </section>
-
   <!-- SHARED_FOOTER -->
-
-  <script>
-    (function () {
-      var form   = document.getElementById('partnerForm');
-      var btn    = document.getElementById('ptSubmitBtn');
-      var msgBox = document.getElementById('ptFormMsg');
-
-      function showMsg(text, ok) {
-        msgBox.textContent = text;
-        msgBox.className = 'pt-form-msg ' + (ok ? 'success' : 'error');
-      }
-
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var name    = document.getElementById('ptName').value.trim();
-        var email   = document.getElementById('ptEmail').value.trim();
-        var company = document.getElementById('ptCompany').value.trim();
-        var title   = document.getElementById('ptTitle').value.trim();
-        var phone   = document.getElementById('ptPhone').value.trim();
-        var message = document.getElementById('ptMessage').value.trim();
-
-        if (!name || !email || !company) { showMsg('Please fill in your name, email and company.', false); return; }
-
-        btn.disabled = true;
-        btn.textContent = 'Sending…';
-        fetch('/api/contact', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ name: name, email: email, company: company, title: title, phone: phone, message: message, source: 'Partnership Enquiry' }),
-        })
-          .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
-          .then(function (r) {
-            if (!r.ok) { showMsg(r.json.error || 'Something went wrong. Please try again.', false); return; }
-            showMsg('Thanks — we\'ll be in touch shortly.', true);
-            form.reset();
-          })
-          .catch(function () { showMsg('Network error — please check your connection and try again.', false); })
-          .finally(function () { btn.disabled = false; btn.textContent = 'Send Enquiry'; });
-      });
-    })();
-  </script>
 </body>
 </html>

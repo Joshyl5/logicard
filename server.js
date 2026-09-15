@@ -597,6 +597,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/our-story.html',              changefreq: 'monthly', priority: '0.6' },
   { path: '/faqs.html',                   changefreq: 'monthly', priority: '0.6' },
   { path: '/partnerships.html',           changefreq: 'monthly', priority: '0.7' },
+  { path: '/partner',                     changefreq: 'monthly', priority: '0.6' },
   { path: '/categories.html',             changefreq: 'monthly', priority: '0.7' },
   { path: '/beauty-wellness.html',        changefreq: 'monthly', priority: '0.6' },
   { path: '/children-baby.html',          changefreq: 'monthly', priority: '0.6' },
@@ -799,6 +800,18 @@ app.get('/members', requireAuth, (_req, res) => res.redirect('/member-offers'));
 
 // "Business Services" was renamed to "Utilities & Mobile" shortly after launch.
 app.get('/business-services.html', (_req, res) => res.redirect(301, '/utilities-mobile.html'));
+
+// Dedicated "apply to partner" landing page — clean URL, not in
+// NAV_OPTIONS_BY_PAGE (that mechanism assumes path === filename, and the
+// file on disk is partner.html). This is what partnerships.html's hero
+// "Become a Partner" button links to.
+app.get('/partner', (_req, res) => {
+  const html = fs.readFileSync(path.join(__dirname, 'public', 'partner.html'), 'utf8');
+  const out = html
+    .replace('<!-- SHARED_NAV -->', renderNav({ active: 'partnerships' }))
+    .replace('<!-- SHARED_FOOTER -->', renderFooter());
+  res.type('html').send(out);
+});
 
 // Age-restricted section — clean URL (no .html), not in NAV_OPTIONS_BY_PAGE
 // (that mechanism assumes path === filename) and deliberately excluded from
@@ -2169,7 +2182,7 @@ app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
 // getActiveOfferBySlug in database.js. Public/pre-login, same data
 // shape as the homepage's Featured Deals — no voucher code or
 // affiliate URL exposed here.
-const RESERVED_ROOT_SLUGS = new Set(['api', 'admin', 'local-uploads', 'deals', 'logistics-rewards', 'images', 'icons', 'adult']);
+const RESERVED_ROOT_SLUGS = new Set(['api', 'admin', 'local-uploads', 'deals', 'logistics-rewards', 'images', 'icons', 'adult', 'partner']);
 app.get('/:slug', async (req, res, next) => {
   const slug = req.params.slug;
   // A dot means this was almost certainly an unmatched static asset request

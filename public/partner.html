@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Become a Partner — Logicard</title>
+  <meta name="description" content="Apply to become a Logicard partner and put your brand's offer in front of the UK's logistics workforce — a genuinely closed, verified audience of drivers, warehouse teams and supply chain staff." />
+  <link rel="canonical" href="https://logicard.co.uk/partner" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Become a Partner — Logicard",
+    "url": "https://logicard.co.uk/partner",
+    "description": "Apply to become a Logicard partner and reach the UK's logistics workforce.",
+    "isPartOf": { "@id": "https://logicard.co.uk/#website" }
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/footer.css?v=1" />
+  <style>
+    /* Flat navy / flat-gold only, per BRAND.md — reuses the same pt-
+       component system as partnerships.html (this page is the focused,
+       shareable "apply now" destination that page's hero button links
+       to, rather than a duplicate of its full marketing content). */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy: #071d40;
+      --navy-mid: #0d3b80;
+      --orange: #FFB300;
+      --orange-dark: #E09A00;
+      --white: #ffffff;
+      --text-muted: #5b6577;
+      --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+    .pt-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    a { color: inherit; }
+
+    /* ── Hero (navy) ── */
+    .pt-hero { padding: 88px 24px 72px; text-align: center; }
+    .pt-hero h1 {
+      font-size: clamp(34px, 5vw, 54px); font-weight: 900; line-height: 1.1;
+      letter-spacing: -1.2px; margin-bottom: 18px; text-wrap: balance;
+    }
+    .pt-hero h1 .gold { color: var(--orange); }
+    .pt-hero-sub {
+      font-size: 16.5px; color: rgba(255,255,255,0.65); line-height: 1.7;
+      max-width: 580px; margin: 0 auto 36px;
+    }
+    .pt-stats { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
+    .pt-stat {
+      background: var(--white); border-radius: 14px; padding: 20px 30px;
+      min-width: 160px; box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    }
+    .pt-stat-num { font-size: 24px; font-weight: 900; color: var(--navy); letter-spacing: -0.5px; margin-bottom: 4px; }
+    .pt-stat-label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
+
+    /* ── Form section (gold) ── */
+    .pt-section { padding: 72px 24px 96px; background: var(--gold-grad); }
+
+    .pt-form-card {
+      max-width: 640px; margin: 0 auto; background: var(--white); border-radius: 20px;
+      padding: 44px; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    }
+    .pt-form-head { text-align: center; margin-bottom: 28px; }
+    .pt-form-head h2 { font-size: clamp(22px, 2.8vw, 28px); font-weight: 900; color: var(--navy); letter-spacing: -0.4px; margin-bottom: 8px; }
+    .pt-form-head p { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
+    .pt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .pt-field { display: flex; flex-direction: column; gap: 6px; }
+    .pt-field label { font-size: 12.5px; font-weight: 700; color: var(--navy); }
+    .pt-field input, .pt-field textarea {
+      background: #f4f6f9; border: 1px solid rgba(7,29,64,0.15); border-radius: 8px;
+      color: var(--navy); font-family: inherit; font-size: 14px; padding: 12px 14px;
+      outline: none; transition: border-color 0.2s;
+    }
+    .pt-field input:focus, .pt-field textarea:focus { border-color: var(--orange); }
+    .pt-field textarea { resize: vertical; min-height: 90px; }
+    .pt-submit-btn {
+      width: 100%; background: var(--orange); color: var(--navy);
+      font-weight: 800; font-size: 14px; letter-spacing: 0.4px; text-transform: uppercase;
+      padding: 15px; border: none; border-radius: 8px; cursor: pointer; margin-top: 8px;
+      transition: background 0.15s;
+    }
+    .pt-submit-btn:hover:not(:disabled) { background: var(--orange-dark); }
+    .pt-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .pt-form-msg { font-size: 13px; margin-top: 14px; padding: 10px 14px; border-radius: 8px; display: none; text-align: left; }
+    .pt-form-msg.error { display: block; color: #b91c1c; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2); }
+    .pt-form-msg.success { display: block; color: #15803d; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); }
+    .pt-form-note {
+      text-align: center; font-size: 12.5px; color: var(--text-muted);
+      margin-top: 18px; line-height: 1.6;
+    }
+    .pt-form-note a { color: var(--orange-dark); font-weight: 700; text-decoration: none; }
+    .pt-form-note a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .pt-hero { padding: 60px 20px 48px; }
+      .pt-stats { gap: 12px; }
+      .pt-stat { padding: 16px 20px; min-width: 130px; }
+      .pt-section { padding: 52px 16px 72px; }
+      .pt-form-card { padding: 32px 22px; }
+      .pt-form-row { grid-template-columns: 1fr; gap: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SHARED_NAV -->
+  <div class="site-subbar">
+    <a href="/partnerships.html" class="site-subbar-back">&lt; Back</a>
+  </div>
+
+  <!-- Hero — navy -->
+  <div class="pt-hero">
+    <h1>Become A <span class="gold">Logicard</span> Partner</h1>
+    <p class="pt-hero-sub">Put your brand's offer in front of the UK's logistics workforce — a genuinely closed, verified audience who trust Logicard for real, everyday savings.</p>
+    <div class="pt-stats">
+      <div class="pt-stat">
+        <div class="pt-stat-num">2.8M+</div>
+        <div class="pt-stat-label">UK Logistics Workforce</div>
+      </div>
+      <div class="pt-stat">
+        <div class="pt-stat-num">High</div>
+        <div class="pt-stat-label">Spending Power</div>
+      </div>
+      <div class="pt-stat">
+        <div class="pt-stat-num">UK-Wide</div>
+        <div class="pt-stat-label">Coverage</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application form — gold -->
+  <section class="pt-section">
+    <div class="pt-form-card">
+      <div class="pt-form-head">
+        <h2>Tell us about your brand</h2>
+        <p>Takes about 2 minutes. We'll come back to you within a few working days.</p>
+      </div>
+      <form id="partnerForm" novalidate>
+        <div class="pt-form-row">
+          <div class="pt-field">
+            <label for="ptName">Full Name *</label>
+            <input id="ptName" type="text" required autocomplete="name" />
+          </div>
+          <div class="pt-field">
+            <label for="ptEmail">Business Email *</label>
+            <input id="ptEmail" type="email" required autocomplete="email" placeholder="you@yourcompany.co.uk" />
+          </div>
+        </div>
+        <div class="pt-form-row">
+          <div class="pt-field">
+            <label for="ptCompany">Company / Brand Name *</label>
+            <input id="ptCompany" type="text" required autocomplete="organization" />
+          </div>
+          <div class="pt-field">
+            <label for="ptTitle">Your Job Title</label>
+            <input id="ptTitle" type="text" autocomplete="organization-title" />
+          </div>
+        </div>
+        <div class="pt-field" style="margin-bottom: 16px;">
+          <label for="ptPhone">Phone Number</label>
+          <input id="ptPhone" type="tel" autocomplete="tel" />
+        </div>
+        <div class="pt-field" style="margin-bottom: 16px;">
+          <label for="ptMessage">What would you like to offer Logicard members?</label>
+          <textarea id="ptMessage" placeholder="e.g. 15% off for verified logistics workers, a free trial, a bundled discount…"></textarea>
+        </div>
+        <button type="submit" class="pt-submit-btn" id="ptSubmitBtn">Submit Application</button>
+        <div class="pt-form-msg" id="ptFormMsg"></div>
+      </form>
+      <p class="pt-form-note">Questions first? Email <a href="mailto:info@logicard.co.uk">info@logicard.co.uk</a> or see <a href="/partnerships.html">why brands partner with Logicard</a>.</p>
+    </div>
+  </section>
+
+  <!-- SHARED_FOOTER -->
+
+  <script>
+    (function () {
+      var form   = document.getElementById('partnerForm');
+      var btn    = document.getElementById('ptSubmitBtn');
+      var msgBox = document.getElementById('ptFormMsg');
+
+      function showMsg(text, ok) {
+        msgBox.textContent = text;
+        msgBox.className = 'pt-form-msg ' + (ok ? 'success' : 'error');
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var name    = document.getElementById('ptName').value.trim();
+        var email   = document.getElementById('ptEmail').value.trim();
+        var company = document.getElementById('ptCompany').value.trim();
+        var title   = document.getElementById('ptTitle').value.trim();
+        var phone   = document.getElementById('ptPhone').value.trim();
+        var message = document.getElementById('ptMessage').value.trim();
+
+        if (!name || !email || !company) { showMsg('Please fill in your name, email and company.', false); return; }
+
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        fetch('/api/contact', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({ name: name, email: email, company: company, title: title, phone: phone, message: message, source: 'Become a Partner' }),
+        })
+          .then(function (res) { return res.json().then(function (json) { return { ok: res.ok, json: json }; }); })
+          .then(function (r) {
+            if (!r.ok) { showMsg(r.json.error || 'Something went wrong. Please try again.', false); return; }
+            showMsg('Thanks — we\'ll be in touch shortly.', true);
+            form.reset();
+          })
+          .catch(function () { showMsg('Network error — please check your connection and try again.', false); })
+          .finally(function () { btn.disabled = false; btn.textContent = 'Submit Application'; });
+      });
+    })();
+  </script>
+
+</body>
+</html>
