@@ -103,20 +103,85 @@
     .q-browse-hint { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 16px; }
     .q-browse-hint a { color: rgba(255,255,255,0.55); }
 
-    /* Sectors intro — gold band (alternates with the navy hero above).
-       A faint, mostly-obscured warehouse photo sits under the gradient
-       for texture — the gradient itself stays the dominant, on-brand
-       fill. 90%-opaque gradient painted over the photo via plain alpha
-       compositing (no blend-mode — that needs a real backdrop colour to
-       blend against, and this layer has none below it, which can render
-       unpredictably darker in some browsers). The remaining 10% is
-       enough for the photo to read as faint texture. */
+    /* Animated globe scene — navy, flows straight on from the hero above
+       with no visible seam (same navy, no border/gap) so the two read as
+       one continuous hero zone rather than two stacked navy bands, which
+       is what keeps the alternation rule intact once the gold text
+       section below picks back up. Adapted from a reference build: same
+       structure (canvas warehouse backdrop, rotating globe, orbiting
+       sector pills) but recoloured to Logicard's own navy/gold — the
+       source used a third accent (blue) and a near-black background,
+       both dropped — and set in Inter throughout rather than introducing
+       a second typeface (the source used Rajdhani for headings/labels). */
+    .qg-scene {
+      position: relative; width: 100%; overflow: hidden;
+      background: var(--navy);
+    }
+    .qg-bg-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .qg-vignette {
+      position: absolute; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 62% 60% at 50% 50%, rgba(7,29,64,0) 0%, rgba(7,29,64,0.82) 100%);
+    }
+    .qg-diagram-wrap { position: relative; max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+    .qg-diagram { position: relative; width: 100%; height: 740px; }
+
+    .qg-globe-wrap { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10; }
+    .qg-globe-wrap canvas { border-radius: 50%; display: block; }
+    .qg-ring {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      border: 1px solid rgba(255,179,0,0.14);
+      animation: qgPulse 3.5s ease-in-out infinite;
+    }
+    @keyframes qgPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.025); } }
+
+    .qg-step { position: absolute; transform: translate(-50%, -50%); z-index: 20; transition: transform 0.18s ease; }
+    .qg-step:hover { transform: translate(-50%, -50%) scale(1.06); }
+    .qg-si {
+      display: flex; align-items: center; gap: clamp(6px, 0.7vw, 10px);
+      background: rgba(7,29,64,0.88);
+      border-top: 0.5px solid rgba(255,179,0,0.32);
+      border-bottom: 0.5px solid rgba(255,179,0,0.32);
+      border-right: 0.5px solid rgba(255,179,0,0.15);
+      border-left: 3px solid rgba(255,179,0,0.8);
+      border-radius: 10px;
+      padding: clamp(7px, 0.9vw, 10px) clamp(12px, 1.8vw, 20px) clamp(7px, 0.9vw, 10px) clamp(10px, 1.3vw, 14px);
+      backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+      white-space: nowrap;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .qg-step:hover .qg-si {
+      background: rgba(10,38,84,0.94); border-left-color: var(--orange);
+      box-shadow: 0 6px 36px rgba(0,0,0,0.55), 0 0 24px rgba(255,179,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
+    }
+    .qg-step.L .qg-si {
+      flex-direction: row-reverse;
+      border-left: 0.5px solid rgba(255,179,0,0.15);
+      border-right: 3px solid rgba(255,179,0,0.8);
+    }
+    .qg-step.L:hover .qg-si { border-right-color: var(--orange); border-left-color: rgba(255,179,0,0.15); }
+    .qg-step.T .qg-si { border: 1px solid rgba(255,179,0,0.32); border-bottom: 2px solid rgba(255,179,0,0.8); border-radius: 8px; }
+    .qg-step.T:hover .qg-si { border-bottom-color: var(--orange); }
+    .qg-step.B .qg-si { border: 1px solid rgba(255,179,0,0.32); border-top: 2px solid rgba(255,179,0,0.8); border-radius: 8px; }
+    .qg-step.B:hover .qg-si { border-top-color: var(--orange); }
+    .qg-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+      background: radial-gradient(circle, var(--orange-dark), var(--orange));
+      box-shadow: 0 0 8px rgba(255,179,0,0.8);
+    }
+    .qg-lbl { font-size: clamp(0.78rem, 0.9vw, 1rem); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--white); }
+    .qg-step:hover .qg-lbl { color: var(--orange); }
+
+    @media (max-width: 768px) {
+      .qg-diagram { height: 520px; }
+      .qg-lbl { font-size: 0.8rem; letter-spacing: 0.02em; }
+      .qg-si { padding: 7px 12px 7px 10px; gap: 7px; }
+      .qg-dot { width: 6px; height: 6px; }
+    }
+
+    /* Sectors intro — gold, "Built for Everyone…" text below the scene */
     .q-sectors-intro-section {
-      background-image:
-        linear-gradient(135deg, rgba(255,140,0,0.9) 0%, rgba(255,184,0,0.9) 55%, rgba(255,146,0,0.9) 100%),
-        url('https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=1600&q=60');
-      background-size: cover, cover;
-      background-position: center, center;
+      background: var(--gold-grad);
       padding: 64px 24px;
     }
     .q-sectors-intro {
@@ -130,28 +195,9 @@
       font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--navy);
       letter-spacing: -0.6px; margin-bottom: 14px; text-wrap: balance;
     }
+    .q-sectors-intro h2 .accent { color: var(--white); }
     .q-sectors-intro p {
       font-size: 15px; line-height: 1.75; color: rgba(7,29,64,0.75);
-    }
-
-    /* Globe graphic — every sector orbiting a globe, built as inline SVG
-       (positions computed so visual gaps between labels stay even, since
-       the labels vary a lot in length — equal angles alone would crowd
-       the longer ones like "Business Services"). Hidden below 760px:
-       it's decorative on top of the fully-accessible pill grid below,
-       not the only way to reach that content, so it's fine to drop
-       rather than render illegibly small. */
-    .q-globe-wrap { max-width: 780px; margin: 40px auto 0; }
-    .gl-svg { display: block; width: 100%; height: auto; overflow: visible; }
-    .gl-globe circle:first-child, .gl-globe ellipse { fill: none; stroke: rgba(255,255,255,0.55); stroke-width: 1.5; }
-    .gl-globe circle:first-child { fill: url(#glGlobeFill); stroke: none; }
-    .gl-globe line { stroke: rgba(255,255,255,0.45); stroke-width: 1.5; }
-    .gl-globe-outline { fill: none; stroke: var(--navy); stroke-width: 2; opacity: 0.15; }
-    .gl-orbit { fill: none; stroke: var(--navy); stroke-width: 1.5; stroke-dasharray: 3 9; opacity: 0.2; }
-    .gl-pill rect { fill: var(--white); stroke: rgba(7,29,64,0.1); }
-    .gl-pill text { font-family: 'Inter', sans-serif; font-size: 12.5px; font-weight: 800; fill: var(--navy); text-anchor: middle; dominant-baseline: central; }
-    @media (max-width: 760px) {
-      .q-globe-wrap { display: none; }
     }
 
     /* Sector cards grid — navy band (alternates with the gold intro
@@ -307,116 +353,190 @@
    </div>
   </div>
 
-  <section class="q-sectors-intro-section" id="qSectors">
+  <section class="qg-scene" id="qSectors">
+    <canvas class="qg-bg-canvas" id="qgBgCanvas"></canvas>
+    <div class="qg-vignette"></div>
+    <div class="qg-diagram-wrap">
+      <div class="qg-diagram" id="qgDiagram">
+        <div class="qg-globe-wrap">
+          <div class="qg-ring" style="inset:-56px"></div>
+          <div class="qg-ring" style="inset:-34px;animation-delay:1.15s"></div>
+          <div class="qg-ring" style="inset:-14px;animation-delay:2.3s;border-color:rgba(255,255,255,0.16)"></div>
+          <canvas id="qgGlobeCanvas" width="520" height="520"
+            style="width:clamp(200px,26.5vw,320px);height:clamp(200px,26.5vw,320px);
+                   filter:drop-shadow(0 0 52px rgba(255,179,0,0.55)) drop-shadow(0 0 100px rgba(255,179,0,0.18))">
+          </canvas>
+        </div>
+
+        <div class="qg-step" id="qgS0"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Supply Chain</span></div></div>
+        <div class="qg-step" id="qgS1"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Procurement</span></div></div>
+        <div class="qg-step" id="qgS2"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Freight</span></div></div>
+        <div class="qg-step" id="qgS3"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Stock Control</span></div></div>
+        <div class="qg-step" id="qgS4"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Transport</span></div></div>
+        <div class="qg-step" id="qgS5"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Warehousing</span></div></div>
+        <div class="qg-step" id="qgS6"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Operations</span></div></div>
+        <div class="qg-step" id="qgS7"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Technology</span></div></div>
+        <div class="qg-step" id="qgS8"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Security</span></div></div>
+        <div class="qg-step" id="qgS9"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Business Services</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+  /* Warehouse background (canvas) — navy-toned, not the near-black of the
+     reference this was adapted from. */
+  (function () {
+    var c = document.getElementById('qgBgCanvas');
+    function draw() {
+      var W = c.width = c.offsetWidth, H = c.height = c.offsetHeight, ctx = c.getContext('2d');
+      var bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#040f24'); bg.addColorStop(0.38, '#071d40'); bg.addColorStop(1, '#0a1f3d');
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = '#0a1a33'; ctx.fillRect(0, H * 0.73, W, H * 0.27);
+
+      [0.15, 0.35, 0.55, 0.75, 0.9].forEach(function (lx) {
+        var x = lx * W;
+        ctx.fillStyle = '#152030'; ctx.fillRect(x - 34, H * 0.025, 68, 10);
+        var lg = ctx.createRadialGradient(x, H * 0.03, 0, x, H * 0.03, W * 0.25);
+        var op = lx === 0.55 ? 0.09 : 0.19;
+        lg.addColorStop(0, 'rgba(255,172,50,' + op + ')'); lg.addColorStop(0.4, 'rgba(255,140,20,.06)'); lg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = lg; ctx.fillRect(0, 0, W, H * 0.58);
+      });
+
+      function shelf(bx, by, bw, bh, rows, cols) {
+        var sw = bw / cols, sh = bh / rows, i, r, col;
+        for (i = 0; i <= cols; i++) {
+          var x = bx + i * sw;
+          ctx.strokeStyle = 'rgba(50,80,118,.72)'; ctx.lineWidth = 2.5;
+          ctx.beginPath(); ctx.moveTo(x, by); ctx.lineTo(x, by + bh); ctx.stroke();
+        }
+        for (r = 0; r <= rows; r++) {
+          var y = by + r * sh;
+          ctx.strokeStyle = 'rgba(60,95,138,.62)'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + bw, y); ctx.stroke();
+          ctx.strokeStyle = 'rgba(90,138,190,.18)'; ctx.lineWidth = 1;
+          ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + bw, y); ctx.stroke();
+        }
+        for (r = 0; r < rows; r++) {
+          for (col = 0; col < cols; col++) {
+            if (Math.random() < 0.1) continue;
+            var px = bx + col * sw + 3, py = by + r * sh + sh * 0.18, pw = sw - 6, ph = sh * 0.7;
+            var l = 16 + Math.random() * 13 | 0;
+            ctx.fillStyle = 'hsl(24,13%,' + l + '%)'; ctx.fillRect(px, py, pw, ph);
+            ctx.fillStyle = 'rgba(255,255,255,.035)'; ctx.fillRect(px, py, pw, ph * 0.2);
+            ctx.strokeStyle = 'rgba(0,0,0,.28)'; ctx.lineWidth = 0.8; ctx.strokeRect(px, py, pw, ph);
+            if (Math.random() < 0.36) { ctx.fillStyle = 'rgba(255,255,255,.05)'; ctx.fillRect(px + 2, py + ph * 0.32, pw - 4, ph * 0.16); }
+          }
+        }
+      }
+      shelf(0, H * 0.06, W * 0.19, H * 0.8, 5, 3);
+      shelf(-W * 0.04, H * 0.1, W * 0.14, H * 0.74, 5, 2);
+      shelf(W * 0.81, H * 0.06, W * 0.19, H * 0.8, 5, 3);
+      shelf(W * 0.88, H * 0.1, W * 0.14, H * 0.74, 5, 2);
+
+      var vx = W / 2, fY = H * 0.73, i;
+      ctx.strokeStyle = 'rgba(22,50,90,.22)'; ctx.lineWidth = 0.8;
+      for (i = 0; i <= 8; i++) { var x = i * (W / 8); ctx.beginPath(); ctx.moveTo(x, H); ctx.lineTo(vx, fY); ctx.stroke(); }
+      for (i = 0; i < 6; i++) {
+        var t = i / 5, y = fY + (H - fY) * t, xl = vx - vx * t * 1.6, xr = vx + (W - vx) * t * 1.6;
+        ctx.beginPath(); ctx.moveTo(Math.max(0, xl), y); ctx.lineTo(Math.min(W, xr), y); ctx.stroke();
+      }
+
+      ctx.strokeStyle = 'rgba(14,35,68,.45)'; ctx.lineWidth = 1.2;
+      for (i = 0; i < 6; i++) { var cx2 = i * (W / 5); ctx.beginPath(); ctx.moveTo(cx2, 0); ctx.lineTo(vx, H * 0.26); ctx.stroke(); }
+
+      var cg = ctx.createRadialGradient(W / 2, H * 0.47, 0, W / 2, H * 0.47, W * 0.28);
+      cg.addColorStop(0, 'rgba(255,179,0,.08)'); cg.addColorStop(0.55, 'rgba(13,59,128,.08)'); cg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = cg; ctx.fillRect(0, 0, W, H);
+    }
+    draw();
+    window.addEventListener('resize', draw);
+  })();
+
+  /* Rotating globe (canvas) */
+  (function () {
+    var c = document.getElementById('qgGlobeCanvas'), ctx = c.getContext('2d');
+    var W = 520, cx = 260, cy = 260, R = 244, rot = 0;
+    function frame(r) {
+      ctx.clearRect(0, 0, W, W);
+      var g = ctx.createRadialGradient(cx - 52, cy - 52, 8, cx, cy, R);
+      g.addColorStop(0, 'rgba(255,200,90,.16)'); g.addColorStop(0.5, 'rgba(13,59,128,.18)'); g.addColorStop(1, 'rgba(4,13,40,.32)');
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,179,0,.55)'; ctx.lineWidth = 2.5; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, R - 8, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 6; ctx.stroke();
+      ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+      var lat;
+      for (lat = -80; lat <= 80; lat += 20) {
+        var lR = Math.cos(lat * Math.PI / 180) * R, lY = cy + Math.sin(lat * Math.PI / 180) * R;
+        if (lR < 2) continue;
+        ctx.beginPath(); ctx.ellipse(cx, lY, lR, lR * 0.22, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = lat === 0 ? 'rgba(255,179,0,.65)' : 'rgba(255,255,255,.22)';
+        ctx.lineWidth = lat === 0 ? 1.8 : 0.75; ctx.stroke();
+      }
+      var i;
+      for (i = 0; i < 12; i++) {
+        var a = (i / 12) * Math.PI + r, ca = Math.cos(a);
+        ctx.beginPath(); ctx.ellipse(cx, cy, R * Math.abs(ca), R, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,' + (0.06 + 0.16 * Math.abs(ca)) + ')'; ctx.lineWidth = 0.75; ctx.stroke();
+      }
+      for (lat = -60; lat <= 60; lat += 30) {
+        for (var lon = 0; lon < 360; lon += 30) {
+          var lr = lon * Math.PI / 180 + r,
+              x3 = Math.cos(lat * Math.PI / 180) * Math.sin(lr),
+              y3 = Math.sin(lat * Math.PI / 180),
+              z3 = Math.cos(lat * Math.PI / 180) * Math.cos(lr);
+          if (z3 < 0) continue;
+          ctx.beginPath(); ctx.arc(cx + x3 * R, cy - y3 * R, 2.2, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,179,0,' + ((0.26 + 0.74 * z3) * 0.9) + ')'; ctx.fill();
+        }
+      }
+      ctx.restore();
+      var sh = ctx.createRadialGradient(cx - 60, cy - 60, 0, cx - 25, cy - 25, R * 0.6);
+      sh.addColorStop(0, 'rgba(255,230,180,.14)'); sh.addColorStop(1, 'rgba(255,230,180,0)');
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = sh; ctx.fill();
+    }
+    (function loop() { rot += 0.005; frame(rot); requestAnimationFrame(loop); })();
+  })();
+
+  /* Orbital layout — pills positioned by percentage against a virtual
+     1200x740 design space, which is why it stays correctly proportioned
+     at any actual rendered size (CSS % resolves against the real box). */
+  (function () {
+    var VW = 1200, VH = 740, CX = VW / 2, CY = VH / 2, RX = 495, RY = 215, N = 10, start = -Math.PI / 2;
+    function ang(i) { return start + (i / N) * 2 * Math.PI; }
+    function pt(i) {
+      var a = ang(i), x = CX + RX * Math.cos(a);
+      var level = i <= 5 ? i : N - i;
+      var y = (CY - RY) + level * (2 * RY / (N / 2));
+      return { x: x, y: y };
+    }
+    function place() {
+      for (var i = 0; i < N; i++) {
+        var p = pt(i), el = document.getElementById('qgS' + i);
+        if (!el) continue;
+        el.style.left = (p.x / VW * 100) + '%';
+        el.style.top = (p.y / VH * 100) + '%';
+        el.classList.remove('L', 'T', 'B');
+        var dx = p.x - CX, dy = p.y - CY, dist = Math.sqrt(dx * dx + dy * dy);
+        var c2 = dx / dist, s2 = dy / dist;
+        if (c2 < -0.3) el.classList.add('L');
+        else if (c2 > 0.3) { /* right side default */ }
+        else if (s2 <= 0) el.classList.add('T');
+        else el.classList.add('B');
+      }
+    }
+    place();
+    var rt;
+    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(place, 150); });
+  })();
+  </script>
+
+  <section class="q-sectors-intro-section">
     <div class="q-sectors-intro">
       <div class="q-sectors-eyebrow">Every part of the industry</div>
-      <h2>Built for everyone who keeps logistics moving</h2>
-      <p>Logistics isn't just drivers and warehouses — it's everyone who keeps goods moving, from the boardroom to the loading bay. Logicard covers the whole industry: 3PL, Air Freight, Business Services, Customs, E-Commerce, Finance, Fleet Management, HR, Logistics Charity, Management, Operations, Procurement, Rail Freight, Sea Freight, Security, Self Employed, Stock Control, Supply Chain, Technology, Transport and Warehousing. If your role sits anywhere in that chain, you qualify.</p>
-    </div>
-
-    <div class="q-globe-wrap">
-      <svg class="gl-svg" viewBox="-532 -532 1064 1064" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A globe surrounded by every logistics sector Logicard covers: 3PL, Air Freight, Business Services, Customs, E-Commerce, Finance, Fleet Management, HR, Logistics Charity, Management, Operations, Procurement, Rail Freight, Sea Freight, Security, Self Employed, Stock Control, Supply Chain, Technology, Transport, Warehousing.">
-        <defs>
-          <linearGradient id="glGlobeFill" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#071d40" />
-            <stop offset="100%" stop-color="#0d3b80" />
-          </linearGradient>
-        </defs>
-        <circle class="gl-orbit" cx="0" cy="0" r="414" />
-        <g class="gl-globe">
-          <circle cx="0" cy="0" r="72" />
-          <ellipse cx="0" cy="0" rx="30" ry="72" />
-          <ellipse cx="0" cy="0" rx="58" ry="72" />
-          <line x1="-72" y1="0" x2="72" y2="0" />
-          <line x1="-62" y1="-36" x2="62" y2="-36" />
-          <line x1="-62" y1="36" x2="62" y2="36" />
-          <circle cx="0" cy="0" r="72" class="gl-globe-outline" />
-        </g>
-        <g class="gl-pill">
-          <rect x="0.0" y="-427.0" width="62" height="28" rx="14" />
-          <text x="31" y="-413">3PL</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="78.0" y="-407.0" width="108" height="28" rx="14" />
-          <text x="132" y="-393">Air Freight</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="185.0" y="-336.0" width="152" height="28" rx="14" />
-          <text x="261" y="-322">Business Services</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="309.5" y="-237.0" width="79" height="28" rx="14" />
-          <text x="349" y="-223">Customs</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="344.5" y="-139.0" width="101" height="28" rx="14" />
-          <text x="395" y="-125">E-Commerce</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="374.5" y="-33.0" width="79" height="28" rx="14" />
-          <text x="414" y="-19">Finance</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="326.5" y="95.0" width="145" height="28" rx="14" />
-          <text x="399" y="109">Fleet Management</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="320.0" y="206.0" width="62" height="28" rx="14" />
-          <text x="351" y="220">HR</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="193.0" y="300.0" width="152" height="28" rx="14" />
-          <text x="269" y="314">Logistics Charity</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="95.5" y="374.0" width="101" height="28" rx="14" />
-          <text x="146" y="388">Management</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-20.5" y="399.0" width="101" height="28" rx="14" />
-          <text x="30" y="413">Operations</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-146.0" y="390.0" width="108" height="28" rx="14" />
-          <text x="-92" y="404">Procurement</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-270.0" y="342.0" width="116" height="28" rx="14" />
-          <text x="-212" y="356">Rail Freight</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-365.0" y="259.0" width="108" height="28" rx="14" />
-          <text x="-311" y="273">Sea Freight</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-417.0" y="163.0" width="86" height="28" rx="14" />
-          <text x="-374" y="177">Security</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-471.5" y="46.0" width="123" height="28" rx="14" />
-          <text x="-410" y="60">Self Employed</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-467.5" y="-94.0" width="123" height="28" rx="14" />
-          <text x="-406" y="-80">Stock Control</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-416.0" y="-222.0" width="116" height="28" rx="14" />
-          <text x="-358" y="-208">Supply Chain</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-329.5" y="-320.0" width="101" height="28" rx="14" />
-          <text x="-279" y="-306">Technology</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-231.0" y="-385.0" width="94" height="28" rx="14" />
-          <text x="-184" y="-371">Transport</text>
-        </g>
-        <g class="gl-pill">
-          <rect x="-126.0" y="-422.0" width="108" height="28" rx="14" />
-          <text x="-72" y="-408">Warehousing</text>
-        </g>
-      </svg>
+      <h2>Built for Everyone Who Keeps <span class="accent">Logistics Moving</span></h2>
+      <p>From the C-suite to the loading bay, logistics runs on people who rarely share the same job title. Logicard brings together every corner of the industry — freight, finance, tech, ops, and everything in between. If you keep goods moving, you belong here.</p>
     </div>
   </section>
 
