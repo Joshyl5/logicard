@@ -134,7 +134,13 @@
     @keyframes qgPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.025); } }
 
     .qg-step { position: absolute; transform: translate(-50%, -50%); z-index: 20; transition: transform 0.18s ease; }
-    .qg-step:hover { transform: translate(-50%, -50%) scale(1.06); }
+    /* z-index alone on the tooltip pseudo-element isn't enough to beat a
+       sibling pill: every .qg-step shares the same z-index (20), so two
+       equal stacking contexts fall back to DOM order, and a tooltip's
+       raised z-index only wins comparisons inside its own pill's
+       context. Bumping the whole hovered pill above its siblings is
+       what actually puts the tooltip on top regardless of DOM order. */
+    .qg-step:hover { transform: translate(-50%, -50%) scale(1.06); z-index: 100; }
     .qg-si {
       display: flex; align-items: center; gap: clamp(6px, 0.7vw, 10px);
       background: rgba(7,29,64,0.88);
@@ -199,23 +205,23 @@
     .qg-step[data-tooltip]:hover::before { opacity: 1; }
 
     /* T (top pill, e.g. Supply Chain) — opens upward. */
-    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::after { bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(6px); }
-    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::before { bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); border-top-color: var(--white); }
+    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::after { bottom: calc(100% + 28px); left: 50%; transform: translateX(-50%) translateY(6px); }
+    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::before { bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%); border-top-color: var(--white); }
     .qg-step:not(.L):not(.R):not(.B)[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
 
     /* B (bottom pill, e.g. Warehousing) — opens downward. */
-    .qg-step.B[data-tooltip]::after { top: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(-6px); }
-    .qg-step.B[data-tooltip]::before { top: calc(100% + 6px); left: 50%; transform: translateX(-50%); border-bottom-color: var(--white); }
+    .qg-step.B[data-tooltip]::after { top: calc(100% + 28px); left: 50%; transform: translateX(-50%) translateY(-6px); }
+    .qg-step.B[data-tooltip]::before { top: calc(100% + 14px); left: 50%; transform: translateX(-50%); border-bottom-color: var(--white); }
     .qg-step.B[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
 
     /* L (left column) — opens further left, into the open margin. */
-    .qg-step.L[data-tooltip]::after { top: 50%; right: calc(100% + 14px); transform: translateY(-50%) translateX(6px); }
-    .qg-step.L[data-tooltip]::before { top: 50%; right: calc(100% + 6px); transform: translateY(-50%); border-left-color: var(--white); }
+    .qg-step.L[data-tooltip]::after { top: 50%; right: calc(100% + 28px); transform: translateY(-50%) translateX(6px); }
+    .qg-step.L[data-tooltip]::before { top: 50%; right: calc(100% + 14px); transform: translateY(-50%); border-left-color: var(--white); }
     .qg-step.L[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
 
     /* R (right column) — opens further right, into the open margin. */
-    .qg-step.R[data-tooltip]::after { top: 50%; left: calc(100% + 14px); transform: translateY(-50%) translateX(-6px); }
-    .qg-step.R[data-tooltip]::before { top: 50%; left: calc(100% + 6px); transform: translateY(-50%); border-right-color: var(--white); }
+    .qg-step.R[data-tooltip]::after { top: 50%; left: calc(100% + 28px); transform: translateY(-50%) translateX(-6px); }
+    .qg-step.R[data-tooltip]::before { top: 50%; left: calc(100% + 14px); transform: translateY(-50%); border-right-color: var(--white); }
     .qg-step.R[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
 
     @media (max-width: 768px) {
