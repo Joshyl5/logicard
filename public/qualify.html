@@ -70,6 +70,17 @@
       padding: 64px 24px 60px;
     }
     .q-search-inner { max-width: 720px; margin: 0 auto; }
+    /* Same green as the nav's "Check Your Eligibility Now" badge — a
+       label heading for this section, not a link (it's already the
+       destination that badge points to, so there's nowhere to send it). */
+    .q-check-badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: #1a9c4a; border: 1px solid #14853d; color: var(--white);
+      font-weight: 800; font-size: 14px; letter-spacing: 0.2px;
+      padding: 10px 20px; border-radius: 100px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+      margin: 0 auto 20px;
+    }
     .q-search-wrap { max-width: 480px; margin: 0 auto 4px; position: relative; }
     .q-search-input {
       width: 100%; padding: 16px 20px; border-radius: 100px;
@@ -102,7 +113,6 @@
     .q-match p { font-size: 14px; color: var(--text-muted); margin-bottom: 18px; }
 
     .q-browse-hint { font-size: 13px; color: rgba(7,29,64,0.5); margin-top: 16px; }
-    .q-browse-hint a { color: var(--navy); font-weight: 700; }
 
     /* Animated globe scene — 2nd section, flat Logicard navy, straight
        on from the navy intro above with no seam (see that section's own
@@ -456,6 +466,11 @@
   <!-- 2nd section: search, full gold background. -->
   <section class="q-search-section">
    <div class="q-search-inner">
+    <div class="q-check-badge">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Check Your Eligibility
+    </div>
+
     <div class="q-search-wrap">
       <input type="text" id="qSearchInput" class="q-search-input" placeholder="Start typing your job title, e.g. Warehouse…" autocomplete="off" />
       <div class="q-search-results" id="qSearchResults"></div>
@@ -471,7 +486,7 @@
       </a>
     </div>
 
-    <p class="q-browse-hint">Prefer to browse? <a href="#qSectors">See the full list by category ↓</a></p>
+    <p class="q-browse-hint">Or see the full list below</p>
    </div>
   </section>
 
