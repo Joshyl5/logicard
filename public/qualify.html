@@ -59,10 +59,10 @@
     }
     .q-cta-btn:hover { background: #ffc933; transform: translateY(-2px); box-shadow: 0 10px 40px rgba(255,179,0,0.45); }
 
-    /* Search — its own full-gold section (2nd on the page, after the
-       globe). Everything here was styled for a navy backdrop before;
-       recoloured for gold now that it's a standalone section rather
-       than living inside the navy hero. */
+    /* Search — its own full-gold section (3rd on the page, after the
+       navy intro+globe). Everything here was styled for a navy backdrop
+       before; recoloured for gold now that it's a standalone section
+       rather than living inside the navy hero. */
     .q-search-section {
       background: var(--gold-grad);
       color: var(--navy);
@@ -104,8 +104,9 @@
     .q-browse-hint { font-size: 13px; color: rgba(7,29,64,0.5); margin-top: 16px; }
     .q-browse-hint a { color: var(--navy); font-weight: 700; }
 
-    /* Animated globe scene — 1st section on the page, flat Logicard
-       navy. The reference build this was adapted from drew a warehouse
+    /* Animated globe scene — 2nd section, flat Logicard navy, straight
+       on from the navy intro above with no seam (see that section's own
+       comment). The reference build this was adapted from drew a warehouse
        scene into a background canvas here; dropped in favour of a flat
        fill, same as everywhere else on the site — just the rotating
        globe and orbiting sector pills remain, recoloured to Logicard's
@@ -173,13 +174,14 @@
       .qg-dot { width: 6px; height: 6px; }
     }
 
-    /* Sectors intro — 1st section now (moved above the globe), gold.
-       Keeping the globe navy and the search section gold per explicit
-       requests on those two, this is the one that flips instead so the
-       rhythm still alternates: intro gold -> globe navy -> search gold
-       -> grid navy -> CTA gold. */
+    /* Sectors intro — 1st section, navy, flowing straight into the
+       globe below it with no visible seam (same navy, no border/gap) so
+       the two read as one continuous opening zone — same pattern as
+       before when this was Hero+qg-scene. Alternation picks back up
+       from the gold search section onward: intro+globe navy -> search
+       gold -> grid navy -> CTA gold. */
     .q-sectors-intro-section {
-      background: var(--gold-grad);
+      background: var(--navy);
       padding: 64px 24px;
     }
     .q-sectors-intro {
@@ -187,15 +189,15 @@
     }
     .q-sectors-eyebrow {
       font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--navy); opacity: 0.65; margin-bottom: 14px;
+      color: var(--orange); margin-bottom: 14px;
     }
     .q-sectors-intro h2 {
-      font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--navy);
+      font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--white);
       letter-spacing: -0.6px; margin-bottom: 14px; text-wrap: balance;
     }
-    .q-sectors-intro h2 .accent { color: var(--white); }
+    .q-sectors-intro h2 .accent { color: var(--orange); }
     .q-sectors-intro p {
-      font-size: 15px; line-height: 1.75; color: rgba(7,29,64,0.75);
+      font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.65);
     }
 
     /* Sector cards grid — 4th section, navy (was gold, flipped back now
