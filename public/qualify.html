@@ -531,12 +531,13 @@
   (function () {
     var VW = 1200, VH = 740, CX = VW / 2, CY = VH / 2, RX = 370, RY = 215, N = 10, start = -Math.PI / 2;
     function ang(i) { return start + (i / N) * 2 * Math.PI; }
-    // Procurement (i=1) and Business Services (i=9) sit at an angle where
-    // cos() gives a noticeably smaller horizontal offset than their
-    // neighbours (Freight/Security), so at that height they land close to
-    // the globe's edge rather than clearing it the way the others do.
-    // Nudged out further horizontally to match.
-    var EXTRA_PUSH = { 1: 40, 9: -40 };
+    // Procurement (i=1), Business Services (i=9), Transport (i=4) and
+    // Operations (i=6) each sit at an angle where cos() gives a
+    // noticeably smaller horizontal offset than their neighbours, so at
+    // that height they land close to the globe's edge rather than
+    // clearing it the way the others do. Nudged out further
+    // horizontally to match, same distance for all four.
+    var EXTRA_PUSH = { 1: 40, 9: -40, 4: 40, 6: -40 };
     function pt(i) {
       var a = ang(i), x = CX + RX * Math.cos(a);
       var level = i <= 5 ? i : N - i;
