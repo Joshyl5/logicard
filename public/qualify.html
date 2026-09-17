@@ -51,13 +51,10 @@
       max-width: 720px;
       margin: 0 auto;
     }
-    .q-title {
-      font-size: clamp(32px, 5vw, 54px);
-      font-weight: 900; line-height: 1.08;
-      letter-spacing: -1px;
-      margin-bottom: 40px;
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
     }
-    .q-title span { color: var(--orange); }
     .q-cta-btn {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--orange); color: #000;
@@ -73,12 +70,13 @@
     .q-search-wrap { max-width: 480px; margin: 0 auto 4px; position: relative; }
     .q-search-input {
       width: 100%; padding: 16px 20px; border-radius: 100px;
-      border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
-      color: #fff; font-size: 15px; outline: none;
-      transition: border-color 0.2s, background 0.2s;
+      border: 1px solid var(--orange-dark); background: var(--orange);
+      color: var(--navy); font-size: 15px; font-weight: 600; outline: none;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 24px rgba(255,179,0,0.25);
     }
-    .q-search-input::placeholder { color: rgba(255,255,255,0.35); }
-    .q-search-input:focus { border-color: rgba(255,179,0,0.5); background: rgba(255,255,255,0.09); }
+    .q-search-input::placeholder { color: rgba(7,29,64,0.55); font-weight: 500; }
+    .q-search-input:focus { background: #ffc933; box-shadow: 0 8px 30px rgba(255,179,0,0.4); }
     .q-search-results { margin-top: 14px; display: none; flex-wrap: wrap; gap: 8px; justify-content: center; }
     .q-search-results.open { display: flex; }
     .q-search-result {
@@ -103,24 +101,20 @@
     .q-browse-hint { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 16px; }
     .q-browse-hint a { color: rgba(255,255,255,0.55); }
 
-    /* Animated globe scene — navy, flows straight on from the hero above
-       with no visible seam (same navy, no border/gap) so the two read as
-       one continuous hero zone rather than two stacked navy bands, which
-       is what keeps the alternation rule intact once the gold text
-       section below picks back up. Adapted from a reference build: same
-       structure (canvas warehouse backdrop, rotating globe, orbiting
-       sector pills) but recoloured to Logicard's own navy/gold — the
-       source used a third accent (blue) and a near-black background,
-       both dropped — and set in Inter throughout rather than introducing
-       a second typeface (the source used Rajdhani for headings/labels). */
+    /* Animated globe scene — flat Logicard navy, flows straight on from
+       the hero above with no visible seam so the two read as one
+       continuous hero zone, which is what keeps the alternation rule
+       intact once the gold text section below picks back up. The
+       reference build this was adapted from drew a warehouse scene into
+       a background canvas here; dropped in favour of a flat fill, same
+       as everywhere else on the site — just the rotating globe and
+       orbiting sector pills remain, recoloured to Logicard's own
+       navy/gold (the source used a third accent, blue) and set in Inter
+       throughout rather than introducing a second typeface (the source
+       used Rajdhani for headings/labels). */
     .qg-scene {
       position: relative; width: 100%; overflow: hidden;
       background: var(--navy);
-    }
-    .qg-bg-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .qg-vignette {
-      position: absolute; inset: 0; pointer-events: none;
-      background: radial-gradient(ellipse 62% 60% at 50% 50%, rgba(7,29,64,0) 0%, rgba(7,29,64,0.82) 100%);
     }
     .qg-diagram-wrap { position: relative; max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
     .qg-diagram { position: relative; width: 100%; height: 740px; }
@@ -359,7 +353,11 @@
 
   <div class="q-hero">
    <div class="q-hero-inner">
-    <h1 class="q-title">Applicable <span>Roles</span></h1>
+    <!-- Visible title removed per request — the globe scene below now
+         serves as the page's visual opener instead. Kept as a visually-
+         hidden h1 so the page still has a real heading for SEO/screen
+         readers rather than none at all. -->
+    <h1 class="sr-only">Applicable Roles</h1>
 
     <div class="q-search-wrap">
       <input type="text" id="qSearchInput" class="q-search-input" placeholder="Start typing your job title, e.g. Warehouse…" autocomplete="off" />
@@ -381,8 +379,6 @@
   </div>
 
   <section class="qg-scene" id="qSectors">
-    <canvas class="qg-bg-canvas" id="qgBgCanvas"></canvas>
-    <div class="qg-vignette"></div>
     <div class="qg-diagram-wrap">
       <div class="qg-diagram" id="qgDiagram">
         <div class="qg-globe-wrap">
@@ -410,77 +406,6 @@
   </section>
 
   <script>
-  /* Warehouse background (canvas) — navy-toned, not the near-black of the
-     reference this was adapted from. */
-  (function () {
-    var c = document.getElementById('qgBgCanvas');
-    function draw() {
-      var W = c.width = c.offsetWidth, H = c.height = c.offsetHeight, ctx = c.getContext('2d');
-      var bg = ctx.createLinearGradient(0, 0, 0, H);
-      bg.addColorStop(0, '#040f24'); bg.addColorStop(0.38, '#071d40'); bg.addColorStop(1, '#0a1f3d');
-      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-
-      ctx.fillStyle = '#0a1a33'; ctx.fillRect(0, H * 0.73, W, H * 0.27);
-
-      [0.15, 0.35, 0.55, 0.75, 0.9].forEach(function (lx) {
-        var x = lx * W;
-        ctx.fillStyle = '#152030'; ctx.fillRect(x - 34, H * 0.025, 68, 10);
-        var lg = ctx.createRadialGradient(x, H * 0.03, 0, x, H * 0.03, W * 0.25);
-        var op = lx === 0.55 ? 0.09 : 0.19;
-        lg.addColorStop(0, 'rgba(255,172,50,' + op + ')'); lg.addColorStop(0.4, 'rgba(255,140,20,.06)'); lg.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = lg; ctx.fillRect(0, 0, W, H * 0.58);
-      });
-
-      function shelf(bx, by, bw, bh, rows, cols) {
-        var sw = bw / cols, sh = bh / rows, i, r, col;
-        for (i = 0; i <= cols; i++) {
-          var x = bx + i * sw;
-          ctx.strokeStyle = 'rgba(50,80,118,.72)'; ctx.lineWidth = 2.5;
-          ctx.beginPath(); ctx.moveTo(x, by); ctx.lineTo(x, by + bh); ctx.stroke();
-        }
-        for (r = 0; r <= rows; r++) {
-          var y = by + r * sh;
-          ctx.strokeStyle = 'rgba(60,95,138,.62)'; ctx.lineWidth = 2;
-          ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + bw, y); ctx.stroke();
-          ctx.strokeStyle = 'rgba(90,138,190,.18)'; ctx.lineWidth = 1;
-          ctx.beginPath(); ctx.moveTo(bx, y); ctx.lineTo(bx + bw, y); ctx.stroke();
-        }
-        for (r = 0; r < rows; r++) {
-          for (col = 0; col < cols; col++) {
-            if (Math.random() < 0.1) continue;
-            var px = bx + col * sw + 3, py = by + r * sh + sh * 0.18, pw = sw - 6, ph = sh * 0.7;
-            var l = 16 + Math.random() * 13 | 0;
-            ctx.fillStyle = 'hsl(24,13%,' + l + '%)'; ctx.fillRect(px, py, pw, ph);
-            ctx.fillStyle = 'rgba(255,255,255,.035)'; ctx.fillRect(px, py, pw, ph * 0.2);
-            ctx.strokeStyle = 'rgba(0,0,0,.28)'; ctx.lineWidth = 0.8; ctx.strokeRect(px, py, pw, ph);
-            if (Math.random() < 0.36) { ctx.fillStyle = 'rgba(255,255,255,.05)'; ctx.fillRect(px + 2, py + ph * 0.32, pw - 4, ph * 0.16); }
-          }
-        }
-      }
-      shelf(0, H * 0.06, W * 0.19, H * 0.8, 5, 3);
-      shelf(-W * 0.04, H * 0.1, W * 0.14, H * 0.74, 5, 2);
-      shelf(W * 0.81, H * 0.06, W * 0.19, H * 0.8, 5, 3);
-      shelf(W * 0.88, H * 0.1, W * 0.14, H * 0.74, 5, 2);
-
-      var vx = W / 2, fY = H * 0.73, i;
-      ctx.strokeStyle = 'rgba(22,50,90,.22)'; ctx.lineWidth = 0.8;
-      for (i = 0; i <= 8; i++) { var x = i * (W / 8); ctx.beginPath(); ctx.moveTo(x, H); ctx.lineTo(vx, fY); ctx.stroke(); }
-      for (i = 0; i < 6; i++) {
-        var t = i / 5, y = fY + (H - fY) * t, xl = vx - vx * t * 1.6, xr = vx + (W - vx) * t * 1.6;
-        ctx.beginPath(); ctx.moveTo(Math.max(0, xl), y); ctx.lineTo(Math.min(W, xr), y); ctx.stroke();
-      }
-
-      ctx.strokeStyle = 'rgba(14,35,68,.45)'; ctx.lineWidth = 1.2;
-      for (i = 0; i < 6; i++) { var cx2 = i * (W / 5); ctx.beginPath(); ctx.moveTo(cx2, 0); ctx.lineTo(vx, H * 0.26); ctx.stroke(); }
-
-      var cg = ctx.createRadialGradient(W / 2, H * 0.47, 0, W / 2, H * 0.47, W * 0.28);
-      cg.addColorStop(0, 'rgba(255,179,0,.08)'); cg.addColorStop(0.55, 'rgba(13,59,128,.08)'); cg.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = cg; ctx.fillRect(0, 0, W, H);
-    }
-    draw();
-    window.addEventListener('resize', draw);
-  })();
-
   /* Rotating globe (canvas) */
   (function () {
     var c = document.getElementById('qgGlobeCanvas'), ctx = c.getContext('2d');
