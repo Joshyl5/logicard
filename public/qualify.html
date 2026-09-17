@@ -114,8 +114,12 @@
        Inter throughout rather than introducing a second typeface (the source
        used Rajdhani for headings/labels). */
     .qg-scene {
-      position: relative; width: 100%; overflow: hidden;
+      position: relative; width: 100%;
       background: var(--navy);
+      /* No overflow:hidden — it was only ever needed to clip the old
+         warehouse canvas background, which is long gone. Removing it
+         is what lets the pill tooltips open above the header without
+         getting cut off at the section's top/bottom edge. */
     }
     .qg-diagram-wrap { position: relative; max-width: 1100px; margin: 0 auto; padding: 0 24px 40px; }
     .qg-diagram { position: relative; width: 100%; height: 740px; }
@@ -168,15 +172,14 @@
     .qg-step:hover .qg-lbl { color: var(--orange); }
 
     /* Hover tooltip — only pills carrying a data-tooltip get one, so the
-       9 without real copy yet are unaffected. Placed below the pill by
-       default (toward the globe) since .qg-scene clips overflow and a
-       "T" pill like Supply Chain sits right at the top edge — a tooltip
-       opening upward there would get cut off. */
+       9 without real copy yet are unaffected. Opens above the header
+       for every pill (now that .qg-scene no longer clips overflow,
+       there's nothing stopping it, including for the topmost pill). */
     .qg-step[data-tooltip] { cursor: help; }
     .qg-step[data-tooltip]::after {
       content: attr(data-tooltip);
-      position: absolute; top: calc(100% + 14px); left: 50%;
-      transform: translateX(-50%) translateY(-6px);
+      position: absolute; bottom: calc(100% + 14px); left: 50%;
+      transform: translateX(-50%) translateY(6px);
       width: 230px; text-transform: none; letter-spacing: normal; white-space: normal;
       background: var(--white); color: var(--navy);
       font-size: 12.5px; font-weight: 500; line-height: 1.55;
@@ -186,18 +189,14 @@
       transition: opacity 0.18s ease, transform 0.18s ease;
     }
     .qg-step[data-tooltip]::before {
-      content: ''; position: absolute; top: calc(100% + 6px); left: 50%;
+      content: ''; position: absolute; bottom: calc(100% + 6px); left: 50%;
       transform: translateX(-50%);
-      border: 6px solid transparent; border-bottom-color: var(--white);
+      border: 6px solid transparent; border-top-color: var(--white);
       opacity: 0; pointer-events: none; z-index: 51;
       transition: opacity 0.18s ease;
     }
     .qg-step[data-tooltip]:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
     .qg-step[data-tooltip]:hover::before { opacity: 1; }
-    /* "B" pills sit at the bottom edge — flip the tooltip to open upward
-       there instead, for the same clipping reason. */
-    .qg-step.B[data-tooltip]::after { top: auto; bottom: calc(100% + 14px); }
-    .qg-step.B[data-tooltip]::before { top: auto; bottom: calc(100% + 6px); border-bottom-color: transparent; border-top-color: var(--white); }
 
     @media (max-width: 768px) {
       .qg-diagram { height: 520px; }
