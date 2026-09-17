@@ -264,16 +264,43 @@
     .q-roles {
       display: none;
       padding: 16px 18px 18px;
-      flex-wrap: wrap; gap: 8px;
+      flex-direction: column; gap: 8px;
     }
     .q-sector.open .q-roles { display: flex; }
-    .q-role {
-      font-size: 12px; font-weight: 600;
-      color: var(--navy);
-      background: rgba(7,29,64,0.045);
+
+    /* Each job title is its own small accordion: click to reveal an
+       empty box under it (content added later — this just builds the
+       clickable structure and placeholder space for that text). */
+    .q-role-item {
       border: 1px solid rgba(7,29,64,0.09);
-      border-radius: 100px;
-      padding: 5px 13px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .q-role-toggle {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      background: rgba(7,29,64,0.03); border: none; cursor: pointer;
+      padding: 9px 13px; font-family: inherit; text-align: left;
+      transition: background 0.15s;
+    }
+    .q-role-toggle:hover { background: rgba(255,179,0,0.08); }
+    .q-role-toggle span {
+      font-size: 12.5px; font-weight: 700; color: var(--navy);
+    }
+    .q-role-chevron {
+      width: 15px; height: 15px; flex-shrink: 0;
+      fill: none; stroke: rgba(7,29,64,0.4);
+      stroke-width: 2; stroke-linecap: round;
+      transition: transform 0.2s ease;
+    }
+    .q-role-item.open .q-role-chevron { transform: rotate(180deg); }
+    .q-role-item.open .q-role-toggle { background: rgba(255,179,0,0.06); }
+    .q-role-detail { display: none; padding: 10px 13px 13px; }
+    .q-role-item.open .q-role-detail { display: block; }
+    .q-role-box {
+      min-height: 22px;
+      border: 1.5px dashed rgba(7,29,64,0.18);
+      border-radius: 8px;
+      background: rgba(7,29,64,0.015);
     }
     .q-roles-join {
       display: none;
@@ -566,6 +593,10 @@
       sector.classList.toggle('open');
     }
 
+    function toggleRole(btn) {
+      btn.closest('.q-role-item').classList.toggle('open');
+    }
+
     function escapeHtml(str) {
       return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
     }
@@ -614,7 +645,15 @@
               <svg class="q-sector-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
             <div class="q-roles">
-              ${cat.roles.map(r => `<span class="q-role">${escapeHtml(r)}</span>`).join('')}
+              ${cat.roles.map(r => `
+                <div class="q-role-item">
+                  <button type="button" class="q-role-toggle" onclick="toggleRole(this)">
+                    <span>${escapeHtml(r)}</span>
+                    <svg class="q-role-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <div class="q-role-detail"><div class="q-role-box"></div></div>
+                </div>
+              `).join('')}
             </div>
             <div class="q-roles-join"><a href="/signup.html">Join Logicard free →</a></div>
           </div>
