@@ -171,16 +171,17 @@
     .qg-lbl { font-size: clamp(0.78rem, 0.9vw, 1rem); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--white); }
     .qg-step:hover .qg-lbl { color: var(--orange); }
 
-    /* Hover tooltip — only pills carrying a data-tooltip get one, so the
-       9 without real copy yet are unaffected. Opens above the header
-       for every pill (now that .qg-scene no longer clips overflow,
-       there's nothing stopping it, including for the topmost pill). */
+    /* Hover tooltip — only pills carrying a data-tooltip get one. Each
+       pill already carries a position class (T/B/L/R) from the orbit
+       layout script, used here to open the tooltip outward into open
+       space instead of always upward — straight up from an "L"/"R"
+       side pill would land on top of the next pill stacked above it in
+       the same column, since those sit close together vertically. */
     .qg-step[data-tooltip] { cursor: help; }
     .qg-step[data-tooltip]::after {
       content: attr(data-tooltip);
-      position: absolute; bottom: calc(100% + 14px); left: 50%;
-      transform: translateX(-50%) translateY(6px);
-      width: 230px; text-transform: none; letter-spacing: normal; white-space: normal;
+      position: absolute;
+      width: 220px; text-transform: none; letter-spacing: normal; white-space: normal;
       background: var(--white); color: var(--navy);
       font-size: 12.5px; font-weight: 500; line-height: 1.55;
       padding: 12px 14px; border-radius: 10px;
@@ -189,14 +190,33 @@
       transition: opacity 0.18s ease, transform 0.18s ease;
     }
     .qg-step[data-tooltip]::before {
-      content: ''; position: absolute; bottom: calc(100% + 6px); left: 50%;
-      transform: translateX(-50%);
-      border: 6px solid transparent; border-top-color: var(--white);
+      content: ''; position: absolute;
+      border: 6px solid transparent;
       opacity: 0; pointer-events: none; z-index: 51;
       transition: opacity 0.18s ease;
     }
-    .qg-step[data-tooltip]:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .qg-step[data-tooltip]:hover::after,
     .qg-step[data-tooltip]:hover::before { opacity: 1; }
+
+    /* T (top pill, e.g. Supply Chain) — opens upward. */
+    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::after { bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(6px); }
+    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::before { bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); border-top-color: var(--white); }
+    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
+
+    /* B (bottom pill, e.g. Warehousing) — opens downward. */
+    .qg-step.B[data-tooltip]::after { top: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(-6px); }
+    .qg-step.B[data-tooltip]::before { top: calc(100% + 6px); left: 50%; transform: translateX(-50%); border-bottom-color: var(--white); }
+    .qg-step.B[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
+
+    /* L (left column) — opens further left, into the open margin. */
+    .qg-step.L[data-tooltip]::after { top: 50%; right: calc(100% + 14px); transform: translateY(-50%) translateX(6px); }
+    .qg-step.L[data-tooltip]::before { top: 50%; right: calc(100% + 6px); transform: translateY(-50%); border-left-color: var(--white); }
+    .qg-step.L[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
+
+    /* R (right column) — opens further right, into the open margin. */
+    .qg-step.R[data-tooltip]::after { top: 50%; left: calc(100% + 14px); transform: translateY(-50%) translateX(-6px); }
+    .qg-step.R[data-tooltip]::before { top: 50%; left: calc(100% + 6px); transform: translateY(-50%); border-right-color: var(--white); }
+    .qg-step.R[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
 
     @media (max-width: 768px) {
       .qg-diagram { height: 520px; }
@@ -413,16 +433,16 @@
           </canvas>
         </div>
 
-        <div class="qg-step" id="qgS0" data-tooltip="If you have any role which links with Supply Chain, Logicard is for you. Discounts on everyday spends and life's essentials."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Supply Chain</span></div></div>
-        <div class="qg-step" id="qgS1"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Procurement</span></div></div>
-        <div class="qg-step" id="qgS2"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Freight</span></div></div>
-        <div class="qg-step" id="qgS3"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Stock Control</span></div></div>
-        <div class="qg-step" id="qgS4"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Transport</span></div></div>
-        <div class="qg-step" id="qgS5"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Warehousing</span></div></div>
-        <div class="qg-step" id="qgS6"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Operations</span></div></div>
-        <div class="qg-step" id="qgS7"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Technology</span></div></div>
-        <div class="qg-step" id="qgS8"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Security</span></div></div>
-        <div class="qg-step" id="qgS9"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Business Services</span></div></div>
+        <div class="qg-step" id="qgS0" data-tooltip="From end-to-end planning to last-mile delivery, supply chain professionals keep global goods flowing. Whether you manage demand forecasting, supplier networks, or logistics coordination, Logicard rewards the people who connect every link in the chain."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Supply Chain</span></div></div>
+        <div class="qg-step" id="qgS1" data-tooltip="Sourcing the right goods at the right price is what keeps logistics operations running. Buyers, category managers, and contract specialists who negotiate with suppliers and manage vendor relationships qualify for Logicard's industry-wide rewards programme."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Procurement</span></div></div>
+        <div class="qg-step" id="qgS2" data-tooltip="Road, rail, sea, or air — freight professionals move millions of tonnes of cargo every day. Freight forwarders, brokers, customs agents, and carrier teams are all eligible for Logicard, recognising their essential role in global trade."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Freight</span></div></div>
+        <div class="qg-step" id="qgS3" data-tooltip="Accurate inventory is the backbone of every efficient warehouse. Stock controllers, inventory analysts, and replenishment teams who track, audit, and manage product levels qualify for Logicard — because getting the numbers right matters every single day."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Stock Control</span></div></div>
+        <div class="qg-step" id="qgS4" data-tooltip="Drivers, fleet managers, transport planners, and logistics coordinators who keep vehicles moving and routes optimised are central to the industry. Logicard recognises transport professionals across every mode, from HGV operations to last-mile delivery fleets."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Transport</span></div></div>
+        <div class="qg-step" id="qgS5" data-tooltip="Pick, pack, receive, dispatch. Warehouse operatives, shift managers, and site supervisors form the physical backbone of the supply chain. Logicard is built for the people on the floor and in the office who make fulfilment happen."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Warehousing</span></div></div>
+        <div class="qg-step" id="qgS6" data-tooltip="Logistics operations professionals keep sites running smoothly, safely, and on time. From site managers to continuous improvement leads, those who optimise processes, manage SLAs, and coordinate daily logistics activity are fully eligible for Logicard membership."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Operations</span></div></div>
+        <div class="qg-step" id="qgS7" data-tooltip="The logistics sector runs on software, data, and innovation. Developers, systems integrators, TMS/WMS specialists, and tech teams building the tools that power modern supply chains qualify for Logicard — connecting the industry's digital workforce under one platform."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Technology</span></div></div>
+        <div class="qg-step" id="qgS8" data-tooltip="Cargo theft, access control, CCTV monitoring, and site safety are critical to every logistics operation. Security professionals protecting warehouses, freight depots, and transport hubs play a vital role in the industry and are welcome on Logicard."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Security</span></div></div>
+        <div class="qg-step" id="qgS9" data-tooltip="Accountants, HR managers, legal teams, and consultants who work within or alongside logistics businesses keep operations commercially sound. Logicard extends to the professional services community that supports the industry, ensuring no part of the network is left out."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Business Services</span></div></div>
       </div>
     </div>
   </section>
@@ -517,11 +537,11 @@
         if (!el) continue;
         el.style.left = (p.x / VW * 100) + '%';
         el.style.top = (p.y / VH * 100) + '%';
-        el.classList.remove('L', 'T', 'B');
+        el.classList.remove('L', 'R', 'T', 'B');
         var dx = p.x - CX, dy = p.y - CY, dist = Math.sqrt(dx * dx + dy * dy);
         var c2 = dx / dist, s2 = dy / dist;
         if (c2 < -0.3) el.classList.add('L');
-        else if (c2 > 0.3) { /* right side default */ }
+        else if (c2 > 0.3) el.classList.add('R'); // was left unclassed — needed so its tooltip knows to open rightward
         else if (s2 <= 0) el.classList.add('T');
         else el.classList.add('B');
       }
