@@ -173,11 +173,13 @@
       .qg-dot { width: 6px; height: 6px; }
     }
 
-    /* Sectors intro — 3rd section, navy (was gold — flipped so the
-       rhythm keeps alternating: globe navy -> search gold -> here navy
-       -> grid gold -> CTA navy). */
+    /* Sectors intro — 1st section now (moved above the globe), gold.
+       Keeping the globe navy and the search section gold per explicit
+       requests on those two, this is the one that flips instead so the
+       rhythm still alternates: intro gold -> globe navy -> search gold
+       -> grid navy -> CTA gold. */
     .q-sectors-intro-section {
-      background: var(--navy);
+      background: var(--gold-grad);
       padding: 64px 24px;
     }
     .q-sectors-intro {
@@ -185,23 +187,23 @@
     }
     .q-sectors-eyebrow {
       font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
-      color: var(--orange); margin-bottom: 14px;
+      color: var(--navy); opacity: 0.65; margin-bottom: 14px;
     }
     .q-sectors-intro h2 {
-      font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--white);
+      font-size: clamp(24px, 3.2vw, 34px); font-weight: 900; color: var(--navy);
       letter-spacing: -0.6px; margin-bottom: 14px; text-wrap: balance;
     }
-    .q-sectors-intro h2 .accent { color: var(--orange); }
+    .q-sectors-intro h2 .accent { color: var(--white); }
     .q-sectors-intro p {
-      font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.65);
+      font-size: 15px; line-height: 1.75; color: rgba(7,29,64,0.75);
     }
 
-    /* Sector cards grid — 4th section, gold (was navy — flipped to keep
-       alternating now the intro above is navy). Cards stay white with
-       navy text regardless — the same card convention used everywhere
-       else on the site regardless of section colour. */
+    /* Sector cards grid — 4th section, navy (was gold, flipped back now
+       the intro moved above the globe and became gold itself). Cards
+       stay white with navy text regardless of section colour — the
+       same card convention used everywhere else on the site. */
     .q-sectors-grid-section {
-      background: var(--gold-grad);
+      background: var(--navy);
       padding: 56px 24px 72px;
     }
     .q-sectors-grid {
@@ -311,18 +313,23 @@
     }
     .q-roles-join a:hover { border-color: var(--orange-dark); }
 
-    /* Bottom CTA — 5th and final section, navy (was gold — flipped so
-       the rhythm keeps alternating: globe navy -> search gold -> intro
-       navy -> grid gold -> here navy, straight into the always-navy
-       footer with no clash). .q-cta-btn's default orange-on-black/navy
-       styling already works here unmodified. */
+    /* Bottom CTA — 5th and final section, gold (was navy — flipped back
+       now the rhythm is intro gold -> globe navy -> search gold -> grid
+       navy -> here gold). .q-cta-btn is orange-on-black by default (for
+       its other use in the search section's white match card), so it's
+       overridden to navy-on-gold here for correct contrast. */
     .q-bottom {
       text-align: center;
       padding: 88px 24px;
-      background: var(--navy);
+      background: var(--gold-grad);
     }
+    .q-bottom .q-cta-btn {
+      background: var(--navy); color: var(--white);
+      box-shadow: 0 6px 32px rgba(7,29,64,0.28);
+    }
+    .q-bottom .q-cta-btn:hover { background: var(--navy-mid); box-shadow: 0 10px 40px rgba(7,29,64,0.36); }
     .q-bottom p {
-      font-size: 14px; color: rgba(255,255,255,0.6);
+      font-size: 14px; color: rgba(7,29,64,0.65);
       margin-top: 14px;
     }
 
@@ -346,11 +353,20 @@
 
   <!-- SHARED_NAV -->
 
-  <!-- 1st section: the globe, on its own — nothing else here. -->
+  <!-- 1st section: intro text, gold. -->
+  <section class="q-sectors-intro-section">
+    <div class="q-sectors-intro">
+      <!-- Visually-hidden h1 so the page still has a real heading for
+           SEO/screen readers — this intro is the visible opener instead. -->
+      <h1 class="sr-only">Applicable Roles</h1>
+      <div class="q-sectors-eyebrow">Every part of the industry</div>
+      <h2>Built for Everyone Who Keeps <span class="accent">Logistics Moving</span></h2>
+      <p>From the C-suite to the loading bay, logistics runs on people who rarely share the same job title. Logicard brings together every corner of the industry — freight, finance, tech, ops, and everything in between. If you keep goods moving, you belong here.</p>
+    </div>
+  </section>
+
+  <!-- 2nd section: the globe, on its own — nothing else here. -->
   <section class="qg-scene">
-    <!-- Visually-hidden h1 so the page still has a real heading for
-         SEO/screen readers — the globe is the visible opener instead. -->
-    <h1 class="sr-only">Applicable Roles</h1>
     <div class="qg-diagram-wrap">
       <div class="qg-diagram" id="qgDiagram">
         <div class="qg-globe-wrap">
@@ -482,17 +498,9 @@
   })();
   </script>
 
-  <section class="q-sectors-intro-section">
-    <div class="q-sectors-intro">
-      <div class="q-sectors-eyebrow">Every part of the industry</div>
-      <h2>Built for Everyone Who Keeps <span class="accent">Logistics Moving</span></h2>
-      <p>From the C-suite to the loading bay, logistics runs on people who rarely share the same job title. Logicard brings together every corner of the industry — freight, finance, tech, ops, and everything in between. If you keep goods moving, you belong here.</p>
-    </div>
-  </section>
-
   <section class="q-sectors-grid-section" id="qSectors">
     <div class="q-sectors-grid" id="qSectorsGrid">
-      <p style="text-align:center;color:rgba(7,29,64,0.55)">Loading roles…</p>
+      <p style="text-align:center;color:rgba(255,255,255,0.55)">Loading roles…</p>
     </div>
   </section><!-- /q-sectors -->
 
@@ -578,7 +586,7 @@
           </div>
         `).join('');
       } catch {
-        container.innerHTML = '<p style="text-align:center;color:rgba(7,29,64,0.55)">Unable to load roles right now — please refresh.</p>';
+        container.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.55)">Unable to load roles right now — please refresh.</p>';
       }
     }
 
