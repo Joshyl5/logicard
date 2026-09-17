@@ -501,9 +501,13 @@
 
   /* Orbital layout — pills positioned by percentage against a virtual
      1200x740 design space, which is why it stays correctly proportioned
-     at any actual rendered size (CSS % resolves against the real box). */
+     at any actual rendered size (CSS % resolves against the real box).
+     RX pulled in from 495 to close the dead horizontal gap between the
+     side pills and the globe; RY (and the level math below, which is
+     what actually keeps the vertical gaps between stacked pills equal)
+     is untouched so that spacing doesn't change. */
   (function () {
-    var VW = 1200, VH = 740, CX = VW / 2, CY = VH / 2, RX = 495, RY = 215, N = 10, start = -Math.PI / 2;
+    var VW = 1200, VH = 740, CX = VW / 2, CY = VH / 2, RX = 370, RY = 215, N = 10, start = -Math.PI / 2;
     function ang(i) { return start + (i / N) * 2 * Math.PI; }
     function pt(i) {
       var a = ang(i), x = CX + RX * Math.cos(a);
