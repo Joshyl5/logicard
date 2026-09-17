@@ -167,6 +167,38 @@
     .qg-lbl { font-size: clamp(0.78rem, 0.9vw, 1rem); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--white); }
     .qg-step:hover .qg-lbl { color: var(--orange); }
 
+    /* Hover tooltip — only pills carrying a data-tooltip get one, so the
+       9 without real copy yet are unaffected. Placed below the pill by
+       default (toward the globe) since .qg-scene clips overflow and a
+       "T" pill like Supply Chain sits right at the top edge — a tooltip
+       opening upward there would get cut off. */
+    .qg-step[data-tooltip] { cursor: help; }
+    .qg-step[data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute; top: calc(100% + 14px); left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      width: 230px; text-transform: none; letter-spacing: normal; white-space: normal;
+      background: var(--white); color: var(--navy);
+      font-size: 12.5px; font-weight: 500; line-height: 1.55;
+      padding: 12px 14px; border-radius: 10px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+      opacity: 0; pointer-events: none; z-index: 50;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .qg-step[data-tooltip]::before {
+      content: ''; position: absolute; top: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent; border-bottom-color: var(--white);
+      opacity: 0; pointer-events: none; z-index: 51;
+      transition: opacity 0.18s ease;
+    }
+    .qg-step[data-tooltip]:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .qg-step[data-tooltip]:hover::before { opacity: 1; }
+    /* "B" pills sit at the bottom edge — flip the tooltip to open upward
+       there instead, for the same clipping reason. */
+    .qg-step.B[data-tooltip]::after { top: auto; bottom: calc(100% + 14px); }
+    .qg-step.B[data-tooltip]::before { top: auto; bottom: calc(100% + 6px); border-bottom-color: transparent; border-top-color: var(--white); }
+
     @media (max-width: 768px) {
       .qg-diagram { height: 520px; }
       .qg-lbl { font-size: 0.8rem; letter-spacing: 0.02em; }
@@ -381,7 +413,7 @@
           </canvas>
         </div>
 
-        <div class="qg-step" id="qgS0"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Supply Chain</span></div></div>
+        <div class="qg-step" id="qgS0" data-tooltip="If you have any role which links with Supply Chain, Logicard is for you. Discounts on everyday spends and life's essentials."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Supply Chain</span></div></div>
         <div class="qg-step" id="qgS1"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Procurement</span></div></div>
         <div class="qg-step" id="qgS2"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Freight</span></div></div>
         <div class="qg-step" id="qgS3"><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Stock Control</span></div></div>
