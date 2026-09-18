@@ -582,9 +582,12 @@
     // Operations (i=6) each sit at an angle where cos() gives a
     // noticeably smaller horizontal offset than their neighbours, so at
     // that height they land close to the globe's edge rather than
-    // clearing it the way the others do. Nudged out further
-    // horizontally to match, same distance for all four.
-    var EXTRA_PUSH = { 1: 40, 9: -40, 4: 40, 6: -40 };
+    // clearing it the way the others do. Nudged out further to match.
+    // Business Services gets extra beyond the shared 40px: its label is
+    // 6 characters longer than Procurement's, so even at an equal
+    // center-to-globe distance its wider pill eats further into the gap
+    // — the +26px here is that width difference, not a guess.
+    var EXTRA_PUSH = { 1: 40, 9: -66, 4: 40, 6: -40 };
     function pt(i) {
       var a = ang(i), x = CX + RX * Math.cos(a);
       var level = i <= 5 ? i : N - i;
