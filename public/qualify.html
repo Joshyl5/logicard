@@ -240,6 +240,17 @@
       .qg-si { padding: 7px 12px 7px 10px; gap: 7px; }
       .qg-dot { width: 6px; height: 6px; }
     }
+    /* Below ~390px the orbit layout's pills genuinely overlap each
+       other (checked by simulating the actual JS position math at real
+       phone widths — not a guess) since pill width only shrinks
+       modestly while their available radius shrinks with the
+       container. Hidden below 480px for a comfortable margin above
+       that — it's a decorative complement to the fully-accessible
+       sector grid below it, not the only way to reach that content, so
+       dropping it on narrow phones loses nothing. */
+    @media (max-width: 480px) {
+      .qg-scene { display: none; }
+    }
 
     /* Sectors intro — 1st section, navy, flowing straight into the
        globe below it with no visible seam (same navy, no border/gap) so
@@ -495,6 +506,11 @@
   (function () {
     var c = document.getElementById('qgGlobeCanvas'), ctx = c.getContext('2d');
     var W = 520, cx = 260, cy = 260, R = 244, rot = 0;
+    // .qg-scene is display:none below 480px (see CSS) — the canvas still
+    // exists in the DOM either way, so without this the rAF loop would
+    // keep redrawing a hidden globe indefinitely on phones, wasting
+    // battery for nothing visible.
+    var mq = window.matchMedia('(max-width: 480px)');
     function frame(r) {
       ctx.clearRect(0, 0, W, W);
       var g = ctx.createRadialGradient(cx - 52, cy - 52, 8, cx, cy, R);
@@ -533,7 +549,10 @@
       sh.addColorStop(0, 'rgba(255,230,180,.14)'); sh.addColorStop(1, 'rgba(255,230,180,0)');
       ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = sh; ctx.fill();
     }
-    (function loop() { rot += 0.005; frame(rot); requestAnimationFrame(loop); })();
+    (function loop() {
+      if (!mq.matches) { rot += 0.005; frame(rot); }
+      requestAnimationFrame(loop);
+    })();
   })();
 
   /* Orbital layout — pills positioned by percentage against a virtual
