@@ -413,6 +413,19 @@
       font-size: 14px; color: rgba(7,29,64,0.65);
       margin-top: 14px;
     }
+    /* Trust stats — filling what was otherwise the quietest spot on the
+       page, right before the final CTA. Same white-tile-on-gold pattern
+       already used for partnerships.html's stats row, for consistency. */
+    .q-stats-row {
+      display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+      max-width: 640px; margin: 0 auto 40px;
+    }
+    .q-stat {
+      background: var(--white); border-radius: 14px; padding: 20px 32px;
+      min-width: 150px; box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+    }
+    .q-stat-num { font-size: 26px; font-weight: 900; color: var(--navy); letter-spacing: -0.5px; margin-bottom: 4px; }
+    .q-stat-label { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.4px; }
 
     /* Footer */
 
@@ -607,6 +620,20 @@
   </section><!-- /q-sectors -->
 
   <div class="q-bottom">
+    <div class="q-stats-row">
+      <div class="q-stat">
+        <div class="q-stat-num">250+</div>
+        <div class="q-stat-label">Members</div>
+      </div>
+      <div class="q-stat">
+        <div class="q-stat-num">100+</div>
+        <div class="q-stat-label">Offers</div>
+      </div>
+      <div class="q-stat">
+        <div class="q-stat-num">21</div>
+        <div class="q-stat-label">Categories</div>
+      </div>
+    </div>
     <a href="/signup.html" class="q-cta-btn">
       Claim your free Logicard
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
