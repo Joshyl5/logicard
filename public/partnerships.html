@@ -121,7 +121,7 @@
     .pt-check-item span { font-size: 15px; font-weight: 700; color: var(--navy); }
 
     /* ── Our Partners — honest placeholder state ── */
-    .pt-partner-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; max-width: 900px; margin: 0 auto; }
+    .pt-partner-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; max-width: 1160px; margin: 0 auto; }
     .pt-partner-slot {
       aspect-ratio: 16 / 10; border-radius: 14px;
       border: 2px dashed rgba(7,29,64,0.25);
@@ -263,6 +263,7 @@
         <div class="pt-partner-slot"><span>Coming Soon</span></div>
         <div class="pt-partner-slot"><span>Coming Soon</span></div>
         <div class="pt-partner-slot"><span>Coming Soon</span></div>
+        <div class="pt-partner-slot"><span>Coming Soon</span></div>
       </div>
     </div>
   </section>
@@ -300,7 +301,7 @@
               ? '<a class="pt-partner-card" href="/deals/' + esc(b.slug) + '">' + img + '</a>'
               : '<div class="pt-partner-card">' + img + '</div>';
           });
-          var remaining = Math.max(0, 4 - cards.length);
+          var remaining = Math.max(0, 5 - cards.length);
           for (var i = 0; i < remaining; i++) {
             cards.push('<div class="pt-partner-slot"><span>Coming Soon</span></div>');
           }
