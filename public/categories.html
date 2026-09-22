@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=6" />
-  <link rel="stylesheet" href="/footer.css?v=1" />
+  <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -148,6 +148,7 @@
       width: 22px; height: 22px; margin: 0 auto 10px;
       stroke: var(--orange); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
+    .deals-stat-icon { display: block; font-size: 22px; line-height: 22px; margin: 0 auto 10px; color: var(--orange); font-weight: 800; }
     .deals-stat strong { display: block; font-size: 14px; font-weight: 800; margin-bottom: 4px; }
     .deals-stat span { display: block; font-size: 11.5px; color: rgba(255,255,255,0.6); line-height: 1.4; }
 
@@ -310,7 +311,7 @@
 
       <div class="deals-hero-stats">
         <div class="deals-stat">
-          <svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          <span class="deals-stat-icon">&pound;</span>
           <strong>Real savings</strong>
           <span>Exclusive member discounts</span>
         </div>

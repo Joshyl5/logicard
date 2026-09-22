@@ -8,7 +8,7 @@
 .sf-inner { max-width: 1200px; margin: 0 auto; }
 .sf-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 48px; }
 
-.sf-brand-logo { display: inline-flex; align-items: center; font-size: 21px; font-weight: 900; letter-spacing: -1px; text-decoration: none; margin-bottom: 16px; }
+.sf-brand-logo { display: inline-flex; align-items: center; font-size: 23px; font-weight: 900; letter-spacing: -1px; text-decoration: none; margin-bottom: 16px; }
 .sf-brand-logo .logi { color: #fff; }
 .sf-brand-logo .card { color: var(--orange, #FFB300); }
 .sf-brand-tagline { font-size: 13.5px; color: rgba(255,255,255,0.5); line-height: 1.65; max-width: 230px; margin: 0; }
