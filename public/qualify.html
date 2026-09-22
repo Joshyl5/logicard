@@ -114,92 +114,47 @@
 
     .q-browse-hint { font-size: 13px; color: rgba(7,29,64,0.5); margin-top: 16px; }
 
-    /* Animated globe scene — 2nd section, flat Logicard navy, straight
-       on from the navy intro above with no seam (see that section's own
-       comment). The reference build this was adapted from drew a warehouse
-       scene into a background canvas here; dropped in favour of a flat
-       fill, same as everywhere else on the site — just the rotating
-       globe and orbiting sector pills remain, recoloured to Logicard's
-       own navy/gold (the source used a third accent, blue) and set in
-       Inter throughout rather than introducing a second typeface (the source
-       used Rajdhani for headings/labels). */
-    .qg-scene {
-      position: relative; width: 100%;
-      background: var(--navy);
-      /* No overflow:hidden — it was only ever needed to clip the old
-         warehouse canvas background, which is long gone. Removing it
-         is what lets the pill tooltips open above the header without
-         getting cut off at the section's top/bottom edge. */
-    }
-    .qg-hint {
-      text-align: center; padding: 0 24px 24px;
-      color: var(--orange); font-size: 13px; font-weight: 800;
-      letter-spacing: 0.3px; text-transform: uppercase;
-    }
-    .qg-diagram-wrap { position: relative; max-width: 1100px; margin: 0 auto; padding: 0 24px 40px; }
-    .qg-diagram { position: relative; width: 100%; height: 740px; }
-
-    .qg-globe-wrap { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 10; }
-    .qg-globe-wrap canvas { border-radius: 50%; display: block; }
-    .qg-ring {
-      position: absolute; border-radius: 50%; pointer-events: none;
-      border: 1px solid rgba(255,179,0,0.14);
-      animation: qgPulse 3.5s ease-in-out infinite;
-    }
-    @keyframes qgPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.75; transform: scale(1.025); } }
-
-    .qg-step { position: absolute; transform: translate(-50%, -50%); z-index: 20; transition: transform 0.18s ease; }
-    /* z-index alone on the tooltip pseudo-element isn't enough to beat a
-       sibling pill: every .qg-step shares the same z-index (20), so two
-       equal stacking contexts fall back to DOM order, and a tooltip's
-       raised z-index only wins comparisons inside its own pill's
-       context. Bumping the whole hovered pill above its siblings is
-       what actually puts the tooltip on top regardless of DOM order. */
-    .qg-step:hover { transform: translate(-50%, -50%) scale(1.06); z-index: 100; }
-    .qg-si {
-      display: flex; align-items: center; gap: clamp(6px, 0.7vw, 10px);
-      background: rgba(7,29,64,0.88);
-      border-top: 0.5px solid rgba(255,179,0,0.32);
-      border-bottom: 0.5px solid rgba(255,179,0,0.32);
-      border-right: 0.5px solid rgba(255,179,0,0.15);
-      border-left: 3px solid rgba(255,179,0,0.8);
-      border-radius: 10px;
-      padding: clamp(7px, 0.9vw, 10px) clamp(12px, 1.8vw, 20px) clamp(7px, 0.9vw, 10px) clamp(10px, 1.3vw, 14px);
-      backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px);
+    /* "Logicard World" animated scene — 2nd section, straight on from
+       the navy intro above with no seam. Adapted from a full-viewport
+       reference build into a bounded section: position:fixed ->
+       position:absolute scoped to this section, and the reference's
+       own html/body overflow:hidden (only needed for a standalone
+       fullscreen demo) is dropped entirely, since this has to sit
+       inside a normal scrolling page. Gold recoloured from the
+       reference's #f0a500 to Logicard's own #FFB300 throughout (globe
+       glow, orbit dots, ship stripe, lorry/van branding), and Rajdhani
+       swapped for Inter in both the label pills and the canvas-drawn
+       text, to stay consistent with the rest of the site rather than
+       introducing a second typeface. */
+    .qg-scene { position: relative; height: 740px; }
+    .qg-scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+    #qgLabels { position: absolute; inset: 0; pointer-events: none; }
+    .lbl {
+      position: absolute;
+      font-family: 'Inter', sans-serif;
+      font-weight: 800;
+      font-size: clamp(0.72rem, 1.3vw, 0.92rem);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: rgba(7,29,64,0.85);
+      border: 1px solid rgba(255,179,0,0.55);
+      padding: 7px 15px;
+      border-radius: 100px;
       white-space: nowrap;
-      box-shadow: 0 4px 28px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05);
-      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      cursor: help;
+      transition: border-color 0.15s, color 0.15s;
     }
-    .qg-step:hover .qg-si {
-      background: rgba(10,38,84,0.94); border-left-color: var(--orange);
-      box-shadow: 0 6px 36px rgba(0,0,0,0.55), 0 0 24px rgba(255,179,0,0.28), inset 0 1px 0 rgba(255,255,255,0.08);
-    }
-    .qg-step.L .qg-si {
-      flex-direction: row-reverse;
-      border-left: 0.5px solid rgba(255,179,0,0.15);
-      border-right: 3px solid rgba(255,179,0,0.8);
-    }
-    .qg-step.L:hover .qg-si { border-right-color: var(--orange); border-left-color: rgba(255,179,0,0.15); }
-    .qg-step.T .qg-si { border: 1px solid rgba(255,179,0,0.32); border-bottom: 2px solid rgba(255,179,0,0.8); border-radius: 8px; }
-    .qg-step.T:hover .qg-si { border-bottom-color: var(--orange); }
-    .qg-step.B .qg-si { border: 1px solid rgba(255,179,0,0.32); border-top: 2px solid rgba(255,179,0,0.8); border-radius: 8px; }
-    .qg-step.B:hover .qg-si { border-top-color: var(--orange); }
-    .qg-dot {
-      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-      background: radial-gradient(circle, var(--orange-dark), var(--orange));
-      box-shadow: 0 0 8px rgba(255,179,0,0.8);
-    }
-    .qg-lbl { font-size: clamp(0.78rem, 0.9vw, 1rem); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--white); }
-    .qg-step:hover .qg-lbl { color: var(--orange); }
+    .lbl:hover { border-color: var(--orange); color: var(--orange); z-index: 100; }
 
-    /* Hover tooltip — only pills carrying a data-tooltip get one. Each
-       pill already carries a position class (T/B/L/R) from the orbit
-       layout script, used here to open the tooltip outward into open
-       space instead of always upward — straight up from an "L"/"R"
-       side pill would land on top of the next pill stacked above it in
-       the same column, since those sit close together vertically. */
-    .qg-step[data-tooltip] { cursor: help; }
-    .qg-step[data-tooltip]::after {
+    /* Hover tooltip — same mechanism used for the previous globe's
+       pills, retargeted from .qg-step to .lbl. Direction (dT/dB/dL/dR)
+       is assigned once per label from its fixed orbit angle at build
+       time — these angles don't change on resize, unlike the old
+       percentage layout, so there's no need to recompute it. */
+    .lbl[data-tooltip]::after {
       content: attr(data-tooltip);
       position: absolute;
       width: 220px; text-transform: none; letter-spacing: normal; white-space: normal;
@@ -210,51 +165,44 @@
       opacity: 0; pointer-events: none; z-index: 50;
       transition: opacity 0.18s ease, transform 0.18s ease;
     }
-    .qg-step[data-tooltip]::before {
+    .lbl[data-tooltip]::before {
       content: ''; position: absolute;
       border: 6px solid transparent;
       opacity: 0; pointer-events: none; z-index: 51;
       transition: opacity 0.18s ease;
     }
-    .qg-step[data-tooltip]:hover::after,
-    .qg-step[data-tooltip]:hover::before { opacity: 1; }
+    .lbl[data-tooltip]:hover::after, .lbl[data-tooltip]:hover::before { opacity: 1; }
 
-    /* T (top pill, e.g. Supply Chain) — opens upward. */
-    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::after { bottom: calc(100% + 28px); left: 50%; transform: translateX(-50%) translateY(6px); }
-    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]::before { bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%); border-top-color: var(--white); }
-    .qg-step:not(.L):not(.R):not(.B)[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
+    .lbl.dT[data-tooltip]::after { bottom: calc(100% + 20px); left: 50%; transform: translateX(-50%) translateY(6px); }
+    .lbl.dT[data-tooltip]::before { bottom: calc(100% + 10px); left: 50%; transform: translateX(-50%); border-top-color: var(--white); }
+    .lbl.dT[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
 
-    /* B (bottom pill, e.g. Warehousing) — opens downward. */
-    .qg-step.B[data-tooltip]::after { top: calc(100% + 28px); left: 50%; transform: translateX(-50%) translateY(-6px); }
-    .qg-step.B[data-tooltip]::before { top: calc(100% + 14px); left: 50%; transform: translateX(-50%); border-bottom-color: var(--white); }
-    .qg-step.B[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
+    .lbl.dB[data-tooltip]::after { top: calc(100% + 20px); left: 50%; transform: translateX(-50%) translateY(-6px); }
+    .lbl.dB[data-tooltip]::before { top: calc(100% + 10px); left: 50%; transform: translateX(-50%); border-bottom-color: var(--white); }
+    .lbl.dB[data-tooltip]:hover::after { transform: translateX(-50%) translateY(0); }
 
-    /* L (left column) — opens further left, into the open margin. */
-    .qg-step.L[data-tooltip]::after { top: 50%; right: calc(100% + 28px); transform: translateY(-50%) translateX(6px); }
-    .qg-step.L[data-tooltip]::before { top: 50%; right: calc(100% + 14px); transform: translateY(-50%); border-left-color: var(--white); }
-    .qg-step.L[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
+    .lbl.dL[data-tooltip]::after { top: 50%; right: calc(100% + 20px); transform: translateY(-50%) translateX(6px); }
+    .lbl.dL[data-tooltip]::before { top: 50%; right: calc(100% + 10px); transform: translateY(-50%); border-left-color: var(--white); }
+    .lbl.dL[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
 
-    /* R (right column) — opens further right, into the open margin. */
-    .qg-step.R[data-tooltip]::after { top: 50%; left: calc(100% + 28px); transform: translateY(-50%) translateX(-6px); }
-    .qg-step.R[data-tooltip]::before { top: 50%; left: calc(100% + 14px); transform: translateY(-50%); border-right-color: var(--white); }
-    .qg-step.R[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
+    .lbl.dR[data-tooltip]::after { top: 50%; left: calc(100% + 20px); transform: translateY(-50%) translateX(-6px); }
+    .lbl.dR[data-tooltip]::before { top: 50%; left: calc(100% + 10px); transform: translateY(-50%); border-right-color: var(--white); }
+    .lbl.dR[data-tooltip]:hover::after { transform: translateY(-50%) translateX(0); }
 
-    @media (max-width: 768px) {
-      .qg-diagram { height: 520px; }
-      .qg-lbl { font-size: 0.8rem; letter-spacing: 0.02em; }
-      .qg-si { padding: 7px 12px 7px 10px; gap: 7px; }
-      .qg-dot { width: 6px; height: 6px; }
-    }
-    /* Below ~390px the orbit layout's pills genuinely overlap each
-       other (checked by simulating the actual JS position math at real
-       phone widths — not a guess) since pill width only shrinks
-       modestly while their available radius shrinks with the
-       container. Hidden below 480px for a comfortable margin above
-       that — it's a decorative complement to the fully-accessible
-       sector grid below it, not the only way to reach that content, so
-       dropping it on narrow phones loses nothing. */
-    @media (max-width: 480px) {
-      .qg-scene { display: none; }
+    .qg-hint-wrap { background: var(--navy); text-align: center; padding: 20px 24px; }
+    .qg-hint { color: var(--orange); font-size: 13px; font-weight: 800; letter-spacing: 0.3px; text-transform: uppercase; }
+
+    /* Checked by simulating the actual label-position math (pill width
+       vs. available orbit circumference) at real widths, not a guess:
+       below ~768px wide, several of the 10 labels — some quite long
+       ("Business Services", "Stock Control") — genuinely overlap each
+       other however the angles are arranged, because the orbit radius
+       this scene uses doesn't grow enough at narrower widths to fit
+       them all. Hidden below 780px for a safe margin above that —
+       it's a decorative complement to the fully-accessible sector grid
+       further down the page, not the only way to reach that content. */
+    @media (max-width: 780px) {
+      .qg-scene, .qg-hint-wrap { display: none; }
     }
 
     /* Sectors intro — 1st section, navy, flowing straight into the
@@ -466,32 +414,12 @@
 
   <!-- 2nd section: the globe, on its own — nothing else here. -->
   <section class="qg-scene">
-    <div class="qg-diagram-wrap">
-      <div class="qg-diagram" id="qgDiagram">
-        <div class="qg-globe-wrap">
-          <div class="qg-ring" style="inset:-56px"></div>
-          <div class="qg-ring" style="inset:-34px;animation-delay:1.15s"></div>
-          <div class="qg-ring" style="inset:-14px;animation-delay:2.3s;border-color:rgba(255,255,255,0.16)"></div>
-          <canvas id="qgGlobeCanvas" width="520" height="520"
-            style="width:clamp(200px,26.5vw,320px);height:clamp(200px,26.5vw,320px);
-                   filter:drop-shadow(0 0 52px rgba(255,179,0,0.55)) drop-shadow(0 0 100px rgba(255,179,0,0.18))">
-          </canvas>
-        </div>
-
-        <div class="qg-step" id="qgS0" data-tooltip="From end-to-end planning to last-mile delivery, supply chain professionals keep global goods flowing. Whether you manage demand forecasting, supplier networks, or logistics coordination, Logicard rewards the people who connect every link in the chain."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Supply Chain</span></div></div>
-        <div class="qg-step" id="qgS1" data-tooltip="Sourcing the right goods at the right price is what keeps logistics operations running. Buyers, category managers, and contract specialists who negotiate with suppliers and manage vendor relationships qualify for Logicard's industry-wide rewards programme."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Procurement</span></div></div>
-        <div class="qg-step" id="qgS2" data-tooltip="Road, rail, sea, or air — freight professionals move millions of tonnes of cargo every day. Freight forwarders, brokers, customs agents, and carrier teams are all eligible for Logicard, recognising their essential role in global trade."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Freight</span></div></div>
-        <div class="qg-step" id="qgS3" data-tooltip="Accurate inventory is the backbone of every efficient warehouse. Stock controllers, inventory analysts, and replenishment teams who track, audit, and manage product levels qualify for Logicard — because getting the numbers right matters every single day."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Stock Control</span></div></div>
-        <div class="qg-step" id="qgS4" data-tooltip="Drivers, fleet managers, transport planners, and logistics coordinators who keep vehicles moving and routes optimised are central to the industry. Logicard recognises transport professionals across every mode, from HGV operations to last-mile delivery fleets."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Transport</span></div></div>
-        <div class="qg-step" id="qgS5" data-tooltip="Pick, pack, receive, dispatch. Warehouse operatives, shift managers, and site supervisors form the physical backbone of the supply chain. Logicard is built for the people on the floor and in the office who make fulfilment happen."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Warehousing</span></div></div>
-        <div class="qg-step" id="qgS6" data-tooltip="Logistics operations professionals keep sites running smoothly, safely, and on time. From site managers to continuous improvement leads, those who optimise processes, manage SLAs, and coordinate daily logistics activity are fully eligible for Logicard membership."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Operations</span></div></div>
-        <div class="qg-step" id="qgS7" data-tooltip="The logistics sector runs on software, data, and innovation. Developers, systems integrators, TMS/WMS specialists, and tech teams building the tools that power modern supply chains qualify for Logicard — connecting the industry's digital workforce under one platform."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Technology</span></div></div>
-        <div class="qg-step" id="qgS8" data-tooltip="Cargo theft, access control, CCTV monitoring, and site safety are critical to every logistics operation. Security professionals protecting warehouses, freight depots, and transport hubs play a vital role in the industry and are welcome on Logicard."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Security</span></div></div>
-        <div class="qg-step" id="qgS9" data-tooltip="Accountants, HR managers, legal teams, and consultants who work within or alongside logistics businesses keep operations commercially sound. Logicard extends to the professional services community that supports the industry, ensuring no part of the network is left out."><div class="qg-si"><div class="qg-dot"></div><span class="qg-lbl">Business Services</span></div></div>
-      </div>
-    </div>
-    <p class="qg-hint">Hover over each heading to see the associated roles</p>
+    <canvas id="qgWorldCanvas"></canvas>
+    <div id="qgLabels"></div>
   </section>
+  <div class="qg-hint-wrap">
+    <p class="qg-hint">Hover over each heading to see the associated roles</p>
+  </div>
 
   <!-- 2nd section: search, full gold background. -->
   <section class="q-search-section">
@@ -521,104 +449,389 @@
   </section>
 
   <script>
-  /* Rotating globe (canvas) */
+  /* "Logicard World" scene — sky, warehouses, ground/road, sea/ships,
+     plane, lorries, vans and a rotating globe with 10 orbiting sector
+     labels, all on one canvas. Adapted from a full-viewport reference:
+     sizing now reads the .qg-scene section's own rendered size instead
+     of window.innerWidth/innerHeight, so this behaves as a normal
+     bounded page section rather than a fullscreen background. */
   (function () {
-    var c = document.getElementById('qgGlobeCanvas'), ctx = c.getContext('2d');
-    var W = 520, cx = 260, cy = 260, R = 244, rot = 0;
-    // .qg-scene is display:none below 480px (see CSS) — the canvas still
-    // exists in the DOM either way, so without this the rAF loop would
-    // keep redrawing a hidden globe indefinitely on phones, wasting
-    // battery for nothing visible.
-    var mq = window.matchMedia('(max-width: 480px)');
-    function frame(r) {
-      ctx.clearRect(0, 0, W, W);
-      var g = ctx.createRadialGradient(cx - 52, cy - 52, 8, cx, cy, R);
-      g.addColorStop(0, 'rgba(255,200,90,.16)'); g.addColorStop(0.5, 'rgba(13,59,128,.18)'); g.addColorStop(1, 'rgba(4,13,40,.32)');
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = g; ctx.fill();
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,179,0,.55)'; ctx.lineWidth = 2.5; ctx.stroke();
-      ctx.beginPath(); ctx.arc(cx, cy, R - 8, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.lineWidth = 6; ctx.stroke();
+    var canvas = document.getElementById('qgWorldCanvas');
+    var ctx = canvas.getContext('2d');
+    var scene = canvas.closest('.qg-scene');
+    var labelsEl = document.getElementById('qgLabels');
+
+    var W, H, GR, GCX, GCY, horizonY, seaTopY, roadY, shipY;
+    var startT = null;
+
+    var GOLD = '#FFB300';
+    var GOLD2 = 'rgba(255,179,0,';
+    var BLUE = 'rgba(60,120,220,';
+    var CATS = ['Supply Chain', 'Procurement', 'Freight', 'Stock Control', 'Transport', 'Warehousing', 'Operations', 'Technology', 'Security', 'Business Services'];
+    var TOOLTIPS = [
+      "From end-to-end planning to last-mile delivery, supply chain professionals keep global goods flowing. Whether you manage demand forecasting, supplier networks, or logistics coordination, Logicard rewards the people who connect every link in the chain.",
+      "Sourcing the right goods at the right price is what keeps logistics operations running. Buyers, category managers, and contract specialists who negotiate with suppliers and manage vendor relationships qualify for Logicard's industry-wide rewards programme.",
+      "Road, rail, sea, or air — freight professionals move millions of tonnes of cargo every day. Freight forwarders, brokers, customs agents, and carrier teams are all eligible for Logicard, recognising their essential role in global trade.",
+      "Accurate inventory is the backbone of every efficient warehouse. Stock controllers, inventory analysts, and replenishment teams who track, audit, and manage product levels qualify for Logicard — because getting the numbers right matters every single day.",
+      "Drivers, fleet managers, transport planners, and logistics coordinators who keep vehicles moving and routes optimised are central to the industry. Logicard recognises transport professionals across every mode, from HGV operations to last-mile delivery fleets.",
+      "Pick, pack, receive, dispatch. Warehouse operatives, shift managers, and site supervisors form the physical backbone of the supply chain. Logicard is built for the people on the floor and in the office who make fulfilment happen.",
+      "Logistics operations professionals keep sites running smoothly, safely, and on time. From site managers to continuous improvement leads, those who optimise processes, manage SLAs, and coordinate daily logistics activity are fully eligible for Logicard membership.",
+      "The logistics sector runs on software, data, and innovation. Developers, systems integrators, TMS/WMS specialists, and tech teams building the tools that power modern supply chains qualify for Logicard — connecting the industry's digital workforce under one platform.",
+      "Cargo theft, access control, CCTV monitoring, and site safety are critical to every logistics operation. Security professionals protecting warehouses, freight depots, and transport hubs play a vital role in the industry and are welcome on Logicard.",
+      "Accountants, HR managers, legal teams, and consultants who work within or alongside logistics businesses keep operations commercially sound. Logicard extends to the professional services community that supports the industry, ensuring no part of the network is left out."
+    ];
+    var ANGLES = [-90, -42, -8, 28, 62, 96, 140, 172, 195, 222]; // degrees from 12-clock
+    var labelEls = [];
+
+    // .qg-scene is display:none below 780px (see CSS) — the canvas
+    // still exists in the DOM either way, so without this the rAF loop
+    // would keep redrawing a hidden scene indefinitely on phones,
+    // wasting battery for nothing visible.
+    var mq = window.matchMedia('(max-width: 780px)');
+
+    function dirFor(deg) {
+      var rad = deg * Math.PI / 180, c = Math.cos(rad), s = Math.sin(rad);
+      if (c < -0.3) return 'dL';
+      if (c > 0.3) return 'dR';
+      return s <= 0 ? 'dT' : 'dB';
+    }
+
+    function rng(seed) {
+      var s = seed | 0;
+      return function () {
+        s = s + 0x6D2B79F5 | 0;
+        var t = Math.imul(s ^ s >>> 15, 1 | s);
+        t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+
+    function init() {
+      W = canvas.width = scene.clientWidth;
+      H = canvas.height = scene.clientHeight;
+      GR = Math.min(W, H) * 0.21;
+      GCX = W * 0.5;
+      GCY = H * 0.385;
+      horizonY = H * 0.63;
+      seaTopY = H * 0.76;
+      roadY = horizonY + (seaTopY - horizonY) * 0.32;
+      shipY = seaTopY + (H - seaTopY) * 0.3;
+
+      labelsEl.innerHTML = '';
+      labelEls = CATS.map(function (name, i) {
+        var el = document.createElement('div');
+        el.className = 'lbl ' + dirFor(ANGLES[i]);
+        el.textContent = name;
+        el.dataset.tooltip = TOOLTIPS[i];
+        labelsEl.appendChild(el);
+        return el;
+      });
+    }
+
+    function drawSky() {
+      var g = ctx.createLinearGradient(0, 0, 0, horizonY);
+      g.addColorStop(0, '#1560c8'); g.addColorStop(0.5, '#2e88e8'); g.addColorStop(1, '#7ec8f8');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, horizonY);
+      [[W*0.12,H*0.09,90,22],[W*0.38,H*0.06,130,28],[W*0.65,H*0.1,100,24],[W*0.85,H*0.07,80,20]].forEach(function (a) {
+        var cx = a[0], cy = a[1], cw = a[2], ch = a[3];
+        var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, cw);
+        cg.addColorStop(0, 'rgba(255,255,255,0.55)'); cg.addColorStop(0.5, 'rgba(255,255,255,0.28)'); cg.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = cg;
+        ctx.save(); ctx.scale(1, ch / cw);
+        ctx.beginPath(); ctx.arc(cx, cy * cw / ch, cw, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      });
+      var hg = ctx.createLinearGradient(0, horizonY - 50, 0, horizonY + 10);
+      hg.addColorStop(0, 'rgba(200,230,255,0)'); hg.addColorStop(1, 'rgba(180,220,255,0.35)');
+      ctx.fillStyle = hg; ctx.fillRect(0, horizonY - 50, W, 60);
+    }
+
+    function drawWarehouses() {
+      var whs = [
+        {x: 0.02, w: 0.16, h: 0.09}, {x: 0.24, w: 0.13, h: 0.075}, {x: 0.44, w: 0.10, h: 0.065},
+        {x: 0.68, w: 0.18, h: 0.095}, {x: 0.90, w: 0.11, h: 0.08}
+      ];
+      whs.forEach(function (d) {
+        var x = d.x * W, w = d.w * W, h = d.h * H, top = horizonY - h, pi, row, col;
+        ctx.fillStyle = '#d8e4ee'; ctx.fillRect(x, top, w, h);
+        ctx.strokeStyle = 'rgba(100,140,180,0.4)'; ctx.lineWidth = 1; ctx.strokeRect(x, top, w, h);
+        ctx.strokeStyle = 'rgba(150,180,210,0.3)'; ctx.lineWidth = 0.8;
+        var panelW = w / Math.floor(w / 40);
+        for (pi = 1; pi < Math.floor(w / 40); pi++) {
+          ctx.beginPath(); ctx.moveTo(x + pi * panelW, top); ctx.lineTo(x + pi * panelW, horizonY); ctx.stroke();
+        }
+        var cols = Math.max(2, Math.floor(w / 20));
+        var pw = (w - 8) / cols - 2, ph = h * 0.11;
+        for (row = 0; row < 3; row++) {
+          for (col = 0; col < cols; col++) {
+            var px = x + 4 + col * (pw + 2), py = top + 5 + row * (ph + 2);
+            ctx.fillStyle = '#3a7fd4'; ctx.fillRect(px, py, pw, ph);
+            ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 0.5; ctx.strokeRect(px, py, pw, ph);
+            ctx.beginPath(); ctx.moveTo(px + pw / 2, py); ctx.lineTo(px + pw / 2, py + ph); ctx.stroke();
+          }
+        }
+        var dCnt = Math.max(1, Math.floor(w / 55));
+        var dw = Math.min(36, w / dCnt * 0.55), dh = h * 0.38;
+        for (var di = 0; di < dCnt; di++) {
+          var dx = x + w / dCnt * (di + 0.5) - dw / 2, dy = horizonY - dh - 1;
+          ctx.fillStyle = '#8aa8c4'; ctx.fillRect(dx, dy, dw, dh);
+          ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 0.8;
+          for (var li = 0; li < 5; li++) {
+            ctx.beginPath(); ctx.moveTo(dx, dy + dh * li / 5); ctx.lineTo(dx + dw, dy + dh * li / 5); ctx.stroke();
+          }
+        }
+      });
+    }
+
+    function drawGround() {
+      var g = ctx.createLinearGradient(0, horizonY, 0, seaTopY);
+      g.addColorStop(0, '#a8c870'); g.addColorStop(0.4, '#8ab858'); g.addColorStop(1, '#6a9840');
+      ctx.fillStyle = g; ctx.fillRect(0, horizonY, W, seaTopY - horizonY);
+      var rh = (seaTopY - horizonY) * 0.28;
+      ctx.fillStyle = '#6a7a88'; ctx.fillRect(0, roadY - rh / 2, W, rh);
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(0, roadY - rh / 2); ctx.lineTo(W, roadY - rh / 2); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, roadY + rh / 2); ctx.lineTo(W, roadY + rh / 2); ctx.stroke();
+      ctx.strokeStyle = 'rgba(255,255,220,0.7)'; ctx.lineWidth = 2; ctx.setLineDash([28, 38]);
+      ctx.beginPath(); ctx.moveTo(0, roadY); ctx.lineTo(W, roadY); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    function drawSea(t) {
+      var g = ctx.createLinearGradient(0, seaTopY, 0, H);
+      g.addColorStop(0, '#40aadd'); g.addColorStop(0.4, '#2890c8'); g.addColorStop(1, '#1a70a8');
+      ctx.fillStyle = g; ctx.fillRect(0, seaTopY, W, H - seaTopY);
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1.5;
+      for (var i = 0; i < 6; i++) {
+        var wy = seaTopY + (H - seaTopY) * (0.08 + i * 0.15), phase = (t / 3000 + i * 0.3) % 1;
+        ctx.beginPath();
+        for (var x = -60; x <= W + 60; x += 8) {
+          var y = wy + Math.sin((x / 80) + phase * Math.PI * 2) * 3;
+          x === -60 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 0.8;
+      for (var j = 0; j < 8; j++) {
+        var wy2 = seaTopY + (H - seaTopY) * (0.05 + j * 0.12), phase2 = (t / 4000 + j * 0.18) % 1;
+        ctx.beginPath();
+        for (var x2 = -60; x2 <= W + 60; x2 += 12) {
+          var y2 = wy2 + Math.sin((x2 / 60) + phase2 * Math.PI * 2) * 2;
+          x2 === -60 ? ctx.moveTo(x2, y2) : ctx.lineTo(x2, y2);
+        }
+        ctx.stroke();
+      }
+    }
+
+    function drawGlobe(t) {
+      var R = GR, cx = GCX, cy = GCY, omega = (t / 12000) * Math.PI * 2, N_LON = 14, N_LAT = 9, i, j;
+      var ag = ctx.createRadialGradient(cx, cy, R * 0.8, cx, cy, R * 1.7);
+      ag.addColorStop(0, 'rgba(100,180,255,0.18)'); ag.addColorStop(0.5, 'rgba(60,130,220,0.1)'); ag.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = ag; ctx.beginPath(); ctx.arc(cx, cy, R * 1.7, 0, Math.PI * 2); ctx.fill();
+      [1.2, 1.32].forEach(function (r, i2) {
+        ctx.strokeStyle = 'rgba(255,179,0,' + (0.1 - i2 * 0.03) + ')'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(cx, cy, R * r, 0, Math.PI * 2); ctx.stroke();
+      });
       ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
-      var lat;
-      for (lat = -80; lat <= 80; lat += 20) {
-        var lR = Math.cos(lat * Math.PI / 180) * R, lY = cy + Math.sin(lat * Math.PI / 180) * R;
-        if (lR < 2) continue;
-        ctx.beginPath(); ctx.ellipse(cx, lY, lR, lR * 0.22, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = lat === 0 ? 'rgba(255,179,0,.65)' : 'rgba(255,255,255,.22)';
-        ctx.lineWidth = lat === 0 ? 1.8 : 0.75; ctx.stroke();
+      var fg = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.25, 0, cx, cy, R);
+      fg.addColorStop(0, '#122a50'); fg.addColorStop(1, '#061428');
+      ctx.fillStyle = fg; ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+      ctx.restore();
+      for (j = 1; j < N_LAT; j++) {
+        var phi = (j / N_LAT) * Math.PI - Math.PI / 2, lR = R * Math.cos(phi), lY = cy + R * Math.sin(phi), isEq = Math.abs(phi) < 0.05;
+        ctx.strokeStyle = isEq ? GOLD2 + '0.45)' : 'rgba(45,90,185,0.2)'; ctx.lineWidth = isEq ? 2 : 0.8;
+        ctx.beginPath(); ctx.ellipse(cx, lY, lR, lR * 0.14, 0, 0, Math.PI * 2); ctx.stroke();
       }
-      var i;
-      for (i = 0; i < 12; i++) {
-        var a = (i / 12) * Math.PI + r, ca = Math.cos(a);
-        ctx.beginPath(); ctx.ellipse(cx, cy, R * Math.abs(ca), R, 0, 0, Math.PI * 2);
-        ctx.strokeStyle = 'rgba(255,255,255,' + (0.06 + 0.16 * Math.abs(ca)) + ')'; ctx.lineWidth = 0.75; ctx.stroke();
+      for (i = 0; i < N_LON; i++) {
+        var theta = omega + (i / N_LON) * Math.PI * 2, cosT = Math.cos(theta), rx = R * Math.abs(cosT);
+        ctx.strokeStyle = cosT >= 0 ? BLUE + '0.32)' : BLUE + '0.09)'; ctx.lineWidth = 0.9;
+        ctx.beginPath(); ctx.ellipse(cx, cy, rx, R, 0, 0, Math.PI * 2); ctx.stroke();
       }
-      for (lat = -60; lat <= 60; lat += 30) {
-        for (var lon = 0; lon < 360; lon += 30) {
-          var lr = lon * Math.PI / 180 + r,
-              x3 = Math.cos(lat * Math.PI / 180) * Math.sin(lr),
-              y3 = Math.sin(lat * Math.PI / 180),
-              z3 = Math.cos(lat * Math.PI / 180) * Math.cos(lr);
-          if (z3 < 0) continue;
-          ctx.beginPath(); ctx.arc(cx + x3 * R, cy - y3 * R, 2.2, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(255,179,0,' + ((0.26 + 0.74 * z3) * 0.9) + ')'; ctx.fill();
+      ctx.save();
+      ctx.beginPath(); ctx.ellipse(cx, cy, R, R * 0.055, 0, 0, Math.PI * 2);
+      var eq = ctx.createLinearGradient(cx - R, cy, cx + R, cy);
+      eq.addColorStop(0, GOLD2 + '0)'); eq.addColorStop(0.3, GOLD2 + '0.6)'); eq.addColorStop(0.5, GOLD2 + '0.8)');
+      eq.addColorStop(0.7, GOLD2 + '0.6)'); eq.addColorStop(1, GOLD2 + '0)');
+      ctx.fillStyle = eq; ctx.fill(); ctx.restore();
+      ctx.strokeStyle = BLUE + '0.45)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+      for (i = 0; i < N_LON; i++) {
+        var theta2 = omega + (i / N_LON) * Math.PI * 2, cosT2 = Math.cos(theta2);
+        if (cosT2 < 0) continue;
+        for (j = 1; j < N_LAT; j++) {
+          var phi2 = (j / N_LAT) * Math.PI - Math.PI / 2, dx2 = R * cosT2 * Math.cos(phi2), dy2 = R * Math.sin(phi2);
+          ctx.fillStyle = GOLD2 + (cosT2 * 0.65).toFixed(2) + ')';
+          ctx.beginPath(); ctx.arc(cx + dx2, cy + dy2, 2, 0, Math.PI * 2); ctx.fill();
         }
       }
-      ctx.restore();
-      var sh = ctx.createRadialGradient(cx - 60, cy - 60, 0, cx - 25, cy - 25, R * 0.6);
-      sh.addColorStop(0, 'rgba(255,230,180,.14)'); sh.addColorStop(1, 'rgba(255,230,180,0)');
-      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fillStyle = sh; ctx.fill();
+      var orbitR = R * (W < 500 ? 1.32 : 1.52);
+      ANGLES.forEach(function (deg, i3) {
+        var rad = deg * Math.PI / 180;
+        var dotX = cx + R * 1.07 * Math.cos(rad), dotY = cy + R * 1.07 * Math.sin(rad);
+        var lx = cx + orbitR * Math.cos(rad), ly = cy + orbitR * Math.sin(rad);
+        ctx.fillStyle = GOLD2 + '0.7)'; ctx.beginPath(); ctx.arc(dotX, dotY, 2.5, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = GOLD2 + '0.18)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(dotX, dotY); ctx.lineTo(lx, ly); ctx.stroke();
+        if (labelEls[i3]) { labelEls[i3].style.left = lx + 'px'; labelEls[i3].style.top = ly + 'px'; }
+      });
     }
-    (function loop() {
-      if (!mq.matches) { rot += 0.005; frame(rot); }
-      requestAnimationFrame(loop);
-    })();
-  })();
 
-  /* Orbital layout — pills positioned by percentage against a virtual
-     1200x740 design space, which is why it stays correctly proportioned
-     at any actual rendered size (CSS % resolves against the real box).
-     RX pulled in from 495 to close the dead horizontal gap between the
-     side pills and the globe; RY (and the level math below, which is
-     what actually keeps the vertical gaps between stacked pills equal)
-     is untouched so that spacing doesn't change. */
-  (function () {
-    var VW = 1200, VH = 740, CX = VW / 2, CY = VH / 2, RX = 370, RY = 215, N = 10, start = -Math.PI / 2;
-    function ang(i) { return start + (i / N) * 2 * Math.PI; }
-    // Procurement (i=1), Business Services (i=9), Transport (i=4) and
-    // Operations (i=6) each sit at an angle where cos() gives a
-    // noticeably smaller horizontal offset than their neighbours, so at
-    // that height they land close to the globe's edge rather than
-    // clearing it the way the others do. Nudged out further to match.
-    // Business Services gets extra beyond the shared 40px: its label is
-    // 6 characters longer than Procurement's, so even at an equal
-    // center-to-globe distance its wider pill eats further into the gap
-    // — the +26px here is that width difference, not a guess.
-    var EXTRA_PUSH = { 1: 40, 9: -66, 4: 40, 6: -40 };
-    function pt(i) {
-      var a = ang(i), x = CX + RX * Math.cos(a);
-      var level = i <= 5 ? i : N - i;
-      var y = (CY - RY) + level * (2 * RY / (N / 2));
-      if (EXTRA_PUSH[i]) x += EXTRA_PUSH[i];
-      return { x: x, y: y };
+    function drawPlane(t) {
+      var period = 24000, p = (t % period) / period, x = -200 + p * (W + 420), y = H * 0.13 + Math.sin(p * Math.PI) * H * 0.04, sc = Math.min(W, H) / 900;
+      ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc);
+      for (var ci = 0; ci < 2; ci++) {
+        var ctY = ci === 0 ? -9 : 9;
+        var cg = ctx.createLinearGradient(-280, 0, -70, 0);
+        cg.addColorStop(0, 'rgba(210,225,255,0)'); cg.addColorStop(1, 'rgba(210,225,255,0.4)');
+        ctx.strokeStyle = cg; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(-280, ctY); ctx.lineTo(-70, ctY); ctx.stroke();
+      }
+      ctx.fillStyle = '#dde8f8'; ctx.beginPath(); ctx.ellipse(0, 0, 78, 13, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#ecf4ff';
+      ctx.beginPath(); ctx.moveTo(68, 0); ctx.quadraticCurveTo(90, -2, 95, 0); ctx.quadraticCurveTo(90, 2, 68, 0); ctx.fill();
+      ctx.fillStyle = '#b2c6de';
+      ctx.beginPath(); ctx.moveTo(18, 8); ctx.lineTo(-22, 52); ctx.lineTo(-38, 50); ctx.lineTo(-8, 8); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#8fa8c0';
+      ctx.beginPath(); ctx.ellipse(-6, 32, 19, 7, 0.05, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#a2bacf';
+      ctx.beginPath(); ctx.moveTo(-63, -8); ctx.lineTo(-82, -38); ctx.lineTo(-68, -8); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#b2c6de';
+      ctx.beginPath(); ctx.moveTo(-62, 5); ctx.lineTo(-80, 22); ctx.lineTo(-78, 20); ctx.lineTo(-60, 7); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = 'rgba(10,40,110,0.55)';
+      for (var wi = 0; wi < 7; wi++) { ctx.beginPath(); ctx.ellipse(48 - wi * 13, -7, 4, 3, 0, 0, Math.PI * 2); ctx.fill(); }
+      ctx.restore();
     }
-    function place() {
-      for (var i = 0; i < N; i++) {
-        var p = pt(i), el = document.getElementById('qgS' + i);
-        if (!el) continue;
-        el.style.left = (p.x / VW * 100) + '%';
-        el.style.top = (p.y / VH * 100) + '%';
-        el.classList.remove('L', 'R', 'T', 'B');
-        var dx = p.x - CX, dy = p.y - CY, dist = Math.sqrt(dx * dx + dy * dy);
-        var c2 = dx / dist, s2 = dy / dist;
-        if (c2 < -0.3) el.classList.add('L');
-        else if (c2 > 0.3) el.classList.add('R'); // was left unclassed — needed so its tooltip knows to open rightward
-        else if (s2 <= 0) el.classList.add('T');
-        else el.classList.add('B');
+
+    function drawLorryAt(x, gy) {
+      var sc = Math.min(W, H) / 900;
+      ctx.save(); ctx.translate(x, gy); ctx.scale(sc, sc);
+      ctx.fillStyle = 'rgba(0,0,0,0.22)'; ctx.beginPath(); ctx.ellipse(-90, 6, 155, 6, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#bccad6'; ctx.fillRect(-240, -68, 215, 68);
+      ctx.strokeStyle = 'rgba(0,0,0,0.13)'; ctx.lineWidth = 1;
+      for (var ri = 0; ri < 8; ri++) {
+        var rx = -235 + ri * 27;
+        ctx.beginPath(); ctx.moveTo(rx, -68); ctx.lineTo(rx, 0); ctx.stroke();
+      }
+      ctx.fillStyle = GOLD;
+      ctx.font = 'bold ' + (Math.round(18 * sc) > 5 ? 18 : 8) + 'px Inter, sans-serif';
+      ctx.textAlign = 'center'; ctx.fillText('LOGICARD', -130, -30);
+      ctx.font = (Math.round(10 * sc) > 4 ? 10 : 6) + 'px Inter, sans-serif';
+      ctx.fillStyle = 'rgba(255,179,0,0.6)'; ctx.fillText('GLOBAL LOGISTICS', -130, -14);
+      ctx.fillStyle = '#183462'; ctx.fillRect(-25, -78, 75, 78);
+      ctx.fillStyle = 'rgba(30,70,155,0.75)'; ctx.fillRect(-16, -70, 60, 32);
+      ctx.fillStyle = 'rgba(30,70,155,0.55)'; ctx.fillRect(-16, -30, 24, 14);
+      ctx.fillStyle = '#0f2248'; ctx.fillRect(50, -24, 10, 24);
+      ctx.strokeStyle = '#1e3a60'; ctx.lineWidth = 5;
+      ctx.beginPath(); ctx.moveTo(38, -78); ctx.lineTo(38, -104); ctx.stroke();
+      for (var si = 0; si < 3; si++) {
+        ctx.fillStyle = 'rgba(60,60,70,' + (0.12 - si * 0.04) + ')';
+        ctx.beginPath(); ctx.arc(40 + si * 3, -108 - si * 8, 7 + si * 3, 0, Math.PI * 2); ctx.fill();
+      }
+      [-215, -175, -45, -10, 55].forEach(function (wx) {
+        ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(wx, 0, 19, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = '#2a2a2a'; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = '#3a3a3a'; ctx.beginPath(); ctx.arc(wx, 0, 8, 0, Math.PI * 2); ctx.fill();
+      });
+      ctx.restore();
+    }
+
+    function drawLorries(t) {
+      var period = 33000;
+      for (var li = 0; li < 2; li++) {
+        var p = ((t / period) + li * 0.52) % 1;
+        drawLorryAt(-310 + p * (W + 560), roadY);
       }
     }
-    place();
-    var rt;
-    window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(place, 150); });
+
+    function drawVanAt(x, gy) {
+      var sc = Math.min(W, H) / 900 * 0.72;
+      ctx.save(); ctx.translate(x, gy); ctx.scale(sc, sc);
+      ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.beginPath(); ctx.ellipse(-50, 5, 72, 5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = GOLD; ctx.fillRect(-115, -58, 115, 58);
+      ctx.fillStyle = '#d4a017'; ctx.fillRect(-115, -52, 30, 52);
+      ctx.fillStyle = 'rgba(8,24,70,0.7)'; ctx.fillRect(-112, -48, 24, 26);
+      ctx.fillStyle = '#c49010'; ctx.fillRect(-123, -16, 10, 16);
+      ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(-12, -58); ctx.lineTo(-12, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(-4, -58); ctx.lineTo(-4, 0); ctx.stroke();
+      ctx.fillStyle = '#060f1c'; ctx.font = 'bold 13px Inter, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText('LOGICARD', -62, -26);
+      ctx.fillStyle = 'rgba(8,24,70,0.5)';
+      ctx.fillRect(-95, -48, 22, 14); ctx.fillRect(-68, -48, 22, 14); ctx.fillRect(-42, -48, 22, 14);
+      [-90, -18].forEach(function (wx) {
+        ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(wx, 3, 13, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = '#3a3a3a'; ctx.beginPath(); ctx.arc(wx, 3, 5, 0, Math.PI * 2); ctx.fill();
+      });
+      ctx.restore();
+    }
+
+    function drawVans(t) {
+      var period = 27000, vanRoadY = roadY + (seaTopY - roadY) * 0.15;
+      for (var vi = 0; vi < 3; vi++) {
+        var p = ((t / period) + vi * 0.34) % 1;
+        drawVanAt(W + 140 - p * (W + 280), vanRoadY);
+      }
+    }
+
+    function drawShipAt(x, wy, variant) {
+      var sc = Math.min(W, H) / 900 * 0.88, HL = 280, HH = 42;
+      ctx.save(); ctx.translate(x, wy); ctx.scale(sc, sc);
+      ctx.fillStyle = '#182840';
+      ctx.beginPath();
+      ctx.moveTo(-HL / 2 - 20, 0); ctx.lineTo(-HL / 2, 16); ctx.lineTo(-HL / 2 + 8, HH);
+      ctx.lineTo(HL / 2 - 8, HH); ctx.lineTo(HL / 2, HH * 0.7); ctx.lineTo(HL / 2, 0);
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = GOLD; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(-HL / 2, 10); ctx.lineTo(HL / 2, 10); ctx.stroke();
+      ctx.fillStyle = '#1e3048'; ctx.fillRect(-HL / 2 + 10, -14, HL - 20, 14);
+      var CCOLORS = ['#c0392b','#2980b9','#27ae60','#e67e22','#8e44ad','#e74c3c','#16a085'];
+      var rows = 3 + (variant % 2), cW = 36, cH = 20, stackX = -HL / 2 + 18, cols = 6;
+      for (var row = 0; row < rows; row++) {
+        for (var col = 0; col < cols; col++) {
+          var cx2 = stackX + col * (cW + 2), cy2 = -14 - (row + 1) * (cH + 1);
+          ctx.fillStyle = CCOLORS[(row * 2 + col + variant * 3) % CCOLORS.length];
+          ctx.fillRect(cx2, cy2, cW, cH);
+          ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 0.5; ctx.strokeRect(cx2, cy2, cW, cH);
+          ctx.beginPath(); ctx.moveTo(cx2 + cW / 2, cy2); ctx.lineTo(cx2 + cW / 2, cy2 + cH); ctx.stroke();
+        }
+      }
+      var bTop = -14 - rows * (cH + 1);
+      ctx.fillStyle = '#243a55'; ctx.fillRect(HL / 2 - 72, bTop - 48, 55, 48);
+      ctx.fillStyle = '#1a2e45'; ctx.fillRect(HL / 2 - 68, bTop - 65, 46, 20);
+      ctx.fillStyle = 'rgba(160,210,255,0.28)';
+      for (var wi2 = 0; wi2 < 3; wi2++) { ctx.fillRect(HL / 2 - 67 + wi2 * 15, bTop - 35, 10, 7); }
+      ctx.strokeStyle = 'rgba(180,200,230,0.45)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(HL / 2 - 45, bTop - 65); ctx.lineTo(HL / 2 - 45, bTop - 92); ctx.stroke();
+      ctx.strokeStyle = 'rgba(60,130,200,0.22)'; ctx.lineWidth = 2;
+      [12, 20].forEach(function (wy2) {
+        ctx.beginPath(); ctx.moveTo(HL / 2 - 5, wy2);
+        ctx.quadraticCurveTo(HL / 2 + 60, wy2 + 6, HL / 2 + 130, wy2 + 4); ctx.stroke();
+      });
+      ctx.restore();
+    }
+
+    function drawShips(t) {
+      var period = 46000;
+      for (var si = 0; si < 2; si++) {
+        var p = ((t / period) + si * 0.5) % 1;
+        drawShipAt(W + 320 - p * (W + 640), shipY, si);
+      }
+    }
+
+    function frame(ts) {
+      if (!startT) startT = ts;
+      var t = ts - startT;
+      if (!mq.matches) {
+        ctx.clearRect(0, 0, W, H);
+        drawSky(); drawWarehouses(); drawGlobe(t); drawGround(); drawSea(t);
+        drawShips(t); drawLorries(t); drawVans(t); drawPlane(t);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    init();
+    window.addEventListener('resize', init);
+    document.fonts.ready.then(function () { requestAnimationFrame(frame); });
   })();
   </script>
 
