@@ -879,54 +879,48 @@
     .founder-point h3 { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 8px; }
     .founder-point p  { font-size: 13.5px; color: rgba(255,255,255,0.6); line-height: 1.65; }
 
-    /* ── Brand Partners Strip ── */
-    .partners-section { background: var(--navy); padding: 88px 48px; text-align: center; }
-    .partners-heading { font-size: clamp(24px, 3vw, 34px); font-weight: 900; color: var(--white); margin-bottom: 44px; letter-spacing: -0.3px; }
-    .partners-strip {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      max-width: 680px; margin: 0 auto;
-    }
-    .partner-chip {
-      display: flex; align-items: center; justify-content: flex-start; gap: 14px;
-      background: #fff; border: 1px solid rgba(7,29,64,0.08);
-      border-radius: 14px; padding: 16px 20px;
-      text-align: left;
-      box-shadow: 0 1px 2px rgba(7,29,64,0.03);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-    .partner-chip:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 14px 32px rgba(7,29,64,0.1);
-      border-color: rgba(255,179,0,0.4);
-    }
-    .partner-chip-icon {
-      width: 42px; height: 42px; flex-shrink: 0;
-      background: rgba(255,179,0,0.12);
-      border: 1px solid rgba(255,179,0,0.25);
-      border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .partner-chip-icon svg { width: 21px; height: 21px; fill: none; stroke: var(--orange-dark); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .partner-chip-label { font-weight: 800; font-size: 14px; color: var(--navy); letter-spacing: 0.1px; line-height: 1.3; }
-    .partners-note { margin-top: 36px; font-size: 13.5px; color: rgba(255,255,255,0.55); }
+    /* ── Our Partners — real brand logos, live from the partner-brands
+       API (same data/markup pattern as partnerships.html's grid).
+       Split into two bands rather than one flat section: this sits
+       between the gold founders-section above and the navy
+       support-section below, and a single flat colour here can't
+       differ from both neighbours at once with only two colours in
+       the palette — two alternating bands (navy intro, gold grid)
+       solves it cleanly instead of recolouring either neighbour. ── */
+    .hp-partners-intro { background: var(--navy); padding: 72px 48px 0; text-align: center; }
+    .hp-partners-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
+    .hp-partners-intro h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--white); letter-spacing: -0.5px; margin-bottom: 14px; text-wrap: balance; }
+    .hp-partners-intro h2 .accent { color: var(--orange); }
+    .hp-partners-intro p { font-size: 15.5px; color: rgba(255,255,255,0.65); max-width: 560px; margin: 0 auto; line-height: 1.7; }
 
-    @media (max-width: 560px) {
-      .partners-strip { gap: 12px; }
-      .partner-chip { padding: 14px 16px; gap: 12px; }
-      .partner-chip-icon { width: 36px; height: 36px; }
-      .partner-chip-icon svg { width: 18px; height: 18px; }
-      .partner-chip-label { font-size: 13px; }
+    .hp-partners-grid-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 48px 48px 88px; }
+    .hp-partners-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; max-width: 1160px; margin: 0 auto; }
+    .hp-partner-card {
+      aspect-ratio: 16 / 10; border-radius: 14px; background: var(--white);
+      display: flex; align-items: center; justify-content: center; padding: 18px;
+      box-shadow: 0 2px 16px rgba(7,29,64,0.12);
     }
-    @media (max-width: 400px) {
-      .partners-strip { grid-template-columns: 1fr; }
+    .hp-partner-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .hp-partner-slot {
+      aspect-ratio: 16 / 10; border-radius: 14px;
+      border: 2px dashed rgba(7,29,64,0.25);
+      display: flex; align-items: center; justify-content: center;
+      text-align: center; padding: 12px;
+    }
+    .hp-partner-slot span { font-size: 12.5px; font-weight: 700; color: rgba(7,29,64,0.45); text-transform: uppercase; letter-spacing: 0.4px; }
+
+    @media (max-width: 900px) {
+      .hp-partners-intro { padding: 56px 28px 0; }
+      .hp-partners-grid-section { padding: 40px 28px 64px; }
+      .hp-partners-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .hp-partners-grid { gap: 12px; }
     }
 
     @media (max-width: 900px) {
       .founders-section { padding: 64px 28px; }
       .founders-points { grid-template-columns: 1fr; }
-      .partners-section { padding: 56px 28px; }
     }
   </style>
 </head>
@@ -1188,52 +1182,57 @@
   </section>
 
   <!-- Brand Partners -->
-  <section class="partners-section" id="partners" style="display: none;">
-    <h2 class="partners-heading">We work with well known brands ensuring the very best deals</h2>
-    <div class="partners-strip">
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8 8 5 11.5 5 15a7 7 0 0014 0c0-3.5-3-7-7-13z"/></svg></span>
-        <span class="partner-chip-label">Fuel Partner</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M3 18v-7a2 2 0 012-2h14a2 2 0 012 2v7M3 18h18M3 18v2M21 18v2M7 9V7a2 2 0 012-2h6a2 2 0 012 2v2"/></svg></span>
-        <span class="partner-chip-label">Hotel Partner</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M4 8h13a3 3 0 010 6h-1M4 8v9a3 3 0 003 3h6a3 3 0 003-3V8M4 8V5h13v3"/></svg></span>
-        <span class="partner-chip-label">Food &amp; Dining</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M1 3h13v10H1zM14 8h4l3 3v2h-7z"/><circle cx="5" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></svg></span>
-        <span class="partner-chip-label">Fleet &amp; Vehicle Care</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span>
-        <span class="partner-chip-label">Tech &amp; Gear</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span>
-        <span class="partner-chip-label">Health &amp; Wellbeing</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M6 8V6a6 6 0 0112 0v2M3 8h18l-1.5 12a2 2 0 01-2 1.8H6.5a2 2 0 01-2-1.8L3 8z"/></svg></span>
-        <span class="partner-chip-label">Retail &amp; Fashion</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
-        <span class="partner-chip-label">Travel &amp; Leisure</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-4z"/></svg></span>
-        <span class="partner-chip-label">Insurance &amp; Finance</span>
-      </span>
-      <span class="partner-chip">
-        <span class="partner-chip-icon"><svg viewBox="0 0 24 24"><path d="M4 8v8M2 10v4M20 8v8M22 10v4M6 12h12"/></svg></span>
-        <span class="partner-chip-label">Gyms &amp; Fitness</span>
-      </span>
-    </div>
-    <p class="partners-note">Brand partners are onboarding now — new deals are added every week as we grow.</p>
+  <section class="hp-partners-intro">
+    <div class="hp-partners-eyebrow">Our Partners</div>
+    <h2>Brands That Back Our <span class="accent">Members</span></h2>
+    <p>From vaping and snacks to travel, telecoms and food — these are just some of the brands giving Logicard members real savings.</p>
   </section>
+
+  <section class="hp-partners-grid-section" id="partners">
+    <div class="hp-partners-grid" id="hpPartnerGrid">
+      <div class="hp-partner-slot"><span>Coming Soon</span></div>
+      <div class="hp-partner-slot"><span>Coming Soon</span></div>
+      <div class="hp-partner-slot"><span>Coming Soon</span></div>
+      <div class="hp-partner-slot"><span>Coming Soon</span></div>
+      <div class="hp-partner-slot"><span>Coming Soon</span></div>
+    </div>
+  </section>
+  <script>
+    (function () {
+      var grid = document.getElementById('hpPartnerGrid');
+      if (!grid) return;
+
+      function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+      function isSafeImageUrl(u) {
+        return typeof u === 'string' && (/^https:\/\//i.test(u) || u.startsWith('/'));
+      }
+      function isSafeSlug(s) {
+        return typeof s === 'string' && /^[a-z0-9-]+$/.test(s);
+      }
+
+      fetch('/api/public/partner-brands')
+        .then(function (r) { if (!r.ok) throw new Error('bad response'); return r.json(); })
+        .then(function (brands) {
+          if (!Array.isArray(brands) || brands.length === 0) return; // keep the static placeholders
+          var cards = brands.filter(function (b) { return isSafeImageUrl(b.logoUrl); }).map(function (b) {
+            var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" />';
+            return isSafeSlug(b.slug)
+              ? '<a class="hp-partner-card" href="/deals/' + esc(b.slug) + '">' + img + '</a>'
+              : '<div class="hp-partner-card">' + img + '</div>';
+          });
+          var remaining = Math.max(0, 5 - cards.length);
+          for (var i = 0; i < remaining; i++) {
+            cards.push('<div class="hp-partner-slot"><span>Coming Soon</span></div>');
+          }
+          grid.innerHTML = cards.join('');
+        })
+        .catch(function () { /* keep the static placeholders */ });
+    })();
+  </script>
 
   <!-- Driver Support -->
   <section class="lc-section support-section" id="support">
