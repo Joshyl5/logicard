@@ -32,7 +32,11 @@ const {
   getDocumentsDueForPurge, markDocumentPurged,
   listForumPosts, getForumPost, createForumPost, createForumReply, removeForumItem,
   restoreForumItem, reportForumItem, clearForumReport, getForumModerationQueue,
+  getPublishedGuides, getPublishedGuideBySlug, getAllGuides, saveGuide, deleteGuide,
+  getTrackedLinkBySlug, recordLinkClick, getTrackedLinksWithStats, saveTrackedLink, deleteTrackedLink,
+  getLinkClickReport,
 } = require('./database');
+const { renderGuideList, renderGuidePage } = require('./templates/guide-page');
 const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT } = require('./storage');
 const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
 const { UK_TOWNS } = require('./uk-towns');
@@ -2383,7 +2387,107 @@ app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
 // getActiveOfferBySlug in database.js. Public/pre-login, same data
 // shape as the homepage's Featured Deals — no voucher code or
 // affiliate URL exposed here.
-const RESERVED_ROOT_SLUGS = new Set(['api', 'admin', 'local-uploads', 'deals', 'logistics-rewards', 'images', 'icons', 'adult', 'partner']);
+// ── Guides (public) ───────────────────────────────────────────────
+app.get('/guides', async (req, res, next) => {
+  try {
+    const guides = await getPublishedGuides();
+    res.send(renderGuideList(guides).replace('<!-- SHARED_NAV -->', navFor(req, { active: 'guides' })).replace('<!-- SHARED_FOOTER -->', renderFooter()));
+  } catch (err) { console.error('Guides list error:', err.message); next(); }
+});
+
+app.get('/guides/:slug', async (req, res, next) => {
+  if (!/^[a-z0-9-]{1,80}$/.test(req.params.slug)) return next();
+  try {
+    const guide = await getPublishedGuideBySlug(req.params.slug);
+    if (!guide) return next();
+    res.send(renderGuidePage(guide).replace('<!-- SHARED_NAV -->', navFor(req, { active: 'guides' })).replace('<!-- SHARED_FOOTER -->', renderFooter()));
+  } catch (err) { console.error('Guide page error:', err.message); next(); }
+});
+
+// ── Tracked links: /go/<slug> logs the click, then redirects ──────────
+// Logs time, the logged-in member (if any) and which of our pages the click
+// came from. Rate limited so a script can't inflate the numbers cheaply.
+const goLimiter = rateLimit({ windowMs: 60 * 1000, max: 30, standardHeaders: true, legacyHeaders: false });
+app.get('/go/:slug', goLimiter, async (req, res, next) => {
+  if (!/^[a-z0-9-]{1,80}$/.test(req.params.slug)) return next();
+  try {
+    const link = await getTrackedLinkBySlug(req.params.slug);
+    if (!link) return next();
+    let fromPath = null;
+    try {
+      const ref = new URL(req.get('referer') || '');
+      if (/(^|\.)logicard\.co\.uk$/i.test(ref.hostname) || ref.hostname === req.hostname) fromPath = ref.pathname;
+    } catch (_) { /* no or invalid referrer */ }
+    const memberNo = req.session && req.session.membershipNumber ? req.session.membershipNumber : null;
+    recordLinkClick(link.id, memberNo, fromPath).catch(err => console.error('Link click log failed:', err.message));
+    res.set('Cache-Control', 'no-store');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.redirect(302, link.destinationUrl);
+  } catch (err) { console.error('Tracked link error:', err.message); next(); }
+});
+
+// ── Guides + tracked links (admin) ───────────────────────────────
+const SLUG_RE = /^[a-z0-9-]{1,80}$/;
+function validGuide(b) {
+  if (!b.title || !String(b.title).trim() || String(b.title).length > 200) return 'A title (up to 200 characters) is required.';
+  if (b.slug && !SLUG_RE.test(b.slug)) return 'Page address can only contain lowercase letters, numbers and hyphens.';
+  if (!b.body || !String(b.body).trim()) return 'The guide needs some content.';
+  if (String(b.body).length > 50000) return 'The guide is too long (max 50,000 characters).';
+  if (b.summary && String(b.summary).length > 400) return 'The summary is too long (max 400 characters).';
+  if (b.category && String(b.category).length > 60) return 'Category is too long.';
+  if (b.heroImageUrl && !/^(https:\/\/|\/local-uploads\/)/i.test(b.heroImageUrl)) return 'Image must be an https:// link or an uploaded file.';
+  return null;
+}
+function validLink(b) {
+  if (!b.label || !String(b.label).trim() || String(b.label).length > 120) return 'A name (up to 120 characters) is required.';
+  if (b.slug && !SLUG_RE.test(b.slug)) return 'Link address can only contain lowercase letters, numbers and hyphens.';
+  if (!b.destinationUrl || !/^https:\/\/[^\s]+$/i.test(b.destinationUrl) || String(b.destinationUrl).length > 2000) return 'Destination must be a full https:// link.';
+  return null;
+}
+const dupMsg = (what) => `That ${what} address is already in use — pick a different one.`;
+
+app.get('/admin/guides', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-guides.html'));
+});
+app.get('/api/admin/guides', requireAdmin, async (_req, res) => res.json(await getAllGuides()));
+app.post('/api/admin/guides', requireAdmin, async (req, res) => {
+  const error = validGuide(req.body || {}); if (error) return res.status(400).json({ error });
+  try { res.json(await saveGuide(null, req.body)); }
+  catch (err) { if (err.code === '23505') return res.status(400).json({ error: dupMsg('page') }); console.error('Save guide error:', err.message); res.status(500).json({ error: 'Something went wrong. Please try again.' }); }
+});
+app.put('/api/admin/guides/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id); if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid guide.' });
+  const error = validGuide(req.body || {}); if (error) return res.status(400).json({ error });
+  try { const g = await saveGuide(id, req.body); if (!g) return res.status(404).json({ error: 'Guide not found.' }); res.json(g); }
+  catch (err) { if (err.code === '23505') return res.status(400).json({ error: dupMsg('page') }); console.error('Save guide error:', err.message); res.status(500).json({ error: 'Something went wrong. Please try again.' }); }
+});
+app.delete('/api/admin/guides/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id); if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid guide.' });
+  res.json({ success: await deleteGuide(id) });
+});
+
+app.get('/api/admin/links', requireAdmin, async (_req, res) => res.json(await getTrackedLinksWithStats()));
+app.post('/api/admin/links', requireAdmin, async (req, res) => {
+  const error = validLink(req.body || {}); if (error) return res.status(400).json({ error });
+  try { res.json(await saveTrackedLink(null, req.body)); }
+  catch (err) { if (err.code === '23505') return res.status(400).json({ error: dupMsg('link') }); console.error('Save link error:', err.message); res.status(500).json({ error: 'Something went wrong. Please try again.' }); }
+});
+app.put('/api/admin/links/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id); if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid link.' });
+  const error = validLink(req.body || {}); if (error) return res.status(400).json({ error });
+  try { const l = await saveTrackedLink(id, req.body); if (!l) return res.status(404).json({ error: 'Link not found.' }); res.json(l); }
+  catch (err) { if (err.code === '23505') return res.status(400).json({ error: dupMsg('link') }); console.error('Save link error:', err.message); res.status(500).json({ error: 'Something went wrong. Please try again.' }); }
+});
+app.delete('/api/admin/links/:id', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id); if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid link.' });
+  res.json({ success: await deleteTrackedLink(id) });
+});
+app.get('/api/admin/links/:id/report', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id); if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid link.' });
+  res.json(await getLinkClickReport(id));
+});
+
+const RESERVED_ROOT_SLUGS = new Set(['api', 'admin', 'local-uploads', 'deals', 'logistics-rewards', 'images', 'icons', 'adult', 'partner', 'guides', 'go', 'forum']);
 app.get('/:slug', async (req, res, next) => {
   const slug = req.params.slug;
   // A dot means this was almost certainly an unmatched static asset request

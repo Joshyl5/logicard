@@ -349,6 +349,47 @@ async function initDb() {
   `);
   await pool.query('CREATE INDEX IF NOT EXISTS forum_posts_activity_idx ON forum_posts (last_activity_at DESC)');
   await pool.query('CREATE INDEX IF NOT EXISTS forum_replies_post_idx ON forum_replies (post_id, created_at)');
+
+  // Guides (/guides, /guides/<slug>): articles written in the admin panel,
+  // e.g. "Best cashback current accounts".
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS guides (
+      id              SERIAL PRIMARY KEY,
+      slug            TEXT NOT NULL UNIQUE,
+      title           TEXT NOT NULL,
+      summary         TEXT,
+      body            TEXT NOT NULL,
+      category        TEXT,
+      hero_image_url  TEXT,
+      is_published    BOOLEAN DEFAULT FALSE,
+      published_at    TIMESTAMPTZ,
+      created_at      TIMESTAMPTZ DEFAULT NOW(),
+      updated_at      TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+
+  // Tracked links (/go/<slug>): every click is logged, then redirected.
+  // membership_number is only set when a logged-in member clicks.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS tracked_links (
+      id               SERIAL PRIMARY KEY,
+      slug             TEXT NOT NULL UNIQUE,
+      label            TEXT NOT NULL,
+      destination_url  TEXT NOT NULL,
+      is_active        BOOLEAN DEFAULT TRUE,
+      created_at       TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS link_clicks (
+      id                 SERIAL PRIMARY KEY,
+      link_id            INTEGER NOT NULL REFERENCES tracked_links(id) ON DELETE CASCADE,
+      clicked_at         TIMESTAMPTZ DEFAULT NOW(),
+      membership_number  INTEGER,
+      from_path          TEXT
+    )
+  `);
+  await pool.query('CREATE INDEX IF NOT EXISTS link_clicks_link_idx ON link_clicks (link_id, clicked_at)');
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -1309,6 +1350,140 @@ async function getForumModerationQueue() {
   }));
 }
 
+
+// ── Guides ────────────────────────────────────────────────────────
+function toGuide(row) {
+  if (!row) return null;
+  return {
+    id: row.id, slug: row.slug, title: row.title, summary: row.summary, body: row.body,
+    category: row.category, heroImageUrl: row.hero_image_url, isPublished: row.is_published,
+    publishedAt: row.published_at, createdAt: row.created_at, updatedAt: row.updated_at,
+  };
+}
+
+async function getPublishedGuides() {
+  const r = await pool.query('SELECT * FROM guides WHERE is_published ORDER BY published_at DESC NULLS LAST, id DESC');
+  return r.rows.map(toGuide);
+}
+
+async function getPublishedGuideBySlug(slug) {
+  const r = await pool.query('SELECT * FROM guides WHERE slug = $1 AND is_published', [slug]);
+  return toGuide(r.rows[0]);
+}
+
+async function getAllGuides() {
+  const r = await pool.query('SELECT * FROM guides ORDER BY updated_at DESC, id DESC');
+  return r.rows.map(toGuide);
+}
+
+async function saveGuide(id, { slug, title, summary = null, body, category = null, heroImageUrl = null, isPublished = false }) {
+  const finalSlug = slug || slugify(title);
+  if (id) {
+    const r = await pool.query(
+      `UPDATE guides SET slug = $1, title = $2, summary = $3, body = $4, category = $5, hero_image_url = $6,
+         is_published = $7,
+         published_at = CASE WHEN $7 AND published_at IS NULL THEN NOW() ELSE published_at END,
+         updated_at = NOW()
+       WHERE id = $8 RETURNING *`,
+      [finalSlug, title, summary, body, category, heroImageUrl, !!isPublished, id]
+    );
+    return toGuide(r.rows[0]);
+  }
+  const r = await pool.query(
+    `INSERT INTO guides (slug, title, summary, body, category, hero_image_url, is_published, published_at)
+     VALUES ($1,$2,$3,$4,$5,$6,$7, CASE WHEN $7 THEN NOW() END) RETURNING *`,
+    [finalSlug, title, summary, body, category, heroImageUrl, !!isPublished]
+  );
+  return toGuide(r.rows[0]);
+}
+
+async function deleteGuide(id) {
+  const r = await pool.query('DELETE FROM guides WHERE id = $1', [id]);
+  return r.rowCount > 0;
+}
+
+// ── Tracked links + click log ──────────────────────────────────────
+function toTrackedLink(row) {
+  if (!row) return null;
+  return {
+    id: row.id, slug: row.slug, label: row.label, destinationUrl: row.destination_url,
+    isActive: row.is_active, createdAt: row.created_at,
+    clicksTotal: row.clicks_total == null ? undefined : Number(row.clicks_total),
+    clicks30: row.clicks_30 == null ? undefined : Number(row.clicks_30),
+    memberClicks: row.member_clicks == null ? undefined : Number(row.member_clicks),
+    lastClick: row.last_click || null,
+  };
+}
+
+async function getTrackedLinkBySlug(slug) {
+  const r = await pool.query('SELECT * FROM tracked_links WHERE slug = $1 AND is_active', [slug]);
+  return toTrackedLink(r.rows[0]);
+}
+
+async function recordLinkClick(linkId, membershipNumber = null, fromPath = null) {
+  await pool.query(
+    'INSERT INTO link_clicks (link_id, membership_number, from_path) VALUES ($1, $2, $3)',
+    [linkId, membershipNumber, fromPath ? String(fromPath).slice(0, 200) : null]
+  );
+}
+
+async function getTrackedLinksWithStats() {
+  const r = await pool.query(`
+    SELECT l.*,
+      (SELECT COUNT(*) FROM link_clicks c WHERE c.link_id = l.id) AS clicks_total,
+      (SELECT COUNT(*) FROM link_clicks c WHERE c.link_id = l.id AND c.clicked_at > NOW() - INTERVAL '30 days') AS clicks_30,
+      (SELECT COUNT(*) FROM link_clicks c WHERE c.link_id = l.id AND c.membership_number IS NOT NULL) AS member_clicks,
+      (SELECT MAX(clicked_at) FROM link_clicks c WHERE c.link_id = l.id) AS last_click
+    FROM tracked_links l ORDER BY l.created_at DESC`);
+  return r.rows.map(toTrackedLink);
+}
+
+async function saveTrackedLink(id, { slug, label, destinationUrl, isActive = true }) {
+  const finalSlug = slug || slugify(label);
+  if (id) {
+    const r = await pool.query(
+      'UPDATE tracked_links SET slug = $1, label = $2, destination_url = $3, is_active = $4 WHERE id = $5 RETURNING *',
+      [finalSlug, label, destinationUrl, !!isActive, id]
+    );
+    return toTrackedLink(r.rows[0]);
+  }
+  const r = await pool.query(
+    'INSERT INTO tracked_links (slug, label, destination_url, is_active) VALUES ($1,$2,$3,$4) RETURNING *',
+    [finalSlug, label, destinationUrl, !!isActive]
+  );
+  return toTrackedLink(r.rows[0]);
+}
+
+async function deleteTrackedLink(id) {
+  const r = await pool.query('DELETE FROM tracked_links WHERE id = $1', [id]);
+  return r.rowCount > 0;
+}
+
+// Click report for one link: clicks per day (last 30 days), which pages the
+// clicks came from, and the members who clicked most (admin only).
+async function getLinkClickReport(linkId) {
+  const [daily, pages, members] = await Promise.all([
+    pool.query(`SELECT to_char(date_trunc('day', clicked_at), 'YYYY-MM-DD') AS day, COUNT(*) AS n
+                FROM link_clicks WHERE link_id = $1 AND clicked_at > NOW() - INTERVAL '30 days'
+                GROUP BY 1 ORDER BY 1 DESC`, [linkId]),
+    pool.query(`SELECT COALESCE(from_path, '(direct)') AS path, COUNT(*) AS n FROM link_clicks
+                WHERE link_id = $1 GROUP BY 1 ORDER BY n DESC LIMIT 10`, [linkId]),
+    pool.query(`SELECT c.membership_number, m.first_name, m.last_name, COUNT(*) AS n, MAX(c.clicked_at) AS last
+                FROM link_clicks c LEFT JOIN members m ON m.membership_number = c.membership_number
+                WHERE c.link_id = $1 AND c.membership_number IS NOT NULL
+                GROUP BY 1,2,3 ORDER BY n DESC LIMIT 25`, [linkId]),
+  ]);
+  return {
+    daily: daily.rows.map(r => ({ day: r.day, clicks: Number(r.n) })),
+    pages: pages.rows.map(r => ({ path: r.path, clicks: Number(r.n) })),
+    members: members.rows.map(r => ({
+      membershipNumber: r.membership_number,
+      name: [r.first_name, r.last_name].filter(Boolean).join(' ') || 'Unknown member',
+      clicks: Number(r.n), lastClick: r.last,
+    })),
+  };
+}
+
 module.exports = {
   createMember, emailExists, findMemberByEmail, getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
@@ -1327,4 +1502,7 @@ module.exports = {
   getDocumentsDueForPurge, markDocumentPurged,
   listForumPosts, getForumPost, createForumPost, createForumReply, removeForumItem,
   restoreForumItem, reportForumItem, clearForumReport, getForumModerationQueue,
+  getPublishedGuides, getPublishedGuideBySlug, getAllGuides, saveGuide, deleteGuide,
+  getTrackedLinkBySlug, recordLinkClick, getTrackedLinksWithStats, saveTrackedLink, deleteTrackedLink,
+  getLinkClickReport,
 };

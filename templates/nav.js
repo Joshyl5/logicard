@@ -20,7 +20,7 @@ function cls(active, key) {
 function renderNav({ active = null, activeDropdown = null, loggedIn = false } = {}) {
   const dropdownCls = (key) => cls(activeDropdown, key);
   const aboutKeys = ['about', 'qualify', 'how-it-works', 'our-story', 'faqs'];
-  const moreKeys = ['things-to-do', 'shopping-cards', 'e-learning', 'financial-wellbeing', 'mental-wellbeing', 'logistics-news', 'forum'];
+  const moreKeys = ['things-to-do', 'shopping-cards', 'e-learning', 'financial-wellbeing', 'mental-wellbeing', 'logistics-news', 'forum', 'guides'];
   const dealsOpen = active === 'categories' || !!activeDropdown ? ' open' : '';
   const aboutOpen = aboutKeys.includes(active) ? ' open' : '';
   const moreOpen = moreKeys.includes(active) ? ' open' : '';
@@ -71,6 +71,7 @@ function renderNav({ active = null, activeDropdown = null, loggedIn = false } = 
       <details${moreOpen}>
         <summary>More</summary>
         <div class="sub">
+          <a href="/guides"${cls(active, 'guides')}>Guides</a>
           <a href="/forum"${cls(active, 'forum')}>Members Forum</a>
           <a href="/logistics-news.html"${cls(active, 'logistics-news')}>Logistics News</a>
           <a href="/things-to-do.html"${cls(active, 'things-to-do')}>Things to Do</a>

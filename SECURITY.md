@@ -32,6 +32,7 @@ Every sensitive endpoint has its own tuned limiter — not one generic limiter r
 | Forum reply / delete own (per member) | 1 hr | 40 |
 | Forum report (per member) | 1 hr | 20 |
 | Forum reads | 1 min | 120 |
+| Tracked link redirects (/go/…) | 1 min | 30 |
 
 **Injection safety**
 - Every database query in `database.js` uses parameterized placeholders (`$1, $2…`) — zero string-concatenated SQL anywhere in the codebase.
@@ -69,6 +70,12 @@ Every sensitive endpoint has its own tuned limiter — not one generic limiter r
 - The offer itself is public. The voucher code, the Copy button and the tracked brand link (`/api/offers/:id/go`) are only rendered server-side for a logged-in **verified** member. Guests and unverified members get a masked placeholder, so the code never appears in their page source.
 - Member-rendered pages are sent with `Cache-Control: private, no-store` so no shared cache can store a page that contains a code.
 - `login.js` honours `?next=` only for a single same-site path segment (`/^\/[a-z0-9-]{1,80}$/i`), so it can't be used as an open redirect.
+
+**Guides and tracked links (/guides, /go/<slug>)**
+- Guide text is written in admin and rendered server-side: everything is HTML-escaped first, then only a small format (headings, bullets, bold, links) is applied. Links are only created for same-site paths or `https://` URLs, so `javascript:` or `//other-site` links can't be injected.
+- `/go/<slug>` only redirects to destinations stored by an admin (validated as `https://`), never to a URL taken from the request, so it can't be used as an open redirect.
+- Each click stores the time, the member number (only if a member is logged in) and the referring Logicard page path. No IP address or browser details are stored. This should be described in the Privacy Policy before guides with tracked links go live.
+- Guide and link management is behind `requireAdmin`.
 
 **Secrets**
 - `.env` is gitignored and has never been committed.

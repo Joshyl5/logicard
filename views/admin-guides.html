@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Guides &amp; Tracked Links</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    .ag-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+    .ag-tabs button { font: 700 14px Montserrat, sans-serif; padding: 10px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #fff; cursor: pointer; }
+    .ag-tabs button.on { background: #FFB300; color: #111; border-color: #FFB300; }
+    .ag-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .ag-bar p { color: rgba(255,255,255,0.85); font-size: 14px; margin: 0; }
+    .ag-list { display: grid; gap: 10px; }
+    .ag-item { background: #161616; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 16px; color: #fff; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .ag-item h3 { font: 800 16px Montserrat, sans-serif; margin: 0 0 4px; }
+    .ag-item .meta { font-size: 13px; color: rgba(255,255,255,0.8); word-break: break-all; }
+    .ag-tag { display: inline-block; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 6px; margin-right: 6px; }
+    .ag-tag.live { background: rgba(52,211,153,0.15); color: #34d399; }
+    .ag-tag.draft { background: rgba(255,255,255,0.1); color: #fff; }
+    .ag-stats { display: flex; gap: 14px; font-size: 13px; }
+    .ag-stats b { display: block; font-size: 20px; color: #FFB300; }
+    .ag-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ag-actions button, .ag-actions a { font: 700 13px Montserrat, sans-serif; padding: 7px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #fff; cursor: pointer; text-decoration: none; }
+    .ag-actions .danger { border-color: #f87171; color: #f87171; }
+    .ag-help { background: rgba(255,179,0,0.1); border: 1px solid rgba(255,179,0,0.3); border-radius: 10px; padding: 10px 12px; font-size: 12.5px; color: #fff; line-height: 1.6; margin-bottom: 10px; }
+    .ag-help code { color: #FFB300; }
+    .ag-table { width: 100%; border-collapse: collapse; font-size: 13px; color: #fff; margin-bottom: 14px; }
+    .ag-table th, .ag-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .ag-table th { color: #FFB300; }
+    #guideModal textarea#gBody { min-height: 260px; font-family: ui-monospace, Consolas, monospace; font-size: 13px; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-card { background: #121212; border: 1px solid rgba(255,179,0,0.3); border-radius: 16px; color: #fff; }
+    .modal-card h2 { color: #fff; font-weight: 800; }
+    .modal-btns { display: flex; gap: 10px; margin-top: 12px; }
+    .modal-btns button { flex: 1; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; }
+    .modal-btns .cancel { border: 1px solid rgba(255,255,255,0.15); background: transparent; color: #fff; }
+    .modal-btns .save { flex: 2; border: none; background: #FFB300; color: #000; }
+  </style>
+</head>
+<body class="admin-page">
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-logo">
+        <img src="/logicard-logo-hero.png" alt="Logicard" class="admin-logo-img" />
+        <span class="admin-panel-badge">Guides &amp; Tracked Links</span>
+      </div>
+      <div class="admin-header-right">
+        <a href="/admin" class="admin-user-label" style="text-decoration:none">← Back to Dashboard</a>
+        <button class="signout-btn" id="adminSignout">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="ag-tabs" id="tabs">
+      <button type="button" data-tab="guides" class="on">Guides</button>
+      <button type="button" data-tab="links">Tracked links &amp; clicks</button>
+    </div>
+
+    <section id="tab-guides">
+      <div class="ag-bar">
+        <p>Articles at <strong>logicard.co.uk/guides</strong>. Drafts are only visible here.</p>
+        <button class="export-btn" id="newGuideBtn">+ New guide</button>
+      </div>
+      <div class="ag-list" id="guideList"><p style="color:#fff">Loading…</p></div>
+    </section>
+
+    <section id="tab-links" hidden>
+      <div class="ag-bar">
+        <p>Share <strong>logicard.co.uk/go/&lt;name&gt;</strong> instead of the provider's link. Every click is counted (and linked to the member if they're logged in) before sending them on.</p>
+        <button class="export-btn" id="newLinkBtn">+ New tracked link</button>
+      </div>
+      <div class="ag-list" id="linkList"><p style="color:#fff">Loading…</p></div>
+    </section>
+  </main>
+
+  <!-- Guide editor -->
+  <div id="guideModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="guideModalTitle">New guide</h2>
+      <form id="guideForm" novalidate>
+        <input type="hidden" id="gId" />
+        <div class="lfield"><label for="gTitle">Title <span class="adm-req">*</span></label><input id="gTitle" type="text" maxlength="200" placeholder="e.g. The best cashback current accounts right now" /></div>
+        <div class="lfield"><label for="gSlug">Page address</label><input id="gSlug" type="text" placeholder="e.g. best-cashback-accounts" /><p class="adm-hint">logicard.co.uk/guides/<span id="gSlugPreview">…</span> — filled in from the title if left blank.</p></div>
+        <div class="lfield"><label for="gCategory">Category</label><input id="gCategory" type="text" maxlength="60" placeholder="e.g. Money" /></div>
+        <div class="lfield"><label for="gSummary">Summary (shown on the Guides page)</label><textarea id="gSummary" rows="2" maxlength="400"></textarea></div>
+        <div class="lfield"><label for="gImage">Image (optional)</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;"><input id="gImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="flex:1;min-width:160px;" /><button type="button" class="export-btn" id="gImageUpload">Upload</button></div>
+          <input id="gImage" type="text" placeholder="https://… (or upload above)" /><p id="gImageStatus" class="adm-hint"></p>
+        </div>
+        <div class="lfield"><label for="gBody">Guide <span class="adm-req">*</span></label>
+          <div class="ag-help">
+            Leave a blank line between paragraphs.<br />
+            <code>## Heading</code> &nbsp; <code>### Smaller heading</code> &nbsp; <code>- bullet point</code> &nbsp; <code>**bold**</code><br />
+            Link: <code>[Santander Edge](/go/santander-edge)</code> &nbsp; Gold button: <code>[button: Open an account](/go/santander-edge)</code><br />
+            Always link to providers through a tracked link (<code>/go/…</code>) so clicks are counted.
+          </div>
+          <textarea id="gBody" rows="12"></textarea>
+        </div>
+        <div class="lfield" style="display:flex;align-items:center;gap:8px;"><input id="gPublished" type="checkbox" style="width:auto;" /><label for="gPublished" style="margin:0;">Published (visible on the website)</label></div>
+        <div id="guideError" class="form-error" role="alert"></div>
+        <div class="modal-btns"><button type="button" class="cancel" data-close="guideModal">Cancel</button><button type="submit" class="save">Save guide</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Tracked link editor -->
+  <div id="linkModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="linkModalTitle">New tracked link</h2>
+      <form id="linkForm" novalidate>
+        <input type="hidden" id="lId" />
+        <div class="lfield"><label for="lLabel">Name <span class="adm-req">*</span></label><input id="lLabel" type="text" maxlength="120" placeholder="e.g. Santander Edge current account" /></div>
+        <div class="lfield"><label for="lSlug">Link address</label><input id="lSlug" type="text" placeholder="e.g. santander-edge" /><p class="adm-hint">logicard.co.uk/go/<span id="lSlugPreview">…</span></p></div>
+        <div class="lfield"><label for="lDest">Send people to <span class="adm-req">*</span></label><input id="lDest" type="url" placeholder="https://… (your affiliate link)" /></div>
+        <div class="lfield" style="display:flex;align-items:center;gap:8px;"><input id="lActive" type="checkbox" checked style="width:auto;" /><label for="lActive" style="margin:0;">Active</label></div>
+        <div id="linkError" class="form-error" role="alert"></div>
+        <div class="modal-btns"><button type="button" class="cancel" data-close="linkModal">Cancel</button><button type="submit" class="save">Save link</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Click report -->
+  <div id="reportModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="reportTitle">Clicks</h2>
+      <div id="reportBody"></div>
+      <div class="modal-btns"><button type="button" class="cancel" data-close="reportModal">Close</button></div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      function $(id) { return document.getElementById(id); }
+      function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+      function slugify(t) { return String(t || '').toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80); }
+      function api(method, url, body) {
+        return fetch(url, { method: method, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined })
+          .then(function (r) {
+            if (r.status === 401) { location.href = '/admin-login.html'; throw new Error('Please log in.'); }
+            return r.json().catch(function () { return {}; }).then(function (d) { if (!r.ok) throw new Error(d.error || 'Something went wrong.'); return d; });
+          });
+      }
+      function open(id) { $(id).style.display = 'flex'; }
+      function close(id) { $(id).style.display = 'none'; }
+      document.querySelectorAll('[data-close]').forEach(function (b) { b.addEventListener('click', function () { close(b.getAttribute('data-close')); }); });
+
+      // Tabs
+      $('tabs').addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        $('tab-guides').hidden = b.dataset.tab !== 'guides';
+        $('tab-links').hidden = b.dataset.tab !== 'links';
+      });
+
+      // ── Guides ──
+      var guides = [];
+      function loadGuides() {
+        return api('GET', '/api/admin/guides').then(function (d) { guides = d; renderGuides(); });
+      }
+      function renderGuides() {
+        var list = $('guideList'); list.innerHTML = '';
+        if (!guides.length) { list.appendChild(el('p', null, 'No guides yet — press "New guide" to write your first one.')).style.color = '#fff'; return; }
+        guides.forEach(function (g) {
+          var item = el('div', 'ag-item'), info = el('div');
+          var h = el('h3'); h.appendChild(el('span', 'ag-tag ' + (g.isPublished ? 'live' : 'draft'), g.isPublished ? 'LIVE' : 'DRAFT')); h.appendChild(document.createTextNode(g.title));
+          info.appendChild(h); info.appendChild(el('div', 'meta', '/guides/' + g.slug + (g.category ? ' · ' + g.category : '')));
+          var a = el('div', 'ag-actions');
+          if (g.isPublished) { var v = el('a', null, 'View'); v.href = '/guides/' + g.slug; v.target = '_blank'; a.appendChild(v); }
+          var e = el('button', null, 'Edit'); e.type = 'button'; e.addEventListener('click', function () { editGuide(g); }); a.appendChild(e);
+          var d = el('button', 'danger', 'Delete'); d.type = 'button'; d.addEventListener('click', function () {
+            if (confirm('Delete "' + g.title + '"? This cannot be undone.')) api('DELETE', '/api/admin/guides/' + g.id).then(loadGuides).catch(function (x) { alert(x.message); });
+          }); a.appendChild(d);
+          item.appendChild(info); item.appendChild(a); list.appendChild(item);
+        });
+      }
+      function editGuide(g) {
+        g = g || {};
+        $('guideModalTitle').textContent = g.id ? 'Edit guide' : 'New guide';
+        $('gId').value = g.id || ''; $('gTitle').value = g.title || ''; $('gSlug').value = g.slug || '';
+        $('gCategory').value = g.category || ''; $('gSummary').value = g.summary || ''; $('gImage').value = g.heroImageUrl || '';
+        $('gBody').value = g.body || ''; $('gPublished').checked = !!g.isPublished; $('guideError').textContent = ''; $('gImageStatus').textContent = '';
+        syncGuideSlug(); open('guideModal');
+      }
+      function syncGuideSlug() { $('gSlugPreview').textContent = $('gSlug').value.trim() || slugify($('gTitle').value) || '…'; }
+      $('gTitle').addEventListener('input', syncGuideSlug); $('gSlug').addEventListener('input', syncGuideSlug);
+      $('newGuideBtn').addEventListener('click', function () { editGuide(null); });
+      $('gImageUpload').addEventListener('click', function () {
+        var f = $('gImageFile').files[0]; if (!f) { $('gImageStatus').textContent = 'Choose an image first.'; return; }
+        var fd = new FormData(); fd.append('file', f); $('gImageStatus').textContent = 'Uploading…';
+        fetch('/api/admin/partner-brands/upload', { method: 'POST', body: fd }).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw new Error(d.error || 'Upload failed.'); return d; }); })
+          .then(function (d) { $('gImage').value = d.url; $('gImageStatus').textContent = 'Uploaded — remember to save.'; })
+          .catch(function (x) { $('gImageStatus').textContent = x.message; });
+      });
+      $('guideForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var id = $('gId').value;
+        var payload = {
+          title: $('gTitle').value.trim(), slug: $('gSlug').value.trim() || slugify($('gTitle').value),
+          category: $('gCategory').value.trim() || null, summary: $('gSummary').value.trim() || null,
+          heroImageUrl: $('gImage').value.trim() || null, body: $('gBody').value, isPublished: $('gPublished').checked
+        };
+        api(id ? 'PUT' : 'POST', '/api/admin/guides' + (id ? '/' + id : ''), payload)
+          .then(function () { close('guideModal'); loadGuides(); })
+          .catch(function (x) { $('guideError').textContent = x.message; });
+      });
+
+      // ── Tracked links ──
+      var links = [];
+      function loadLinks() { return api('GET', '/api/admin/links').then(function (d) { links = d; renderLinks(); }); }
+      function renderLinks() {
+        var list = $('linkList'); list.innerHTML = '';
+        if (!links.length) { list.appendChild(el('p', null, 'No tracked links yet.')).style.color = '#fff'; return; }
+        links.forEach(function (l) {
+          var item = el('div', 'ag-item'), info = el('div');
+          var h = el('h3'); if (!l.isActive) h.appendChild(el('span', 'ag-tag draft', 'OFF')); h.appendChild(document.createTextNode(l.label));
+          info.appendChild(h);
+          info.appendChild(el('div', 'meta', 'logicard.co.uk/go/' + l.slug + '  →  ' + l.destinationUrl));
+          var st = el('div', 'ag-stats');
+          [['Total', l.clicksTotal], ['Last 30 days', l.clicks30], ['By members', l.memberClicks]].forEach(function (p) { var s = el('div'); s.appendChild(el('b', null, String(p[1] || 0))); s.appendChild(document.createTextNode(p[0])); st.appendChild(s); });
+          var a = el('div', 'ag-actions');
+          var c = el('button', null, 'Copy link'); c.type = 'button'; c.addEventListener('click', function () {
+            var t = 'https://logicard.co.uk/go/' + l.slug;
+            (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { c.textContent = 'Copied!'; }, function () { prompt('Copy this link:', t); });
+            setTimeout(function () { c.textContent = 'Copy link'; }, 2000);
+          }); a.appendChild(c);
+          var r = el('button', null, 'Clicks report'); r.type = 'button'; r.addEventListener('click', function () { showReport(l); }); a.appendChild(r);
+          var e = el('button', null, 'Edit'); e.type = 'button'; e.addEventListener('click', function () { editLink(l); }); a.appendChild(e);
+          var d = el('button', 'danger', 'Delete'); d.type = 'button'; d.addEventListener('click', function () {
+            if (confirm('Delete "' + l.label + '" and all its click history? Any guide still using /go/' + l.slug + ' will stop working.')) api('DELETE', '/api/admin/links/' + l.id).then(loadLinks).catch(function (x) { alert(x.message); });
+          }); a.appendChild(d);
+          info.appendChild(st); item.appendChild(info); item.appendChild(a); list.appendChild(item);
+        });
+      }
+      function editLink(l) {
+        l = l || {};
+        $('linkModalTitle').textContent = l.id ? 'Edit tracked link' : 'New tracked link';
+        $('lId').value = l.id || ''; $('lLabel').value = l.label || ''; $('lSlug').value = l.slug || '';
+        $('lDest').value = l.destinationUrl || ''; $('lActive').checked = l.id ? !!l.isActive : true; $('linkError').textContent = '';
+        syncLinkSlug(); open('linkModal');
+      }
+      function syncLinkSlug() { $('lSlugPreview').textContent = $('lSlug').value.trim() || slugify($('lLabel').value) || '…'; }
+      $('lLabel').addEventListener('input', syncLinkSlug); $('lSlug').addEventListener('input', syncLinkSlug);
+      $('newLinkBtn').addEventListener('click', function () { editLink(null); });
+      $('linkForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var id = $('lId').value;
+        var payload = { label: $('lLabel').value.trim(), slug: $('lSlug').value.trim() || slugify($('lLabel').value), destinationUrl: $('lDest').value.trim(), isActive: $('lActive').checked };
+        api(id ? 'PUT' : 'POST', '/api/admin/links' + (id ? '/' + id : ''), payload)
+          .then(function () { close('linkModal'); loadLinks(); })
+          .catch(function (x) { $('linkError').textContent = x.message; });
+      });
+      function table(head, rows) {
+        var t = el('table', 'ag-table'), tr = el('tr');
+        head.forEach(function (h) { tr.appendChild(el('th', null, h)); }); t.appendChild(tr);
+        rows.forEach(function (r) { var row = el('tr'); r.forEach(function (c) { row.appendChild(el('td', null, String(c))); }); t.appendChild(row); });
+        return t;
+      }
+      function showReport(l) {
+        $('reportTitle').textContent = 'Clicks — ' + l.label; var body = $('reportBody'); body.textContent = 'Loading…'; open('reportModal');
+        api('GET', '/api/admin/links/' + l.id + '/report').then(function (r) {
+          body.innerHTML = '';
+          body.appendChild(el('h3', null, 'Last 30 days')).style.cssText = 'color:#FFB300;font-size:14px;margin:6px 0';
+          body.appendChild(r.daily.length ? table(['Day', 'Clicks'], r.daily.map(function (d) { return [d.day, d.clicks]; })) : el('p', 'adm-hint', 'No clicks in the last 30 days.'));
+          body.appendChild(el('h3', null, 'Where clicks came from')).style.cssText = 'color:#FFB300;font-size:14px;margin:6px 0';
+          body.appendChild(r.pages.length ? table(['Page', 'Clicks'], r.pages.map(function (d) { return [d.path, d.clicks]; })) : el('p', 'adm-hint', 'No clicks yet.'));
+          body.appendChild(el('h3', null, 'Members who clicked')).style.cssText = 'color:#FFB300;font-size:14px;margin:6px 0';
+          body.appendChild(r.members.length ? table(['Member', 'No.', 'Clicks', 'Last click'], r.members.map(function (m) { return [m.name, m.membershipNumber, m.clicks, new Date(m.lastClick).toLocaleString('en-GB')]; })) : el('p', 'adm-hint', 'No logged-in members have clicked yet.'));
+        }).catch(function (x) { body.textContent = x.message; });
+      }
+
+      $('adminSignout').addEventListener('click', function () { fetch('/api/admin/logout', { method: 'POST' }).then(function () { location.href = '/'; }); });
+      loadGuides(); loadLinks();
+    })();
+  </script>
+</body>
+</html>
