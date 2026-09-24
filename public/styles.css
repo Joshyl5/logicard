@@ -2087,3 +2087,29 @@ body:has([id$="Modal"][style*="display: flex"]), body:has([id$="Modal"][style*="
 .adm-group { margin: 14px 0 8px; padding-top: 12px; border-top: 1px solid rgba(255,179,0,0.3); color: #FFB300; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
 .adm-hint { margin: 4px 0 0; font-size: 12px; color: rgba(255,255,255,0.75); }
 .adm-req { color: #FFB300; }
+
+/* ── Membership sign-up form: white card, black text, gold key words ── */
+.signup-card {
+  background: #ffffff !important; color: #111111; border: 0 !important;
+  border-top: 6px solid #FFB300 !important; backdrop-filter: none !important;
+  --muted: #333333; --white: #111111;
+}
+.signup-card .gold { color: #FFB300; }
+.signup-card-title { color: #111111; }
+.signup-card-subtitle, .signup-card .form-note, .signup-card .why-we-ask,
+.signup-card .check-text, .signup-card .success-panel > p { color: #333333 !important; }
+.signup-card label, .signup-card .fieldset legend, .signup-card .success-panel h2 { color: #111111 !important; }
+.signup-card .req { color: #E09A00; }
+.signup-card input[type="text"], .signup-card input[type="email"], .signup-card input[type="tel"],
+.signup-card input[type="password"], .signup-card input[type="date"], .signup-card select {
+  background: #f4f6f9 !important; color: #111111 !important; border: 1px solid rgba(0,0,0,0.18) !important;
+}
+.signup-card input::placeholder { color: rgba(0,0,0,0.45) !important; }
+.signup-card input:focus, .signup-card select:focus { border-color: #FFB300 !important; box-shadow: 0 0 0 3px rgba(255,179,0,0.25) !important; }
+.signup-card select option { background: #ffffff; color: #111111; }
+.signup-card .check-box { border-color: rgba(0,0,0,0.35) !important; background: #ffffff; }
+.signup-card .check-label input:checked ~ .check-box { background: #FFB300 !important; border-color: #FFB300 !important; }
+.signup-card .pw-toggle { color: #333333 !important; }
+.signup-card .inline-link, .signup-card a:not(.submit-btn) { color: #111111 !important; font-weight: 700; text-decoration: underline; text-decoration-color: #FFB300; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.signup-card .submit-btn { background: #FFB300 !important; color: #111111 !important; }
+.signup-card .why-we-ask summary, .signup-card .check-text strong { color: #111111 !important; }

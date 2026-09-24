@@ -81,6 +81,16 @@ body.site-menu-open { overflow: hidden; }
 .site-header-wrap ~ .members-header .mh-logo-pill,
 .site-header-wrap ~ .report-header .report-header-logo { display: none; }
 
+/* Member area columns match the gold bar: 1120px column, 20px gutters,
+   so the logo lines up with the toolbar, headings and cards below it. */
+.site-header-wrap ~ .members-header, .site-header-wrap ~ .notif-banner-wrap,
+.site-header-wrap ~ .offers-hero, .site-header-wrap ~ .offers-main,
+.site-header-wrap ~ .referral-banner,
+.site-header-wrap ~ * .offers-hero, .site-header-wrap ~ * .offers-main { padding-left: 20px !important; padding-right: 20px !important; }
+.site-header-wrap ~ .notif-banner-wrap { max-width: 1120px !important; margin-left: auto; margin-right: auto; }
+.site-header-wrap ~ .members-header .mh-topbar, .site-header-wrap ~ .members-header .mh-navbar,
+.site-header-wrap ~ .members-header .mh-inner, .oh-inner, .offers-container { max-width: 1080px !important; }
+
 /* ── Back link (optional, placed right after SHARED_NAV — used by
    login/signup/checkout and other narrow-flow pages). ── */
 .site-subbar { display: flex; justify-content: flex-end; padding: 16px 40px 0; }

@@ -287,7 +287,7 @@ async function sendWelcomeEmail(member) {
       <p style="margin:0 0 16px;font-size:13px;color:#5f6d82">Visit <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none;font-weight:700">logicard.co.uk</a> for support and FAQs.</p>
       <div style="border-top:1px solid #e2e6ee;margin:16px 0;padding-top:16px">
         <p style="margin:0;font-size:12px;color:#5f6d82">To make sure our emails reach your inbox, please add <strong>welcome@logicard.co.uk</strong> to your contacts.</p>
-        <p style="margin:8px 0 0;font-size:11px;color:#aaa">© 2026 Logicard Ltd · Company number 17474646 · You received this because you registered at logicard.co.uk</p>
+        <p style="margin:8px 0 0;font-size:11px;color:#aaa">© 2026 Logicard Ltd · Registered in England and Wales, company number 17474646 · Registered office: 7 Linnet Close, Hinckley, LE10 3FP · You received this because you registered at logicard.co.uk</p>
       </div>
     </div>
   </div>`;
@@ -314,7 +314,7 @@ To ensure our emails reach your inbox, please add welcome@logicard.co.uk to your
 
 Need help? Email info@logicard.co.uk or visit logicard.co.uk
 
-© 2026 Logicard Ltd · Company number 17474646 · You received this because you registered at logicard.co.uk`;
+© 2026 Logicard Ltd · Registered in England and Wales, company number 17474646 · Registered office: 7 Linnet Close, Hinckley, LE10 3FP · You received this because you registered at logicard.co.uk`;
 
   try {
     await resend.emails.send({
@@ -1563,7 +1563,7 @@ app.post('/api/admin/giveaway/draw', requireAdmin, async (req, res) => {
       </div>
       <div style="padding:20px 36px;text-align:center;background:#f0f2f7;border-top:1px solid #e2e6ee">
         <p style="margin:0;font-size:11px;color:#aaa">Please do not reply to this email — this mailbox is not monitored.</p>
-        <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard Ltd · Company number 17474646 · <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none">logicard.co.uk</a></p>
+        <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard Ltd · Registered in England and Wales, company number 17474646 · Registered office: 7 Linnet Close, Hinckley, LE10 3FP · <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none">logicard.co.uk</a></p>
       </div>
     </div>`;
     try {
@@ -1765,7 +1765,7 @@ app.post('/api/forgot-password', resetLimiter, async (req, res) => {
     </div>
     <div style="padding:20px 36px;text-align:center;background:#f0f2f7;border-top:1px solid #e2e6ee">
       <p style="margin:0;font-size:11px;color:#aaa">Please do not reply to this email — this mailbox is not monitored.</p>
-      <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard Ltd · Company number 17474646 · <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none">logicard.co.uk</a></p>
+      <p style="margin:6px 0 0;font-size:11px;color:#bbb">© 2026 Logicard Ltd · Registered in England and Wales, company number 17474646 · Registered office: 7 Linnet Close, Hinckley, LE10 3FP · <a href="https://logicard.co.uk" style="color:#FFB300;text-decoration:none">logicard.co.uk</a></p>
     </div>
   </div>`;
 
@@ -2165,10 +2165,10 @@ app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
     getMemberWaitlistedOfferIds(req.session.membershipNumber, offerIds),
   ]);
 
-  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl }) => {
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl, slug }) => {
     const stats = statsMap[id];
     return {
-      id, merchantName, title, description, category, discountText, imageUrl,
+      id, merchantName, title, description, category, discountText, imageUrl, slug,
       voucherCode:    stats ? undefined : voucherCode, // legacy shared code only applies when no unique-code pool exists
       hasCodePool:    !!stats,
       codesAvailable: stats ? stats.available : null,
@@ -2183,7 +2183,7 @@ app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
 app.get('/api/offers/featured', requireAuth, requireVerified, async (req, res) => {
   const member = await getMemberByNumber(req.session.membershipNumber);
   const offers = filterOffersForMember(await getFeaturedOffersForDashboard(), member ? member.gender : null);
-  res.json(offers.map(({ id, merchantName, title, imageUrl }) => ({ id, merchantName, title, imageUrl })));
+  res.json(offers.map(({ id, merchantName, title, imageUrl, slug }) => ({ id, merchantName, title, imageUrl, slug })));
 });
 
 app.post('/api/offers/:id/claim', requireAuth, requireVerified, async (req, res) => {
@@ -2291,10 +2291,10 @@ app.get('/api/mobile/offers', requireMobileAuth, requireMobileVerified, async (r
     getMemberWaitlistedOfferIds(req.membershipNumber, offerIds),
   ]);
 
-  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl }) => {
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl, slug }) => {
     const stats = statsMap[id];
     return {
-      id, merchantName, title, description, category, discountText, imageUrl,
+      id, merchantName, title, description, category, discountText, imageUrl, slug,
       voucherCode:    stats ? undefined : voucherCode,
       hasCodePool:    !!stats,
       codesAvailable: stats ? stats.available : null,

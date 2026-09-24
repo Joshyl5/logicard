@@ -280,7 +280,7 @@ function renderOffers(offers) {
           ${o.discountText ? `<span class="price-badge">${escapeHtml(o.discountText)}</span>` : ''}
         </div>
         ${renderCodeSection(o)}
-        <a class="oc-btn" href="/api/offers/${o.id}/go" target="_blank" rel="noopener noreferrer">Get This Deal</a>
+        <a class="oc-btn" href="${/^[a-z0-9-]+$/i.test(o.slug || '') ? '/' + o.slug + '#redeem' : '/api/offers/' + o.id + '/go'}">Get This Deal</a>
       </div>
     </div>
   `).join('');

@@ -68,7 +68,7 @@ async function loadFeaturedOffers() {
   if (!offers.length) return;
 
   document.getElementById('advertsGrid').innerHTML = offers.map(o => `
-    <a class="advert-tile" href="/api/offers/${o.id}/go" target="_blank" rel="sponsored noopener">
+    <a class="advert-tile" href="${/^[a-z0-9-]+$/i.test(o.slug || '') ? '/' + o.slug : '/api/offers/' + o.id + '/go'}">
       <img class="advert-tile-img" src="${escapeHtml(o.imageUrl)}" alt="${escapeHtml(o.merchantName)}" loading="lazy" />
       <div class="advert-tile-caption">${escapeHtml(o.merchantName)} — ${escapeHtml(o.title)}</div>
     </a>
