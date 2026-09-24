@@ -28,7 +28,7 @@ img, video, iframe { max-width: 100%; }
   box-shadow: 0 4px 18px rgba(0,0,0,0.35);
 }
 
-.site-header-logo { flex-shrink: 0; display: inline-flex; align-items: center; border: 2.5px solid #0a0a0a; padding: 8px 16px; border-radius: 6px; background: #0a0a0a; text-decoration: none; font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif; font-size: 23px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+.site-header-logo { flex-shrink: 0; display: inline-flex; align-items: center; border: 2.5px solid #0a0a0a; padding: 8px 16px; border-radius: 6px; background: #000000; text-decoration: none; font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif; font-size: 23px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
 .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: #FFB300; }
 
 .site-burger { width: 48px; height: 48px; background: none; border: 0; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px; flex-shrink: 0; margin-left: auto; }
@@ -36,7 +36,7 @@ img, video, iframe { max-width: 100%; }
 
 /* ── Slide-out drawer ── */
 .site-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 190; }
-.site-drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(360px, 86vw); background: #0a0a0a; border-left: 1px solid rgba(255,255,255,0.08); z-index: 200; transform: translateX(100%); visibility: hidden; transition: transform .3s ease, visibility 0s linear .3s; display: flex; flex-direction: column; font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif; color: #fff; }
+.site-drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(360px, 86vw); background: #000000; border-left: 1px solid rgba(255,255,255,0.08); z-index: 200; transform: translateX(100%); visibility: hidden; transition: transform .3s ease, visibility 0s linear .3s; display: flex; flex-direction: column; font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif; color: #fff; }
 body.site-menu-open .site-scrim { opacity: 1; pointer-events: auto; }
 body.site-menu-open .site-drawer { transform: none; visibility: visible; transition: transform .3s ease, visibility 0s; }
 body.site-menu-open { overflow: hidden; }
@@ -63,7 +63,7 @@ body.site-menu-open { overflow: hidden; }
 .site-header-actions { flex-shrink: 0; margin-left: auto; display: flex; align-items: center; gap: 16px; }
 .site-header-signin { font-size: 14px; font-weight: 700; color: #111; text-decoration: none; }
 .site-header-signin:hover { text-decoration: underline; }
-.site-header-join { background: #0a0a0a; color: #FFB300; font-weight: 800; font-size: 13px; padding: 10px 20px; border-radius: 100px; text-decoration: none; }
+.site-header-join { background: #000000; color: #FFB300; font-weight: 800; font-size: 13px; padding: 10px 20px; border-radius: 100px; text-decoration: none; }
 .site-header-join:hover { background: #1f1f1f; }
 
 /* ── Member area ──

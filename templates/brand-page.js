@@ -62,7 +62,7 @@ function renderBrandPage({ brand, offers }) {
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --navy: #0a0a0a; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
+      --navy: #000000; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
       --white: #ffffff; --text-muted: #5b6577;
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
@@ -90,7 +90,7 @@ function renderBrandPage({ brand, offers }) {
     /* Gold band around the offers/coming-soon content — alternates with
        the navy hero above and navy back-link area below, matching the
        site-wide section-banding rule (homepage is the reference). */
-    .bp-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 8px 0 56px; }
+    .bp-gold-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; padding: 8px 0 56px; }
     .bp-offer-card { background: rgba(255,255,255,0.9); border: 1px solid rgba(10,10,10,0.1); border-radius: 16px; padding: 28px; }
     .bp-offer-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
     .bp-badge { font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px; background: rgba(10,10,10,0.06); color: rgba(10,10,10,0.75); padding: 5px 10px; border-radius: 100px; }
@@ -139,7 +139,7 @@ function renderBrandNotFound() {
   <link rel="stylesheet" href="/nav.css?v=8" />
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #0a0a0a; color: #fff; }
+    body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }
     .nf { text-align: center; padding: 120px 24px; }
     .nf h1 { font-size: 32px; font-weight: 900; margin-bottom: 14px; }
     .nf p { color: rgba(255,255,255,0.9); margin-bottom: 28px; }

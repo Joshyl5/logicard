@@ -14,7 +14,7 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #0a0a0a; --navy-deep: #04040d;
+      --orange: #FFB300; --orange-dark: #E09A00; --navy: #000000; --navy-deep: #04040d;
       --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
@@ -36,10 +36,10 @@
        the homepage's section-banding pattern. Cards flip to a light,
        navy-text treatment on the gold band, same inverse-contrast
        convention the homepage's .how-card uses on its own gold section. */
-    .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); }
-    .cat-gold-band .category-card { background: rgba(255,255,255,0.9); border-color: rgba(10,10,10,0.12); }
+    .cat-gold-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
+    .cat-gold-band .category-card { background: #161616; border-color: rgba(255,255,255,0.12); }
     .cat-gold-band .category-card h2 { color: var(--navy); }
-    .cat-gold-band .category-card p, .cat-gold-band .helpline-note { color: rgba(10,10,10,0.7); }
+    .cat-gold-band .category-card p, .cat-gold-band .helpline-note { color: rgba(255,255,255,0.88); }
 
     .helpline-note { max-width: 720px; margin: 0 auto; padding: 0 24px 56px; text-align: center; color: rgba(255,255,255,0.9); font-size: 14px; line-height: 1.7; }
 

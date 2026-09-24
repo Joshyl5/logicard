@@ -15,7 +15,7 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #0a0a0a; --navy-deep: #04040d;
+      --orange: #FFB300; --orange-dark: #E09A00; --navy: #000000; --navy-deep: #04040d;
       --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
@@ -111,19 +111,19 @@
     .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
     .category-card p { color: rgba(255,255,255,0.9); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
     .category-card .soon-badge {
-      display: inline-block; background: rgba(10,10,10,0.08); color: rgba(10,10,10,0.55);
+      display: inline-block; background: rgba(10,10,10,0.08); color: rgba(255,255,255,0.88);
       font-weight: 700; font-size: 12.5px; padding: 8px 16px; border-radius: 100px;
     }
 
-    .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); }
-    .cat-gold-band .category-card { background: rgba(255,255,255,0.9); border-color: rgba(10,10,10,0.12); }
+    .cat-gold-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
+    .cat-gold-band .category-card { background: #161616; border-color: rgba(255,255,255,0.12); }
     .cat-gold-band .category-card h2 { color: var(--navy); }
-    .cat-gold-band .category-card p { color: rgba(10,10,10,0.7); }
+    .cat-gold-band .category-card p { color: rgba(255,255,255,0.88); }
 
     .responsible-note {
       max-width: 720px; margin: 0 auto; padding: 0 24px 56px; text-align: center;
     }
-    .responsible-note p { font-size: 13px; color: rgba(10,10,10,0.6); line-height: 1.7; }
+    .responsible-note p { font-size: 13px; color: rgba(255,255,255,0.88); line-height: 1.7; }
     .responsible-note a { color: var(--navy); font-weight: 700; }
 
     .bottom-cta { text-align: center; padding: 56px 24px 80px; }

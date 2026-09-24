@@ -24,7 +24,7 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --navy: #0a0a0a; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
+      --navy: #000000; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
       --white: #ffffff; --text-muted: #5b6577;
       --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
     }
@@ -56,10 +56,10 @@
        narrative). Two-tone heading mirrors the hero's own white-base/
        gold-accent pattern, just inverted for a gold section: navy base
        text, white accent word. */
-    .wmd-section { padding: 88px 24px 96px; background: var(--gold-grad); }
+    .wmd-section { padding: 88px 24px 96px; background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
     .wmd-inner { max-width: 980px; margin: 0 auto; }
     .wmd-title { text-align: center; font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: var(--navy); letter-spacing: -0.6px; margin-bottom: 56px; text-wrap: balance; }
-    .wmd-title .accent { color: var(--white); }
+    .wmd-title .accent { color: var(--orange); }
     .wmd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px 56px; }
     .wmd-item-head { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
     .wmd-icon {
@@ -69,7 +69,7 @@
     }
     .wmd-icon svg { width: 16px; height: 16px; stroke: var(--white); fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
     .wmd-item h3 { font-size: 18px; font-weight: 800; color: var(--navy); letter-spacing: -0.2px; }
-    .wmd-item p { font-size: 14.5px; line-height: 1.7; color: rgba(10,10,10,0.72); }
+    .wmd-item p { font-size: 14.5px; line-height: 1.7; color: rgba(255,255,255,0.88); }
 
     /* Points — navy (continues the alternation after What Makes Us
        Different/gold above) */
@@ -86,7 +86,7 @@
     .story-point p { font-size: 14.5px; color: var(--text-muted); line-height: 1.65; }
 
     /* Mission statement — gold (continues the alternation after Points/navy) */
-    .story-mission { padding: 88px 24px; text-align: center; background: var(--gold-grad); }
+    .story-mission { padding: 88px 24px; text-align: center; background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
     .story-mission-inner { max-width: 720px; margin: 0 auto; }
     .story-mission-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); opacity: 0.65; margin-bottom: 18px; }
     .story-mission p { font-size: clamp(20px, 2.6vw, 27px); font-weight: 700; line-height: 1.55; color: var(--navy); letter-spacing: -0.3px; text-wrap: balance; }

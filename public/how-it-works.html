@@ -30,7 +30,7 @@
        background, so the flat-fill rule for section backgrounds still holds. */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --navy: #0a0a0a; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
+      --navy: #000000; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
       --white: #ffffff; --text-muted: #5b6577;
       --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
     }
@@ -59,14 +59,14 @@
     .section-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--navy); opacity: 0.65; margin-bottom: 16px; }
 
     /* ── Steps section — gold (cards stay white per the site's card system) ── */
-    .hiw-section { padding: 72px 24px 96px; background: var(--gold-grad); }
+    .hiw-section { padding: 72px 24px 96px; background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
     .hiw-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
     .hiw-step {
       background: var(--white); border-radius: 20px; padding: 44px 32px 36px;
       text-align: center; position: relative; overflow: hidden;
     }
     .hiw-step--featured { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); border: 1px solid rgba(255,179,0,0.25); }
-    .hiw-step-num { position: absolute; top: 16px; right: 22px; font-size: 64px; font-weight: 900; line-height: 1; color: rgba(10,10,10,0.06); letter-spacing: -2px; }
+    .hiw-step-num { position: absolute; top: 16px; right: 22px; font-size: 64px; font-weight: 900; line-height: 1; color: rgba(255,255,255,0.88); letter-spacing: -2px; }
     .hiw-step--featured .hiw-step-num { color: rgba(255,255,255,0.06); }
     .hiw-step-icon {
       width: 60px; height: 60px; border-radius: 16px; margin: 0 auto 24px;
@@ -90,7 +90,7 @@
     .eco-section h2 { font-size: clamp(28px, 3.8vw, 42px); font-weight: 900; color: var(--white); letter-spacing: -0.8px; margin-bottom: 18px; text-wrap: balance; }
     .eco-section .lead { font-size: 16px; color: rgba(255,255,255,0.9); line-height: 1.75; max-width: 680px; margin: 0 auto 56px; }
     .eco-flow { display: flex; align-items: stretch; justify-content: center; gap: 0; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
-    .eco-node { background: var(--white); border-radius: 16px; padding: 26px 18px; width: 174px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .eco-node { background: #161616; border: 1px solid rgba(255,179,0,0.3); --navy: #ffffff; border-radius: 16px; padding: 26px 18px; width: 174px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .eco-node-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 14px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); display: flex; align-items: center; justify-content: center; }
     .eco-node-icon svg { width: 20px; height: 20px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .eco-node-num { font-size: 11px; font-weight: 800; letter-spacing: 0.5px; color: var(--orange-dark); text-transform: uppercase; margin-bottom: 6px; }
@@ -101,10 +101,10 @@
     .eco-footnote { margin: 44px auto 0; font-size: 14.5px; color: rgba(255,255,255,0.9); max-width: 620px; line-height: 1.7; font-weight: 600; }
 
     /* ── Ecosystem photo section — gold, photo in a contained card ── */
-    .epx-section { padding: 88px 24px 96px; background: var(--gold-grad); }
+    .epx-section { padding: 88px 24px 96px; background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
     .epx-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
     .epx-text h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--navy); letter-spacing: -0.6px; margin-bottom: 18px; text-wrap: balance; }
-    .epx-text p { font-size: 15.5px; color: rgba(10,10,10,0.72); line-height: 1.75; margin-bottom: 16px; }
+    .epx-text p { font-size: 15.5px; color: rgba(255,255,255,0.88); line-height: 1.75; margin-bottom: 16px; }
     .epx-photo { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
     .epx-photo img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 5; }
     .epx-credit {

@@ -14,7 +14,7 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #0a0a0a; --navy-deep: #04040d;
+      --orange: #FFB300; --orange-dark: #E09A00; --navy: #000000; --navy-deep: #04040d;
       --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
@@ -159,12 +159,12 @@
        here, same inverse-contrast convention the homepage's .how-card
        uses on its own gold section. ── */
     .deals-cats-section {
-      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
       color: var(--navy);
       padding: 64px 24px 76px; text-align: center;
     }
     .deals-cats-heading { color: var(--navy); font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
-    .deals-cats-sub { color: rgba(10,10,10,0.7); font-size: 15px; margin-bottom: 40px; }
+    .deals-cats-sub { color: rgba(255,255,255,0.88); font-size: 15px; margin-bottom: 40px; }
     .deals-cats-grid {
       max-width: 1400px; margin: 0 auto;
       display: grid; grid-template-columns: repeat(9, 1fr); gap: 14px;
@@ -233,7 +233,7 @@
     .deal-card-claim:hover { background: var(--orange-dark); }
 
     .bottom-cta {
-      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
       text-align: center; padding: 56px 24px;
     }
     .cta-btn { display: inline-block; background: var(--navy); color: var(--white); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }

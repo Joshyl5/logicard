@@ -14,7 +14,7 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #0a0a0a; --navy-deep: #04040d;
+      --orange: #FFB300; --orange-dark: #E09A00; --navy: #000000; --navy-deep: #04040d;
       --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
@@ -41,7 +41,7 @@
     /* Gold band — alternates with the navy hero above and the navy
        bottom-cta below (navy, gold, navy), matching the homepage's
        section-banding pattern. */
-    .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 56px 24px 80px; }
+    .cat-gold-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; padding: 56px 24px 80px; }
 
     /* Placeholder deal cards — same component/size as the site's real
        Featured Deals cards (categories.html/index.html), so when real
@@ -54,8 +54,8 @@
       max-width: 1320px; margin: 0 auto;
     }
     .deal-card {
-      background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(10,10,10,0.1);
+      background: #161616;
+      border: 1px solid rgba(255,255,255,0.12);
       border-radius: 16px;
       overflow: hidden;
       display: flex; flex-direction: column;
@@ -63,21 +63,21 @@
     .deal-card-image { aspect-ratio: 16 / 9; background: rgba(10,10,10,0.06); overflow: hidden; }
     .deal-card-image-fallback {
       width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-      font-size: 34px; font-weight: 900; color: rgba(10,10,10,0.2);
+      font-size: 34px; font-weight: 900; color: rgba(255,255,255,0.88);
     }
     .deal-card-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
     .deal-card-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
     .deal-card-badge {
       font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px;
-      background: rgba(10,10,10,0.06); color: rgba(10,10,10,0.75);
+      background: rgba(10,10,10,0.06); color: rgba(255,255,255,0.88);
       padding: 5px 10px; border-radius: 100px;
     }
     .deal-card-badge--exclusive { background: var(--navy); color: var(--orange); }
     .deal-card-title { font-size: 15px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
-    .deal-card-sub { font-size: 13.5px; color: rgba(10,10,10,0.6); line-height: 1.5; margin-bottom: 18px; flex: 1; }
+    .deal-card-sub { font-size: 13.5px; color: rgba(255,255,255,0.88); line-height: 1.5; margin-bottom: 18px; flex: 1; }
     .deal-card-soon {
       display: inline-block; align-self: flex-start;
-      background: rgba(10,10,10,0.08); color: rgba(10,10,10,0.55);
+      background: rgba(10,10,10,0.08); color: rgba(255,255,255,0.88);
       font-weight: 700; font-size: 12.5px; padding: 9px 16px; border-radius: 100px;
     }
     @media (max-width: 1100px) { .deals-placeholder-grid { grid-template-columns: repeat(3, 1fr); } }

@@ -28,7 +28,7 @@
        same rhythm as the homepage. */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --navy: #0a0a0a;
+      --navy: #000000;
       --navy-mid: #1f1f1f;
       --orange: #FFB300;
       --orange-dark: #E09A00;
@@ -113,7 +113,7 @@
 
     /* ── Section shell ── */
     .ab-section { padding: 88px 24px; }
-    .ab-section.gold { background: var(--gold-grad); color: var(--navy); }
+    .ab-section.gold { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; color: var(--navy); }
     .ab-section.navy { background: var(--navy); color: var(--white); }
     .ab-section-eyebrow {
       display: block; font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
@@ -127,12 +127,12 @@
     }
     .ab-section-sub { font-size: 16px; line-height: 1.7; }
     .ab-section.navy .ab-section-sub { color: rgba(255,255,255,0.9); }
-    .ab-section.gold .ab-section-sub { color: rgba(10,10,10,0.75); }
+    .ab-section.gold .ab-section-sub { color: rgba(255,255,255,0.88); }
 
     /* ── Origin story (gold) ── */
     .ab-story { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
     .ab-story-head { max-width: 480px; }
-    .ab-story-text p { font-size: 16.5px; line-height: 1.85; color: rgba(10,10,10,0.85); margin-bottom: 18px; }
+    .ab-story-text p { font-size: 16.5px; line-height: 1.85; color: rgba(255,255,255,0.88); margin-bottom: 18px; }
     .ab-story-text p:last-child { margin-bottom: 0; }
     .ab-story-card {
       position: relative; overflow: hidden;
@@ -152,8 +152,8 @@
     }
     .ab-shift-row:first-child { padding-top: 0; }
     .ab-shift-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .ab-shift-row .was { font-size: 15px; color: rgba(10,10,10,0.35); text-decoration: line-through; }
-    .ab-shift-row .arrow { color: rgba(10,10,10,0.25); flex-shrink: 0; }
+    .ab-shift-row .was { font-size: 15px; color: rgba(255,255,255,0.88); text-decoration: line-through; }
+    .ab-shift-row .arrow { color: rgba(255,255,255,0.88); flex-shrink: 0; }
     .ab-shift-row .now-group { display: flex; align-items: center; gap: 8px; }
     .ab-shift-row .now { font-size: 16px; font-weight: 800; color: var(--navy); }
     .ab-shift-row .tick { width: 19px; height: 19px; flex-shrink: 0; }
@@ -178,8 +178,8 @@
     /* ── Newsletter (gold section, navy card) ── */
     .ab-newsletter-card {
       max-width: 620px; margin: 48px auto 0;
-      background: var(--navy); border-radius: 20px; padding: 44px 40px;
-      text-align: center; box-shadow: 0 16px 44px rgba(10,10,10,0.25);
+      background: #161616; border: 1px solid rgba(255,179,0,0.35); border-radius: 20px; padding: 44px 40px;
+      text-align: center; box-shadow: 0 16px 44px rgba(0,0,0,0.4);
     }
     .ab-newsletter-icon {
       width: 52px; height: 52px; margin: 0 auto 20px; border-radius: 14px;
@@ -199,7 +199,7 @@
     .ab-newsletter-row input::placeholder { color: rgba(255,255,255,0.75); }
     .ab-newsletter-row input:focus { border-color: var(--orange); }
     .ab-newsletter-btn {
-      background: var(--orange); color: var(--navy); font-weight: 800; font-size: 14px;
+      background: var(--orange); color: #111; font-weight: 800; font-size: 14px;
       padding: 13px 24px; border: none; border-radius: 6px; cursor: pointer;
       white-space: nowrap; transition: background 0.15s;
     }

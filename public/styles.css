@@ -382,8 +382,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-select option { background: #0a0a0a; color: var(--white); }
-select optgroup { background: #0a0a0a; color: var(--accent); font-weight: 700; font-style: normal; }
+select option { background: #000000; color: var(--white); }
+select optgroup { background: #000000; color: var(--accent); font-weight: 700; font-style: normal; }
 
 /* ── "Why do we ask?" disclosure ─────────────────────────────── */
 .why-we-ask { margin-top: 4px; font-size: 0.8rem; }
@@ -443,7 +443,7 @@ select optgroup { background: #0a0a0a; color: var(--accent); font-weight: 700; f
   position: fixed;
   max-height: 300px;
   overflow-y: auto;
-  background: #0a0a0a;
+  background: #000000;
   border: 1px solid rgba(79,163,247,0.3);
   border-radius: var(--radius-sm);
   box-shadow: 0 16px 40px rgba(0,0,0,0.55);
@@ -679,7 +679,7 @@ select optgroup { background: #0a0a0a; color: var(--accent); font-weight: 700; f
 .back-link:hover { color: var(--white); }
 
 .page-hero {
-  background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+  background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
   color: #0a0a0a;
   padding: 118px 24px 24px;
   text-align: center;

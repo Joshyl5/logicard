@@ -27,7 +27,7 @@
       --orange: #FFB300;
       --orange-dark: #E09A00;
       --navy-deep: #04040d;
-      --navy: #0a0a0a;
+      --navy: #000000;
       --navy-mid: #1f1f1f;
       --white: #ffffff;
       --gray-mid: #e5e5e5;
@@ -64,7 +64,7 @@
        before; recoloured for gold now that it's a standalone section
        rather than living inside the navy hero. */
     .q-search-section {
-      background: var(--gold-grad);
+      background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
       color: var(--navy);
       text-align: center;
       padding: 64px 24px 60px;
@@ -89,7 +89,7 @@
       transition: border-color 0.2s, box-shadow 0.2s;
       box-shadow: 0 6px 24px rgba(10,10,10,0.15);
     }
-    .q-search-input::placeholder { color: rgba(10,10,10,0.4); font-weight: 500; }
+    .q-search-input::placeholder { color: rgba(255,255,255,0.88); font-weight: 500; }
     .q-search-input:focus { border-color: var(--navy); box-shadow: 0 8px 30px rgba(10,10,10,0.22); }
     .q-search-results { margin-top: 14px; display: none; flex-wrap: wrap; gap: 8px; justify-content: center; }
     .q-search-results.open { display: flex; }
@@ -100,7 +100,7 @@
       transition: background 0.15s, border-color 0.15s;
     }
     .q-search-result:hover { background: rgba(10,10,10,0.15); border-color: rgba(10,10,10,0.3); }
-    .q-search-empty { display: none; margin-top: 14px; font-size: 13.5px; color: rgba(10,10,10,0.6); }
+    .q-search-empty { display: none; margin-top: 14px; font-size: 13.5px; color: rgba(255,255,255,0.88); }
     .q-search-empty a { color: var(--navy); font-weight: 700; text-decoration: none; }
 
     .q-match {
@@ -112,7 +112,7 @@
     .q-match h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--navy); }
     .q-match p { font-size: 14px; color: var(--text-muted); margin-bottom: 18px; }
 
-    .q-browse-hint { font-size: 13px; color: rgba(10,10,10,0.5); margin-top: 16px; }
+    .q-browse-hint { font-size: 13px; color: rgba(255,255,255,0.88); margin-top: 16px; }
 
     /* "Logicard World" animated scene — 2nd section, straight on from
        the navy intro above with no seam. Adapted from a full-viewport
@@ -355,7 +355,7 @@
     .q-bottom {
       text-align: center;
       padding: 88px 24px;
-      background: var(--gold-grad);
+      background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
     }
     .q-bottom .q-cta-btn {
       background: var(--navy); color: var(--white);
@@ -363,7 +363,7 @@
     }
     .q-bottom .q-cta-btn:hover { background: var(--navy-mid); box-shadow: 0 10px 40px rgba(10,10,10,0.36); }
     .q-bottom p {
-      font-size: 14px; color: rgba(10,10,10,0.65);
+      font-size: 14px; color: rgba(255,255,255,0.88);
       margin-top: 14px;
     }
     /* Trust stats — filling what was otherwise the quietest spot on the

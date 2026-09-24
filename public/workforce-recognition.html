@@ -26,8 +26,8 @@
     :root {
       --orange: #FFB300;
       --orange-dark: #E09A00;
-      --navy-deep: #0a0a0a; /* alias of --navy, per BRAND.md */
-      --navy: #0a0a0a;
+      --navy-deep: #000000; /* alias of --navy, per BRAND.md */
+      --navy: #000000;
       --navy-mid: #1f1f1f;
       --blue-accent: #1a6cc8;
       --white: #ffffff;
@@ -101,16 +101,16 @@
        full-bleed since every section on this page is already a boxed
        max-width column, not an edge-to-edge band like the homepage's. */
     #wr-how, #wr-form {
-      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
+      background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
       border-radius: 28px;
       color: var(--navy);
     }
     #wr-how .wr-section-title, #wr-form .wr-section-title { color: var(--navy); }
-    #wr-how .wr-section-sub, #wr-form .wr-section-sub { color: rgba(10,10,10,0.7); }
+    #wr-how .wr-section-sub, #wr-form .wr-section-sub { color: rgba(255,255,255,0.88); }
     #wr-how .wr-section-eyebrow, #wr-form .wr-section-eyebrow { color: var(--navy); opacity: 0.75; }
-    #wr-how .wr-step { background: rgba(255,255,255,0.9); border-color: rgba(10,10,10,0.1); }
+    #wr-how .wr-step { background: #161616; border-color: rgba(255,255,255,0.12); }
     #wr-how .wr-step h3 { color: var(--navy); }
-    #wr-how .wr-step p { color: rgba(10,10,10,0.7); }
+    #wr-how .wr-step p { color: rgba(255,255,255,0.88); }
     #wr-how .wr-step-num { background: var(--navy); color: var(--white); }
     .wr-section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
     .wr-section-eyebrow {
@@ -212,7 +212,7 @@
     }
     .wr-field input:focus, .wr-field select:focus, .wr-field textarea:focus { border-color: var(--orange); }
     .wr-field textarea { resize: vertical; min-height: 90px; }
-    .wr-field select option { background: #0a0a0a; }
+    .wr-field select option { background: #000000; }
     .wr-submit-btn {
       width: 100%;
       background: linear-gradient(135deg, var(--orange), var(--orange-dark));
