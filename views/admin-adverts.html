@@ -94,6 +94,25 @@
           <label for="advertLinkUrl">Link URL (optional)</label>
           <input id="advertLinkUrl" type="url" placeholder="https://…" />
         </div>
+        <div class="lfield">
+          <label for="advertAdvertiser">Advertiser (brand) <span class="adm-req">*</span></label>
+          <input id="advertAdvertiser" type="text" maxlength="120" placeholder="e.g. Go Ape" />
+        </div>
+        <div class="lfield">
+          <label for="advertAlt">Describe the image <span class="adm-req">*</span></label>
+          <input id="advertAlt" type="text" maxlength="200" placeholder="e.g. Go Ape treetop course - 15% off for members" />
+          <p class="adm-hint">Read aloud to members using screen readers, and shown if the image can't load.</p>
+        </div>
+        <div class="lfield">
+          <label for="advertOfferSlug">Open a Logicard offer page (recommended)</label>
+          <select id="advertOfferSlug"><option value="">— None: use the website link above —</option></select>
+          <p class="adm-hint">Members land on the offer's Logicard page (e.g. logicard.co.uk/go-ape) with their code. Leave as None to send them to the website link instead.</p>
+        </div>
+        <div class="lfield" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><label for="advertStarts">Start date (optional)</label><input id="advertStarts" type="date" /></div>
+          <div><label for="advertEnds">End date (optional)</label><input id="advertEnds" type="date" /></div>
+        </div>
+        <p class="adm-hint" style="margin:-4px 0 10px;">Outside these dates the advert is hidden automatically.</p>
         <div class="lfield" style="margin-bottom:14px;">
           <label for="advertSortOrder">Sort Order</label>
           <input id="advertSortOrder" type="number" value="0" />

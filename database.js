@@ -293,6 +293,18 @@ async function initDb() {
   // Clicking a partner logo goes to /deals/:slug — a page showing that
   // brand's live offers (or a "coming soon" state if there aren't any yet).
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS slug TEXT`);
+  // Brand page fields (2026-09): /deals/<slug> shows these.
+  await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS about_brand TEXT`);
+  await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS category TEXT`);
+  await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS banner_url TEXT`);
+  await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS website_url TEXT`);
+  // Advert fields (2026-09): who it's for, image description, schedule,
+  // and optionally a Logicard offer page to open instead of an outside link.
+  await pool.query(`ALTER TABLE adverts ADD COLUMN IF NOT EXISTS advertiser TEXT`);
+  await pool.query(`ALTER TABLE adverts ADD COLUMN IF NOT EXISTS alt_text TEXT`);
+  await pool.query(`ALTER TABLE adverts ADD COLUMN IF NOT EXISTS starts_on DATE`);
+  await pool.query(`ALTER TABLE adverts ADD COLUMN IF NOT EXISTS ends_on DATE`);
+  await pool.query(`ALTER TABLE adverts ADD COLUMN IF NOT EXISTS offer_slug TEXT`);
   await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS partner_brands_slug_idx ON partner_brands (slug) WHERE slug IS NOT NULL`);
 
   // Headlines pulled periodically from curated UK logistics/freight trade
@@ -516,6 +528,11 @@ function toAdvert(row) {
     isActive:   row.is_active,
     sortOrder:  row.sort_order,
     clickCount: row.click_count,
+    advertiser: row.advertiser,
+    altText:    row.alt_text,
+    startsOn:   row.starts_on ? new Date(row.starts_on).toISOString().slice(0, 10) : null,
+    endsOn:     row.ends_on ? new Date(row.ends_on).toISOString().slice(0, 10) : null,
+    offerSlug:  row.offer_slug,
     createdAt:  row.created_at,
     updatedAt:  row.updated_at,
   };
@@ -527,6 +544,10 @@ function toPartnerBrand(row) {
     id:        row.id,
     brandName: row.brand_name,
     logoUrl:   row.logo_url,
+    aboutBrand: row.about_brand,
+    category:  row.category,
+    bannerUrl: row.banner_url,
+    websiteUrl: row.website_url,
     slug:      row.slug,
     isActive:  row.is_active,
     sortOrder: row.sort_order,
@@ -753,7 +774,10 @@ async function incrementOfferClicks(id) {
 // ── Adverts (member-dashboard promo tiles) ────────────────────────
 async function getActiveAdverts() {
   const r = await pool.query(
-    'SELECT * FROM adverts WHERE is_active = true ORDER BY sort_order ASC, created_at DESC, id ASC'
+    `SELECT * FROM adverts WHERE is_active = true
+       AND (starts_on IS NULL OR starts_on <= CURRENT_DATE)
+       AND (ends_on IS NULL OR ends_on >= CURRENT_DATE)
+     ORDER BY sort_order ASC, created_at DESC, id ASC`
   );
   return r.rows.map(toAdvert);
 }
@@ -769,26 +793,29 @@ async function getAdvertById(id) {
 }
 
 async function createAdvert(data) {
-  const { title, imageUrl, linkUrl = null, isActive = true, sortOrder = 0 } = data;
+  const { title, imageUrl, linkUrl = null, isActive = true, sortOrder = 0,
+          advertiser = null, altText = null, startsOn = null, endsOn = null, offerSlug = null } = data;
 
   const r = await pool.query(`
-    INSERT INTO adverts (title, image_url, link_url, is_active, sort_order)
-    VALUES ($1,$2,$3,$4,$5)
+    INSERT INTO adverts (title, image_url, link_url, is_active, sort_order, advertiser, alt_text, starts_on, ends_on, offer_slug)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     RETURNING *
-  `, [title, imageUrl, linkUrl, !!isActive, sortOrder]);
+  `, [title, imageUrl, linkUrl, !!isActive, sortOrder, advertiser, altText, startsOn || null, endsOn || null, offerSlug || null]);
 
   return toAdvert(r.rows[0]);
 }
 
 async function updateAdvert(id, data) {
-  const { title, imageUrl, linkUrl = null, isActive = true, sortOrder = 0 } = data;
+  const { title, imageUrl, linkUrl = null, isActive = true, sortOrder = 0,
+          advertiser = null, altText = null, startsOn = null, endsOn = null, offerSlug = null } = data;
 
   const r = await pool.query(`
     UPDATE adverts SET
-      title = $1, image_url = $2, link_url = $3, is_active = $4, sort_order = $5, updated_at = NOW()
+      title = $1, image_url = $2, link_url = $3, is_active = $4, sort_order = $5,
+      advertiser = $7, alt_text = $8, starts_on = $9, ends_on = $10, offer_slug = $11, updated_at = NOW()
     WHERE id = $6
     RETURNING *
-  `, [title, imageUrl, linkUrl, !!isActive, sortOrder, id]);
+  `, [title, imageUrl, linkUrl, !!isActive, sortOrder, id, advertiser, altText, startsOn || null, endsOn || null, offerSlug || null]);
 
   return toAdvert(r.rows[0]);
 }
@@ -821,26 +848,29 @@ async function getPartnerBrandById(id) {
 }
 
 async function createPartnerBrand(data) {
-  const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0 } = data;
+  const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0,
+          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null } = data;
 
   const r = await pool.query(`
-    INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order)
-    VALUES ($1,$2,$3,$4,$5)
+    INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, banner_url, website_url)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
     RETURNING *
-  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, aboutBrand, category, bannerUrl || null, websiteUrl || null]);
 
   return toPartnerBrand(r.rows[0]);
 }
 
 async function updatePartnerBrand(id, data) {
-  const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0 } = data;
+  const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0,
+          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null } = data;
 
   const r = await pool.query(`
     UPDATE partner_brands SET
-      brand_name = $1, logo_url = $2, slug = $3, is_active = $4, sort_order = $5, updated_at = NOW()
+      brand_name = $1, logo_url = $2, slug = $3, is_active = $4, sort_order = $5,
+      about_brand = $7, category = $8, banner_url = $9, website_url = $10, updated_at = NOW()
     WHERE id = $6
     RETURNING *
-  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id, aboutBrand, category, bannerUrl || null, websiteUrl || null]);
 
   return toPartnerBrand(r.rows[0]);
 }

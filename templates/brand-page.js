@@ -4,38 +4,50 @@ function escapeHtml(str) {
   return String(str ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 }
 
-// Reached by clicking a logo on the Partnerships page's "Our Partners"
-// grid. Shows whatever live offers exist for that brand (matched by
-// merchant name — same public-teaser shape as the homepage's Featured
-// Deals, no voucher code or affiliate URL); if there aren't any yet, a
-// "coming soon" state instead of a dead end. Flat navy/gold throughout,
-// per BRAND.md.
-function renderBrandPage({ brand, offers }) {
-  const title       = `${brand.brandName} — Logicard Member Deals`;
-  const description = offers.length
-    ? `Exclusive ${brand.brandName} discounts for Logicard members — the UK's discount card for logistics workers.`
-    : `${brand.brandName} is a confirmed Logicard partner — their member discount is coming soon.`;
-  const canonical = `https://logicard.co.uk/deals/${brand.slug}`;
+// Partner brand page (/deals/<slug>), reached from the partner logos on the
+// Partnerships page and homepage banner. Shows the brand (logo, banner,
+// category, "About") and its live offers as the standard deal cards, each
+// with "Visit <brand> page" (the offer's own Logicard page) and "Get deal"
+// (guests -> sign up, unverified -> verify, members -> straight to the code).
+// If the brand has no live offer yet it shows a "coming soon" panel.
+function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
+  const name = brand.brandName;
+  const title = `${name} — Logicard Member Deals`;
+  const description = brand.aboutBrand
+    ? `${brand.aboutBrand.slice(0, 150)} Exclusive discounts for Logicard members.`
+    : offers.length
+      ? `Exclusive ${name} discounts for Logicard members — the UK's discount card for logistics workers.`
+      : `${name} is a confirmed Logicard partner — their member discount is coming soon.`;
+  const canonical = `https://logicard.co.uk/deals/${escapeHtml(brand.slug)}`;
+  const safeImg = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '');
+  const getHref = (slug) => viewerState === 'member' ? `/${slug}#redeem` : viewerState === 'unverified' ? '/verify' : `/signup.html?src=deal-${slug}`;
 
-  const offerCards = offers.map(o => `
-        <div class="bp-offer-card">
-          <div class="bp-offer-badges">
-            ${o.category ? `<span class="bp-badge">${escapeHtml(o.category)}</span>` : ''}
-            <span class="bp-badge bp-badge--exclusive">Exclusive to Logicard</span>
+  const cards = offers.filter(o => /^[a-z0-9-]+$/i.test(o.slug || '')).map(o => `
+        <div class="dc">
+          <a class="dc-img" href="/${escapeHtml(o.slug)}" aria-label="${escapeHtml(o.merchantName)} deal page">${safeImg(o.imageUrl) ? `<img src="${escapeHtml(o.imageUrl)}" alt="${escapeHtml(o.merchantName)}" loading="lazy" />` : escapeHtml((name || '?').charAt(0))}${safeImg(o.logoUrl) ? `<span class="dc-logo"><img src="${escapeHtml(o.logoUrl)}" alt="${escapeHtml(name)} logo" loading="lazy" onerror="this.parentNode.remove()" /></span>` : ''}</a>
+          <div class="dc-body">
+            <span class="dc-brand">${escapeHtml(o.merchantName || name)}</span>
+            <h3>${escapeHtml(o.discountText || o.title)}</h3>
+            ${o.category ? `<span class="dc-cat">${escapeHtml(o.category)}</span>` : ''}
+            <div class="dc-btns">
+              <a class="dc-visit" href="/${escapeHtml(o.slug)}">Visit ${escapeHtml(o.merchantName || name)} page</a>
+              <a class="dc-get" href="${getHref(escapeHtml(o.slug))}" data-get-deal="${escapeHtml(o.slug)}">Get deal <span aria-hidden="true">&rarr;</span></a>
+            </div>
           </div>
-          <p class="bp-offer-title">${escapeHtml(o.title)}</p>
-          ${o.discountText ? `<p class="bp-offer-discount">${escapeHtml(o.discountText)}</p>` : ''}
-          <a href="/signup.html" class="btn-primary">Join to Claim<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
         </div>`).join('');
 
-  const body = offers.length
-    ? `<div class="bp-offers">${offerCards}</div>`
-    : `
-      <div class="bp-soon-card">
-        <h2>Deal coming soon</h2>
-        <p>${escapeHtml(brand.brandName)} is a confirmed Logicard partner — their member discount isn't live yet. Join today (first year free, then £10/year) and we'll have it ready for you the moment it lands.</p>
-        <a href="/signup.html" class="btn-primary">Join Logicard Free<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  const offersHtml = cards
+    ? `<h2 class="t-h2">${escapeHtml(name)} <span class="gold">Member Deals</span></h2>
+      <div class="bp-grid">${cards}
+      </div>`
+    : `<div class="t-card t-card-gold bp-soon">
+        <h2>Deal <span class="gold">Coming Soon</span></h2>
+        <p>${escapeHtml(name)} is a confirmed Logicard partner — their member discount isn't live yet. Join today (first year free, then £10/year) and it'll be ready for you the moment it lands.</p>
+        <div class="t-btns"><a href="/signup.html" class="t-btn t-btn-gold">Join Logicard</a></div>
       </div>`;
+
+  const website = viewerState === 'member' && /^https:\/\//i.test(brand.websiteUrl || '')
+    ? `<p class="bp-web"><a class="t-link" href="${escapeHtml(brand.websiteUrl)}" target="_blank" rel="noopener nofollow">Visit the ${escapeHtml(name)} website</a></p>` : '';
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -59,71 +71,66 @@ function renderBrandPage({ brand, offers }) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=9" />
+  <link rel="stylesheet" href="/footer.css?v=2" />
+  <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --navy: #000000; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
-      --white: #ffffff; --text-muted: #5b6577;
-    }
-    body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
-    .bp-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--orange); color: var(--navy);
-      padding: 16px 34px; font-weight: 900; font-size: 15px; letter-spacing: 0.3px;
-      text-decoration: none; border-radius: 4px;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
-
-    .bp-hero { padding: 72px 20px 56px; text-align: center; }
-    .bp-logo-card {
-      width: 220px; height: 130px; margin: 0 auto 28px; background: var(--white);
-      border-radius: 16px; display: flex; align-items: center; justify-content: center;
-      padding: 20px; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
-    }
-    .bp-logo-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .bp-hero h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 900; letter-spacing: -0.8px; margin-bottom: 10px; }
-    .bp-hero p { font-size: 16px; color: rgba(255,255,255,0.9); }
-
-    .bp-offers { padding: 0 24px 88px; max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-    /* Gold band around the offers/coming-soon content — alternates with
-       the navy hero above and navy back-link area below, matching the
-       site-wide section-banding rule (homepage is the reference). */
-    .bp-gold-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; padding: 8px 0 56px; }
-    .bp-offer-card { background: rgba(255,255,255,0.9); border: 1px solid rgba(10,10,10,0.1); border-radius: 16px; padding: 28px; }
-    .bp-offer-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .bp-badge { font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px; background: rgba(10,10,10,0.06); color: rgba(10,10,10,0.75); padding: 5px 10px; border-radius: 100px; }
-    .bp-badge--exclusive { background: var(--navy); color: var(--orange); }
-    .bp-offer-title { font-size: 16px; color: rgba(10,10,10,0.85); line-height: 1.5; margin-bottom: 10px; }
-    .bp-offer-discount { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 20px; }
-
-    .bp-soon-card {
-      max-width: 560px; margin: 0 auto 88px; padding: 0 24px; text-align: center;
-    }
-    .bp-soon-card h2 { font-size: 24px; font-weight: 900; margin-bottom: 14px; letter-spacing: -0.3px; color: var(--navy); }
-    .bp-soon-card p { font-size: 15.5px; color: rgba(10,10,10,0.7); line-height: 1.7; margin-bottom: 28px; }
-
-    .bp-back { display: block; text-align: center; padding: 0 24px 56px; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 600; }
-    .bp-back:hover { color: var(--white); }
+    .bp-banner { border-radius: 18px; overflow: hidden; background: #111; border: 1px solid var(--line); margin-bottom: 22px; aspect-ratio: 16 / 6; display: grid; place-items: center; }
+    .bp-banner img { width: 100%; height: 100%; object-fit: contain; } /* never crop brand artwork */
+    .bp-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .bp-logo { background: #fff; border-radius: 14px; padding: 10px 14px; height: 76px; min-width: 76px; max-width: 200px; display: grid; place-items: center; }
+    .bp-logo img { max-height: 56px; max-width: 100%; object-fit: contain; }
+    .bp-head h1 { font-size: clamp(30px, 7vw, 52px); }
+    .bp-cat { display: inline-block; margin-top: 6px; font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+    .bp-about { color: var(--muted); font-size: 17px; line-height: 1.7; max-width: 760px; margin-bottom: 8px; white-space: pre-line; }
+    .bp-web { margin-top: 10px; }
+    .bp-grid { display: grid; gap: 18px; }
+    .bp-soon { max-width: 640px; }
+    .bp-soon h2 { font-size: 24px; margin-bottom: 8px; }
+    .bp-soon p { margin-bottom: 16px; }
+    .dc { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+    .dc-img { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #111; overflow: hidden; font: 400 60px var(--display); color: var(--gold); text-decoration: none; }
+    .dc-img > img { width: 100%; height: 100%; object-fit: contain; }
+    .dc-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+    .dc-logo img { max-height: 34px; max-width: 100%; object-fit: contain; }
+    .dc-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .dc-brand { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+    .dc-body h3 { font-size: 21px; margin: 0; }
+    .dc-cat { align-self: flex-start; font: 600 13px var(--body); border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+    .dc-btns { display: grid; gap: 8px; margin-top: auto; padding-top: 8px; }
+    .dc-btns a { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; border-radius: 10px; padding: 12px 14px; font: 400 15px/1.2 var(--display); text-decoration: none; }
+    .dc-visit { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); }
+    .dc-get { background: var(--gold); color: #111; }
+    @media (min-width: 760px) { .bp-grid { grid-template-columns: repeat(3, 1fr); } }
   </style>
 </head>
 <body>
 
   <!-- SHARED_NAV -->
 
-  <div class="bp-hero">
-    <div class="bp-logo-card"><img src="${escapeHtml(brand.logoUrl)}" alt="${escapeHtml(brand.brandName)}" /></div>
-    <h1>${escapeHtml(brand.brandName)}</h1>
-    <p>${offers.length ? 'Exclusive member deals, only for Logicard members.' : 'Confirmed Logicard partner — deal coming soon.'}</p>
-  </div>
-
-  <section class="bp-gold-band">
-  ${body}
+  <section class="t-section">
+    <div class="wrap">
+      ${safeImg(brand.bannerUrl) ? `<div class="bp-banner"><img src="${escapeHtml(brand.bannerUrl)}" alt="${escapeHtml(name)}" /></div>` : ''}
+      <div class="bp-head">
+        <div class="bp-logo"><img src="${escapeHtml(brand.logoUrl)}" alt="${escapeHtml(name)} logo" onerror="this.replaceWith(document.createTextNode(${escapeHtml(JSON.stringify(name))}))" /></div>
+        <div>
+          <h1>${escapeHtml(name)}</h1>
+          ${brand.category ? `<span class="bp-cat">${escapeHtml(brand.category)}</span>` : ''}
+        </div>
+      </div>
+      ${brand.aboutBrand ? `<p class="bp-about">${escapeHtml(brand.aboutBrand)}</p>` : `<p class="bp-about">${offers.length ? 'Exclusive member deals, only for Logicard members.' : 'Confirmed Logicard partner — deal coming soon.'}</p>`}
+      ${website}
+    </div>
   </section>
 
-  <a href="/partnerships.html" class="bp-back">&larr; Back to Partnerships</a>
+  <section class="t-section" style="padding-top:0">
+    <div class="wrap">
+      ${offersHtml}
+      <p style="margin-top:28px"><a class="t-link" href="/partnerships.html">&larr; All partners</a></p>
+    </div>
+  </section>
 
+  <!-- SHARED_FOOTER -->
+  <script src="/deal-links.js?v=2"></script>
 </body>
 </html>`;
 }

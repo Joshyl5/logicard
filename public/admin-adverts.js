@@ -67,6 +67,11 @@ function openModal(id) {
       document.getElementById('advertImageUrl').value  = advert.imageUrl || '';
       document.getElementById('advertLinkUrl').value   = advert.linkUrl || '';
       document.getElementById('advertSortOrder').value = advert.sortOrder || 0;
+      document.getElementById('advertAdvertiser').value = advert.advertiser || '';
+      document.getElementById('advertAlt').value        = advert.altText || '';
+      document.getElementById('advertOfferSlug').value  = advert.offerSlug || '';
+      document.getElementById('advertStarts').value     = advert.startsOn || '';
+      document.getElementById('advertEnds').value       = advert.endsOn || '';
       document.getElementById('advertIsActive').checked = !!advert.isActive;
     }
   } else {
@@ -92,6 +97,11 @@ advertForm.addEventListener('submit', async e => {
     imageUrl:  document.getElementById('advertImageUrl').value.trim(),
     linkUrl:   document.getElementById('advertLinkUrl').value.trim() || null,
     sortOrder: Number(document.getElementById('advertSortOrder').value) || 0,
+    advertiser: document.getElementById('advertAdvertiser').value.trim() || null,
+    altText:    document.getElementById('advertAlt').value.trim() || null,
+    offerSlug:  document.getElementById('advertOfferSlug').value || null,
+    startsOn:   document.getElementById('advertStarts').value || null,
+    endsOn:     document.getElementById('advertEnds').value || null,
     isActive:  document.getElementById('advertIsActive').checked,
   };
 
@@ -161,3 +171,21 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+
+// ── Fill the "Open a Logicard offer page" list from the live offers ──
+(async function () {
+  const sel = document.getElementById('advertOfferSlug');
+  if (!sel) return;
+  try {
+    const res = await fetch('/api/admin/offers');
+    if (!res.ok) return;
+    const offers = await res.json();
+    offers.filter(o => o.slug).sort((a, b) => String(a.merchantName).localeCompare(String(b.merchantName))).forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o.slug;
+      opt.textContent = o.merchantName + ' — ' + (o.discountText || o.title) + ' (/' + o.slug + ')';
+      sel.appendChild(opt);
+    });
+  } catch { /* list stays with just "None" */ }
+})();

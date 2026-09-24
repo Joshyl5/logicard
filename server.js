@@ -647,9 +647,17 @@ app.get('/deals/:slug', async (req, res) => {
     const brand = await getPartnerBrandBySlug(req.params.slug);
     if (!brand) return res.status(404).send(renderBrandNotFound().replace('<!-- SHARED_NAV -->', navFor(req, {})));
 
-    const offers = await getActiveOffersByMerchant(brand.brandName);
-    const publicOffers = offers.map(({ id, title, category, discountText }) => ({ id, title, category, discountText }));
-    res.send(renderBrandPage({ brand, offers: publicOffers }).replace('<!-- SHARED_NAV -->', navFor(req, {})));
+    const offers = (await getActiveOffersByMerchant(brand.brandName)).filter(o => !o.targetGender && offerLive(o));
+    const publicOffers = offers.map(({ id, title, category, discountText, merchantName, imageUrl, logoUrl, slug }) =>
+      ({ id, title, category, discountText, merchantName, imageUrl, logoUrl: logoUrl || brand.logoUrl, slug }));
+    let viewerState = 'guest';
+    if (req.session && req.session.membershipNumber) {
+      const m = await getMemberByNumber(req.session.membershipNumber);
+      viewerState = m && m.verified ? 'member' : m ? 'unverified' : 'guest';
+    }
+    res.send(renderBrandPage({ brand, offers: publicOffers, viewerState })
+      .replace('<!-- SHARED_NAV -->', navFor(req, {}))
+      .replace('<!-- SHARED_FOOTER -->', renderFooter()));
   } catch (err) {
     console.error('Brand page error:', err.message);
     res.status(500).send('Something went wrong loading this page. Please try again.');
@@ -1252,6 +1260,14 @@ function validAdvertPayload(body) {
   if (!title || !String(title).trim()) return 'Title is required.';
   if (!imageUrl || !String(imageUrl).trim()) return 'Image URL is required.';
   if (linkUrl && !/^https?:\/\//i.test(linkUrl)) return 'Link URL must start with http:// or https://.';
+  if (!body.advertiser || !String(body.advertiser).trim()) return 'Advertiser (brand) name is required.';
+  if (!body.altText || !String(body.altText).trim() || String(body.altText).length > 200) return 'Please describe the image in up to 200 characters (read aloud to people using screen readers).';
+  const day = /^\d{4}-\d{2}-\d{2}$/;
+  if (body.startsOn && !day.test(body.startsOn)) return 'Start date must be a valid date.';
+  if (body.endsOn && !day.test(body.endsOn)) return 'End date must be a valid date.';
+  if (body.startsOn && body.endsOn && body.startsOn > body.endsOn) return 'The end date must be on or after the start date.';
+  if (body.offerSlug && !/^[a-z0-9-]{1,80}$/.test(body.offerSlug)) return 'Choose a valid Logicard offer page.';
+  if (!linkUrl && !body.offerSlug) return 'Choose where the advert goes: a Logicard offer page or a website link.';
   return null;
 }
 
@@ -1355,6 +1371,11 @@ function validPartnerBrandPayload(body) {
   if (!/^https?:\/\//i.test(logoUrl) && !logoUrl.startsWith('/')) {
     return 'Logo URL must start with http://, https://, or / (from Upload Logo).';
   }
+  if (!body.aboutBrand || !String(body.aboutBrand).trim()) return 'Please add a short "About the brand" paragraph for the brand page.';
+  if (String(body.aboutBrand).length > 1500) return '"About the brand" is too long (max 1,500 characters).';
+  if (!body.category || !OFFER_CATEGORIES.includes(body.category)) return 'Please choose a category for the brand.';
+  if (body.bannerUrl && !/^(https:\/\/|\/local-uploads\/)/i.test(body.bannerUrl)) return 'Banner image must be an https:// link or an uploaded file.';
+  if (body.websiteUrl && !/^https:\/\/[^\s]+$/i.test(body.websiteUrl)) return 'Website must be a full https:// link.';
   if (slug && !/^[a-z0-9-]+$/.test(slug)) {
     return 'Slug can only contain lowercase letters, numbers and hyphens.';
   }
@@ -2236,10 +2257,12 @@ app.get('/api/adverts/:id/go', requireAuth, async (req, res) => {
 
   const advert = await getAdvertById(id);
   if (!advert || !advert.isActive) return res.status(404).send('This advert is no longer available.');
-  if (!advert.linkUrl) return res.status(404).send('This advert has no link.');
+  // A Logicard offer page wins over an outside link
+  const dest = advert.offerSlug && /^[a-z0-9-]{1,80}$/.test(advert.offerSlug) ? '/' + advert.offerSlug : advert.linkUrl;
+  if (!dest) return res.status(404).send('This advert has no link.');
 
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.redirect(302, advert.linkUrl);
+  res.redirect(302, dest);
 
   incrementAdvertClicks(id).catch(err => console.error('Advert click tracking failed:', err.message));
 });

@@ -145,6 +145,10 @@ function openModal(id) {
       document.getElementById('brandName').value      = brand.brandName || '';
       document.getElementById('brandLogoUrl').value   = brand.logoUrl || '';
       document.getElementById('brandSortOrder').value = brand.sortOrder || 0;
+      document.getElementById('brandCategory').value  = brand.category || '';
+      document.getElementById('brandAbout').value     = brand.aboutBrand || '';
+      document.getElementById('brandBannerUrl').value = brand.bannerUrl || '';
+      document.getElementById('brandWebsite').value   = brand.websiteUrl || '';
       document.getElementById('brandIsActive').checked = !!brand.isActive;
       brandSlugInput.value = brand.slug || '';
       slugTouched = !!brand.slug; // don't clobber an existing slug on name edit
@@ -174,6 +178,10 @@ brandForm.addEventListener('submit', async e => {
     logoUrl:   document.getElementById('brandLogoUrl').value.trim(),
     slug:      brandSlugInput.value.trim() || null,
     sortOrder: Number(document.getElementById('brandSortOrder').value) || 0,
+    category:   document.getElementById('brandCategory').value || null,
+    aboutBrand: document.getElementById('brandAbout').value.trim() || null,
+    bannerUrl:  document.getElementById('brandBannerUrl').value.trim() || null,
+    websiteUrl: document.getElementById('brandWebsite').value.trim() || null,
     isActive:  document.getElementById('brandIsActive').checked,
   };
 
@@ -243,3 +251,29 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+
+// ── Banner image upload (same admin upload endpoint as the logo) ──
+(function () {
+  const btn = document.getElementById('brandBannerUploadBtn');
+  if (!btn) return;
+  btn.addEventListener('click', async () => {
+    const file = document.getElementById('brandBannerFile').files[0];
+    const status = document.getElementById('brandBannerStatus');
+    if (!file) { status.textContent = 'Choose an image file first.'; return; }
+    btn.disabled = true; btn.textContent = 'Uploading…';
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/admin/partner-brands/upload', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (!res.ok) { status.textContent = json.error || 'Upload failed.'; return; }
+      document.getElementById('brandBannerUrl').value = json.url;
+      status.textContent = 'Uploaded — remember to press Save.';
+    } catch {
+      status.textContent = 'Network error — please try again.';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Upload';
+    }
+  });
+})();
