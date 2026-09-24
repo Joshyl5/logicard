@@ -105,6 +105,11 @@ form.addEventListener('submit', async e => {
     return;
   }
 
+  // Which deal or guide sent them here (e.g. ?src=deal-buture), for the
+  // admin Analytics sign-up report. Travels with the sign-up details only.
+  const src = new URLSearchParams(window.location.search).get('src');
+  if (src && /^(deal|guide)-[a-z0-9-]{1,80}$/.test(src)) data.source = src;
+
   const promoCode = (data.promoCode || '').toUpperCase().trim();
 
   if (promoCode && promoCode !== 'FREE') {

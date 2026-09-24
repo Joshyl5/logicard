@@ -76,13 +76,13 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
   } else {
     redeem = `
         <div class="op-code-box"><span class="op-code op-code-masked">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span><span class="op-code-note">Join to unlock your code</span></div>
-        <a href="/signup.html" class="op-claim-btn">Join Logicard to unlock ${arrowIcon}</a>
+        <a href="/signup.html?src=deal-${escapeHtml(offer.slug)}" class="op-claim-btn" data-get-deal="${escapeHtml(offer.slug)}">Join Logicard to unlock ${arrowIcon}</a>
         <p class="op-small">First year free, then £10/year. Already a member? <a href="/login.html?next=${back}">Log in</a></p>`;
   }
 
   // "Get deal" on related cards: guests -> sign up, unverified -> verify,
   // members -> straight to that deal's code.
-  const getHref = (slug) => viewer.state === 'member' ? `/${slug}#redeem` : viewer.state === 'unverified' ? '/verify' : '/signup.html';
+  const getHref = (slug) => viewer.state === 'member' ? `/${slug}#redeem` : viewer.state === 'unverified' ? '/verify' : `/signup.html?src=deal-${slug}`;
   const safeImg = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '');
   const relatedHtml = related.length ? `
     <section class="op-related">
@@ -97,7 +97,7 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
             ${r.category ? `<span class="dc-cat">${escapeHtml(r.category)}</span>` : ''}
             <div class="dc-btns">
               <a class="dc-visit" href="/${escapeHtml(r.slug)}">Visit ${escapeHtml(r.merchantName)} page</a>
-              <a class="dc-get" href="${getHref(escapeHtml(r.slug))}">Get deal <span aria-hidden="true">&rarr;</span></a>
+              <a class="dc-get" href="${getHref(escapeHtml(r.slug))}" data-get-deal="${escapeHtml(r.slug)}">Get deal <span aria-hidden="true">&rarr;</span></a>
             </div>
           </div>
         </div>`).join('')}
@@ -256,6 +256,7 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
 
   <!-- SHARED_FOOTER -->
 
+  <script src="/deal-links.js?v=2"></script>
   <script>
     (function () {
       function wireCopy(btn) {
@@ -263,6 +264,7 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
         btn.addEventListener('click', function () {
           var code = btn.getAttribute('data-code');
           var label = btn.querySelector('span');
+          if (window.LogicardDeal) LogicardDeal.track('copy_code', ${JSON.stringify(String(offer.slug))});
           function done(ok) { if (label) label.textContent = ok ? 'Copied!' : 'Copy failed'; setTimeout(function () { if (label) label.textContent = 'Copy'; }, 2000); }
           if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(code).then(function () { done(true); }, function () { done(false); });
           else { var t = document.createElement('textarea'); t.value = code; document.body.appendChild(t); t.select(); var ok = false; try { ok = document.execCommand('copy'); } catch (e) {} t.remove(); done(ok); }

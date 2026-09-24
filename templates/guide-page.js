@@ -151,7 +151,8 @@ function renderGuidePage(guide) {
         <div class="g-body">
           ${renderGuideBody(guide.body)}
         </div>
-        <p style="margin-top:30px"><a class="t-link" href="/guides">&larr; All guides</a></p>
+        <div class="g-disclose" style="margin-top:30px"><strong>Not a member yet?</strong> Logicard gives UK logistics workers exclusive discounts - first year free, then £10/year.<br /><a class="t-btn t-btn-gold g-btn" style="margin:12px 0 0" href="/signup.html?src=guide-${escapeHtml(guide.slug)}">Join Logicard</a></div>
+        <p style="margin-top:24px"><a class="t-link" href="/guides">&larr; All guides</a></p>
       </article>
     </div>
   </section>

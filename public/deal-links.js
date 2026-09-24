@@ -10,7 +10,7 @@
   function target(slug) {
     if (state === 'member') return '/' + slug + '#redeem';
     if (state === 'unverified') return '/verify';
-    return '/signup.html';
+    return '/signup.html?src=deal-' + slug;
   }
   function update() {
     document.querySelectorAll('a[data-get-deal]').forEach(function (a) {
@@ -27,5 +27,18 @@
       .catch(function () { return { state: 'guest' }; })
       .then(function (d) { state = d.state || 'guest'; update(); });
   }
-  window.LogicardDeal = { apply: apply };
+  // Count "Get deal" clicks for admin > Analytics (who clicked is worked out
+  // on the server from the session, not sent from here).
+  function track(type, slug) {
+    try {
+      var body = JSON.stringify({ type: type, target: slug });
+      if (navigator.sendBeacon) navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
+      else fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true });
+    } catch (e) { /* never block the click */ }
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[data-get-deal]');
+    if (a && /^[a-z0-9-]+$/i.test(a.getAttribute('data-get-deal'))) track('get_deal', a.getAttribute('data-get-deal'));
+  });
+  window.LogicardDeal = { apply: apply, track: track };
 })();

@@ -390,6 +390,23 @@ async function initDb() {
     )
   `);
   await pool.query('CREATE INDEX IF NOT EXISTS link_clicks_link_idx ON link_clicks (link_id, clicked_at)');
+
+  // Site analytics (admin > Analytics). One row per event, no cookies and
+  // no IP/browser details. type: view_offer | view_guide | view_page |
+  // get_deal | copy_code | signup. target: offer/guide slug, page path, or
+  // for signups the source ("deal-buture", "guide-x" or "direct").
+  // actor: 'guest' | 'unverified' | 'member'.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS site_events (
+      id                 BIGSERIAL PRIMARY KEY,
+      type               TEXT NOT NULL,
+      target             TEXT NOT NULL,
+      actor              TEXT,
+      membership_number  INTEGER,
+      created_at         TIMESTAMPTZ DEFAULT NOW()
+    )
+  `);
+  await pool.query('CREATE INDEX IF NOT EXISTS site_events_type_idx ON site_events (type, created_at)');
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -1484,6 +1501,83 @@ async function getLinkClickReport(linkId) {
   };
 }
 
+
+// ── Site analytics ────────────────────────────────────────────────
+async function recordSiteEvent(type, target, actor = null, membershipNumber = null) {
+  await pool.query(
+    'INSERT INTO site_events (type, target, actor, membership_number) VALUES ($1, $2, $3, $4)',
+    [type, String(target).slice(0, 120), actor, membershipNumber]
+  );
+}
+
+// Everything the Analytics page shows, for the last `days` days.
+async function getAnalytics(days = 30) {
+  const d = Math.min(Math.max(parseInt(days, 10) || 30, 1), 3650);
+  const since = `NOW() - ($1::int * INTERVAL '1 day')`;
+  const [offers, guides, pages, signups, links] = await Promise.all([
+    pool.query(`
+      SELECT o.id, o.slug, o.merchant_name, o.title, o.category, o.is_active,
+        COUNT(e.*) FILTER (WHERE e.type = 'view_offer')                          AS views,
+        COUNT(e.*) FILTER (WHERE e.type = 'get_deal' AND e.actor = 'member')     AS get_member,
+        COUNT(e.*) FILTER (WHERE e.type = 'get_deal' AND e.actor <> 'member')    AS get_guest,
+        COUNT(e.*) FILTER (WHERE e.type = 'copy_code')                           AS copies,
+        (SELECT COUNT(*) FROM offer_redemptions r WHERE r.offer_id = o.id AND r.redeemed_at > ${since}) AS site_clicks,
+        (SELECT COUNT(*) FROM site_events s WHERE s.type = 'signup' AND s.target = 'deal-' || o.slug AND s.created_at > ${since}) AS signups
+      FROM offers o
+      LEFT JOIN site_events e ON e.target = o.slug AND e.type IN ('view_offer','get_deal','copy_code') AND e.created_at > ${since}
+      GROUP BY o.id ORDER BY views DESC, o.merchant_name`, [d]),
+    pool.query(`
+      SELECT g.id, g.slug, g.title, g.category, g.is_published,
+        (SELECT COUNT(*) FROM site_events e WHERE e.type = 'view_guide' AND e.target = g.slug AND e.created_at > ${since}) AS views,
+        (SELECT COUNT(*) FROM link_clicks c WHERE c.from_path = '/guides/' || g.slug AND c.clicked_at > ${since}) AS link_clicks,
+        (SELECT COUNT(*) FROM site_events s WHERE s.type = 'signup' AND s.target = 'guide-' || g.slug AND s.created_at > ${since}) AS signups
+      FROM guides g ORDER BY views DESC, g.title`, [d]),
+    pool.query(`SELECT target, COUNT(*) AS n FROM site_events WHERE type = 'view_page' AND created_at > ${since}
+                GROUP BY target ORDER BY n DESC`, [d]),
+    pool.query(`SELECT target, COUNT(*) AS n FROM site_events WHERE type = 'signup' AND created_at > ${since}
+                GROUP BY target ORDER BY n DESC`, [d]),
+    pool.query(`SELECT l.slug, l.label, l.destination_url,
+                  COUNT(c.*) AS clicks, COUNT(c.membership_number) AS member_clicks
+                FROM tracked_links l LEFT JOIN link_clicks c ON c.link_id = l.id AND c.clicked_at > ${since}
+                GROUP BY l.id ORDER BY clicks DESC`, [d]),
+  ]);
+  const n = (v) => Number(v || 0);
+  const offerRows = offers.rows.map(r => ({
+    id: r.id, slug: r.slug, brand: r.merchant_name, title: r.title, category: r.category || 'Uncategorised', active: r.is_active,
+    views: n(r.views), getDealGuests: n(r.get_guest), getDealMembers: n(r.get_member),
+    codeCopies: n(r.copies), siteClicks: n(r.site_clicks), signups: n(r.signups),
+  }));
+  // Category totals are the sum of their offers
+  const cats = {};
+  offerRows.forEach(o => {
+    const c = cats[o.category] || (cats[o.category] = { category: o.category, offers: 0, views: 0, getDealGuests: 0, getDealMembers: 0, codeCopies: 0, siteClicks: 0, signups: 0 });
+    c.offers++; ['views', 'getDealGuests', 'getDealMembers', 'codeCopies', 'siteClicks', 'signups'].forEach(k => { c[k] += o[k]; });
+  });
+  return {
+    days: d,
+    offers: offerRows,
+    categories: Object.values(cats).sort((a, b) => (b.views + b.siteClicks) - (a.views + a.siteClicks)),
+    guides: guides.rows.map(r => ({ id: r.id, slug: r.slug, title: r.title, category: r.category, published: r.is_published, views: n(r.views), linkClicks: n(r.link_clicks), signups: n(r.signups) })),
+    pages: pages.rows.map(r => ({ path: r.target, views: n(r.n) })),
+    signups: signups.rows.map(r => ({ source: r.target, signups: n(r.n) })),
+    links: links.rows.map(r => ({ slug: r.slug, label: r.label, destination: r.destination_url, clicks: n(r.clicks), memberClicks: n(r.member_clicks) })),
+  };
+}
+
+// Members who went through to an offer's website (admin only).
+async function getOfferMembers(offerId) {
+  const r = await pool.query(
+    `SELECT r.membership_number, m.first_name, m.last_name, m.role, r.redeemed_at
+       FROM offer_redemptions r JOIN members m ON m.membership_number = r.membership_number
+      WHERE r.offer_id = $1 ORDER BY r.redeemed_at DESC LIMIT 500`,
+    [offerId]
+  );
+  return r.rows.map(row => ({
+    membershipNumber: row.membership_number, name: `${row.first_name} ${row.last_name}`,
+    role: row.role, firstClick: row.redeemed_at,
+  }));
+}
+
 module.exports = {
   createMember, emailExists, findMemberByEmail, getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
@@ -1504,5 +1598,5 @@ module.exports = {
   restoreForumItem, reportForumItem, clearForumReport, getForumModerationQueue,
   getPublishedGuides, getPublishedGuideBySlug, getAllGuides, saveGuide, deleteGuide,
   getTrackedLinkBySlug, recordLinkClick, getTrackedLinksWithStats, saveTrackedLink, deleteTrackedLink,
-  getLinkClickReport,
+  getLinkClickReport, recordSiteEvent, getAnalytics, getOfferMembers,
 };

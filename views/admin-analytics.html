@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Analytics</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css?v=5" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    .an-range { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .an-range button { font: 700 14px Montserrat, sans-serif; padding: 9px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #fff; cursor: pointer; }
+    .an-range button.on { background: #FFB300; color: #111; border-color: #FFB300; }
+    .an-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 26px; }
+    .an-tile { background: #161616; border: 1px solid rgba(255,179,0,0.3); border-radius: 14px; padding: 14px 16px; color: #fff; }
+    .an-tile b { display: block; font: 400 28px 'Archivo Black', sans-serif; color: #FFB300; }
+    .an-tile span { font-size: 13px; color: rgba(255,255,255,0.88); }
+    .an-block { background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 16px; margin-bottom: 20px; color: #fff; }
+    .an-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .an-head h2 { font: 400 20px 'Archivo Black', sans-serif; margin: 0; }
+    .an-head p { font-size: 13px; color: rgba(255,255,255,0.85); margin: 4px 0 0; }
+    .an-csv { font: 700 13px Montserrat, sans-serif; padding: 8px 14px; border-radius: 8px; background: #FFB300; color: #111; text-decoration: none; white-space: nowrap; }
+    .an-scroll { overflow-x: auto; }
+    .an-table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; }
+    .an-table th, .an-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: right; white-space: nowrap; }
+    .an-table th:first-child, .an-table td:first-child, .an-table th.l, .an-table td.l { text-align: left; }
+    .an-table th { color: #FFB300; cursor: pointer; user-select: none; font-weight: 800; }
+    .an-table th.sorted::after { content: ' \25BE'; }
+    .an-table tr:hover td { background: rgba(255,179,0,0.06); }
+    .an-table td.top { color: #FFB300; font-weight: 800; }
+    .an-table a { color: #fff; }
+    .an-mini { font: 700 12px Montserrat, sans-serif; padding: 5px 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); background: transparent; color: #fff; cursor: pointer; }
+    .an-empty { color: rgba(255,255,255,0.8); font-size: 14px; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 1000; align-items: center; justify-content: center; }
+    #membersModal > .modal-card { background: #121212; border: 1px solid rgba(255,179,0,0.3); border-radius: 16px; color: #fff; max-height: 86vh; overflow-y: auto; padding: 22px; width: 92%; max-width: 560px; }
+  </style>
+</head>
+<body class="admin-page">
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-logo">
+        <img src="/logicard-logo-hero.png" alt="Logicard" class="admin-logo-img" />
+        <span class="admin-panel-badge">Analytics</span>
+      </div>
+      <div class="admin-header-right">
+        <a href="/admin" class="admin-user-label" style="text-decoration:none">← Back to Dashboard</a>
+        <button class="signout-btn" id="adminSignout">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="an-range" id="range">
+      <button type="button" data-days="7">Last 7 days</button>
+      <button type="button" data-days="30" class="on">Last 30 days</button>
+      <button type="button" data-days="90">Last 90 days</button>
+      <button type="button" data-days="365">Last year</button>
+      <button type="button" data-days="3650">All time</button>
+    </div>
+
+    <div class="an-tiles" id="tiles"></div>
+
+    <div class="an-block">
+      <div class="an-head"><div><h2>Offers</h2><p>Click a column heading to rank by it. "Brand site clicks" = members who went through to the brand's website.</p></div><a class="an-csv" data-csv="offers" href="#">Download CSV</a></div>
+      <div class="an-scroll"><table class="an-table" id="t-offers"></table></div>
+    </div>
+    <div class="an-block">
+      <div class="an-head"><div><h2>Categories</h2><p>Totals of every offer in each category.</p></div><a class="an-csv" data-csv="categories" href="#">Download CSV</a></div>
+      <div class="an-scroll"><table class="an-table" id="t-categories"></table></div>
+    </div>
+    <div class="an-block">
+      <div class="an-head"><div><h2>Guides</h2><p>Views, tracked-link clicks from inside each guide, and sign-ups from its Join button.</p></div><a class="an-csv" data-csv="guides" href="#">Download CSV</a></div>
+      <div class="an-scroll"><table class="an-table" id="t-guides"></table></div>
+    </div>
+    <div class="an-block">
+      <div class="an-head"><div><h2>Tracked links</h2><p>Every /go/… link, wherever it was shared.</p></div><a class="an-csv" data-csv="links" href="#">Download CSV</a></div>
+      <div class="an-scroll"><table class="an-table" id="t-links"></table></div>
+    </div>
+    <div class="an-block">
+      <div class="an-head"><div><h2>Where sign-ups came from</h2><p>deal-… = a deal's Join / Get deal button, guide-… = a guide's Join button, direct = anywhere else.</p></div><a class="an-csv" data-csv="signups" href="#">Download CSV</a></div>
+      <div class="an-scroll"><table class="an-table" id="t-signups"></table></div>
+    </div>
+    <div class="an-block">
+      <div class="an-head"><div><h2>Page views</h2><p>Homepage, Deals, All Categories and Guides pages.</p></div><a class="an-csv" data-csv="pages" href="#">Download CSV</a></div>
+      <div class="an-scroll"><table class="an-table" id="t-pages"></table></div>
+    </div>
+  </main>
+
+  <div id="membersModal" class="modal-overlay">
+    <div class="modal-card">
+      <h2 id="membersTitle" style="font:400 18px 'Archivo Black',sans-serif;margin:0 0 12px;">Members</h2>
+      <div id="membersBody"></div>
+      <button type="button" class="an-mini" id="membersClose" style="margin-top:12px;padding:10px 18px;">Close</button>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var days = 30, data = null;
+      function $(id) { return document.getElementById(id); }
+      function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+      function num(n) { return Number(n || 0).toLocaleString('en-GB'); }
+
+      // Sortable table. cols: [label, key, isText, render?]
+      function table(id, cols, rows, sortKey) {
+        var t = $(id), sort = { key: sortKey, dir: -1 };
+        function draw() {
+          t.innerHTML = '';
+          if (!rows.length) { var r0 = el('tr'), c0 = el('td', 'an-empty', 'Nothing recorded yet for this period.'); c0.colSpan = cols.length; r0.appendChild(c0); t.appendChild(r0); return; }
+          var sorted = rows.slice().sort(function (a, b) {
+            var x = a[sort.key], y = b[sort.key];
+            if (typeof x === 'string' || typeof y === 'string') return sort.dir * String(y || '').localeCompare(String(x || ''));
+            return sort.dir * ((x || 0) - (y || 0));
+          });
+          var max = {};
+          cols.forEach(function (c) { if (!c[2]) max[c[1]] = Math.max.apply(null, rows.map(function (r) { return r[c[1]] || 0; })); });
+          var hr = el('tr');
+          cols.forEach(function (c) {
+            var th = el('th', (c[2] ? 'l ' : '') + (sort.key === c[1] ? 'sorted' : ''), c[0]);
+            th.addEventListener('click', function () { sort = { key: c[1], dir: sort.key === c[1] ? -sort.dir : -1 }; draw(); });
+            hr.appendChild(th);
+          });
+          t.appendChild(hr);
+          sorted.forEach(function (r) {
+            var tr = el('tr');
+            cols.forEach(function (c) {
+              var td = el('td', c[2] ? 'l' : '');
+              if (c[3]) c[3](td, r);
+              else if (c[2]) td.textContent = r[c[1]] == null ? '' : String(r[c[1]]);
+              else { td.textContent = num(r[c[1]]); if (r[c[1]] > 0 && r[c[1]] === max[c[1]]) td.className += ' top'; }
+              tr.appendChild(td);
+            });
+            t.appendChild(tr);
+          });
+        }
+        draw();
+      }
+
+      function render() {
+        var o = data.offers, sum = function (arr, k) { return arr.reduce(function (a, r) { return a + (r[k] || 0); }, 0); };
+        var tiles = [
+          ['Deal page views', sum(o, 'views')],
+          ['Get deal (visitors)', sum(o, 'getDealGuests')],
+          ['Get deal (members)', sum(o, 'getDealMembers')],
+          ['Code copies', sum(o, 'codeCopies')],
+          ['Brand site clicks', sum(o, 'siteClicks')],
+          ['Guide views', sum(data.guides, 'views')],
+          ['Tracked link clicks', sum(data.links, 'clicks')],
+          ['Sign-ups', sum(data.signups, 'signups')]
+        ];
+        $('tiles').innerHTML = '';
+        tiles.forEach(function (t) { var d = el('div', 'an-tile'); d.appendChild(el('b', null, num(t[1]))); d.appendChild(el('span', null, t[0])); $('tiles').appendChild(d); });
+
+        table('t-offers', [
+          ['Brand', 'brand', true, function (td, r) { var a = el('a', null, r.brand); a.href = '/' + r.slug; a.target = '_blank'; td.appendChild(a); if (!r.active) td.appendChild(el('span', null, ' (inactive)')); }],
+          ['Category', 'category', true],
+          ['Page views', 'views'], ['Get deal (visitors)', 'getDealGuests'], ['Get deal (members)', 'getDealMembers'],
+          ['Code copies', 'codeCopies'], ['Brand site clicks', 'siteClicks'], ['Sign-ups', 'signups'],
+          ['', 'id', true, function (td, r) { var b = el('button', 'an-mini', 'Members'); b.type = 'button'; b.addEventListener('click', function () { showMembers(r); }); td.appendChild(b); }]
+        ], o, 'views');
+        table('t-categories', [['Category', 'category', true], ['Offers', 'offers'], ['Page views', 'views'], ['Get deal (visitors)', 'getDealGuests'],
+          ['Get deal (members)', 'getDealMembers'], ['Code copies', 'codeCopies'], ['Brand site clicks', 'siteClicks'], ['Sign-ups', 'signups']], data.categories, 'views');
+        table('t-guides', [['Guide', 'title', true, function (td, r) { var a = el('a', null, r.title); a.href = '/guides/' + r.slug; a.target = '_blank'; td.appendChild(a); if (!r.published) td.appendChild(el('span', null, ' (draft)')); }],
+          ['Views', 'views'], ['Link clicks', 'linkClicks'], ['Sign-ups', 'signups']], data.guides, 'views');
+        table('t-links', [['Link', 'label', true], ['Address', 'slug', true, function (td, r) { td.textContent = '/go/' + r.slug; }], ['Clicks', 'clicks'], ['By members', 'memberClicks']], data.links, 'clicks');
+        table('t-signups', [['Source', 'source', true], ['Sign-ups', 'signups']], data.signups, 'signups');
+        table('t-pages', [['Page', 'path', true], ['Views', 'views']], data.pages, 'views');
+      }
+
+      function showMembers(offer) {
+        $('membersTitle').textContent = offer.brand + ' — members who went to the brand site';
+        var body = $('membersBody'); body.textContent = 'Loading…'; $('membersModal').style.display = 'flex';
+        fetch('/api/admin/analytics/offer/' + offer.id + '/members').then(function (r) { return r.json(); }).then(function (list) {
+          body.innerHTML = '';
+          if (!list.length) { body.appendChild(el('p', 'an-empty', 'No members have gone through to this brand yet.')); return; }
+          var t = el('table', 'an-table'); t.style.minWidth = '0';
+          var hr = el('tr'); ['Member', 'No.', 'Role', 'First click'].forEach(function (h, i) { hr.appendChild(el('th', i ? '' : 'l', h)); }); t.appendChild(hr);
+          list.forEach(function (m) { var tr = el('tr'); [m.name, m.membershipNumber, m.role || '', new Date(m.firstClick).toLocaleDateString('en-GB')].forEach(function (v, i) { tr.appendChild(el('td', i ? '' : 'l', String(v))); }); t.appendChild(tr); });
+          body.appendChild(t);
+        }).catch(function () { body.textContent = 'Could not load members.'; });
+      }
+      $('membersClose').addEventListener('click', function () { $('membersModal').style.display = 'none'; });
+
+      function load() {
+        document.querySelectorAll('[data-csv]').forEach(function (a) { a.href = '/api/admin/analytics/csv?kind=' + a.getAttribute('data-csv') + '&days=' + days; });
+        fetch('/api/admin/analytics?days=' + days).then(function (r) {
+          if (r.status === 401) { location.href = '/admin-login.html'; return null; }
+          return r.json();
+        }).then(function (d) { if (d) { data = d; render(); } });
+      }
+      $('range').addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        days = Number(b.dataset.days); load();
+      });
+      $('adminSignout').addEventListener('click', function () { fetch('/api/admin/logout', { method: 'POST' }).then(function () { location.href = '/'; }); });
+      load();
+    })();
+  </script>
+</body>
+</html>

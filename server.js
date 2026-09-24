@@ -34,7 +34,7 @@ const {
   restoreForumItem, reportForumItem, clearForumReport, getForumModerationQueue,
   getPublishedGuides, getPublishedGuideBySlug, getAllGuides, saveGuide, deleteGuide,
   getTrackedLinkBySlug, recordLinkClick, getTrackedLinksWithStats, saveTrackedLink, deleteTrackedLink,
-  getLinkClickReport,
+  getLinkClickReport, recordSiteEvent, getAnalytics, getOfferMembers,
 } = require('./database');
 const { renderGuideList, renderGuidePage } = require('./templates/guide-page');
 const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT } = require('./storage');
@@ -48,6 +48,22 @@ const { renderNav } = require('./templates/nav');
 // when the visitor has a member session.
 function navFor(req, opts = {}) {
   return renderNav({ ...opts, loggedIn: !!(req.session && req.session.membershipNumber) });
+}
+
+// ── Site analytics helpers (admin > Analytics) ──
+// Page views are counted server-side; search engines and other bots are
+// skipped so the numbers reflect real people. Fire-and-forget: a failed
+// insert never affects the page.
+const BOT_UA = /bot|crawl|spider|slurp|facebookexternalhit|preview|monitor|headless|lighthouse|curl|wget|python|axios|node-fetch/i;
+function trackView(req, type, target, actor) {
+  if (BOT_UA.test(req.get('user-agent') || '')) return;
+  const memberNo = req.session && req.session.membershipNumber ? req.session.membershipNumber : null;
+  recordSiteEvent(type, target, actor || (memberNo ? 'member' : 'guest'), memberNo)
+    .catch(err => console.error('Analytics event failed:', err.message));
+}
+function recordSignup(source, membershipNumber) {
+  const src = typeof source === 'string' && /^(deal|guide)-[a-z0-9-]{1,80}$/.test(source) ? source : 'direct';
+  recordSiteEvent('signup', src, 'member', membershipNumber).catch(err => console.error('Signup event failed:', err.message));
 }
 const { renderFooter } = require('./templates/footer');
 const { renderNewsCards, renderNewsItemListJsonLd } = require('./templates/news-feed');
@@ -732,6 +748,8 @@ app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
     .replace('<!-- SHARED_NAV -->', navFor(req, NAV_OPTIONS_BY_PAGE[req.path]))
     .replace('<!-- SHARED_FOOTER -->', renderFooter());
   res.type('html').send(out);
+  const counted = { '/': '/', '/index.html': '/', '/deals.html': '/deals.html', '/categories.html': '/categories.html' };
+  if (counted[req.path]) trackView(req, 'view_page', counted[req.path]);
 });
 
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -1989,6 +2007,69 @@ app.get('/api/session', publicOffersLimiter, async (req, res) => {
   res.json({ state: !member ? 'guest' : member.verified ? 'member' : 'unverified' });
 });
 
+// Client-side analytics events: "Get deal" clicks and code copies. Only
+// these two types and a valid slug are accepted; who clicked is taken from
+// the session, never from the request body.
+const trackLimiter = rateLimit({ windowMs: 60 * 1000, max: 60, standardHeaders: true, legacyHeaders: false });
+app.post('/api/track', trackLimiter, async (req, res) => {
+  const { type, target } = req.body || {};
+  if (!['get_deal', 'copy_code'].includes(type) || typeof target !== 'string' || !/^[a-z0-9-]{1,80}$/.test(target)) {
+    return res.status(400).json({ error: 'Invalid event.' });
+  }
+  let actor = 'guest';
+  const no = req.session && req.session.membershipNumber;
+  if (no) { const m = await getMemberByNumber(no); actor = m && m.verified ? 'member' : 'unverified'; }
+  trackView(req, type, target, actor);
+  res.status(204).end();
+});
+
+// ── Analytics (admin) ──
+app.get('/admin/analytics', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-analytics.html'));
+});
+app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
+  res.json(await getAnalytics(req.query.days));
+});
+app.get('/api/admin/analytics/offer/:id/members', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid offer.' });
+  res.json(await getOfferMembers(id));
+});
+
+// CSV downloads. Cells starting with = + - @ are prefixed with ' so a
+// spreadsheet never treats a brand name or title as a formula.
+function toCsv(headers, rows) {
+  const cell = (v) => {
+    let t = v == null ? '' : String(v);
+    if (/^[=+\-@]/.test(t)) t = "'" + t;
+    return /[",\n\r]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t;
+  };
+  return [headers.map(h => cell(h[0])).join(',')]
+    .concat(rows.map(r => headers.map(h => cell(r[h[1]])).join(',')))
+    .join('\r\n');
+}
+app.get('/api/admin/analytics/csv', requireAdmin, async (req, res) => {
+  const a = await getAnalytics(req.query.days);
+  const kinds = {
+    offers: [[['Brand', 'brand'], ['Offer', 'title'], ['Category', 'category'], ['Page', 'slug'], ['Active', 'active'],
+              ['Page views', 'views'], ['Get deal (visitors)', 'getDealGuests'], ['Get deal (members)', 'getDealMembers'],
+              ['Code copies', 'codeCopies'], ['Brand site clicks', 'siteClicks'], ['Sign-ups from this deal', 'signups']], a.offers],
+    categories: [[['Category', 'category'], ['Offers', 'offers'], ['Page views', 'views'], ['Get deal (visitors)', 'getDealGuests'],
+                  ['Get deal (members)', 'getDealMembers'], ['Code copies', 'codeCopies'], ['Brand site clicks', 'siteClicks'], ['Sign-ups', 'signups']], a.categories],
+    guides: [[['Guide', 'title'], ['Page', 'slug'], ['Category', 'category'], ['Published', 'published'], ['Views', 'views'],
+              ['Tracked link clicks', 'linkClicks'], ['Sign-ups from this guide', 'signups']], a.guides],
+    links: [[['Link', 'label'], ['Address', 'slug'], ['Destination', 'destination'], ['Clicks', 'clicks'], ['Clicks by members', 'memberClicks']], a.links],
+    signups: [[['Source', 'source'], ['Sign-ups', 'signups']], a.signups],
+    pages: [[['Page', 'path'], ['Views', 'views']], a.pages],
+  };
+  const kind = kinds[req.query.kind] ? req.query.kind : 'offers';
+  const [headers, rows] = kinds[kind];
+  const day = new Date().toISOString().slice(0, 10);
+  res.set('Content-Type', 'text/csv; charset=utf-8');
+  res.set('Content-Disposition', `attachment; filename="logicard-${kind}-last-${a.days}-days-${day}.csv"`);
+  res.send('\ufeff' + toCsv(headers, rows));
+});
+
 // Powers the /deals.html browser: every active offer, teaser fields only
 // (no voucher codes or affiliate URLs; those stay behind the member login,
 // same as the featured teasers below). Gender-targeted offers are left out
@@ -2317,6 +2398,7 @@ app.post('/api/signup', signupLimiter, async (req, res) => {
       promoCode: normalizedPromo || null,
       freeYear: promo ? promo.freeYear : false,
     });
+    recordSignup(req.body && req.body.source, membershipNumber);
 
     res.json({ success: true, membershipNumber });
 
@@ -2369,6 +2451,7 @@ app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
     if (intent.status !== 'succeeded') return res.status(400).json({ error: 'Payment not confirmed. Please try again.' });
     if (await emailExists(signupData.email)) return res.status(409).json({ error: 'An account with this email already exists.' });
     const { membershipNumber } = await createMember({ ...signupData, promoCode: null, freeYear: false });
+    recordSignup(req.body && req.body.source, membershipNumber);
     const saved = await findMemberByEmail(signupData.email.toLowerCase());
     if (saved) sendWelcomeEmail(saved);
     res.json({ success: true, membershipNumber });
@@ -2391,6 +2474,7 @@ app.post('/api/checkout/complete', signupLimiter, async (req, res) => {
 app.get('/guides', async (req, res, next) => {
   try {
     const guides = await getPublishedGuides();
+    trackView(req, 'view_page', '/guides');
     res.send(renderGuideList(guides).replace('<!-- SHARED_NAV -->', navFor(req, { active: 'guides' })).replace('<!-- SHARED_FOOTER -->', renderFooter()));
   } catch (err) { console.error('Guides list error:', err.message); next(); }
 });
@@ -2400,6 +2484,7 @@ app.get('/guides/:slug', async (req, res, next) => {
   try {
     const guide = await getPublishedGuideBySlug(req.params.slug);
     if (!guide) return next();
+    trackView(req, 'view_guide', guide.slug);
     res.send(renderGuidePage(guide).replace('<!-- SHARED_NAV -->', navFor(req, { active: 'guides' })).replace('<!-- SHARED_FOOTER -->', renderFooter()));
   } catch (err) { console.error('Guide page error:', err.message); next(); }
 });
@@ -2542,6 +2627,7 @@ app.get('/:slug', async (req, res, next) => {
 
     // Member views contain a personal code: never let a shared cache keep them.
     if (viewer.state !== 'guest') res.set('Cache-Control', 'private, no-store');
+    trackView(req, 'view_offer', slug, viewer.state);
     res.send(renderOfferPage({ offer: publicOffer, viewer, brandLogo, related })
       .replace('<!-- SHARED_NAV -->', navFor(req, {}))
       .replace('<!-- SHARED_FOOTER -->', renderFooter()));
