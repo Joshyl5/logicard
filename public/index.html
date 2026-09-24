@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Logicard - The discount card for all Logistics workers</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Logicard - The discount card for all Logistics workers</title>
   <meta name="description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. Join free and start saving today." />
   <meta name="keywords" content="logistics discount card UK, warehouse worker discounts, freight worker discounts, air freight discounts, sea freight discounts, rail freight discounts, operations staff discounts, logistics industry membership, free membership card UK" />
   <meta property="og:title" content="Logicard - The discount card for all Logistics workers" />
   <meta property="og:description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. Join free and start saving today." />
-  <meta property="og:url" content="https://logicard.co.uk/" />
+  <meta property="og:url" content="/" />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="https://logicard.co.uk/logicard-logo-hero.png" />
+  <meta property="og:image" content="/logicard-logo-hero.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Logicard - The discount card for all Logistics workers" />
   <meta name="twitter:description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. Join free today." />
-  <link rel="canonical" href="https://logicard.co.uk/" />
+  <link rel="canonical" href="/" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "Organization",
-        "@id": "https://logicard.co.uk/#organization",
+        "@id": "/#organization",
         "name": "Logicard",
         "url": "https://logicard.co.uk",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://logicard.co.uk/logicard-logo-hero.png"
+          "url": "/logicard-logo-hero.png"
         },
         "description": "The discount card for all logistics workers — warehousing, operations, freight, air, sea and rail.",
         "areaServed": "GB",
@@ -39,1375 +39,720 @@
       },
       {
         "@type": "WebSite",
-        "@id": "https://logicard.co.uk/#website",
+        "@id": "/#website",
         "url": "https://logicard.co.uk",
         "name": "Logicard",
-        "publisher": { "@id": "https://logicard.co.uk/#organization" },
+        "publisher": { "@id": "/#organization" },
         "description": "The discount card for all logistics workers."
       },
       {
         "@type": "WebPage",
-        "@id": "https://logicard.co.uk/#webpage",
-        "url": "https://logicard.co.uk/",
+        "@id": "/#webpage",
+        "url": "/",
         "name": "Logicard - The discount card for all Logistics workers",
-        "isPartOf": { "@id": "https://logicard.co.uk/#website" },
-        "about": { "@id": "https://logicard.co.uk/#organization" },
+        "isPartOf": { "@id": "/#website" },
+        "about": { "@id": "/#organization" },
         "description": "Logicard is available for those currently working in the logistics industry, including warehousing, operations, freight, air, sea and rail."
       }
     ]
   }
   </script>
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
-  <link rel="stylesheet" href="/footer.css?v=2" />
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --black: #0a0a0a;
+    --black-2: #111111;
+    --card: #161616;
+    --card-2: #1d1d1d;
+    --line: rgba(255,255,255,0.08);
+    --gold: #FFB300;
+    --gold-soft: rgba(255,179,0,0.14);
+    --gold-line: rgba(255,179,0,0.35);
+    --white: #ffffff;
+    --muted: rgba(255,255,255,0.68);
+    --display: 'Archivo Black', 'Arial Black', Impact, sans-serif;
+    --body: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: var(--body); line-height: 1.6; overflow-x: hidden; }
+  a { color: inherit; }
+  img { max-width: 100%; display: block; }
+  .gold { color: var(--gold); }
+  .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+  section { padding: 72px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  .alt { background: var(--black-2); }
+  h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.12; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(30px, 6vw, 46px); text-align: center; margin-bottom: 14px; }
+  .lead { text-align: center; color: var(--muted); font-size: 17px; max-width: 640px; margin: 0 auto 40px; }
 
-    :root {
-      /* Logo-derived palette */
-      --orange: #FFB300;        /* logo "card" text */
-      --orange-dark: #E09A00;
-      --gold: #FFB800;          /* logo sun glow / price tag */
-      --navy: #071d40;          /* logo cloud background */
-      --navy-deep: #071d40;
-      --navy-mid: #0d3b80;
-      --blue-accent: #1a6cc8;   /* logo % circle */
-      --white: #ffffff;
-      --gray-light: #f5f5f5;
-      --gray-mid: #e5e5e5;
-      --text-muted: #666666;
-      --dark-bg: #060d1c;
-    }
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--display); font-size: 17px; text-decoration: none; border-radius: 999px; padding: 17px 34px; border: 2px solid transparent; cursor: pointer; transition: transform .15s, box-shadow .15s, background .15s; }
+  .btn:active { transform: scale(0.98); }
+  .btn-gold { background: var(--gold); color: #111; box-shadow: 0 8px 28px rgba(255,179,0,0.35); }
+  .btn-gold:hover { box-shadow: 0 10px 36px rgba(255,179,0,0.5); }
+  .btn-ghost { background: var(--gold-soft); color: var(--gold); border-color: var(--gold-line); }
+  .btn-ghost:hover { background: rgba(255,179,0,0.22); }
+  .arrow { font-family: var(--body); font-weight: 700; }
 
-    html { scroll-behavior: smooth; }
+  /* ── Header ── */
+  .header { position: sticky; top: 0; z-index: 50; background: var(--gold); box-shadow: 0 4px 18px rgba(0,0,0,0.35); }
+  .header .logo { background: #0a0a0a; border-color: #0a0a0a; box-shadow: none; }
+  .header .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+  .logo { display: inline-flex; align-items: center; border: 2.5px solid rgba(255,179,0,0.55); padding: 8px 16px; border-radius: 6px; background: rgba(255,255,255,0.05); box-shadow: 0 0 14px rgba(255,179,0,0.12); text-decoration: none; font-family: var(--body); font-size: 23px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+  .logo .logi { color: #fff; } .logo .card { color: var(--gold); }
+  .burger { width: 48px; height: 48px; background: none; border: 0; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px; }
+  .burger span { display: block; height: 3px; border-radius: 2px; background: #111; }
 
-    body {
-      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-      color: var(--white);
-      background: var(--navy);
-      -webkit-font-smoothing: antialiased;
-    }
+  /* ── Slide-out menu ── */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 90; }
+  .drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(360px, 86vw); background: var(--black); border-left: 1px solid var(--line); z-index: 100; transform: translateX(100%); transition: transform .3s ease; display: flex; flex-direction: column; }
+  body.menu-open .scrim { opacity: 1; pointer-events: auto; }
+  body.menu-open .drawer { transform: none; }
+  body.menu-open { overflow: hidden; }
+  .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--line); }
+  .drawer-head strong { font-family: var(--display); color: var(--gold); letter-spacing: .06em; font-size: 18px; }
+  .drawer-close { background: none; border: 0; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; width: 40px; height: 40px; }
+  .drawer nav { flex: 1; overflow-y: auto; padding: 10px 0; }
+  .drawer nav > a, .drawer summary { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; font-weight: 700; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; list-style: none; }
+  .drawer summary::-webkit-details-marker { display: none; }
+  .drawer summary::after { content: ''; width: 9px; height: 9px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(45deg); transition: transform .2s; margin-right: 4px; }
+  .drawer details[open] summary::after { transform: rotate(-135deg); }
+  .drawer nav > a.active { color: var(--gold); background: rgba(255,179,0,0.08); }
+  .drawer nav > a:hover, .drawer summary:hover { color: var(--gold); }
+  .drawer .sub a { display: block; padding: 12px 24px 12px 44px; color: var(--muted); text-decoration: none; font-size: 16px; }
+  .drawer .sub a:hover { color: var(--gold); }
+  .drawer-foot { border-top: 1px solid var(--line); padding: 18px 24px 26px; display: grid; gap: 12px; }
+  .drawer-foot .login { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; font-size: 17px; padding: 6px 0; }
+  .drawer-foot .btn { padding: 14px; }
 
-    /* ── Hero ── */
-    .hero {
-      background: var(--navy);
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 140px 80px;
-      overflow: hidden;
-    }
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: rgba(255,179,0,0.15);
-      border: 1px solid rgba(255,179,0,0.4);
-      color: var(--orange);
-      font-size: 13px;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 100px;
-      margin-bottom: 28px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    .hero h1 {
-      font-size: clamp(34px, 4.6vw, 64px);
-      font-weight: 900;
-      color: var(--white);
-      line-height: 1.12;
-      margin-bottom: 24px;
-      letter-spacing: -1px;
-    }
-    .hero h1 .yellow { color: var(--orange); }
-    .hero h1 .hero-rotate-line { display: block; }
-    .hero-cursor {
-      display: inline-block;
-      width: 3px;
-      height: 0.82em;
-      margin-left: 4px;
-      vertical-align: -0.08em;
-      background: var(--orange);
-      animation: hero-blink 0.9s step-end infinite;
-    }
-    @keyframes hero-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-    .hero-sub {
-      font-size: 19px;
-      color: rgba(255,255,255,0.72);
-      margin: 0 auto;
-      line-height: 1.65;
-      max-width: 820px;
-      text-wrap: balance;
-    }
-    .btn-primary {
-      background: var(--orange);
-      color: var(--white);
-      padding: 15px 32px;
-      font-weight: 900;
-      font-size: 15px;
-      letter-spacing: 0.3px;
-      text-decoration: none;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background 0.15s, transform 0.1s;
-      box-shadow: 0 4px 20px rgba(255,179,0,0.35);
-    }
-    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
-    .btn-secondary {
-      background: transparent;
-      color: var(--white);
-      padding: 15px 32px;
-      font-weight: 700;
-      font-size: 15px;
-      border: 2px solid rgba(255,255,255,0.4);
-      text-decoration: none;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: border-color 0.15s;
-    }
-    .btn-secondary:hover { border-color: rgba(255,255,255,0.8); }
+  /* ── Hero ── */
+  .hero { position: relative; padding: 90px 0 80px; text-align: center; overflow: hidden; border-top: 0; min-height: 88vh; display: flex; align-items: center; }
+  .hero-bg { position: absolute; inset: 0; background: url('/images/photo-wall/hgv-drivers-1.png') center 20% / cover no-repeat; opacity: 0.5; }
+  .hero::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 40%, rgba(10,10,10,0.15) 0%, rgba(10,10,10,0.6) 75%), linear-gradient(to bottom, rgba(10,10,10,0.1), rgba(10,10,10,0.25) 60%, var(--black) 98%); }
+  .hero h1, .hero .hero-sub, .hero .perks { text-shadow: 0 2px 14px rgba(0,0,0,0.85); }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero h1 { font-size: clamp(34px, 8vw, 68px); margin-bottom: 20px; }
+  .roller .word { display: flex; align-items: center; justify-content: center; min-height: 2.3em; line-height: 1.1; color: var(--gold); transition: opacity .35s, transform .35s; }
+  .hero-sub { font-size: clamp(17px, 3.8vw, 21px); font-weight: 500; max-width: 640px; margin: 0 auto 34px; color: rgba(255,255,255,0.9); }
+  .roller .word.out { opacity: 0; transform: translateY(12px); }
+  .hero-ctas { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: 36px; }
+  .hero-ctas .btn { width: min(360px, 100%); }
+  .perks { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; list-style: none; font-weight: 600; font-size: 15px; }
+  .perks li { display: flex; align-items: center; gap: 8px; }
+  .perks li::before { content: '✓'; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: #111; font-size: 13px; font-weight: 800; }
 
-    /* ── Photo Wall ── */
-    .photo-wall-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 32px 40px 48px; }
-    .photo-wall-grid {
-      max-width: 1400px; margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr 2.2fr 1fr 1fr;
-      grid-auto-rows: 180px;
-      gap: 8px;
-      padding: 20px;
-      border-radius: 24px;
-    }
-    .pw-tile {
-      position: relative;
-      border-radius: 10px;
-      overflow: hidden;
-      background-size: cover;
-      background-position: center;
-      display: flex;
-      align-items: flex-end;
-      border: 1px solid rgba(7,29,64,0.3);
-    }
-    .pw-tile::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(0deg, rgba(7,29,64,0.82) 0%, rgba(7,29,64,0.15) 55%, transparent 100%);
-    }
-    .pw-tile-icon {
-      position: absolute; top: 14px; right: 14px;
-      width: 26px; height: 26px;
-      opacity: 0.5;
-    }
-    .pw-tile-icon svg { width: 100%; height: 100%; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .pw-tile-label { position: relative; z-index: 1; padding: 14px 16px; }
-    .pw-tile-label .role { display: block; font-size: 14.5px; font-weight: 800; color: #fff; letter-spacing: -0.1px; }
-    .pw-tile-label .sub { display: block; font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+  /* ── Rolling adverts ── */
+  .ticker { background: #000; overflow: hidden; padding: 22px 0; border-top: 1px solid var(--gold-line) !important; border-bottom: 1px solid var(--gold-line); position: relative; }
+  .ticker::before, .ticker::after { content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }
+  .ticker::before { left: 0; background: linear-gradient(to right, #000, transparent); }
+  .ticker::after { right: 0; background: linear-gradient(to left, #000, transparent); }
+  .ticker-track { display: flex; align-items: center; gap: 18px; width: max-content; padding-right: 18px; animation: scroll 40s linear infinite; }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  /* Brand logo slot: drop an <img> inside to replace the placeholder text */
+  .brand { flex: 0 0 auto; width: 150px; height: 70px; display: grid; place-items: center; padding: 12px 18px; background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-decoration: none; color: rgba(255,255,255,0.55); font-family: var(--display); font-size: 14px; letter-spacing: .04em; transition: border-color .2s, color .2s; }
+  .brand:hover { border-color: var(--gold); color: var(--gold); }
+  .brand img { max-width: 100%; max-height: 46px; object-fit: contain; filter: grayscale(100%) brightness(1.6); transition: filter .2s; }
+  .brand:hover img { filter: none; }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
 
-    .pw-center {
-      grid-column: 3; grid-row: 1 / span 2;
-      background: var(--navy);
-      border-radius: 10px;
-      border-top-left-radius: 22px;
-      border-top-right-radius: 22px;
-      overflow: hidden;
-    }
-    .pw-center-img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  /* ── Hot deals ── */
+  .deals-head { display: flex; flex-direction: column; align-items: center; }
+  .badge { display: inline-block; background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); border-radius: 999px; padding: 6px 16px; font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; }
+  .slider { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 20px 20px; margin: 0 -20px; scrollbar-width: none; }
+  .slider::-webkit-scrollbar { display: none; }
+  .deal { flex: 0 0 min(280px, 78vw); scroll-snap-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color .2s, transform .2s; }
+  .deal:hover { border-color: var(--gold-line); transform: translateY(-3px); }
+  .deal-top img { width: 100%; height: 100%; object-fit: cover; }
+  .deal-top { height: 150px; display: grid; place-items: center; font-family: var(--display); font-size: 54px; color: var(--gold); position: relative; overflow: hidden; background: radial-gradient(circle at 30% 20%, rgba(255,179,0,0.25), transparent 60%), #1a1a1a; }
+  .deal-off { max-width: calc(100% - 28px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: absolute; top: 14px; right: 14px; background: var(--gold); color: #111; font-family: var(--display); font-size: 14px; padding: 5px 12px; border-radius: 999px; }
+  .deal-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .deal-cat { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
+  .deal h3 { font-size: 20px; }
+  .deal p { color: var(--muted); font-size: 14px; flex: 1; }
+  .deal-cta { margin-top: 10px; font-weight: 700; color: var(--gold); font-size: 15px; }
+  .slider-nav { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
+  .slider-nav button { width: 48px; height: 48px; border-radius: 50%; background: var(--card); border: 1px solid var(--gold-line); color: var(--gold); font-size: 20px; cursor: pointer; }
+  .slider-nav button:hover { background: var(--gold-soft); }
 
-    @media (max-width: 1024px) {
-      .photo-wall-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 160px; }
-      .pw-center { grid-column: 1 / span 2; grid-row: span 2; order: -1; min-height: 320px; }
-    }
-    @media (max-width: 560px) {
-      .photo-wall-section { padding: 24px 20px 36px; }
-      .photo-wall-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 130px; gap: 6px; padding: 12px; border-radius: 16px; }
-      .pw-center { grid-row: span 3; min-height: 390px; }
-      .pw-tile-label .role { font-size: 13px; }
-      .pw-tile-label .sub { font-size: 11px; }
-    }
+  /* ── Why join ── */
+  .why-grid { display: grid; gap: 28px; align-items: center; }
+  .why-img { border-radius: 22px; overflow: hidden; border: 1px solid var(--gold-line); position: relative; }
+  .why-img img { width: 100%; height: 300px; object-fit: cover; object-position: center 25%; filter: saturate(.9); }
+  .why-text h2 { text-align: left; }
+  .why-text p { color: var(--muted); font-size: 17px; margin-bottom: 18px; }
+  .why-text ul { list-style: none; margin: 0 0 26px; display: grid; gap: 10px; }
+  .why-text li { padding-left: 30px; position: relative; font-weight: 500; }
+  .why-text li::before { content: ''; position: absolute; left: 4px; top: 9px; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+  .text-link { color: var(--gold); font-weight: 700; text-decoration: underline; text-underline-offset: 5px; }
 
-    /* ── Featured Deals ── */
-    .featured-deals-section { background: var(--navy); padding: 72px 80px 96px; }
-    .featured-deals-head { text-align: center; margin-bottom: 44px; }
-    .featured-deals-subtitle { font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.6); }
-    .featured-deals-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
-      max-width: 1320px; margin: 0 auto;
-    }
-    .featured-deals-empty { text-align: center; color: rgba(255,255,255,0.55); font-size: 15px; padding: 20px 0 0; }
-    .deal-card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      overflow: hidden;
-      display: flex; flex-direction: column;
-      transition: transform 0.2s ease, border-color 0.2s ease;
-    }
-    .deal-card:hover { transform: translateY(-4px); border-color: rgba(255,179,0,0.35); }
-    .deal-card-image { aspect-ratio: 16 / 9; background: rgba(255,255,255,0.06); overflow: hidden; }
-    .deal-card-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .deal-card-image-fallback {
-      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
-      font-size: 34px; font-weight: 900; color: rgba(255,179,0,0.5);
-    }
-    .deal-card-body { padding: 20px 22px 24px; display: flex; flex-direction: column; flex: 1; }
-    .deal-card-badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-    .deal-card-badge {
-      font-size: 11.5px; font-weight: 700; letter-spacing: 0.2px;
-      background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.75);
-      padding: 5px 10px; border-radius: 100px;
-    }
-    .deal-card-badge--exclusive { background: rgba(255,179,0,0.15); color: var(--orange); }
-    .deal-card-brand { font-size: 15px; font-weight: 800; color: var(--white); margin-bottom: 4px; }
-    .deal-card-title { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 10px; flex: 1; }
-    .deal-card-discount { font-size: 15px; font-weight: 800; color: var(--orange); margin-bottom: 18px; }
-    .deal-card-footer { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
-    .deal-card-claim {
-      background: var(--orange); color: var(--navy); font-weight: 800; font-size: 13px;
-      padding: 10px 18px; border-radius: 100px; text-decoration: none; transition: background 0.15s;
-    }
-    .deal-card-claim:hover { background: var(--orange-dark); }
+  /* ── Benefits (stacked) ── */
+  .stack { display: grid; gap: 18px; max-width: 760px; margin: 0 auto; }
+  .benefit { display: flex; gap: 22px; align-items: flex-start; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 18px; padding: 26px; }
+  .benefit-icon { flex: 0 0 58px; height: 58px; border-radius: 50%; background: var(--gold-soft); border: 1px solid var(--gold-line); display: grid; place-items: center; }
+  .benefit-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .benefit h3 { font-size: 22px; margin-bottom: 6px; }
+  .benefit p { color: var(--muted); }
 
-    /* ── Shared section styles ── */
-    .lc-section { padding: 88px 80px; }
-    .lc-inner { max-width: 1200px; margin: 0 auto; }
-    .section-eyebrow {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--orange);
-      margin-bottom: 12px;
-    }
-    .section-heading {
-      font-size: clamp(34px, 4vw, 52px);
-      font-weight: 900;
-      color: var(--white);
-      line-height: 1.1;
-      margin-bottom: 16px;
-      letter-spacing: -0.5px;
-    }
-    .section-sub {
-      font-size: 18px;
-      color: rgba(255,255,255,0.65);
-      max-width: 580px;
-      line-height: 1.65;
-      margin-bottom: 60px;
-    }
-    .section-heading.light { color: var(--white); }
-    .section-sub.light { color: rgba(255,255,255,0.6); }
-    .section-eyebrow.light { color: rgba(255,184,0,0.9); }
+  /* ── Digital card ── */
+  .card-stage { position: relative; display: grid; place-items: center; padding: 20px 0 40px; }
+  .card-stage::before { content: ''; position: absolute; width: 80%; height: 70%; background: radial-gradient(ellipse, rgba(255,179,0,0.28), transparent 70%); filter: blur(30px); }
+  .dcard { position: relative; width: min(420px, 100%); border-radius: 24px; padding: 28px; background: linear-gradient(145deg, #2a2a2a 0%, #151515 60%, #1f1a0d 100%); border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 30px 60px rgba(0,0,0,0.6); }
+  .dcard-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+  .dcard .logo { font-size: 19px; padding: 6px 12px; }
+  .status { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.5); color: #34d399; font-weight: 700; font-size: 12px; letter-spacing: .1em; padding: 5px 12px; border-radius: 999px; }
+  .dcard-name { font-family: var(--display); font-size: 26px; }
+  .dcard-num { color: var(--muted); letter-spacing: .18em; margin-bottom: 20px; }
+  .dcard-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-bottom: 22px; border-bottom: 1px solid var(--line); margin-bottom: 22px; }
+  .dcard-meta small { display: block; font-size: 11px; letter-spacing: .12em; color: var(--muted); text-transform: uppercase; }
+  .dcard-meta strong { font-size: 15px; }
+  .dcard-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .qr { width: 74px; height: 74px; border-radius: 10px; background: #fff; padding: 7px; display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .qr i { background: #111; border-radius: 1px; }
+  .qr i.o { background: transparent; }
+  .dcard-foot p { font-size: 13px; color: var(--muted); }
+  .dcard-foot p b { color: var(--gold); }
 
-    /* ── How It Works ── */
-    .how-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); text-align: center; }
-    .how-section .section-heading { color: var(--navy); }
-    .how-section .section-sub { color: var(--navy); font-weight: 500; margin-left: auto; margin-right: auto; }
-    .how-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 28px;
-      margin-top: 52px;
-    }
-    .how-card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 48px 40px 40px;
-      border: 1px solid rgba(7,29,64,0.07);
-      box-shadow: 0 4px 28px rgba(7,29,64,0.07);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.22s, box-shadow 0.22s;
-    }
-    .how-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 52px rgba(7,29,64,0.13);
-    }
-    .how-card--featured {
-      background: var(--navy);
-      border-color: transparent;
-      box-shadow: 0 8px 40px rgba(7,29,64,0.35);
-    }
-    .how-card--featured:hover {
-      box-shadow: 0 24px 60px rgba(7,29,64,0.45);
-    }
-    .how-card-num {
-      position: absolute;
-      top: 20px;
-      right: 28px;
-      font-size: 80px;
-      font-weight: 900;
-      line-height: 1;
-      color: rgba(7,29,64,0.055);
-      pointer-events: none;
-      letter-spacing: -2px;
-    }
-    .how-card--featured .how-card-num { color: rgba(255,255,255,0.07); }
-    .how-card-icon {
-      width: 68px;
-      height: 68px;
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-      border-radius: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 28px;
-      flex-shrink: 0;
-    }
-    .how-card--featured .how-card-icon {
-      background: rgba(255,179,0,0.18);
-      border: 1px solid rgba(255,179,0,0.35);
-    }
-    .how-card-icon svg {
-      width: 32px;
-      height: 32px;
-      stroke: white;
-    }
-    .how-card--featured .how-card-icon svg { stroke: var(--orange); }
-    .how-card h3 {
-      font-size: 22px;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 14px;
-      letter-spacing: -0.3px;
-    }
-    .how-card--featured h3 { color: #ffffff; }
-    .how-card p {
-      font-size: 15px;
-      color: var(--text-muted);
-      line-height: 1.7;
-      flex: 1;
-    }
-    .how-card--featured p { color: rgba(255,255,255,0.62); }
-    .how-card-cta {
-      margin-top: 32px;
-      color: var(--orange);
-      font-weight: 700;
-      font-size: 14px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: 0.2px;
-    }
-    .how-card-cta:hover { gap: 10px; }
+  /* ── Steps ── */
+  .steps { display: grid; gap: 18px; counter-reset: s; }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 30px 26px; text-align: center; }
+  .step-num { width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%; background: var(--gold); color: #111; font-family: var(--display); font-size: 28px; display: grid; place-items: center; box-shadow: 0 0 0 8px var(--gold-soft); }
+  .step h3 { font-size: 22px; margin-bottom: 8px; }
+  .step p { color: var(--muted); }
 
-    /* ── Driver Support ── */
-    .support-section {
-      background: var(--navy);
-      text-align: center;
-    }
-    .support-section .section-sub { margin-left: auto; margin-right: auto; }
-    .support-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .support-card {
-      background: var(--white);
-      border-radius: 14px;
-      padding: 44px 28px 36px;
-      text-align: center;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.07);
-    }
-    .support-card svg {
-      width: 52px;
-      height: 52px;
-      margin-bottom: 20px;
-      stroke: var(--navy);
-    }
-    .support-card h3 {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--navy);
-      margin-bottom: 12px;
-    }
-    .support-card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.65;
-    }
+  /* ── Who can join ── */
+  .roles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 720px; margin: 0 auto 36px; list-style: none; }
+  .roles li { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--gold); padding: 14px 14px; border-radius: 12px; font-weight: 700; font-size: 15px; line-height: 1.25; }
+  .roles li::before { content: '✓'; flex: 0 0 20px; height: 20px; border-radius: 50%; background: var(--gold); color: #111; font-size: 12px; font-weight: 800; display: grid; place-items: center; }
+  .roles li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 6px); }
+  @media (max-width: 380px) { .roles li { font-size: 13px; padding: 12px 10px; gap: 8px; } }
+  .center { text-align: center; }
 
-    /* ── About Us ── */
-    .about-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); text-align: center; }
-    .about-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
-    .about-section .section-eyebrow,
-    .about-section .section-heading { text-align: center; }
-    .about-section .section-eyebrow { color: var(--navy); }
-    .about-section .section-heading { color: var(--navy); }
-    .about-section .section-sub { text-align: center; max-width: 640px; margin-left: auto; margin-right: auto; color: var(--navy); font-weight: 500; text-wrap: balance; }
-    .about-banner {
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-      border-radius: 20px;
-      min-height: 300px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 48px 32px;
-      background: var(--navy);
-    }
-    .about-banner-content { position: relative; z-index: 1; max-width: 560px; }
-    .about-banner-content h3 {
-      font-size: clamp(24px, 3vw, 34px);
-      font-weight: 900;
-      color: var(--white);
-      margin-bottom: 12px;
-      letter-spacing: -0.3px;
-    }
-    .about-banner-content p {
-      font-size: 16px;
-      color: rgba(255,255,255,0.75);
-      margin-bottom: 28px;
-    }
-    .about-banner-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--orange);
-      color: var(--navy);
-      font-weight: 800;
-      font-size: 15px;
-      padding: 14px 32px;
-      border-radius: 100px;
-      text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .about-banner-btn:hover { background: var(--orange-dark); transform: translateY(-1px); }
+  /* ── Newsletter ── */
+  .loop { text-align: center; }
+  .loop form { max-width: 520px; margin: 0 auto; display: grid; gap: 14px; }
+  .loop input { width: 100%; background: #1c1c1c; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 999px; padding: 18px 26px; font: 500 17px var(--body); outline: none; }
+  .loop input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
+  .loop .btn { width: 100%; }
+  .form-msg { color: var(--gold); font-weight: 600; min-height: 1.6em; }
+  .fineprint { font-size: 13px; color: rgba(255,255,255,0.45); }
 
-    /* ── FAQs ── */
-    .faq-section { background: var(--navy); text-align: center; }
-    .faq-section .section-heading,
-    .faq-section .section-eyebrow { text-align: center; }
-    .faq-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
-    .faq-list { width: 100%; max-width: 760px; text-align: left; }
-    .faq-item { border-bottom: 1px solid rgba(255,255,255,0.12); }
-    .faq-item summary {
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 22px 4px;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--white);
-      cursor: pointer;
-    }
-    .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary .chevron { color: var(--orange); transition: transform 0.2s; flex-shrink: 0; }
-    .faq-item[open] summary .chevron { transform: rotate(180deg); }
-    .faq-item-body { padding: 0 4px 24px; }
-    .faq-item-body p {
-      font-size: 15px;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.65);
-    }
-    .faq-item-body p + p { margin-top: 14px; }
-    .faq-item-body ul { margin: 14px 0 0; padding-left: 20px; }
-    .faq-item-body li {
-      font-size: 15px;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 8px;
-    }
-    .faq-item-body strong { color: var(--white); }
+  /* ── News ── */
+  .news-grid { display: grid; gap: 20px; }
+  .news { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color .2s; }
+  .news:hover { border-color: var(--gold-line); }
+  .news-img { height: 170px; display: grid; place-items: center; font-size: 60px; background: linear-gradient(135deg, #1f1f1f, #111); position: relative; }
+  .news-img::after { content: ''; position: absolute; inset: auto 0 0 0; height: 4px; background: var(--gold); }
+  .news-body { padding: 22px; }
+  .news .pill { display: inline-block; background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; }
+  .news h3 { font-size: 20px; margin-bottom: 8px; }
+  .news p { color: var(--muted); font-size: 14px; }
+  .news time { display: block; margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.45); }
 
-    /* ── Sign Up CTA Section ── */
-    .cta-section {
-      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
-      text-align: center;
-      padding: 88px 48px;
-    }
-    .cta-section .section-heading.light {
-      font-size: clamp(30px, 4vw, 52px);
-      margin-bottom: 16px;
-      color: var(--navy);
-    }
-    .cta-section .section-sub.light {
-      margin: 0 auto 36px;
-      text-align: center;
-      color: var(--navy);
-      font-weight: 500;
-    }
-    .cta-btns {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .cta-section .btn-primary {
-      padding: 22px 56px;
-      font-size: 18px;
-      letter-spacing: 0.5px;
-      background: var(--navy);
-      color: var(--white);
-      box-shadow: none;
-    }
-    .cta-section .btn-primary:hover { background: var(--navy-mid); }
-    .cta-section .btn-secondary {
-      padding: 22px 44px;
-      font-size: 18px;
-      color: var(--navy);
-      border-color: rgba(7,29,64,0.4);
-    }
-    .cta-section .btn-secondary:hover { border-color: var(--navy); }
+  /* ── FAQ ── */
+  .faqs { max-width: 800px; margin: 0 auto; display: grid; gap: 12px; }
+  .faq { background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .faq[open] { border-color: var(--gold-line); }
+  .faq summary { list-style: none; cursor: pointer; padding: 20px 24px; font-weight: 700; font-size: 17px; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: '+'; flex: 0 0 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--gold-soft); color: var(--gold); font-size: 22px; transition: transform .2s; }
+  .faq[open] summary::after { transform: rotate(45deg); }
+  .faq div { padding: 0 24px 22px; color: var(--muted); }
+  .faq div p + p, .faq div ul { margin-top: 10px; }
+  .faq div ul { padding-left: 20px; }
+  .faq div strong { color: #fff; }
 
-    /* ── Contact Section ── */
-    .contact-section { background: var(--navy); text-align: center; }
-    .contact-section .lc-inner { display: flex; flex-direction: column; align-items: center; }
-    .contact-section .section-heading { color: var(--white); text-align: center; }
-    .contact-section .section-sub { color: rgba(255,255,255,0.55); text-align: center; margin-left: auto; margin-right: auto; }
-    .contact-layout {
-      max-width: 480px;
-      width: 100%;
-      margin: 0 auto;
-      text-align: left;
-    }
-    .contact-form-wrap { width: 100%; }
-    .contact-input {
-      width: 100%;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 100px;
-      padding: 15px 24px;
-      color: var(--white);
-      font-size: 15px;
-      font-family: inherit;
-      margin-bottom: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .contact-input::placeholder { color: rgba(255,255,255,0.35); }
-    .contact-input:focus { border-color: var(--orange); }
-    .contact-toggle-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .contact-toggle-row label {
-      font-size: 13px;
-      color: rgba(255,255,255,0.5);
-      cursor: pointer;
-    }
-    .toggle-switch {
-      width: 40px;
-      height: 22px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 100px;
-      cursor: pointer;
-      position: relative;
-      transition: background 0.2s;
-      flex-shrink: 0;
-    }
-    .toggle-switch::after {
-      content: '';
-      position: absolute;
-      width: 16px;
-      height: 16px;
-      background: white;
-      border-radius: 50%;
-      top: 3px;
-      left: 3px;
-      transition: transform 0.2s;
-    }
-    .contact-submit {
-      background: var(--orange);
-      color: var(--white);
-      border: none;
-      padding: 16px 40px;
-      font-weight: 900;
-      font-size: 14px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 6px;
-      font-family: inherit;
-      transition: background 0.15s;
-      box-shadow: 0 4px 16px rgba(255,179,0,0.35);
-    }
-    .contact-submit:hover { background: var(--orange-dark); }
-    .contact-privacy {
-      font-size: 12px;
-      color: rgba(255,255,255,0.3);
-      margin-top: 16px;
-      line-height: 1.6;
-    }
-    .contact-privacy a { color: var(--orange); }
-    .contact-heading { display: flex; align-items: center; justify-content: center; gap: 14px; }
-    .contact-heading-icon { width: 38px; height: 38px; stroke: var(--orange); flex-shrink: 0; }
+  /* ── Contact ── */
+  .contact form { max-width: 560px; margin: 0 auto; display: grid; gap: 12px; }
+  .contact input { width: 100%; background: #1c1c1c; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 12px; padding: 15px 18px; font: 500 16px var(--body); outline: none; }
+  .contact input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
+  .toggle-row { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); margin: 4px 0; }
+  .toggle-switch { width: 40px; height: 22px; background: rgba(255,255,255,0.15); border-radius: 100px; cursor: pointer; position: relative; transition: background .2s; flex-shrink: 0; }
+  .toggle-switch::after { content: ''; position: absolute; width: 16px; height: 16px; background: #fff; border-radius: 50%; top: 3px; left: var(--pos, 3px); transition: left .2s; }
+  .contact-alert { font-size: 14px; padding: 10px 14px; border-radius: 8px; }
+  .contact-alert.err { color: #ff7070; background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.22); }
+  .contact-alert.ok { color: #34d399; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); }
+  .contact .fineprint a { color: var(--gold); }
 
-    @media (max-width: 1150px) {
-      .featured-deals-grid { grid-template-columns: repeat(3, 1fr); }
-    }
+  /* ── CTA + footer ── */
+  .final-cta { text-align: center; background: radial-gradient(ellipse at 50% 0%, rgba(255,179,0,0.16), transparent 60%), var(--black); }
+  .final-cta .btn { margin-top: 10px; }
+  footer { border-top: 1px solid var(--line); padding: 44px 0 90px; text-align: center; color: rgba(255,255,255,0.5); font-size: 14px; }
+  footer .logo { margin-bottom: 18px; }
+  footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin-bottom: 16px; }
+  footer nav a { text-decoration: none; color: var(--muted); }
+  footer nav a:hover { color: var(--gold); }
 
-    /* ── Responsive — Tablet (≤900px) ── */
-    @media (max-width: 900px) {
-      .lc-section { padding: 64px 28px; }
-      .hero { padding: 72px 28px 56px; min-height: auto; }
-      .featured-deals-section { padding: 56px 28px 72px; }
-      .featured-deals-grid { grid-template-columns: repeat(2, 1fr); }
-      .how-cards { grid-template-columns: 1fr; gap: 20px; }
-      .how-card { padding: 36px 28px 32px; }
-      .support-grid { grid-template-columns: 1fr 1fr; gap: 18px; }
-      .about-banner { min-height: 260px; padding: 40px 24px; }
-      .cta-section { padding: 56px 32px; }
-    }
+  .to-top { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); width: 54px; height: 54px; border-radius: 50%; background: #fff; color: #111; border: 0; font-size: 22px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s; z-index: 40; }
+  .to-top.show { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
 
-    /* ── Responsive — Mobile (≤600px) ── */
-    @media (max-width: 600px) {
-      /* Hero */
-      .hero { padding: 52px 20px 48px; }
-      .hero-tag { font-size: 11px; padding: 5px 11px; margin-bottom: 18px; }
-      .hero h1 { font-size: clamp(30px, 8vw, 42px); margin-bottom: 16px; letter-spacing: -0.5px; }
-      .hero-sub { font-size: 15px; }
-      .about-banner { min-height: 220px; padding: 32px 20px; border-radius: 14px; }
-      .about-banner-content p { font-size: 14px; margin-bottom: 22px; }
-      .faq-item summary { font-size: 15.5px; padding: 18px 4px; }
+  /* ── App store badges ── */
+  .stores { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
+  .store { display: inline-flex; align-items: center; gap: 10px; background: #000; color: #fff; border: 1.5px solid rgba(255,255,255,0.6); border-radius: 10px; padding: 8px 18px 8px 14px; text-decoration: none; min-width: 170px; transition: border-color .15s, transform .15s; }
+  .store:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .store svg { width: 28px; height: 28px; fill: #fff; flex: 0 0 28px; }
+  .store span { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
+  .store small { font-size: 11px; font-weight: 500; }
+  .store strong { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+  .card-stage + .stores { margin-top: 0; }
 
-      /* Featured Deals */
-      .featured-deals-section { padding: 48px 20px 56px; }
-      .featured-deals-grid { grid-template-columns: 1fr; gap: 16px; }
-
-      /* Sections */
-      .lc-section { padding: 52px 20px; }
-      .section-heading { letter-spacing: -0.3px; }
-      .section-sub { font-size: 15px; margin-bottom: 40px; }
-
-      /* How it works */
-      .how-cards { grid-template-columns: 1fr; gap: 16px; margin-top: 36px; }
-      .how-card { padding: 28px 22px 24px; border-radius: 16px; }
-      .how-card h3 { font-size: 18px; }
-      .how-card p { font-size: 14px; }
-      .how-card-num { font-size: 56px; }
-      .how-card-icon { width: 56px; height: 56px; margin-bottom: 20px; }
-
-      /* Support */
-      .support-grid { grid-template-columns: 1fr; gap: 14px; }
-      .support-card { padding: 28px 24px; }
-      .support-card svg { width: 40px; height: 40px; margin-bottom: 14px; }
-
-      /* CTA section */
-      .cta-section { padding: 48px 20px; }
-      .cta-section .section-heading.light { margin-bottom: 12px; }
-      .cta-section .section-sub.light { margin-bottom: 28px; }
-      .cta-btns { flex-direction: column; align-items: center; gap: 12px; }
-      .cta-section .btn-primary,
-      .cta-section .btn-secondary { width: 100%; max-width: 340px; justify-content: center; padding: 16px 20px; font-size: 16px; }
-
-      /* Contact */
-      .contact-heading-icon { width: 28px; height: 28px; }
-      .contact-input { padding: 13px 18px; font-size: 14px; }
-      .contact-section .section-sub { font-size: 15px; }
-
-      /* Who Qualifies CTA button */
-      .qualify-cta-btn { padding: 16px 32px; font-size: 14.5px; }
-    }
-    /* ── Who Qualifies Section ── */
-    .qualify-section {
-      background: var(--navy);
-      padding: 88px 48px;
-      position: relative;
-      overflow: hidden;
-    }
-    .qualify-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
-    .qualify-head { text-align: center; max-width: 740px; margin: 0 auto 64px; }
-    .qualify-eyebrow {
-      display: block; font-size: 12px; font-weight: 800; letter-spacing: 3px;
-      text-transform: uppercase; color: var(--orange); margin-bottom: 16px;
-    }
-    .qualify-title {
-      font-size: clamp(36px, 4.5vw, 58px); font-weight: 900; color: #fff;
-      line-height: 1.06; letter-spacing: -1px; margin-bottom: 22px;
-    }
-    .qualify-gold { color: var(--orange); }
-    .qualify-sub { font-size: 17px; color: rgba(255,255,255,0.58); line-height: 1.75; margin-bottom: 18px; }
-    .qualify-check-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 14px; font-weight: 700;
-      color: rgba(255,179,0,0.75);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(255,179,0,0.3);
-      padding-bottom: 2px;
-      transition: color 0.2s, border-color 0.2s;
-      margin-bottom: 52px;
-    }
-    .qualify-check-link:hover { color: #FFB300; border-color: #FFB300; }
-
-    /* Sector cards grid */
-    .sectors-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-bottom: 64px;
-    }
-    .sector-card {
-      background: rgba(255,255,255,0.038);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 28px 24px 26px;
-      transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-      cursor: default;
-    }
-    .sector-card:hover {
-      background: rgba(255,179,0,0.07);
-      border-color: rgba(255,179,0,0.38);
-      transform: translateY(-5px);
-    }
-    .sector-icon-wrap {
-      width: 50px; height: 50px;
-      background: rgba(255,179,0,0.16);
-      border: 1px solid rgba(255,179,0,0.2);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 16px;
-      transition: border-color 0.25s;
-    }
-    .sector-card:hover .sector-icon-wrap {
-      border-color: rgba(255,179,0,0.45);
-    }
-    .sector-icon-wrap svg {
-      width: 24px; height: 24px;
-      stroke: #FFB300; fill: none;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-    .sector-name {
-      font-size: 14.5px; font-weight: 800; color: #fff;
-      margin: 0 0 14px; letter-spacing: -0.2px; line-height: 1.3;
-    }
-    .sector-cta {
-      display: inline-block;
-      margin-top: 14px;
-      font-size: 11.5px;
-      font-weight: 700;
-      color: rgba(255,179,0,0.55);
-      text-decoration: none;
-      letter-spacing: 0.3px;
-      transition: color 0.2s;
-    }
-    .sector-card:hover .sector-cta { color: #FFB300; }
-
-    /* CTA */
-    .qualify-cta { text-align: center; margin-top: 20px; }
-    .qualify-cta-btn { font-size: 16px; padding: 18px 52px; }
-    .qualify-cta-note { color: rgba(255,255,255,0.35); font-size: 13px; margin-top: 14px; }
-
-    /* Responsive */
-    @media (max-width: 960px) {
-      .qualify-section { padding: 72px 32px 80px; }
-      .sectors-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-      .qualify-head { margin-bottom: 44px; }
-    }
-    @media (max-width: 600px) {
-      .qualify-section { padding: 60px 20px 68px; }
-      .qualify-title { font-size: clamp(28px, 7vw, 38px); }
-      .qualify-sub { font-size: 15px; }
-      .qualify-head { margin-bottom: 32px; }
-      .sectors-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .sector-card { padding: 20px 16px 18px; border-radius: 14px; }
-      .sector-icon-wrap { width: 42px; height: 42px; border-radius: 11px; margin-bottom: 12px; }
-      .sector-icon-wrap svg { width: 20px; height: 20px; }
-      .sector-name { font-size: 12.5px; margin-bottom: 10px; }
-      .sector-role { font-size: 10px; padding: 3px 8px; }
-      .qualify-cta { margin-top: 12px; }
-    }
-    @media (max-width: 380px) {
-      .sectors-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ── Built By Logistics Workers ── */
-    .founders-section {
-      background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
-      padding: 88px 48px;
-      position: relative;
-      overflow: hidden;
-    }
-    .founders-inner { max-width: 1000px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
-    .founders-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: #1a9c4a; border: 1px solid #14853d;
-      color: var(--white); font-size: 12px; font-weight: 800;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      padding: 7px 16px; border-radius: 100px; margin-bottom: 26px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.25);
-    }
-    .founders-heading {
-      font-size: clamp(30px, 4vw, 46px); font-weight: 900; color: var(--navy);
-      line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 24px;
-    }
-    .founders-heading .yellow { color: var(--navy); }
-    .founders-points {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-      text-align: center;
-    }
-    .founder-point {
-      background: var(--navy);
-      border: 1px solid rgba(255,179,0,0.25);
-      border-radius: 16px;
-      padding: 26px 24px;
-    }
-    .founder-point-icon {
-      width: 42px; height: 42px;
-      background: rgba(255,179,0,0.15);
-      border: 1px solid rgba(255,179,0,0.4);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 16px;
-    }
-    .founder-point-icon svg { width: 20px; height: 20px; stroke: var(--orange); }
-    .founder-point h3 { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-    .founder-point p  { font-size: 13.5px; color: rgba(255,255,255,0.6); line-height: 1.65; }
-
-    /* ── Our Partners — real brand logos, live from the partner-brands
-       API (same data/markup pattern as partnerships.html's grid).
-       Split into two bands rather than one flat section: this sits
-       between the gold founders-section above and the navy
-       support-section below, and a single flat colour here can't
-       differ from both neighbours at once with only two colours in
-       the palette — two alternating bands (navy intro, gold grid)
-       solves it cleanly instead of recolouring either neighbour. ── */
-    .hp-partners-intro { background: var(--navy); padding: 72px 48px 0; text-align: center; }
-    .hp-partners-eyebrow { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--orange); margin-bottom: 14px; }
-    .hp-partners-intro h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--white); letter-spacing: -0.5px; margin-bottom: 14px; text-wrap: balance; }
-    .hp-partners-intro h2 .accent { color: var(--orange); }
-    .hp-partners-intro p { font-size: 15.5px; color: rgba(255,255,255,0.65); max-width: 560px; margin: 0 auto; line-height: 1.7; }
-
-    .hp-partners-grid-section { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 48px 48px 88px; }
-    .hp-partners-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; max-width: 1160px; margin: 0 auto; }
-    .hp-partner-card {
-      aspect-ratio: 16 / 10; border-radius: 14px; background: var(--white);
-      display: flex; align-items: center; justify-content: center; padding: 18px;
-      box-shadow: 0 2px 16px rgba(7,29,64,0.12);
-    }
-    .hp-partner-card img { max-width: 100%; max-height: 100%; object-fit: contain; }
-    .hp-partner-slot {
-      aspect-ratio: 16 / 10; border-radius: 14px;
-      border: 2px dashed rgba(7,29,64,0.25);
-      display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: 12px;
-    }
-    .hp-partner-slot span { font-size: 12.5px; font-weight: 700; color: rgba(7,29,64,0.45); text-transform: uppercase; letter-spacing: 0.4px; }
-
-    @media (max-width: 900px) {
-      .hp-partners-intro { padding: 56px 28px 0; }
-      .hp-partners-grid-section { padding: 40px 28px 64px; }
-      .hp-partners-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 480px) {
-      .hp-partners-grid { gap: 12px; }
-    }
-
-    @media (max-width: 900px) {
-      .founders-section { padding: 64px 28px; }
-      .founders-points { grid-template-columns: 1fr; }
-    }
-  </style>
+  /* ── Wider screens ── */
+  @media (min-width: 760px) {
+    section { padding: 96px 0; }
+    .why-grid { grid-template-columns: 1fr 1fr; gap: 56px; }
+    .why-img img { height: 440px; }
+    .steps { grid-template-columns: repeat(3, 1fr); }
+    .news-grid { grid-template-columns: repeat(3, 1fr); }
+    .hero-ctas { flex-direction: row; justify-content: center; }
+    .hero-ctas .btn { width: auto; }
+    .loop form { grid-template-columns: 1fr auto; }
+    .loop .btn { width: auto; }
+  }
+  @media (max-width: 759px) {
+    .why-text h2 { text-align: center; }
+  }
+</style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <!-- SHARED_NAV -->
+<!-- ═══ Header ═══ -->
+<header class="header">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Logicard home"><span class="logi">Logi</span><span class="card">card</span></a>
+    <button class="burger" id="openMenu" aria-label="Open menu" aria-controls="drawer" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+</header>
 
-  <!-- Hero -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Main menu">
+  <div class="drawer-head">
+    <strong>MENU</strong>
+    <button class="drawer-close" id="closeMenu" aria-label="Close menu">&times;</button>
+  </div>
+  <nav>
+    <a href="/" class="active">Home</a>
+    <a href="/deals.html">Deals</a>
+    <details>
+      <summary>About</summary>
+      <div class="sub">
+        <a href="/about.html">About Logicard</a>
+        <a href="/our-story.html">Our Story</a>
+        <a href="/how-it-works.html">How it works</a>
+        <a href="/qualify.html">Who can join</a>
+        <a href="/faqs.html">FAQs</a>
+      </div>
+    </details>
+    <a href="/partnerships.html">Partnerships</a>
+    <a href="/signup.html">Join Logicard</a>
+    <details>
+      <summary>More</summary>
+      <div class="sub">
+        <a href="/categories.html">Deal Categories</a>
+        <a href="/logistics-news.html">Logistics News</a>
+        <a href="/financial-wellbeing.html">Financial Wellbeing</a>
+        <a href="/mental-wellbeing.html">Mental Wellbeing</a>
+        <a href="/workforce-recognition.html">Workforce Recognition</a>
+        <a href="/#contact">Contact Us</a>
+      </div>
+    </details>
+  </nav>
+  <div class="drawer-foot">
+    <a class="login" href="/login.html"><span class="gold">&#10132;</span> Log in</a>
+    <a class="btn btn-gold" href="/signup.html">Join Now</a>
+  </div>
+</aside>
+
+<main id="top">
+
+  <!-- ═══ Hero ═══ -->
   <section class="hero">
-    <div class="hero-content">
-      <h1><span class="hero-rotate-line">Logicard is built for:</span><span class="hero-rotate-line"><span class="yellow" id="heroRotateText">HGV Drivers</span><span class="hero-cursor" aria-hidden="true"></span></span></h1>
-      <p class="hero-sub">The UK's dedicated rewards and discount service for those working and retired from, the logistics industry, which includes; Warehousing, Transport, Storage of goods &amp; more.</p>
-    </div>
-  </section>
-  <script>
-    (function () {
-      var roles = ['HGV Drivers', 'Delivery Drivers', 'Hauliers', 'Transport Ops Teams', 'Warehouse Workers', 'Sea Freight Workers', 'Air Freight Workers', 'Support Staff', 'Customer Service Workers', 'Sales Teams', 'E-Commerce', '3PL'];
-      var el = document.getElementById('heroRotateText');
-      if (!el) return;
-      var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (prefersReducedMotion) return; // leave the first role static, no animation
-
-      var roleIndex = 0, charIndex = 0, deleting = false;
-      var TYPE_MS = 65, DELETE_MS = 32, HOLD_MS = 1800, NEXT_PAUSE_MS = 350;
-
-      function tick() {
-        var current = roles[roleIndex];
-        if (!deleting) {
-          charIndex++;
-          el.textContent = current.slice(0, charIndex);
-          if (charIndex === current.length) {
-            deleting = false;
-            setTimeout(function () { deleting = true; tick(); }, HOLD_MS);
-            return;
-          }
-          setTimeout(tick, TYPE_MS);
-        } else {
-          charIndex--;
-          el.textContent = current.slice(0, charIndex);
-          if (charIndex === 0) {
-            deleting = false;
-            roleIndex = (roleIndex + 1) % roles.length;
-            setTimeout(tick, NEXT_PAUSE_MS);
-            return;
-          }
-          setTimeout(tick, DELETE_MS);
-        }
-      }
-      setTimeout(tick, HOLD_MS);
-    })();
-  </script>
-
-  <!-- Photo Wall -->
-  <section class="photo-wall-section">
-    <div class="photo-wall-grid">
-
-      <div class="pw-center">
-        <img class="pw-center-img" src="/images/photo-wall/Centralimage.png" alt="Logicard — we're on your side. Discounts, Rewards, Recognition for the people who keep Britain moving." />
+    <div class="hero-bg" role="img" aria-label="Smiling HGV drivers in front of their lorries"></div>
+    <div class="wrap">
+      <h1 class="roller">Logicard Is Built For:<span class="word" id="rollWord" aria-live="polite">Warehouse Workers</span></h1>
+      <p class="hero-sub">The UK's dedicated rewards and discounts service for those working in and retired from the <span class="gold">logistics industry</span>.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-gold" href="/signup.html">Join Now <span class="arrow">&rarr;</span></a>
+        <a class="btn btn-ghost" href="#deals">Browse Deals</a>
       </div>
-
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/Warehouseworkers.png.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Warehouse Team</span><span class="sub">Fulfilment &amp; Distribution</span></span>
+      <ul class="perks">
+        <li>Free to join</li>
+        <li>Instant digital card</li>
+        <li>Instant access to deals</li>
+        <li>And more</li>
+      </ul>
+      <div class="stores" hidden><!-- App not live yet: add real store links, then remove hidden -->
+        <a class="store" href="#" aria-label="Download on the App Store"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8c1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-.9-2.4-3.9ZM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
+        <a class="store" href="#" aria-label="Get it on Google Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.4.7-.4 1.2v18c0 .5.1.9.4 1.2l10-10.2-10-10.2Z" fill="#32bbff"/><path d="m17 8.4-3.4 3.4 3.4 3.4 3.9-2.2c1.1-.6 1.1-1.7 0-2.4L17 8.4Z" fill="#ffd400"/><path d="M13.6 11.8 3.6 22c.4.4 1 .4 1.7 0L17 15.2l-3.4-3.4Z" fill="#ff3a44"/><path d="M13.6 11.8 17 8.4 5.3 1.7c-.7-.4-1.3-.3-1.7.1l10 10Z" fill="#00f076"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
       </div>
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/hgv-drivers-1.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M3 13l1.5-5A2 2 0 016.4 6.5h11.2a2 2 0 011.9 1.5L21 13"/><rect x="2" y="13" width="20" height="6" rx="1"/><circle cx="7" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg></span>
-        <span class="pw-tile-label"><span class="role">HGV Drivers</span><span class="sub">Long Haul &amp; Road Freight</span></span>
-      </div>
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/management.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Management</span><span class="sub">Planning &amp; Operations</span></span>
-      </div>
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/Railworkers.png.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Rail Freight</span><span class="sub">Rail &amp; Freight Yards</span></span>
-      </div>
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/Leadership.png.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Leadership</span><span class="sub">Strategy &amp; Operations</span></span>
-      </div>
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/Officeworkers.png.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M9 2h6a2 2 0 012 2v1H7V4a2 2 0 012-2z"/><rect x="5" y="5" width="14" height="16" rx="2"/><line x1="9" y1="10" x2="15" y2="10"/><line x1="9" y1="14" x2="15" y2="14"/><line x1="9" y1="18" x2="13" y2="18"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Coordinator</span><span class="sub">Logistics Management</span></span>
-      </div>
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/Seafreight.png.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="21"/><path d="M5 12H2a10 10 0 0020 0h-3"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Port Workers</span><span class="sub">Dock &amp; Terminal</span></span>
-      </div>
-      <div class="pw-tile" style="background-image:url('/images/photo-wall/Aircargoworkers.png.png');">
-        <span class="pw-tile-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
-        <span class="pw-tile-label"><span class="role">Air Freight</span><span class="sub">International Logistics</span></span>
-      </div>
-
     </div>
   </section>
 
+  <!-- ═══ Rolling adverts ═══ -->
+  <section class="ticker" id="brandTicker" aria-label="Our partner brands" hidden>
+    <div class="ticker-track" id="ticker"></div>
+  </section>
 
-  <!-- Featured Deals -->
-  <section class="featured-deals-section" id="featured-deals">
-    <div class="lc-inner">
-      <div class="featured-deals-head">
-        <h2 class="section-heading" style="margin-bottom: 8px;">★ Featured Deals</h2>
-        <p class="featured-deals-subtitle">Hand-picked by the Logicard team</p>
+  <!-- ═══ Hot deals ═══ -->
+  <section id="deals">
+    <div class="wrap">
+      <div class="deals-head">
+        <span class="badge">&#128293; Trending now</span>
+        <h2><span class="gold">Hot Deals</span></h2>
+        <p class="lead">The deals our members are searching for right now. Swipe to see more.</p>
       </div>
-      <div class="featured-deals-grid" id="featuredDealsGrid"></div>
-      <p class="featured-deals-empty" id="featuredDealsEmpty" hidden>New featured deals are on their way — check back soon.</p>
+      <div class="slider" id="slider"></div>
+      <p class="center" id="dealsEmpty" hidden><a class="btn btn-ghost" href="/deals.html">Browse all deals <span class="arrow">&rarr;</span></a></p>
+      <div class="slider-nav" id="sliderNav" hidden>
+        <button type="button" id="prev" aria-label="Previous deals">&larr;</button>
+        <button type="button" id="next" aria-label="Next deals">&rarr;</button>
+      </div>
     </div>
   </section>
-  <script>
-    (function () {
-      var grid = document.getElementById('featuredDealsGrid');
-      var empty = document.getElementById('featuredDealsEmpty');
-      if (!grid) return;
 
-      function esc(s) {
-        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-        });
-      }
-      function isSafeImageUrl(u) {
-        return typeof u === 'string' && /^https:\/\//i.test(u);
-      }
+  <!-- ═══ Why join ═══ -->
+  <section id="why" class="alt">
+    <div class="wrap why-grid">
+      <div class="why-img"><img src="/images/photo-wall/hgv-drivers-1.png" loading="lazy" alt="Two smiling Logicard members in front of HGVs" /></div>
+      <div class="why-text">
+        <h2>Why Join <span class="gold">Logicard?</span></h2>
+        <p>Logicard is the discount and rewards service built by logistics workers, for logistics workers. From the cab to the warehouse floor to the planning office - if you keep goods moving, you've earned it.</p>
+        <ul>
+          <li>Exclusive savings from thousands of UK brands</li>
+          <li>Online and in-store discounts, all on your phone</li>
+          <li>A community that understands shift life</li>
+          <li>Recognition for the work that keeps shelves full</li>
+        </ul>
+        <a class="text-link" href="/our-story.html">Learn more about Logicard &rarr;</a>
+      </div>
+    </div>
+  </section>
 
-      fetch('/api/public/featured-offers')
-        .then(function (r) { if (!r.ok) throw new Error('bad response'); return r.json(); })
-        .then(function (offers) {
-          if (!Array.isArray(offers) || offers.length === 0) { empty.hidden = false; return; }
-          grid.innerHTML = offers.map(function (o) {
-            var img = isSafeImageUrl(o.imageUrl)
-              ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />'
-              : '<div class="deal-card-image-fallback">' + esc((o.merchantName || 'Deal').charAt(0)) + '</div>';
-            return (
-              '<div class="deal-card">' +
-                '<div class="deal-card-image">' + img + '</div>' +
-                '<div class="deal-card-body">' +
-                  '<div class="deal-card-badges">' +
-                    (o.category ? '<span class="deal-card-badge">' + esc(o.category) + '</span>' : '') +
-                    '<span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span>' +
-                  '</div>' +
-                  '<h3 class="deal-card-brand">' + esc(o.merchantName) + '</h3>' +
-                  '<p class="deal-card-title">' + esc(o.title) + '</p>' +
-                  (o.discountText ? '<p class="deal-card-discount">' + esc(o.discountText) + '</p>' : '') +
-                  '<div class="deal-card-footer">' +
-                    '<a href="/' + esc(o.slug) + '" class="deal-card-claim">Get Deal</a>' +
-                  '</div>' +
-                '</div>' +
-              '</div>'
-            );
-          }).join('');
-        })
-        .catch(function () { empty.hidden = false; });
-    })();
-  </script>
+  <!-- ═══ Benefits ═══ -->
+  <section id="benefits">
+    <div class="wrap">
+      <h2>Benefits Of <span class="gold">Joining</span></h2>
+      <p class="lead">One membership. Four ways it pays you back.</p>
+      <div class="stack">
+        <div class="benefit">
+          <div class="benefit-icon"><svg viewBox="0 0 24 24"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8Z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
+          <div><h3>Exclusive <span class="gold">Deals</span></h3><p>Member-only discounts on workwear, motoring, food, tech, travel and days out - negotiated for the logistics community.</p></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 9h8M8 13h5"/></svg></div>
+          <div><h3>Member <span class="gold">Forums</span></h3><p>Swap tips on routes, depots, pay and kit with drivers, pickers and planners across the UK.</p></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon"><svg viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8Z"/></svg></div>
+          <div><h3>Industry <span class="gold">News</span></h3><p>The latest on regulations, tachograph rules, pay and industry changes - in plain English.</p></div>
+        </div>
+        <div class="benefit">
+          <div class="benefit-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.5 13.2 17 22l-5-3-5 3 1.5-8.8"/></svg></div>
+          <div><h3>Member <span class="gold">Rewards</span></h3><p>Prize draws, referral bonuses and recognition awards for the people behind the supply chain.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <!-- How It Works -->
-  <section class="lc-section how-section" id="how-it-works">
-    <div class="lc-inner">
-      <h2 class="section-heading">How it works</h2>
-      <p class="section-sub">Join thousands of logistics workers already saving money on fuel, hotels, dining and more. It takes under 2 minutes to sign up — just £10/year. Use promo code FREE at checkout for your first year at £0.</p>
-      <div class="how-cards">
-
-        <div class="how-card">
-          <div class="how-card-num">01</div>
-          <div class="how-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
-              <polyline points="17 21 12 16 7 21"/>
-              <line x1="12" y1="16" x2="12" y2="8"/>
-              <polyline points="8 12 12 8 16 12"/>
-            </svg>
+  <!-- ═══ Digital card ═══ -->
+  <section class="alt">
+    <div class="wrap">
+      <h2>One Card. <span class="gold">Endless Savings.</span></h2>
+      <p class="lead">Your digital membership card lives on your phone. Show it in store, use your code online, and access every benefit instantly.</p>
+      <div class="card-stage">
+        <div class="dcard">
+          <div class="dcard-top">
+            <span class="logo"><span class="logi">Logi</span><span class="card">card</span></span>
+            <span class="status">ACTIVE</span>
           </div>
-          <h3>Sign up free</h3>
-          <p>Create your Logicard account in under 2 minutes. Just £10/year — or use promo code FREE at checkout for your first year at no cost.</p>
-          <a href="/signup.html" class="how-card-cta">Create account →</a>
-        </div>
-
-        <div class="how-card how-card--featured">
-          <div class="how-card-num">02</div>
-          <div class="how-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="7" width="20" height="14" rx="2"/>
-              <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/>
-              <line x1="12" y1="12" x2="12" y2="16"/>
-              <line x1="10" y1="14" x2="14" y2="14"/>
-            </svg>
+          <div class="dcard-name">Sam Taylor</div>
+          <div class="dcard-num">LC-004217</div>
+          <div class="dcard-meta">
+            <div><small>Role</small><strong>HGV Class 1 Driver</strong></div>
+            <div><small>Expires</small><strong>24-09-2027</strong></div>
           </div>
-          <h3>Browse your deals</h3>
-          <p>Explore hundreds of exclusive offers across fuel, hotels, food, tech, fleet maintenance and more — all in one place, updated daily for Logicard members.</p>
-          <a href="#benefits" class="how-card-cta">See deals →</a>
-        </div>
-
-        <div class="how-card">
-          <div class="how-card-num">03</div>
-          <div class="how-card-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/>
-            </svg>
+          <div class="dcard-foot">
+            <p>Scan at partner tills or tap <b>Show code</b> to redeem online.</p>
+            <div class="qr" id="qr" aria-hidden="true"></div>
           </div>
-          <h3>Start saving</h3>
-          <p>Redeem deals instantly using your unique Logicard membership number. Save on every journey, every fill-up and every stay — every single day.</p>
-          <a href="/signup.html" class="how-card-cta">Join today →</a>
         </div>
-
+      </div>
+      <p class="center" style="font-weight:600" hidden>Get the <span class="gold">Logicard app</span> and keep your card in your pocket.</p>
+      <div class="stores" hidden><!-- App not live yet: add real store links, then remove hidden -->
+        <a class="store" href="#" aria-label="Download on the App Store"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8c1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-.9-2.4-3.9ZM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
+        <a class="store" href="#" aria-label="Get it on Google Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.4.7-.4 1.2v18c0 .5.1.9.4 1.2l10-10.2-10-10.2Z" fill="#32bbff"/><path d="m17 8.4-3.4 3.4 3.4 3.4 3.9-2.2c1.1-.6 1.1-1.7 0-2.4L17 8.4Z" fill="#ffd400"/><path d="M13.6 11.8 3.6 22c.4.4 1 .4 1.7 0L17 15.2l-3.4-3.4Z" fill="#ff3a44"/><path d="M13.6 11.8 17 8.4 5.3 1.7c-.7-.4-1.3-.3-1.7.1l10 10Z" fill="#00f076"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
       </div>
     </div>
   </section>
 
-  <!-- Who Qualifies -->
-  <section class="qualify-section" id="who-qualifies">
-    <div class="qualify-inner">
-
-      <div class="qualify-head">
-        <span class="qualify-eyebrow">Who Qualifies?</span>
-        <h2 class="qualify-title">If you work in logistics,<br/><span class="qualify-gold">you belong here.</span></h2>
-        <p class="qualify-sub">Logicard was created by logistics professionals to reward the people who keep the UK moving. From HGV drivers and warehouse operatives to freight forwarders, supply chain managers, customs brokers and couriers — every sector of the industry qualifies.</p>
-        <a href="/qualify.html" class="qualify-check-link">See if you qualify for a Logicard <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  <!-- ═══ How it works ═══ -->
+  <section id="how">
+    <div class="wrap">
+      <h2>How <span class="gold">Logicard</span> Works</h2>
+      <p class="lead">Three simple steps and you're saving.</p>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><h3>Sign <span class="gold">Up</span></h3><p>Register online in a couple of minutes and verify you work in logistics.</p></div>
+        <div class="step"><div class="step-num">2</div><h3>Receive Your <span class="gold">Card</span></h3><p>Your digital card lands on your phone the moment you're verified.</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Start <span class="gold">Saving</span></h3><p>Browse deals, show your card or use your code, and keep more of your pay.</p></div>
       </div>
-
-
-      <div class="qualify-cta">
-        <a href="/signup.html" class="btn-primary qualify-cta-btn">
-          Claim Your Free Membership
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-        <p class="qualify-cta-note">£10/year — use code FREE for your first year at £0</p>
-      </div>
-
+      <p class="center" style="margin-top:36px"><a class="btn btn-gold" href="/signup.html">Join Now <span class="arrow">&rarr;</span></a></p>
     </div>
   </section>
 
-  <!-- Built By Logistics Workers -->
-  <section class="founders-section" id="our-story">
-    <div class="founders-inner">
-      <span class="founders-badge">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
-        Verified logistics workers only
-      </span>
-      <h2 class="founders-heading">Built <span class="yellow">by</span> logistics workers,<br/>for logistics workers.</h2>
-      <div class="founders-points">
-        <div class="founder-point">
-          <div class="founder-point-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></div>
-          <h3>Genuinely closed group</h3>
-          <p>Every member verifies they actually work in logistics — a uniform, a name badge, a payslip, or a work email. No outsiders, no dilution.</p>
-        </div>
-        <div class="founder-point">
-          <div class="founder-point-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
-          <h3>Built with your day in mind</h3>
-          <p>Deals picked for shift patterns, long hours and life on the road — not generic offers that don't fit how you actually work.</p>
-        </div>
-        <div class="founder-point">
-          <div class="founder-point-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <h3>A community, not just a card</h3>
-          <p>Thousands of people who understand the job — because they're doing it too.</p>
-        </div>
-      </div>
+  <!-- ═══ Who can join ═══ -->
+  <section id="who" class="alt">
+    <div class="wrap">
+      <h2>Who Can <span class="gold">Join?</span></h2>
+      <p class="lead">If you work in - or have retired from - the logistics industry, you belong here.</p>
+      <ul class="roles">
+        <li>Warehouse Workers</li>
+        <li>LGV/HGV Drivers</li>
+        <li>Van Drivers</li>
+        <li>Postal Workers</li>
+        <li>Sorters</li>
+        <li>Couriers</li>
+        <li>Managers</li>
+        <li>Directors</li>
+        <li>Purchasing</li>
+        <li>Importers</li>
+        <li>Exporters</li>
+        <li>Logistics Management</li>
+        <li>Admin Roles</li>
+        <li>Planning</li>
+        <li>Engineers</li>
+        <li>Mechanics</li>
+        <li>Support Roles</li>
+        <li>Agency Staff</li>
+      </ul>
+      <p class="center"><a class="btn btn-ghost" href="/qualify.html">Check if you qualify <span class="arrow">&rarr;</span></a></p>
     </div>
   </section>
 
-  <!-- Brand Partners -->
-  <section class="hp-partners-intro">
-    <div class="hp-partners-eyebrow">Our Partners</div>
-    <h2>Brands That Back Our <span class="accent">Members</span></h2>
-    <p>From vaping and snacks to travel, telecoms and food — these are just some of the brands giving Logicard members real savings.</p>
-  </section>
-
-  <section class="hp-partners-grid-section" id="partners">
-    <div class="hp-partners-grid" id="hpPartnerGrid">
-      <div class="hp-partner-slot"><span>Coming Soon</span></div>
-      <div class="hp-partner-slot"><span>Coming Soon</span></div>
-      <div class="hp-partner-slot"><span>Coming Soon</span></div>
-      <div class="hp-partner-slot"><span>Coming Soon</span></div>
-      <div class="hp-partner-slot"><span>Coming Soon</span></div>
-    </div>
-  </section>
-  <script>
-    (function () {
-      var grid = document.getElementById('hpPartnerGrid');
-      if (!grid) return;
-
-      function esc(s) {
-        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
-          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-        });
-      }
-      function isSafeImageUrl(u) {
-        return typeof u === 'string' && (/^https:\/\//i.test(u) || u.startsWith('/'));
-      }
-      function isSafeSlug(s) {
-        return typeof s === 'string' && /^[a-z0-9-]+$/.test(s);
-      }
-
-      fetch('/api/public/partner-brands')
-        .then(function (r) { if (!r.ok) throw new Error('bad response'); return r.json(); })
-        .then(function (brands) {
-          if (!Array.isArray(brands) || brands.length === 0) return; // keep the static placeholders
-          var cards = brands.filter(function (b) { return isSafeImageUrl(b.logoUrl); }).map(function (b) {
-            var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" />';
-            return isSafeSlug(b.slug)
-              ? '<a class="hp-partner-card" href="/deals/' + esc(b.slug) + '">' + img + '</a>'
-              : '<div class="hp-partner-card">' + img + '</div>';
-          });
-          var remaining = Math.max(0, 5 - cards.length);
-          for (var i = 0; i < remaining; i++) {
-            cards.push('<div class="hp-partner-slot"><span>Coming Soon</span></div>');
-          }
-          grid.innerHTML = cards.join('');
-        })
-        .catch(function () { /* keep the static placeholders */ });
-    })();
-  </script>
-
-  <!-- Driver Support -->
-  <section class="lc-section support-section" id="support">
-    <div class="lc-inner">
-      <p class="section-eyebrow">Driver wellbeing</p>
-      <h2 class="section-heading">More than just discounts</h2>
-      <p class="section-sub">We know the road isn't always easy. Logicard is here to support drivers and logistics workers beyond just saving money.</p>
-      <div class="support-grid">
-        <div class="support-card">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-          </svg>
-          <h3>Everyday wellbeing support</h3>
-          <p>Tools and resources to help you stay healthy, reset after a long shift, and look after yourself on the road.</p>
-        </div>
-        <div class="support-card">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-          </svg>
-          <h3>Support for tough days</h3>
-          <p>Access to practical guidance on managing stress, long hours and the pressures of life on the road.</p>
-        </div>
-        <div class="support-card">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="12" y1="8" x2="12" y2="12"/>
-            <line x1="12" y1="16" x2="12.01" y2="16"/>
-          </svg>
-          <h3>A community just for you</h3>
-          <p>Join thousands of logistics workers already benefitting from Logicard. Your card, your community.</p>
-        </div>
-      </div>
+  <!-- ═══ Stay in the loop ═══ -->
+  <section id="loop" class="loop">
+    <div class="wrap">
+      <h2>Stay In The <span class="gold">Loop</span></h2>
+      <p class="lead">Get the latest deals, partner updates and member-only news delivered straight to your inbox.</p>
+      <form id="loopForm" novalidate>
+        <input type="email" id="loopEmail" placeholder="Enter your email" aria-label="Email address" required />
+        <button class="btn btn-gold" type="submit">&#10148; Subscribe</button>
+      </form>
+      <p class="form-msg" id="loopMsg" role="status"></p>
+      <p class="fineprint">No spam. Unsubscribe any time.</p>
     </div>
   </section>
 
-  <!-- About Us -->
-  <section class="lc-section about-section" id="about">
-    <div class="lc-inner">
-      <p class="section-eyebrow">About Us</p>
-      <h2 class="section-heading">The discount service built for logistics.</h2>
-      <p class="section-sub">Logicard is the dedicated rewards and discount service for the UK's logistics workforce — the people who load the vans, drive the routes, run the warehouses and keep the shelves stocked, nationwide. Our members save with over 150 trusted UK brands, both online and in-store, across everyday shopping, fuel, food, travel and more. It's just £10 a year, with your first year free using code FREE at checkout.</p>
-
-      <div class="about-banner">
-        <div class="about-banner-content">
-          <h3>Not sure if you qualify?</h3>
-          <p>Whether you're working or retired from the industry, check your eligibility in under a minute.</p>
-          <a href="/qualify.html" class="about-banner-btn">
-            Check your eligibility now
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-        </div>
-      </div>
+  <!-- ═══ News ═══ -->
+  <section id="news" class="alt">
+    <div class="wrap">
+      <h2>Logistics News &amp; <span class="gold">Trade Updates</span></h2>
+      <p class="lead">News and insights from the Logicard team - see all our <a class="text-link" href="/logistics-news.html">UK logistics news</a>.</p>
+      <div class="news-grid" id="newsGrid"></div>
+      <p class="center" style="margin-top:32px"><a class="btn btn-ghost" href="/logistics-news.html">All logistics news <span class="arrow">&rarr;</span></a></p>
     </div>
   </section>
 
-  <!-- FAQs -->
-  <section class="lc-section faq-section" id="faqs">
-    <div class="lc-inner">
-      <h2 class="section-heading">FAQs</h2>
-      <div class="faq-list">
-
-        <details class="faq-item">
-          <summary>
-            What is Logicard?
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="faq-item-body">
-            <p>Logicard is the number 1 discount service for eligible logistics workers in the UK; including any staff members involved in the production of goods, the storage of goods, the transporting of goods, the stocking of goods, as well as the management of all the processes behind the scenes. Our valued members can access exclusive savings from thousands of brands across everyday shopping, fashion, travel, motoring, days out, home and lifestyle categories.</p>
-            <p>Logicard has become a well known way to save with recognised retailers and household names. It is designed to give everyday value to the people who support communities nationwide, making it a popular choice for reliable and genuine member discounts.</p>
-          </div>
+  <!-- ═══ FAQs ═══ -->
+  <section id="faqs">
+    <div class="wrap">
+      <h2><span class="gold">FAQs</span></h2>
+      <p class="lead">Everything you need to know before you join.</p>
+      <div class="faqs">
+        <details class="faq" open>
+          <summary>What is Logicard?</summary>
+          <div><p>Logicard is the number 1 discount service for eligible logistics workers in the UK, including anyone involved in the production, storage, transport and stocking of goods, and the management of the processes behind the scenes. Members can access exclusive savings from thousands of brands across everyday shopping, fashion, travel, motoring, days out, home and lifestyle.</p></div>
         </details>
-
-        <details class="faq-item">
-          <summary>
-            How do I join?
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="faq-item-body">
-            <p>You will need to register online to join Logicard. It costs just £10 per year for access to our dedicated rewards service — use code FREE at checkout for your first year at £0. Unlocking thousands of discounts, exclusive events and free tickets. Ready to apply? <a href="/signup.html" style="color:var(--orange)">Start your sign up journey here</a>.</p>
-          </div>
+        <details class="faq">
+          <summary>How do I join?</summary>
+          <div><p>Register online to join Logicard. Membership costs just £10 per year - use code <strong>FREE</strong> at checkout for your first year at £0. <a class="text-link" href="/signup.html">Start your sign-up here.</a></p></div>
         </details>
-
-        <details class="faq-item">
-          <summary>
-            Who can apply?
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="faq-item-body">
-            <p>Logicard is available for those who work or have retired from the logistics industry. <a href="/qualify.html" style="color:var(--orange)">Check to see if you're eligible here</a>.</p>
-          </div>
+        <details class="faq">
+          <summary>Who can apply?</summary>
+          <div><p>Logicard is available for anyone who works in, or has retired from, the logistics industry. <a class="text-link" href="/qualify.html">Check if you're eligible.</a></p></div>
         </details>
-
-        <details class="faq-item">
-          <summary>
-            How will my eligibility be verified?
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="faq-item-body">
+        <details class="faq">
+          <summary>How will my eligibility be verified?</summary>
+          <div>
             <p>There are two ways we verify your eligibility:</p>
             <ul>
-              <li><strong>Instant Email Verification:</strong> If you have a recognised work email, from a known logistics company, you will be verified instantly when you sign up.</li>
-              <li><strong>Document Upload:</strong> If email verification is not possible, you can upload proof of employment. This includes a work ID badge, recent payslip, or official letter showing your name, employer, and role. Our team will then review your documents and verify your membership; this typically is done within 7 days.</li>
+              <li><strong>Instant email verification:</strong> if you have a recognised work email from a known logistics company, you're verified instantly when you sign up.</li>
+              <li><strong>Document upload:</strong> otherwise, upload proof of employment - a work ID badge, recent payslip or official letter showing your name, employer and role. Our team typically reviews documents within 7 days.</li>
             </ul>
-            <p>Please note: During busy periods, processing times may vary slightly.</p>
+            <p>During busy periods, processing times may vary slightly.</p>
           </div>
         </details>
-
-        <details class="faq-item">
-          <summary>
-            What discounts can I access with Logicard?
-            <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-          </summary>
-          <div class="faq-item-body">
-            <p>Our members have access to over 150 discounts with local, regional and national UK brands. These discounts are available online and in-store across many categories. If you head to the top of our homepage, you can browse some of the offers available across a variety of categories in our 'discover savings' section.</p>
-          </div>
+        <details class="faq">
+          <summary>What discounts can I access?</summary>
+          <div><p>Members have access to over 150 discounts with local, regional and national UK brands, online and in store, across many categories. <a class="text-link" href="#deals">Browse the hot deals.</a></p></div>
         </details>
-
+        <details class="faq">
+          <summary>How do I use my digital card?</summary>
+          <div><p>Your card lives in your member dashboard on your phone. Show it at partner tills, or tap a deal to reveal your code for online checkouts.</p></div>
+        </details>
       </div>
     </div>
   </section>
 
-  <!-- CTA Banner -->
-  <section class="cta-section">
-    <h2 class="section-heading light">Ready to start saving?</h2>
-    <p class="section-sub light">Join Logicard for free today and unlock hundreds of exclusive discounts built for logistics workers.</p>
-    <div class="cta-btns">
-      <a href="/signup.html" class="btn-primary">
-        GET FREE MEMBERSHIP
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-      <a href="/login.html" class="btn-secondary">Member Sign In</a>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section class="lc-section contact-section" id="contact">
-    <div class="lc-inner">
-      <h2 class="section-heading contact-heading">
-        <svg class="contact-heading-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-          <polyline points="22,6 12,13 2,6"/>
-        </svg>
-        Get in touch
-      </h2>
-      <p class="section-sub">To find out more about Logicard, or to get your brand on board, fill out the form below.</p>
-      <div class="contact-layout">
-        <div class="contact-form-wrap">
-          <form id="contactForm" novalidate>
-            <input id="contactName"    type="text"  class="contact-input" placeholder="Full name *" required />
-            <input id="contactEmail"   type="email" class="contact-input" placeholder="Your email *" required />
-            <input id="contactTitle"   type="text"  class="contact-input" placeholder="Your job title" />
-            <input id="contactCompany" type="text"  class="contact-input" placeholder="Your company / organisation" />
-            <input id="contactPhone"   type="tel"   class="contact-input" placeholder="Contact number (optional)" />
-            <div class="contact-toggle-row">
-              <div class="toggle-switch" id="newsletterToggle"></div>
-              <label for="newsletterToggle">Click here if you would like to hear from us about news and updates.</label>
-            </div>
-            <div id="contactError"   style="display:none;color:#ff7070;font-size:13px;margin-bottom:12px;padding:10px 14px;background:rgba(255,80,80,0.08);border:1px solid rgba(255,80,80,0.22);border-radius:6px"></div>
-            <div id="contactSuccess" style="display:none;color:#2f855a;font-size:13px;margin-bottom:12px;padding:10px 14px;background:rgba(47,133,90,0.12);border:1px solid rgba(47,133,90,0.3);border-radius:6px"></div>
-            <button type="submit" class="contact-submit" id="contactBtn">SUBMIT FORM</button>
-            <p class="contact-privacy">
-              Data submitted is handled in accordance with our <a href="/privacy.html">Privacy Policy</a>.
-              This site is protected by our terms of service — see <a href="/t&amp;cs">Terms &amp; Conditions</a>.
-            </p>
-          </form>
+  <!-- ═══ Contact ═══ -->
+  <section id="contact" class="alt contact">
+    <div class="wrap">
+      <h2>Get In <span class="gold">Touch</span></h2>
+      <p class="lead">To find out more about Logicard, or to get your brand on board, fill out the form below.</p>
+      <form id="contactForm" novalidate>
+        <input id="contactName"    type="text"  placeholder="Full name *" required />
+        <input id="contactEmail"   type="email" placeholder="Your email *" required />
+        <input id="contactTitle"   type="text"  placeholder="Your job title" />
+        <input id="contactCompany" type="text"  placeholder="Your company / organisation" />
+        <input id="contactPhone"   type="tel"   placeholder="Contact number (optional)" />
+        <div class="toggle-row">
+          <div class="toggle-switch" id="newsletterToggle" role="switch" aria-label="Hear from us about news and updates"></div>
+          <label for="newsletterToggle">I'd like to hear from Logicard about news and updates.</label>
         </div>
-      </div>
+        <div id="contactError" class="contact-alert err" style="display:none"></div>
+        <div id="contactSuccess" class="contact-alert ok" style="display:none"></div>
+        <button type="submit" class="btn btn-gold" id="contactBtn">Submit</button>
+        <p class="fineprint">Data submitted is handled in accordance with our <a href="/privacy.html">Privacy Policy</a> and <a href="/t&amp;cs">Terms &amp; Conditions</a>.</p>
+      </form>
     </div>
   </section>
 
-  <!-- Footer -->
-  <!-- SHARED_FOOTER -->
+  <!-- ═══ Final CTA ═══ -->
+  <section class="final-cta">
+    <div class="wrap">
+      <h2>Ready To Start <span class="gold">Saving?</span></h2>
+      <p class="lead">Join thousands of logistics workers already saving with Logicard.</p>
+      <a class="btn btn-gold" href="/signup.html">Join Now <span class="arrow">&rarr;</span></a>
+    </div>
+  </section>
+</main>
 
-  <script src="contact.js"></script>
+<footer>
+  <div class="wrap">
+    <a class="logo" href="#top"><span class="logi">Logi</span><span class="card">card</span></a>
+    <nav>
+      <a href="/deals.html">Deals</a><a href="/about.html">About</a><a href="/partnerships.html">Partnerships</a>
+      <a href="/logistics-news.html">News</a><a href="/faqs.html">FAQs</a><a href="/#contact">Contact</a>
+      <a href="/privacy.html">Privacy</a><a href="/t&amp;cs">Terms</a>
+    </nav>
+    <p>&copy; <span id="yr"></span> Logicard. Built by logistics workers, for logistics workers.</p>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Back to top">&#8963;</button>
+
+<script>
+  // Menu
+  var body = document.body, openBtn = document.getElementById('openMenu');
+  function setMenu(open) { body.classList.toggle('menu-open', open); openBtn.setAttribute('aria-expanded', open); }
+  openBtn.addEventListener('click', function () { setMenu(true); });
+  document.getElementById('closeMenu').addEventListener('click', function () { setMenu(false); });
+  document.getElementById('scrim').addEventListener('click', function () { setMenu(false); });
+  document.querySelectorAll('.drawer a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+
+  // Rolling roles in hero
+  var roles = ['Warehouse Workers', 'LGV/HGV Drivers', 'Van Drivers', 'Postal Workers', 'Sorters', 'Couriers', 'Managers', 'Directors', 'Purchasing', 'Importers', 'Exporters', 'Logistics Management', 'Admin Roles', 'Planning', 'Engineers', 'Mechanics', 'Support Roles'];
+  var ri = 0, word = document.getElementById('rollWord');
+  setInterval(function () {
+    word.classList.add('out');
+    setTimeout(function () { ri = (ri + 1) % roles.length; word.textContent = roles[ri]; word.classList.remove('out'); }, 350);
+  }, 2200);
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function isSafeImageUrl(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
+  function isSafeSlug(v) { return typeof v === 'string' && /^[a-z0-9-]+$/i.test(v); }
+  function getJson(url) { return fetch(url).then(function (r) { if (!r.ok) throw new Error(url); return r.json(); }); }
+
+  // Partner brand ticker (admin > Partner Brands). Stays hidden if there are none.
+  getJson('/api/public/partner-brands').then(function (brands) {
+    brands = (Array.isArray(brands) ? brands : []).filter(function (b) { return isSafeImageUrl(b.logoUrl); });
+    if (!brands.length) return;
+    var html = brands.map(function (b) {
+      var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" />';
+      return '<a class="brand" href="' + (isSafeSlug(b.slug) ? '/deals/' + esc(b.slug) : '/partnerships.html') + '">' + img + '</a>';
+    }).join('');
+    // Repeat so one pass is wider than the screen, then double it for a seamless loop
+    var one = new Array(Math.max(1, Math.ceil(12 / brands.length)) + 1).join(html);
+    document.getElementById('ticker').innerHTML = one + one;
+    document.getElementById('brandTicker').hidden = false;
+  }).catch(function () {});
+
+  // Hot deals (admin > Offers, featured)
+  var slider = document.getElementById('slider');
+  getJson('/api/public/featured-offers').then(function (offers) {
+    if (!Array.isArray(offers) || !offers.length) throw new Error('none');
+    slider.innerHTML = offers.map(function (o) {
+      var top = isSafeImageUrl(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
+      var href = isSafeSlug(o.slug) ? '/' + esc(o.slug) : '/deals.html';
+      return '<a class="deal" href="' + href + '"><div class="deal-top">' + top +
+        (o.discountText ? '<span class="deal-off">' + esc(o.discountText) + '</span>' : '') + '</div>' +
+        '<div class="deal-body">' + (o.category ? '<span class="deal-cat">' + esc(o.category) + '</span>' : '') +
+        '<h3>' + esc(o.merchantName) + '</h3><p>' + esc(o.title) + '</p><span class="deal-cta">Get deal &rarr;</span></div></a>';
+    }).join('');
+    document.getElementById('sliderNav').hidden = offers.length < 2;
+  }).catch(function () { document.getElementById('dealsEmpty').hidden = false; });
+
+  // Latest logistics news (top 3)
+  getJson('/api/public/logistics-news').then(function (items) {
+    if (!Array.isArray(items) || !items.length) return;
+    var icons = ['&#128667;', '&#128230;', '&#128674;'];
+    document.getElementById('newsGrid').innerHTML = items.slice(0, 3).map(function (n, i) {
+      var link = /^https?:\/\//i.test(n.link || '') ? esc(n.link) : '/logistics-news.html';
+      var date = n.publishedAt ? new Date(n.publishedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+      var summary = String(n.summary || '');
+      if (summary.length > 140) summary = summary.slice(0, 137) + '...';
+      return '<a class="news" href="' + link + '" target="_blank" rel="noopener"><div class="news-img">' + icons[i % 3] + '</div><div class="news-body">' +
+        (n.source ? '<span class="pill">' + esc(n.source) + '</span>' : '') + '<h3>' + esc(n.title) + '</h3>' +
+        (summary ? '<p>' + esc(summary) + '</p>' : '') + (date ? '<time>' + esc(date) + '</time>' : '') + '</div></a>';
+    }).join('');
+  }).catch(function () {});
+
+  // Deals slider arrows
+  function slide(dir) { var card = slider.querySelector('.deal'); if (!card) return; slider.scrollBy({ left: dir * (card.offsetWidth + 18), behavior: 'smooth' }); }
+  document.getElementById('prev').addEventListener('click', function () { slide(-1); });
+  document.getElementById('next').addEventListener('click', function () { slide(1); });
+
+  // Decorative QR pattern on the sample card
+  var qr = document.getElementById('qr'), cells = '';
+  for (var i = 0; i < 49; i++) {
+    var r = Math.floor(i / 7), c = i % 7;
+    var finder = (r < 2 && c < 2) || (r < 2 && c > 4) || (r > 4 && c < 2);
+    cells += '<i class="' + (finder || ((i * 7 + 3) % 5 < 2) ? '' : 'o') + '"></i>';
+  }
+  qr.innerHTML = cells;
+
+  // Newsletter sign-up
+  document.getElementById('loopForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('loopEmail'), msg = document.getElementById('loopMsg');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { msg.textContent = 'Please enter a valid email address.'; return; }
+    var btn = this.querySelector('button');
+    btn.disabled = true;
+    fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: 'Newsletter subscriber', email: email.value.trim(), newsletterOptIn: true, source: 'Homepage Newsletter' })
+    })
+      .then(function (r) { if (!r.ok) throw new Error(); msg.textContent = "Thanks! You're on the list."; email.value = ''; })
+      .catch(function () { msg.textContent = 'Something went wrong. Please try again.'; })
+      .then(function () { btn.disabled = false; });
+  });
+
+  // Back to top
+  var toTop = document.getElementById('toTop');
+  window.addEventListener('scroll', function () { toTop.classList.toggle('show', window.scrollY > 700); }, { passive: true });
+  toTop.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+  document.getElementById('yr').textContent = new Date().getFullYear();
+</script>
+<script src="/contact.js"></script>
 </body>
 </html>
