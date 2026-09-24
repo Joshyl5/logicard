@@ -424,7 +424,7 @@
         });
         grid.innerHTML = shown.map(function (o) {
           var img = safeImg(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
-          var logo = logos[key(o.merchantName)];
+          var logo = (safeImg(o.logoUrl) && o.logoUrl) || logos[key(o.merchantName)];
           var badge = logo ? '<span class="md-logo"><img src="' + esc(logo) + '" alt="' + esc(o.merchantName) + '" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '';
           var desc = String(o.description || '');
           if (desc.length > 120) desc = desc.slice(0, 117).replace(/\s+\S*$/, '') + '...';

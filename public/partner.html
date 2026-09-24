@@ -68,16 +68,19 @@
     /* ── Form section (gold) ── */
     .pt-section { padding: 72px 24px 96px; background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
 
+    /* Application form: white card, black text, gold key words */
     .pt-form-card {
-      max-width: 640px; margin: 0 auto; background: var(--white); border-radius: 20px;
-      padding: 44px; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      --navy: #111111; --white: #ffffff; --text-muted: #333333;
+      max-width: 640px; margin: 0 auto; background: #ffffff; color: #111111; border-radius: 20px;
+      padding: 44px; box-shadow: 0 12px 40px rgba(0,0,0,0.25); border-top: 6px solid var(--orange);
     }
+    .pt-form-card .gold { color: #FFB300; }
     .pt-form-head { text-align: center; margin-bottom: 28px; }
     .pt-form-head h2 { font-size: clamp(22px, 2.8vw, 28px); font-weight: 900; color: var(--navy); letter-spacing: -0.4px; margin-bottom: 8px; }
     .pt-form-head p { font-size: 14.5px; color: var(--text-muted); line-height: 1.6; }
     .pt-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .pt-field { display: flex; flex-direction: column; gap: 6px; }
-    .pt-field label { font-size: 12.5px; font-weight: 700; color: var(--navy); }
+    .pt-field label { font-size: 13px; font-weight: 700; color: #111111; }
     .pt-field input, .pt-field textarea {
       background: #f4f6f9; border: 1px solid rgba(10,10,10,0.15); border-radius: 8px;
       color: var(--navy); font-family: inherit; font-size: 14px; padding: 12px 14px;
@@ -100,7 +103,7 @@
       text-align: center; font-size: 12.5px; color: var(--text-muted);
       margin-top: 18px; line-height: 1.6;
     }
-    .pt-form-note a { color: var(--orange-dark); font-weight: 700; text-decoration: none; }
+    .pt-form-note a { color: #111111; font-weight: 800; text-decoration: underline; text-decoration-color: #FFB300; text-decoration-thickness: 2px; text-underline-offset: 3px; }
     .pt-form-note a:hover { text-decoration: underline; }
 
     @media (max-width: 600px) {
@@ -144,7 +147,7 @@
   <section class="pt-section">
     <div class="pt-form-card">
       <div class="pt-form-head">
-        <h2>Tell us about your brand</h2>
+        <h2>Tell Us About <span class="gold">Your Brand</span></h2>
         <p>Takes about 2 minutes. We'll come back to you within a few working days.</p>
       </div>
       <form id="partnerForm" novalidate>

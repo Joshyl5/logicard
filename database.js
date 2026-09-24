@@ -181,6 +181,9 @@ async function initDb() {
   // below. A partial unique index (not a plain UNIQUE column) so
   // multiple NULLs are allowed while it's being backfilled.
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS slug TEXT`);
+  // Brand logo per offer (2026-09): shown on the offer page, deal cards and
+  // Hot Deals. Falls back to the matching partner brand's logo when empty.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS logo_url TEXT`);
   await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS offers_slug_idx ON offers (slug) WHERE slug IS NOT NULL`);
   const unslugged = await pool.query('SELECT id, merchant_name FROM offers WHERE slug IS NULL ORDER BY id ASC');
   for (const row of unslugged.rows) {
@@ -418,6 +421,7 @@ function toOffer(row) {
     voucherCode:   row.voucher_code,
     affiliateUrl:  row.affiliate_url,
     imageUrl:      row.image_url,
+    logoUrl:       row.logo_url,
     isActive:          row.is_active,
     featuredDashboard: !!row.featured_dashboard,
     featuredPublic:    !!row.featured_public,
@@ -614,7 +618,7 @@ async function getOfferById(id) {
 async function createOffer(data) {
   const {
     merchantName, title, description = null, category = null,
-    discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
+    discountText = null, voucherCode = null, affiliateUrl, imageUrl = null, logoUrl = null,
     isActive = true, featuredDashboard = false, featuredPublic = false,
     targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
@@ -623,13 +627,13 @@ async function createOffer(data) {
     INSERT INTO offers (
       merchant_name, title, description, category, discount_text,
       voucher_code, affiliate_url, image_url, is_active, is_featured,
-      featured_dashboard, featured_public, target_gender, platform, slug, sort_order
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+      featured_dashboard, featured_public, target_gender, platform, slug, sort_order, logo_url
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
-    targetGender || null, platform || null, slug || slugify(merchantName), sortOrder,
+    targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, logoUrl || null,
   ]);
 
   return toOffer(r.rows[0]);
@@ -638,7 +642,7 @@ async function createOffer(data) {
 async function updateOffer(id, data) {
   const {
     merchantName, title, description = null, category = null,
-    discountText = null, voucherCode = null, affiliateUrl, imageUrl = null,
+    discountText = null, voucherCode = null, affiliateUrl, imageUrl = null, logoUrl = null,
     isActive = true, featuredDashboard = false, featuredPublic = false,
     targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
@@ -648,13 +652,13 @@ async function updateOffer(id, data) {
       merchant_name = $1, title = $2, description = $3, category = $4,
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
       is_active = $9, is_featured = $10, featured_dashboard = $11, featured_public = $12,
-      target_gender = $13, platform = $14, slug = $15, sort_order = $16, updated_at = NOW()
+      target_gender = $13, platform = $14, slug = $15, sort_order = $16, logo_url = $18, updated_at = NOW()
     WHERE id = $17
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
-    targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, id,
+    targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, id, logoUrl || null,
   ]);
 
   return toOffer(r.rows[0]);

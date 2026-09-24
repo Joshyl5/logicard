@@ -1078,6 +1078,7 @@ function validOfferPayload(body) {
   if (targetGender && !GENDER_VALUES.includes(targetGender)) return 'Invalid target gender.';
   if (platform && !OFFER_PLATFORMS.includes(platform)) return 'Invalid platform.';
   if (slug && !/^[a-z0-9-]+$/.test(slug)) return 'Page URL slug can only contain lowercase letters, numbers and hyphens.';
+  if (body.logoUrl && !/^(https:\/\/|\/local-uploads\/)/i.test(body.logoUrl)) return 'Brand logo must be an https:// link or an uploaded file.';
   return null;
 }
 
@@ -1958,15 +1959,15 @@ app.post('/api/admin/forum/:type(post|reply)/:id/:action(remove|restore|dismiss)
 // because there's no member to target.
 app.get('/api/public/offers', publicOffersLimiter, async (_req, res) => {
   const offers = (await getActiveOffers()).filter(o => !o.targetGender);
-  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, slug }) => ({
-    id, merchantName, title, description, category, discountText, imageUrl, slug,
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
+    id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug,
   })));
 });
 
 app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
   const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender);
-  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, slug }) => ({
-    id, merchantName, title, description, category, discountText, imageUrl, slug, // slug powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
+    id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug, // slug powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
   })));
 });
 
@@ -2391,7 +2392,8 @@ app.get('/:slug', async (req, res, next) => {
     const norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
     const [brands, allOffers] = await Promise.all([getActivePartnerBrands(), getActiveOffers()]);
     const brand = brands.find(b => norm(b.brandName) === norm(offer.merchantName));
-    const brandLogo = brand && /^(https:\/\/|\/(?!\/))/i.test(brand.logoUrl || '') ? brand.logoUrl : null;
+    const safeLogo = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '') ? u : null;
+    const brandLogo = safeLogo(offer.logoUrl) || (brand ? safeLogo(brand.logoUrl) : null);
     const related = allOffers
       .filter(o => o.id !== offer.id && o.slug && !o.targetGender && o.category === offer.category)
       .slice(0, 3)

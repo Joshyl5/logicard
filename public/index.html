@@ -143,7 +143,9 @@
   .deal { flex: 0 0 min(320px, 84vw); scroll-snap-align: start; background: var(--card); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color .2s; }
   .deal:hover { border-color: var(--gold-line); }
   .deal-top { height: 190px; display: grid; place-items: center; font-family: var(--display); font-size: 64px; color: var(--gold); position: relative; overflow: hidden; background: #1a1a1a; }
-  .deal-top img { width: 100%; height: 100%; object-fit: contain; } /* never crop brand artwork */
+  .deal-top img { width: 100%; height: 100%; object-fit: contain; }
+  .deal-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+  .deal-top .deal-logo img { width: auto; height: auto; max-height: 34px; max-width: 100%; object-fit: contain; } /* never crop brand artwork */
   .deal-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
   .deal h3 { font-size: 22px; line-height: 1.2; }
   .deal p { color: var(--muted); font-size: 15px; flex: 1; }
@@ -616,7 +618,8 @@
       var href = isSafeSlug(o.slug) ? '/' + esc(o.slug) : '/deals.html';
       var desc = String(o.description || '');
       if (desc.length > 110) desc = desc.slice(0, 107).replace(/\s+\S*$/, '') + '...';
-      return '<a class="deal" href="' + href + '"><div class="deal-top">' + top + '</div>' +
+      var logo = isSafeImageUrl(o.logoUrl) ? '<span class="deal-logo"><img src="' + esc(o.logoUrl) + '" alt="' + esc(o.merchantName) + '" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '';
+      return '<a class="deal" href="' + href + '"><div class="deal-top">' + top + logo + '</div>' +
         '<div class="deal-body"><h3>' + esc(o.title || o.merchantName) + '</h3>' +
         '<p><strong>' + esc(o.merchantName) + '</strong>' + (desc ? ' - ' + esc(desc) : '') + '</p>' +
         (o.category ? '<span class="deal-cat">' + esc(o.category) + '</span>' : '') +

@@ -136,6 +136,7 @@ const offerSubmitBtn  = document.getElementById('offerSubmitBtn');
 function openModal(id) {
   offerFormError.textContent = '';
   offerForm.reset();
+  showOfferLogoPreview(null);
   document.getElementById('offerId').value       = '';
   document.getElementById('offerIsActive').checked = true;
   document.getElementById('offerFeaturedDashboard').checked = false;
@@ -158,6 +159,8 @@ function openModal(id) {
       document.getElementById('offerVoucherCode').value    = offer.voucherCode || '';
       document.getElementById('offerAffiliateUrl').value   = offer.affiliateUrl || '';
       document.getElementById('offerImageUrl').value       = offer.imageUrl || '';
+      document.getElementById('offerLogoUrl').value        = offer.logoUrl || '';
+      showOfferLogoPreview(offer.logoUrl);
       document.getElementById('offerSortOrder').value      = offer.sortOrder || 0;
       document.getElementById('offerIsActive').checked     = !!offer.isActive;
       document.getElementById('offerFeaturedDashboard').checked = !!offer.featuredDashboard;
@@ -195,6 +198,7 @@ offerForm.addEventListener('submit', async e => {
     voucherCode:  document.getElementById('offerVoucherCode').value.trim() || null,
     affiliateUrl: document.getElementById('offerAffiliateUrl').value.trim(),
     imageUrl:     document.getElementById('offerImageUrl').value.trim() || null,
+    logoUrl:      document.getElementById('offerLogoUrl').value.trim() || null,
     sortOrder:    Number(document.getElementById('offerSortOrder').value) || 0,
     isActive:     document.getElementById('offerIsActive').checked,
     featuredDashboard: document.getElementById('offerFeaturedDashboard').checked,
@@ -338,3 +342,38 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+
+// ── Brand logo upload (reuses the admin partner-brand logo upload endpoint) ──
+function showOfferLogoPreview(src) {
+  const img = document.getElementById('offerLogoPreview');
+  if (!img) return;
+  if (!src) { img.style.display = 'none'; img.removeAttribute('src'); return; }
+  img.src = src; img.style.display = 'block';
+}
+(function () {
+  const btn = document.getElementById('offerLogoUploadBtn');
+  const file = document.getElementById('offerLogoFile');
+  const url = document.getElementById('offerLogoUrl');
+  const status = document.getElementById('offerLogoStatus');
+  if (!btn) return;
+  url.addEventListener('input', () => showOfferLogoPreview(url.value.trim()));
+  btn.addEventListener('click', async () => {
+    if (!file.files[0]) { status.textContent = 'Choose an image file first.'; return; }
+    btn.disabled = true; btn.textContent = 'Uploading…'; status.textContent = '';
+    try {
+      const fd = new FormData();
+      fd.append('file', file.files[0]);
+      const res = await fetch('/api/admin/partner-brands/upload', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (!res.ok) { status.textContent = json.error || 'Upload failed.'; return; }
+      url.value = json.url;
+      showOfferLogoPreview(json.url);
+      status.textContent = 'Uploaded — remember to press Save.';
+    } catch {
+      status.textContent = 'Network error — please try again.';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Upload';
+    }
+  });
+})();

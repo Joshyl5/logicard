@@ -170,6 +170,16 @@
           <input id="offerImageUrl" type="url" placeholder="https://…" />
         </div>
         <div class="lfield" style="margin-bottom:14px;">
+          <label for="offerLogoUrl">Brand Logo (shown on the offer page and deal cards)</label>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+            <input id="offerLogoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:180px;" />
+            <button type="button" class="export-btn" id="offerLogoUploadBtn">Upload</button>
+          </div>
+          <input id="offerLogoUrl" type="text" placeholder="https://… (or upload above)" />
+          <p id="offerLogoStatus" style="font-size:12px;margin-top:6px;color:rgba(255,255,255,0.8);"></p>
+          <img id="offerLogoPreview" alt="" style="display:none;max-height:56px;max-width:180px;margin-top:6px;background:#fff;padding:6px;border-radius:8px;" />
+        </div>
+        <div class="lfield" style="margin-bottom:14px;">
           <label for="offerSortOrder">Sort Order</label>
           <input id="offerSortOrder" type="number" value="0" />
         </div>
