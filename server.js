@@ -23,7 +23,7 @@ const {
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
-  upsertNewsItem, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
+  upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
@@ -171,27 +171,42 @@ function cleanNewsSummary(snippet) {
   return cleaned ? cleaned.slice(0, 400) : null;
 }
 
+// One story a week: if an auto-pulled story was added in the last 7 days,
+// do nothing (no feeds are even downloaded). Otherwise read the feeds and
+// add the single newest headline we don't already have.
+const NEWS_STORIES_EVERY_DAYS = 7;
 async function fetchLogisticsNews() {
-  let totalNew = 0;
+  try {
+    if (await hasAutoNewsSince(NEWS_STORIES_EVERY_DAYS)) return;
+  } catch (err) {
+    console.error('[news] Could not check last story date:', err.message);
+    return;
+  }
+  const candidates = [];
   for (const feed of LOGISTICS_NEWS_FEEDS) {
     try {
       const parsed = await rssParser.parseURL(feed.url);
       for (const item of (parsed.items || []).slice(0, 15)) {
         if (!item.link || !item.title) continue;
-        await upsertNewsItem({
+        candidates.push({
           title: item.title,
           link: item.link,
           source: feed.source,
           summary: cleanNewsSummary(item.contentSnippet),
           publishedAt: item.isoDate || item.pubDate || null,
         });
-        totalNew++;
       }
     } catch (err) {
       console.error(`[news] Failed to fetch ${feed.source} (${feed.url}):`, err.message);
     }
   }
-  if (totalNew) console.log(`[news] Checked ${totalNew} article(s) across ${LOGISTICS_NEWS_FEEDS.length} feed(s) (duplicates skipped automatically).`);
+  candidates.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
+  for (const item of candidates) {
+    if (await upsertNewsItem(item)) {
+      console.log(`[news] Added this week's story: "${item.title}" (${item.source})`);
+      return;
+    }
+  }
 }
 
 const FREE_EMAIL_DOMAINS = new Set([
@@ -2638,7 +2653,7 @@ app.get('/:slug', async (req, res, next) => {
 });
 
 const PURGE_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
-const NEWS_FETCH_INTERVAL_MS  = 3 * 60 * 60 * 1000;  // every 3 hours
+const NEWS_FETCH_INTERVAL_MS  = 6 * 60 * 60 * 1000;  // check every 6 hours; adds at most one story a week
 
 app.listen(PORT, () => {
   console.log(`Logicard running at http://localhost:${PORT}`);

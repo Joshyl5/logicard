@@ -868,17 +868,43 @@ function toNewsItem(row) {
 // One row per article link — re-fetching the same feed just skips anything
 // already stored (ON CONFLICT DO NOTHING), so this is safe to run on a
 // timer without growing duplicates or needing to track what's new itself.
+// Returns true if the article was new (false if its link was already stored).
 async function upsertNewsItem({ title, link, source, summary, publishedAt }) {
-  await pool.query(
+  const r = await pool.query(
     `INSERT INTO news_items (title, link, source, summary, published_at)
      VALUES ($1,$2,$3,$4,$5) ON CONFLICT (link) DO NOTHING`,
     [title, link, source, summary || null, publishedAt || null]
   );
+  return r.rowCount > 0;
 }
 
+// True if an auto-pulled story was added within the last `days` days
+// (the weekly news job uses this so it adds at most one story a week,
+// however often the server restarts).
+async function hasAutoNewsSince(days) {
+  const r = await pool.query(
+    `SELECT 1 FROM news_items WHERE NOT COALESCE(is_manual, FALSE)
+       AND fetched_at > NOW() - ($1::int * INTERVAL '1 day') LIMIT 1`,
+    [days]
+  );
+  return r.rowCount > 0;
+}
+
+// Public news: one auto-pulled story per week (the newest that week), plus
+// every story added by hand in Manage News.
 async function getRecentNewsItems(limit = 30) {
   const r = await pool.query(
-    'SELECT * FROM news_items ORDER BY published_at DESC NULLS LAST, fetched_at DESC LIMIT $1',
+    `SELECT * FROM (
+       SELECT * FROM (
+         SELECT DISTINCT ON (date_trunc('week', COALESCE(published_at, fetched_at))) *
+           FROM news_items WHERE NOT COALESCE(is_manual, FALSE)
+          ORDER BY date_trunc('week', COALESCE(published_at, fetched_at)) DESC, COALESCE(published_at, fetched_at) DESC
+       ) weekly
+       UNION ALL
+       SELECT * FROM news_items WHERE is_manual
+     ) u
+     ORDER BY published_at DESC NULLS LAST, fetched_at DESC
+     LIMIT $1`,
     [limit]
   );
   return r.rows.map(toNewsItem);
@@ -1587,7 +1613,7 @@ module.exports = {
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
-  upsertNewsItem, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
+  upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
   registerOfferInterest, getMemberWaitlistedOfferIds, popOfferWaitlist,
   createNotification, getUnreadNotifications, markNotificationRead,
