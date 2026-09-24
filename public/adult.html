@@ -10,13 +10,13 @@
   <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #071d40; --navy-deep: #04040d;
-      --navy-mid: #0d3b80; --white: #ffffff; --text-muted: #666666;
+      --orange: #FFB300; --orange-dark: #E09A00; --navy: #0a0a0a; --navy-deep: #04040d;
+      --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
 
@@ -62,10 +62,10 @@
       margin: 0 auto 20px;
     }
     .age-gate-card h1 { font-size: 22px; font-weight: 900; margin-bottom: 10px; letter-spacing: -0.3px; }
-    .age-gate-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 24px; }
+    .age-gate-card p { color: rgba(255,255,255,0.9); font-size: 14.5px; line-height: 1.6; margin-bottom: 24px; }
     .age-gate-dob { display: flex; gap: 10px; margin-bottom: 18px; }
     .age-gate-dob select {
-      flex: 1; background: rgba(4,14,34,0.8); border: 1px solid rgba(255,255,255,0.18);
+      flex: 1; background: rgba(5,5,5,0.8); border: 1px solid rgba(255,255,255,0.18);
       border-radius: 8px; color: var(--white); font-family: inherit; font-size: 14px;
       padding: 11px 8px; outline: none;
     }
@@ -84,11 +84,11 @@
     }
     .age-gate-enter:hover { background: var(--orange-dark); }
     .age-gate-leave {
-      color: rgba(255,255,255,0.5); font-size: 13.5px; text-decoration: none;
+      color: rgba(255,255,255,0.9); font-size: 13.5px; text-decoration: none;
       padding: 6px;
     }
     .age-gate-leave:hover { color: var(--white); }
-    .age-gate-legal { margin-top: 20px; font-size: 11.5px; color: rgba(255,255,255,0.35); line-height: 1.6; }
+    .age-gate-legal { margin-top: 20px; font-size: 11.5px; color: rgba(255,255,255,0.75); line-height: 1.6; }
 
     /* Page content (hidden behind the gate until confirmed) */
     #pageContent { display: none; }
@@ -96,7 +96,7 @@
 
     .page-hero { background: var(--navy); color: var(--white); padding: 64px 24px; text-align: center; }
     .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
-    .page-hero p { color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
+    .page-hero p { color: rgba(255,255,255,0.9); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
     .age-pill {
       display: inline-flex; align-items: center; gap: 6px;
       background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
@@ -109,29 +109,29 @@
     .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 24px 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 24px; }
     .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; text-align: center; }
     .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
-    .category-card p { color: rgba(255,255,255,0.65); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
+    .category-card p { color: rgba(255,255,255,0.9); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
     .category-card .soon-badge {
-      display: inline-block; background: rgba(7,29,64,0.08); color: rgba(7,29,64,0.55);
+      display: inline-block; background: rgba(10,10,10,0.08); color: rgba(10,10,10,0.55);
       font-weight: 700; font-size: 12.5px; padding: 8px 16px; border-radius: 100px;
     }
 
     .cat-gold-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); }
-    .cat-gold-band .category-card { background: rgba(255,255,255,0.9); border-color: rgba(7,29,64,0.12); }
+    .cat-gold-band .category-card { background: rgba(255,255,255,0.9); border-color: rgba(10,10,10,0.12); }
     .cat-gold-band .category-card h2 { color: var(--navy); }
-    .cat-gold-band .category-card p { color: rgba(7,29,64,0.7); }
+    .cat-gold-band .category-card p { color: rgba(10,10,10,0.7); }
 
     .responsible-note {
       max-width: 720px; margin: 0 auto; padding: 0 24px 56px; text-align: center;
     }
-    .responsible-note p { font-size: 13px; color: rgba(7,29,64,0.6); line-height: 1.7; }
+    .responsible-note p { font-size: 13px; color: rgba(10,10,10,0.6); line-height: 1.7; }
     .responsible-note a { color: var(--navy); font-weight: 700; }
 
     .bottom-cta { text-align: center; padding: 56px 24px 80px; }
     .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
     .cta-btn:hover { background: var(--orange-dark); }
 
-    footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.5); }
-    footer a { color: rgba(255,255,255,0.5); }
+    footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.9); }
+    footer a { color: rgba(255,255,255,0.9); }
 
   </style>
 </head>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Members Forum - Logicard</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
+  <link rel="stylesheet" href="/forum.css?v=1" />
+</head>
+<body>
+  <!-- SHARED_NAV -->
+
+  <main class="fwrap">
+    <a class="pback" href="/forum">&larr; All discussions</a>
+    <div id="postArea"><p class="pempty">Loading...</p></div>
+
+    <div id="repliesArea" hidden>
+      <h2 class="rhead">Replies</h2>
+      <div class="rlist" id="rlist"></div>
+
+      <form class="fform" id="replyForm" novalidate>
+        <label for="rBody">Add a reply</label>
+        <textarea id="rBody" maxlength="3000" placeholder="Write your reply..." required></textarea>
+        <p class="fmsg" id="rMsg" role="status"></p>
+        <div class="fform-row"><button type="submit" class="fbtn fbtn-gold" id="rSubmit">Reply</button></div>
+      </form>
+      <p class="fnote" id="verifyNote" hidden>Your membership needs verifying before you can reply. <a href="/verify">Verify now</a></p>
+    </div>
+  </main>
+
+  <script src="/forum.js?v=1"></script>
+  <script>
+    (function () {
+      var F = window.LogicardForum;
+      var postId = location.pathname.split('/').pop();
+      var postArea = document.getElementById('postArea');
+
+      // Report / Delete links for a post or reply
+      function actions(type, item) {
+        var wrap = document.createElement('div'); wrap.className = 'pactions';
+        var path = '/api/forum/' + (type === 'reply' ? 'replies' : 'posts') + '/' + item.id;
+        if (item.isMine) {
+          var del = document.createElement('button'); del.type = 'button'; del.className = 'flink'; del.textContent = 'Delete';
+          del.addEventListener('click', function () {
+            if (!confirm('Delete this ' + type + '?')) return;
+            F.api('DELETE', path).then(function () {
+              if (type === 'post') window.location.href = '/forum'; else render();
+            }).catch(function (e) { alert(e.message); });
+          });
+          wrap.appendChild(del);
+        } else {
+          var rep = document.createElement('button'); rep.type = 'button'; rep.className = 'flink'; rep.textContent = 'Report';
+          rep.addEventListener('click', function () {
+            if (!confirm('Report this ' + type + ' to the Logicard team?')) return;
+            F.api('POST', path + '/report').then(function () { rep.textContent = 'Reported - thanks'; rep.disabled = true; })
+              .catch(function (e) { alert(e.message); });
+          });
+          wrap.appendChild(rep);
+        }
+        return wrap;
+      }
+
+      function render() {
+        F.api('GET', '/api/forum/posts/' + encodeURIComponent(postId)).then(function (p) {
+          document.title = p.title + ' - Logicard Forum';
+          postArea.innerHTML = '';
+          var card = document.createElement('article'); card.className = 'pfull';
+          card.innerHTML = '<span class="pcat"></span><h1></h1><div class="pmeta"></div><div class="pbody"></div>';
+          card.querySelector('.pcat').textContent = p.category;
+          card.querySelector('h1').textContent = p.title;
+          F.meta(card.querySelector('.pmeta'), p.author, p.createdAt);
+          card.querySelector('.pbody').textContent = p.body;
+          card.appendChild(actions('post', p));
+          postArea.appendChild(card);
+
+          var rlist = document.getElementById('rlist'); rlist.innerHTML = '';
+          if (!p.replies.length) rlist.innerHTML = '<p class="pempty" style="padding:10px">No replies yet.</p>';
+          p.replies.forEach(function (r) {
+            var d = document.createElement('div'); d.className = 'reply';
+            d.innerHTML = '<div class="pmeta"></div><div class="pbody"></div>';
+            F.meta(d.querySelector('.pmeta'), r.author, r.createdAt);
+            d.querySelector('.pbody').textContent = r.body;
+            d.appendChild(actions('reply', r));
+            rlist.appendChild(d);
+          });
+          document.getElementById('repliesArea').hidden = false;
+          document.getElementById('replyForm').hidden = !p.canPost;
+          document.getElementById('verifyNote').hidden = p.canPost;
+        }).catch(function (e) {
+          postArea.innerHTML = ''; var x = document.createElement('p'); x.className = 'pempty'; x.textContent = e.message; postArea.appendChild(x);
+        });
+      }
+
+      document.getElementById('replyForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = document.getElementById('rSubmit'), msg = document.getElementById('rMsg'), body = document.getElementById('rBody');
+        msg.className = 'fmsg'; msg.textContent = ''; btn.disabled = true;
+        F.api('POST', '/api/forum/posts/' + encodeURIComponent(postId) + '/replies', { body: body.value })
+          .then(function () { body.value = ''; render(); })
+          .catch(function (err) { msg.className = 'fmsg err'; F.showError(msg, err); })
+          .then(function () { btn.disabled = false; });
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

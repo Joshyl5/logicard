@@ -19,7 +19,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     /* Palette matches BRAND.md section 3 exactly — flat navy / flat-or-gradient
@@ -28,8 +28,8 @@
        same rhythm as the homepage. */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --navy: #071d40;
-      --navy-mid: #0d3b80;
+      --navy: #0a0a0a;
+      --navy-mid: #1f1f1f;
       --orange: #FFB300;
       --orange-dark: #E09A00;
       --white: #ffffff;
@@ -80,7 +80,7 @@
     }
     .ab-hero h1 .gold { color: var(--orange); }
     .ab-hero p.ab-body {
-      font-size: 17px; color: rgba(255,255,255,0.7); line-height: 1.7;
+      font-size: 17px; color: rgba(255,255,255,0.9); line-height: 1.7;
       max-width: 520px; margin-bottom: 36px;
     }
     .ab-hero-cta {
@@ -126,18 +126,18 @@
       letter-spacing: -0.6px; line-height: 1.12; margin-bottom: 16px; text-wrap: balance;
     }
     .ab-section-sub { font-size: 16px; line-height: 1.7; }
-    .ab-section.navy .ab-section-sub { color: rgba(255,255,255,0.6); }
-    .ab-section.gold .ab-section-sub { color: rgba(7,29,64,0.75); }
+    .ab-section.navy .ab-section-sub { color: rgba(255,255,255,0.9); }
+    .ab-section.gold .ab-section-sub { color: rgba(10,10,10,0.75); }
 
     /* ── Origin story (gold) ── */
     .ab-story { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
     .ab-story-head { max-width: 480px; }
-    .ab-story-text p { font-size: 16.5px; line-height: 1.85; color: rgba(7,29,64,0.85); margin-bottom: 18px; }
+    .ab-story-text p { font-size: 16.5px; line-height: 1.85; color: rgba(10,10,10,0.85); margin-bottom: 18px; }
     .ab-story-text p:last-child { margin-bottom: 0; }
     .ab-story-card {
       position: relative; overflow: hidden;
       background: var(--white); border-radius: 18px; padding: 36px 32px;
-      box-shadow: 0 12px 40px rgba(7,29,64,0.18);
+      box-shadow: 0 12px 40px rgba(10,10,10,0.18);
     }
     .ab-story-card-bg {
       position: absolute; right: -18px; bottom: -22px;
@@ -148,12 +148,12 @@
     .ab-shift-row {
       position: relative; z-index: 1;
       display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 16px 0; border-bottom: 1px solid rgba(7,29,64,0.1);
+      padding: 16px 0; border-bottom: 1px solid rgba(10,10,10,0.1);
     }
     .ab-shift-row:first-child { padding-top: 0; }
     .ab-shift-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .ab-shift-row .was { font-size: 15px; color: rgba(7,29,64,0.35); text-decoration: line-through; }
-    .ab-shift-row .arrow { color: rgba(7,29,64,0.25); flex-shrink: 0; }
+    .ab-shift-row .was { font-size: 15px; color: rgba(10,10,10,0.35); text-decoration: line-through; }
+    .ab-shift-row .arrow { color: rgba(10,10,10,0.25); flex-shrink: 0; }
     .ab-shift-row .now-group { display: flex; align-items: center; gap: 8px; }
     .ab-shift-row .now { font-size: 16px; font-weight: 800; color: var(--navy); }
     .ab-shift-row .tick { width: 19px; height: 19px; flex-shrink: 0; }
@@ -163,7 +163,7 @@
     .ab-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
     .ab-card {
       background: var(--white); border-radius: 16px; padding: 32px 28px;
-      box-shadow: 0 2px 20px rgba(7,29,64,0.07);
+      box-shadow: 0 2px 20px rgba(10,10,10,0.07);
     }
     .ab-card-icon {
       width: 46px; height: 46px; border-radius: 12px;
@@ -179,7 +179,7 @@
     .ab-newsletter-card {
       max-width: 620px; margin: 48px auto 0;
       background: var(--navy); border-radius: 20px; padding: 44px 40px;
-      text-align: center; box-shadow: 0 16px 44px rgba(7,29,64,0.25);
+      text-align: center; box-shadow: 0 16px 44px rgba(10,10,10,0.25);
     }
     .ab-newsletter-icon {
       width: 52px; height: 52px; margin: 0 auto 20px; border-radius: 14px;
@@ -188,7 +188,7 @@
     }
     .ab-newsletter-icon svg { width: 24px; height: 24px; stroke: var(--orange); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
     .ab-newsletter-card h2 { font-size: 24px; font-weight: 900; color: var(--white); margin-bottom: 10px; letter-spacing: -0.3px; }
-    .ab-newsletter-card > p { font-size: 14.5px; color: rgba(255,255,255,0.6); line-height: 1.65; margin-bottom: 26px; max-width: 440px; margin-left: auto; margin-right: auto; }
+    .ab-newsletter-card > p { font-size: 14.5px; color: rgba(255,255,255,0.9); line-height: 1.65; margin-bottom: 26px; max-width: 440px; margin-left: auto; margin-right: auto; }
     .ab-newsletter-row { display: flex; gap: 10px; flex-wrap: wrap; }
     .ab-newsletter-row input {
       flex: 1; min-width: 160px;
@@ -196,7 +196,7 @@
       border-radius: 6px; color: var(--white); font-family: inherit; font-size: 14px;
       padding: 13px 14px; outline: none; transition: border-color 0.2s;
     }
-    .ab-newsletter-row input::placeholder { color: rgba(255,255,255,0.4); }
+    .ab-newsletter-row input::placeholder { color: rgba(255,255,255,0.75); }
     .ab-newsletter-row input:focus { border-color: var(--orange); }
     .ab-newsletter-btn {
       background: var(--orange); color: var(--navy); font-weight: 800; font-size: 14px;
@@ -208,12 +208,12 @@
     .ab-newsletter-msg { font-size: 13px; margin-top: 14px; padding: 10px 14px; border-radius: 8px; display: none; text-align: left; }
     .ab-newsletter-msg.error { display: block; color: #ff8a8a; background: rgba(255,80,80,0.1); border: 1px solid rgba(255,80,80,0.25); }
     .ab-newsletter-msg.success { display: block; color: #4ade80; background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.3); }
-    .ab-newsletter-fine { font-size: 12px; color: rgba(255,255,255,0.35); margin-top: 16px; }
+    .ab-newsletter-fine { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 16px; }
 
     /* ── Final CTA (navy) ── */
     .ab-cta { text-align: center; }
     .ab-cta h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.6px; }
-    .ab-cta p { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 32px; }
+    .ab-cta p { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 32px; }
 
     /* ── Footer ── */
 
@@ -351,7 +351,7 @@
     <h2>Ready to feel valued?</h2>
     <p>Join thousands of logistics workers already saving money, every single day.</p>
     <a href="/signup.html" class="btn-primary">
-      Claim Your Free Membership
+      Claim Your First Year Free
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </section>

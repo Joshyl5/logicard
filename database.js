@@ -306,6 +306,38 @@ async function initDb() {
   // for the admin list so they can be edited/removed independently of the
   // scheduled fetch job, which never touches manual rows.
   await pool.query(`ALTER TABLE news_items ADD COLUMN IF NOT EXISTS is_manual BOOLEAN DEFAULT FALSE`);
+
+  // Members Forum (/forum). Logged-in members read; verified members post
+  // and reply. Removal is a soft delete (is_removed) so a moderated thread
+  // keeps its shape and admins can see what was taken down. is_reported is
+  // set by the member "Report" button and surfaces the item at the top of
+  // the admin moderation list.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS forum_posts (
+      id                 SERIAL PRIMARY KEY,
+      membership_number  INTEGER NOT NULL REFERENCES members(membership_number) ON DELETE CASCADE,
+      category           TEXT NOT NULL,
+      title              TEXT NOT NULL,
+      body               TEXT NOT NULL,
+      created_at         TIMESTAMPTZ DEFAULT NOW(),
+      last_activity_at   TIMESTAMPTZ DEFAULT NOW(),
+      is_removed         BOOLEAN DEFAULT FALSE,
+      is_reported        BOOLEAN DEFAULT FALSE
+    )
+  `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS forum_replies (
+      id                 SERIAL PRIMARY KEY,
+      post_id            INTEGER NOT NULL REFERENCES forum_posts(id) ON DELETE CASCADE,
+      membership_number  INTEGER NOT NULL REFERENCES members(membership_number) ON DELETE CASCADE,
+      body               TEXT NOT NULL,
+      created_at         TIMESTAMPTZ DEFAULT NOW(),
+      is_removed         BOOLEAN DEFAULT FALSE,
+      is_reported        BOOLEAN DEFAULT FALSE
+    )
+  `);
+  await pool.query('CREATE INDEX IF NOT EXISTS forum_posts_activity_idx ON forum_posts (last_activity_at DESC)');
+  await pool.query('CREATE INDEX IF NOT EXISTS forum_replies_post_idx ON forum_replies (post_id, created_at)');
 }
 
 initDb().catch(err => console.error('DB init error:', err.message));
@@ -1117,6 +1149,143 @@ async function confirmWorkEmailToken(tokenHash) {
   return member;
 }
 
+
+// ── Members Forum ─────────────────────────────────────────────────
+// Author is shown as first name + surname initial + role only — never the
+// full surname, email or membership number.
+function forumAuthor(row) {
+  const first = row.first_name || 'Member';
+  const initial = row.last_name ? ` ${row.last_name.charAt(0).toUpperCase()}.` : '';
+  return { name: first + initial, role: row.role || null };
+}
+
+function toForumPost(row, viewer) {
+  if (!row) return null;
+  return {
+    id: row.id, category: row.category, title: row.title, body: row.body,
+    createdAt: row.created_at, lastActivityAt: row.last_activity_at,
+    replyCount: row.reply_count == null ? undefined : Number(row.reply_count),
+    author: forumAuthor(row), isMine: viewer != null && row.membership_number === viewer,
+  };
+}
+
+function toForumReply(row, viewer) {
+  return {
+    id: row.id, body: row.body, createdAt: row.created_at,
+    author: forumAuthor(row), isMine: viewer != null && row.membership_number === viewer,
+  };
+}
+
+async function listForumPosts({ category = null, limit = 20, offset = 0, viewer = null } = {}) {
+  const r = await pool.query(
+    `SELECT p.*, m.first_name, m.last_name, m.role,
+            (SELECT COUNT(*) FROM forum_replies fr WHERE fr.post_id = p.id AND NOT fr.is_removed) AS reply_count
+       FROM forum_posts p JOIN members m ON m.membership_number = p.membership_number
+      WHERE NOT p.is_removed AND ($1::text IS NULL OR p.category = $1)
+      ORDER BY p.last_activity_at DESC
+      LIMIT $2 OFFSET $3`,
+    [category, limit, offset]
+  );
+  return r.rows.map(row => toForumPost(row, viewer));
+}
+
+async function getForumPost(id, viewer = null) {
+  const p = await pool.query(
+    `SELECT p.*, m.first_name, m.last_name, m.role
+       FROM forum_posts p JOIN members m ON m.membership_number = p.membership_number
+      WHERE p.id = $1 AND NOT p.is_removed`,
+    [id]
+  );
+  if (!p.rows[0]) return null;
+  const r = await pool.query(
+    `SELECT fr.*, m.first_name, m.last_name, m.role
+       FROM forum_replies fr JOIN members m ON m.membership_number = fr.membership_number
+      WHERE fr.post_id = $1 AND NOT fr.is_removed
+      ORDER BY fr.created_at ASC`,
+    [id]
+  );
+  return { ...toForumPost(p.rows[0], viewer), replies: r.rows.map(row => toForumReply(row, viewer)) };
+}
+
+async function createForumPost({ membershipNumber, category, title, body }) {
+  const r = await pool.query(
+    'INSERT INTO forum_posts (membership_number, category, title, body) VALUES ($1,$2,$3,$4) RETURNING id',
+    [membershipNumber, category, title, body]
+  );
+  return r.rows[0].id;
+}
+
+async function createForumReply({ postId, membershipNumber, body }) {
+  const post = await pool.query('SELECT id FROM forum_posts WHERE id = $1 AND NOT is_removed', [postId]);
+  if (!post.rows[0]) return null;
+  const r = await pool.query(
+    'INSERT INTO forum_replies (post_id, membership_number, body) VALUES ($1,$2,$3) RETURNING id',
+    [postId, membershipNumber, body]
+  );
+  await pool.query('UPDATE forum_posts SET last_activity_at = NOW() WHERE id = $1', [postId]);
+  return r.rows[0].id;
+}
+
+// The table name below is picked from a fixed two-value mapping, never from
+// user input, so this stays within the parameterized-query-only rule.
+function forumTable(type) {
+  return type === 'reply' ? 'forum_replies' : 'forum_posts';
+}
+
+// ownerOnly: a membership number to only remove the item if that member
+// wrote it (members deleting their own), or null for an admin removal.
+async function removeForumItem(type, id, ownerOnly = null) {
+  const r = await pool.query(
+    `UPDATE ${forumTable(type)} SET is_removed = TRUE
+      WHERE id = $1 AND ($2::int IS NULL OR membership_number = $2) RETURNING id`,
+    [id, ownerOnly]
+  );
+  return r.rowCount > 0;
+}
+
+async function restoreForumItem(type, id) {
+  await pool.query(`UPDATE ${forumTable(type)} SET is_removed = FALSE, is_reported = FALSE WHERE id = $1`, [id]);
+}
+
+async function reportForumItem(type, id) {
+  const r = await pool.query(
+    `UPDATE ${forumTable(type)} SET is_reported = TRUE WHERE id = $1 AND NOT is_removed RETURNING id`,
+    [id]
+  );
+  return r.rowCount > 0;
+}
+
+async function clearForumReport(type, id) {
+  await pool.query(`UPDATE ${forumTable(type)} SET is_reported = FALSE WHERE id = $1`, [id]);
+}
+
+// Admin moderation list: newest 200 posts and replies (live and removed),
+// live reported items first. Admin-only, so it includes the full name and
+// membership number for follow-up.
+async function getForumModerationQueue() {
+  const r = await pool.query(
+    `SELECT * FROM (
+       SELECT 'post' AS type, p.id, p.id AS post_id, p.title, p.body, p.category, p.created_at,
+              p.is_removed, p.is_reported, p.membership_number, m.first_name, m.last_name
+         FROM forum_posts p JOIN members m ON m.membership_number = p.membership_number
+       UNION ALL
+       SELECT 'reply', fr.id, fr.post_id, fp.title, fr.body, fp.category, fr.created_at,
+              fr.is_removed, fr.is_reported, fr.membership_number, m.first_name, m.last_name
+         FROM forum_replies fr
+         JOIN forum_posts fp ON fp.id = fr.post_id
+         JOIN members m ON m.membership_number = fr.membership_number
+     ) q
+     ORDER BY (is_reported AND NOT is_removed) DESC, created_at DESC
+     LIMIT 200`
+  );
+  return r.rows.map(row => ({
+    type: row.type, id: row.id, postId: row.post_id, title: row.title, body: row.body,
+    category: row.category, createdAt: row.created_at, isRemoved: row.is_removed,
+    isReported: row.is_reported, membershipNumber: row.membership_number,
+    authorName: `${row.first_name} ${row.last_name}`,
+  }));
+}
+
 module.exports = {
   createMember, emailExists, findMemberByEmail, getMemberByNumber, getAllMembers,
   setResetToken, findMemberByResetToken, clearResetToken,
@@ -1133,4 +1302,6 @@ module.exports = {
   createVerificationDocument, getPendingVerificationDocuments, getVerificationDocumentsForMember,
   getVerificationDocument, reviewVerificationDocument, setWorkEmailToken, confirmWorkEmailToken,
   getDocumentsDueForPurge, markDocumentPurged,
+  listForumPosts, getForumPost, createForumPost, createForumReply, removeForumItem,
+  restoreForumItem, reportForumItem, clearForumReport, getForumModerationQueue,
 };

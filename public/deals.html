@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How We Find Your Deals — Logicard</title>
+  <title>Member Deals for Logistics Workers — Logicard</title>
   <meta name="description" content="How Logicard sources and negotiates member discounts — using the collective buying power of thousands of UK logistics workers to secure real, vetted savings." />
   <link rel="canonical" href="https://logicard.co.uk/deals.html" />
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
@@ -11,7 +11,7 @@
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "How We Find Your Deals — Logicard",
+    "name": "Member Deals for Logistics Workers — Logicard",
     "url": "https://logicard.co.uk/deals.html",
     "description": "How Logicard sources and negotiates member discounts using the collective buying power of UK logistics workers.",
     "isPartOf": { "@id": "https://logicard.co.uk/#website" }
@@ -19,16 +19,16 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --orange: #FFB300;
       --orange-dark: #E09A00;
-      --navy-deep: #071d40; /* alias of --navy, per BRAND.md */
-      --navy: #071d40;
-      --navy-mid: #0d3b80;
+      --navy-deep: #0a0a0a; /* alias of --navy, per BRAND.md */
+      --navy: #0a0a0a;
+      --navy-mid: #1f1f1f;
       --blue-accent: #1a6cc8;
       --white: #ffffff;
       --text-muted: #666666;
@@ -64,7 +64,7 @@
       margin-bottom: 22px;
     }
     .dl-subtitle {
-      font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.75;
+      font-size: 17px; color: rgba(255,255,255,0.9); line-height: 1.75;
       margin-bottom: 36px;
       max-width: 640px;
       margin-left: auto; margin-right: auto;
@@ -103,7 +103,7 @@
       font-size: clamp(26px, 3.5vw, 40px); font-weight: 900;
       letter-spacing: -0.5px; margin-bottom: 14px; line-height: 1.15;
     }
-    .dl-section-sub { font-size: 15.5px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+    .dl-section-sub { font-size: 15.5px; color: rgba(255,255,255,0.9); line-height: 1.7; }
 
     /* Why cards */
     .dl-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
@@ -129,7 +129,7 @@
     }
     .dl-why-icon svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 2; }
     .dl-why-card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
-    .dl-why-card p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+    .dl-why-card p { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.65; }
 
     /* How it works */
     .dl-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
@@ -143,13 +143,13 @@
     .dl-step-num {
       display: inline-flex; align-items: center; justify-content: center;
       width: 34px; height: 34px;
-      background: var(--orange); color: #071d40;
+      background: var(--orange); color: #0a0a0a;
       font-weight: 900; font-size: 15px;
       border-radius: 50%;
       margin-bottom: 18px;
     }
     .dl-step h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 10px; }
-    .dl-step p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+    .dl-step p { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.65; }
 
     /* Callout */
     .dl-callout {
@@ -182,13 +182,13 @@
       border-radius: 50%; display: flex; align-items: center; justify-content: center;
     }
     .dl-vet-check svg { width: 13px; height: 13px; stroke: var(--orange); fill: none; stroke-width: 3; }
-    .dl-vet-item p { font-size: 14.5px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+    .dl-vet-item p { font-size: 14.5px; color: rgba(255,255,255,0.9); line-height: 1.6; }
     .dl-vet-item strong { color: #fff; }
 
     /* Final CTA */
     .dl-cta-section { text-align: center; padding: 64px 24px 88px; }
     .dl-cta-title { font-size: clamp(24px, 3.5vw, 36px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.5px; }
-    .dl-cta-sub { font-size: 15.5px; color: rgba(255,255,255,0.55); margin-bottom: 32px; }
+    .dl-cta-sub { font-size: 15.5px; color: rgba(255,255,255,0.9); margin-bottom: 32px; }
 
     /* Footer */
 
@@ -203,25 +203,104 @@
       .dl-steps { grid-template-columns: 1fr; }
       .dl-callout { padding: 28px 24px; }
     }
+    /* ── Member Deals hero + browser (2026-09 rebrand) ── */
+    .md-hero { position: relative; overflow: hidden; background: #0a0a0a; }
+    .md-hero-bg { position: absolute; inset: 0; background: url('/images/photo-wall/Warehouseworkers.png.png') 70% 30% / cover no-repeat; }
+    .md-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,10,10,0.94) 0%, rgba(10,10,10,0.82) 45%, rgba(10,10,10,0.45) 100%), linear-gradient(to bottom, transparent 70%, #0a0a0a 100%); }
+    .md-hero-inner { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 44px 20px 40px; display: grid; gap: 28px; align-items: end; }
+    .md-eyebrow { font-family: 'Archivo Black', 'Arial Black', sans-serif; font-size: 13px; letter-spacing: .22em; color: #FFB300; text-transform: uppercase; margin-bottom: 10px; }
+    .md-title { font-family: 'Archivo Black', 'Arial Black', sans-serif; font-weight: 400; font-size: clamp(34px, 6.4vw, 64px); line-height: 1.05; margin-bottom: 14px; }
+    .md-title .gold { color: #FFB300; }
+    .md-sub { font-family: 'Montserrat', 'Inter', sans-serif; font-size: clamp(16px, 2.2vw, 19px); color: rgba(255,255,255,0.92); max-width: 640px; margin-bottom: 22px; line-height: 1.55; }
+    .md-search { display: flex; align-items: center; gap: 10px; max-width: 640px; background: rgba(10,10,10,0.85); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; padding: 6px 6px 6px 16px; }
+    .md-search svg { flex: 0 0 22px; stroke: #fff; }
+    .md-search input { flex: 1; min-width: 0; background: none; border: 0; outline: none; color: #fff; font: 500 16px 'Montserrat', 'Inter', sans-serif; padding: 10px 0; }
+    .md-search input::placeholder { color: rgba(255,255,255,0.75); }
+    .md-search button { flex: 0 0 auto; background: #FFB300; color: #111; border: 0; border-radius: 12px; padding: 12px 20px; font: 400 16px 'Archivo Black', 'Arial Black', sans-serif; cursor: pointer; }
+    .md-popular { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; font: 500 14px 'Montserrat', 'Inter', sans-serif; }
+    .md-popular span { margin-right: 4px; }
+    .md-pop { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.55); border-radius: 999px; padding: 7px 14px; font: 600 14px 'Montserrat', 'Inter', sans-serif; cursor: pointer; }
+    .md-pop:hover, .md-pop.on { border-color: #FFB300; color: #FFB300; }
+    .md-values { display: grid; grid-template-columns: repeat(3, 1fr); background: rgba(10,10,10,0.88); border: 1px solid rgba(255,255,255,0.25); border-radius: 18px; padding: 20px 10px; text-align: center; }
+    .md-value svg { width: 32px; height: 32px; stroke: #FFB300; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 8px; }
+    .md-value strong { display: block; font: 400 15px 'Archivo Black', 'Arial Black', sans-serif; margin-bottom: 4px; }
+    .md-value small { display: block; font: 500 13px/1.35 'Montserrat', 'Inter', sans-serif; color: rgba(255,255,255,0.88); padding: 0 6px; }
+
+    .md-browser { max-width: 1180px; margin: 0 auto; padding: 20px 20px 70px; }
+    .md-count { font: 600 14px 'Montserrat', 'Inter', sans-serif; color: rgba(255,255,255,0.88); margin-bottom: 16px; }
+    .md-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    .md-card { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; text-decoration: none; color: #fff; display: flex; flex-direction: column; transition: border-color .2s, transform .2s; }
+    .md-card:hover { border-color: rgba(255,179,0,0.5); transform: translateY(-3px); }
+    .md-img { position: relative; aspect-ratio: 16 / 9; background: #1f1f1f; display: grid; place-items: center; font: 400 60px 'Archivo Black', sans-serif; color: #FFB300; overflow: hidden; }
+    .md-img > img { width: 100%; height: 100%; object-fit: cover; }
+    .md-logo { position: absolute; top: 14px; right: 14px; background: #fff; border-radius: 8px; padding: 8px 12px; max-width: 45%; height: 52px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(0,0,0,0.35); }
+    .md-logo img { max-height: 36px; max-width: 100%; object-fit: contain; }
+    .md-body { padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .md-body h3 { font: 400 21px/1.2 'Archivo Black', 'Arial Black', sans-serif; }
+    .md-body p { font: 500 15px/1.5 'Montserrat', 'Inter', sans-serif; color: rgba(255,255,255,0.9); flex: 1; }
+    .md-cat { align-self: flex-start; font: 600 13px 'Montserrat', 'Inter', sans-serif; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 5px 12px; }
+    .md-cta { display: flex; justify-content: space-between; align-items: center; background: #FFB300; color: #111; border-radius: 10px; padding: 13px 16px; font: 400 16px 'Archivo Black', 'Arial Black', sans-serif; margin-top: 4px; }
+    .md-empty { text-align: center; padding: 40px 10px; font: 500 16px 'Montserrat', 'Inter', sans-serif; }
+    .md-empty a { color: #FFB300; }
+    .md-intro { text-align: center; max-width: 760px; margin: 0 auto; padding: 60px 20px 0; }
+    .md-intro h2 { font: 400 clamp(28px, 5vw, 42px)/1.15 'Archivo Black', 'Arial Black', sans-serif; margin-bottom: 12px; }
+    .md-intro p { font: 500 17px/1.7 'Montserrat', 'Inter', sans-serif; color: rgba(255,255,255,0.9); }
+
+    @media (min-width: 700px) { .md-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1000px) {
+      .md-hero-inner { grid-template-columns: 1.35fr 1fr; padding: 56px 20px 48px; }
+      .md-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 420px) {
+      .md-values { padding: 16px 4px; }
+      .md-value strong { font-size: 13px; }
+      .md-value small { font-size: 12px; }
+      .md-search button { padding: 11px 14px; font-size: 14px; }
+    }
   </style>
 </head>
 <body>
 
   <!-- SHARED_NAV -->
-  <div class="site-subbar">
-    <a href="/" class="site-subbar-back">&lt; Back</a>
-  </div>
 
-  <div class="dl-hero">
-    <span class="dl-eyebrow">How It Works</span>
-    <h1 class="dl-title">How We Find Your Deals</h1>
-    <p class="dl-subtitle">No single logistics worker can walk into a national retailer and negotiate a discount. But thousands of us, together, can. That's the whole idea behind Logicard.</p>
-    <div class="dl-hero-btns">
-      <a href="/signup.html" class="dl-btn-primary">
-        Join Free
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
+  <section class="md-hero">
+    <div class="md-hero-bg" role="img" aria-label="Smiling Logicard warehouse team in front of racking"></div>
+    <div class="md-hero-inner">
+      <div>
+        <p class="md-eyebrow">Member Deals</p>
+        <h1 class="md-title">Savings For The People Who <span class="gold">Keep Britain Moving.</span></h1>
+        <p class="md-sub">Exclusive discounts on workwear, fuel, food, tech, days out and more - for drivers, warehouse teams and everyone behind the UK supply chain.</p>
+        <form class="md-search" id="mdSearch" role="search">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="mdQuery" type="search" placeholder="Search deals, brands or categories..." aria-label="Search deals" />
+          <button type="submit">Search</button>
+        </form>
+        <div class="md-popular" id="mdPopular">
+          <span>Popular searches:</span>
+          <button type="button" class="md-pop" data-q="Food &amp; Drink">Food &amp; Drink</button>
+          <button type="button" class="md-pop" data-q="Motoring">Motoring</button>
+          <button type="button" class="md-pop" data-q="Days Out">Days Out</button>
+          <button type="button" class="md-pop" data-q="Tech">Tech</button>
+          <button type="button" class="md-pop" data-q="Health">Health &amp; Beauty</button>
+        </div>
+      </div>
+      <div class="md-values">
+        <div class="md-value"><svg viewBox="0 0 24 24"><path d="M17 20H7c2-1 3-3 3-6V9a4 4 0 0 1 7.5-2"/><path d="M6 14h8"/></svg><strong>Real savings</strong><small>Member-only discounts</small></div>
+        <div class="md-value"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><strong>Trusted brands</strong><small>Partners who back logistics</small></div>
+        <div class="md-value"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><strong>Members first</strong><small>Built by logistics workers</small></div>
+      </div>
     </div>
+  </section>
+
+  <section class="md-browser" id="all-deals" aria-label="All member deals">
+    <p class="md-count" id="mdCount" aria-live="polite"></p>
+    <div class="md-grid" id="mdGrid"></div>
+    <p class="md-empty" id="mdEmpty" hidden></p>
+  </section>
+
+  <div class="md-intro">
+    <h2>How We Find <span style="color:#FFB300">Your Deals</span></h2>
+    <p>No single logistics worker can walk into a national retailer and negotiate a discount. But thousands of us, together, can. That's the whole idea behind Logicard.</p>
   </div>
 
   <section class="dl-section" id="dl-why">
@@ -318,14 +397,73 @@
 
   <section class="dl-cta-section">
     <h2 class="dl-cta-title">Add your voice to the group</h2>
-    <p class="dl-cta-sub">Join free today — the bigger we are, the better the deals get for everyone.</p>
+    <p class="dl-cta-sub">Join today - first year free, then £10/year — the bigger we are, the better the deals get for everyone.</p>
     <a href="/signup.html" class="dl-btn-primary">
-      Join Logicard Free
+      Join - First Year Free
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </section>
 
   <!-- SHARED_FOOTER -->
+
+  <script>
+    (function () {
+      var grid = document.getElementById('mdGrid'), empty = document.getElementById('mdEmpty');
+      var count = document.getElementById('mdCount'), input = document.getElementById('mdQuery');
+      var offers = [], logos = {};
+
+      function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      function safeImg(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
+      function safeSlug(v) { return typeof v === 'string' && /^[a-z0-9-]+$/i.test(v); }
+      function key(n) { return String(n || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+
+      function render() {
+        var q = input.value.trim().toLowerCase();
+        var shown = offers.filter(function (o) {
+          return !q || [o.merchantName, o.title, o.description, o.category].join(' ').toLowerCase().indexOf(q) !== -1;
+        });
+        grid.innerHTML = shown.map(function (o) {
+          var img = safeImg(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
+          var logo = logos[key(o.merchantName)];
+          var badge = logo ? '<span class="md-logo"><img src="' + esc(logo) + '" alt="' + esc(o.merchantName) + '" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '';
+          var desc = String(o.description || '');
+          if (desc.length > 120) desc = desc.slice(0, 117).replace(/\s+\S*$/, '') + '...';
+          return '<a class="md-card" href="' + (safeSlug(o.slug) ? '/' + esc(o.slug) : '/signup.html') + '">' +
+            '<div class="md-img">' + img + badge + '</div>' +
+            '<div class="md-body"><h3>' + esc(o.title || o.discountText || o.merchantName) + '</h3>' +
+            '<p><strong>' + esc(o.merchantName) + '</strong>' + (desc ? ' - ' + esc(desc) : '') + '</p>' +
+            (o.category ? '<span class="md-cat">' + esc(o.category) + '</span>' : '') +
+            '<span class="md-cta">Get deal <span>&rarr;</span></span></div></a>';
+        }).join('');
+        count.textContent = offers.length ? (q ? shown.length + ' of ' + offers.length + ' deals match "' + input.value.trim() + '"' : offers.length + ' member deals') : '';
+        empty.hidden = shown.length > 0 || !offers.length;
+        if (!shown.length && offers.length) empty.innerHTML = 'No deals match that search yet. <a href="#" id="mdClear">Show all deals</a>';
+      }
+
+      document.getElementById('mdSearch').addEventListener('submit', function (e) { e.preventDefault(); render(); document.getElementById('all-deals').scrollIntoView({ behavior: 'smooth' }); });
+      input.addEventListener('input', render);
+      document.getElementById('mdPopular').addEventListener('click', function (e) {
+        var b = e.target.closest('.md-pop'); if (!b) return;
+        var on = !b.classList.contains('on');
+        this.querySelectorAll('.md-pop').forEach(function (x) { x.classList.remove('on'); });
+        if (on) b.classList.add('on');
+        input.value = on ? b.dataset.q : '';
+        render();
+      });
+      empty.addEventListener('click', function (e) { if (e.target.id === 'mdClear') { e.preventDefault(); input.value = ''; render(); } });
+
+      function getJson(u) { return fetch(u).then(function (r) { if (!r.ok) throw new Error(u); return r.json(); }); }
+      Promise.all([
+        getJson('/api/public/offers'),
+        getJson('/api/public/partner-brands').catch(function () { return []; })
+      ]).then(function (res) {
+        (Array.isArray(res[1]) ? res[1] : []).forEach(function (b) { if (safeImg(b.logoUrl)) logos[key(b.brandName)] = b.logoUrl; });
+        offers = Array.isArray(res[0]) ? res[0] : [];
+        if (!offers.length) { empty.hidden = false; empty.innerHTML = 'New deals are being added - <a href="/signup.html">join now</a> to be first to see them.'; return; }
+        render();
+      }).catch(function () { empty.hidden = false; empty.textContent = 'Deals could not be loaded just now. Please refresh the page.'; });
+    })();
+  </script>
 
 </body>
 </html>

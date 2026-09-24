@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Members Forum - Logicard</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
+  <link rel="stylesheet" href="/forum.css?v=1" />
+</head>
+<body>
+  <!-- SHARED_NAV -->
+
+  <main class="fwrap">
+    <div class="fhead">
+      <h1>Members <span class="gold">Forum</span></h1>
+      <p>Swap tips on routes, depots, pay, kit and deals with logistics workers across the UK. Keep it friendly - no personal details, no abuse.</p>
+    </div>
+
+    <div class="fform-row" style="margin-bottom:18px">
+      <button type="button" class="fbtn fbtn-gold" id="newBtn">+ Start a discussion</button>
+    </div>
+
+    <form class="fform" id="newForm" hidden novalidate>
+      <label for="fCat">Category</label>
+      <select id="fCat" required></select>
+      <label for="fTitle">Title</label>
+      <input id="fTitle" type="text" maxlength="120" placeholder="What's it about?" required />
+      <label for="fBody">Your post</label>
+      <textarea id="fBody" maxlength="5000" placeholder="Share your question, tip or story..." required></textarea>
+      <p class="fmsg" id="fMsg" role="status"></p>
+      <div class="fform-row">
+        <button type="submit" class="fbtn fbtn-gold" id="fSubmit">Post</button>
+        <button type="button" class="fbtn fbtn-ghost" id="fCancel">Cancel</button>
+      </div>
+    </form>
+
+    <div class="chips" id="chips" role="tablist" aria-label="Forum categories"></div>
+    <div class="plist" id="plist"></div>
+    <div class="pmore"><button type="button" class="fbtn fbtn-ghost" id="moreBtn" hidden>Load more</button></div>
+  </main>
+
+  <script src="/forum.js?v=1"></script>
+  <script>
+    (function () {
+      var F = window.LogicardForum;
+      var list = document.getElementById('plist'), chips = document.getElementById('chips');
+      var moreBtn = document.getElementById('moreBtn');
+      var form = document.getElementById('newForm'), msg = document.getElementById('fMsg');
+      var state = { category: null, page: 1 };
+
+      function load(append) {
+        var q = '?page=' + state.page + (state.category ? '&category=' + encodeURIComponent(state.category) : '');
+        F.api('GET', '/api/forum/posts' + q).then(function (d) {
+          if (!append) list.innerHTML = '';
+          if (!d.posts.length && !append) {
+            list.innerHTML = '<p class="pempty">No discussions here yet - be the first to start one.</p>';
+          }
+          d.posts.forEach(function (p) {
+            var a = document.createElement('a');
+            a.className = 'pcard';
+            a.href = '/forum/' + p.id;
+            a.innerHTML = '<span class="pcat"></span><h2></h2><p></p><div class="pmeta"></div>';
+            a.querySelector('.pcat').textContent = p.category;
+            a.querySelector('h2').textContent = p.title;
+            a.querySelector('p').textContent = p.body;
+            F.meta(a.querySelector('.pmeta'), p.author, p.lastActivityAt, p.replyCount + (p.replyCount === 1 ? ' reply' : ' replies'));
+            list.appendChild(a);
+          });
+          moreBtn.hidden = !d.hasMore;
+        }).catch(function (e) { list.innerHTML = ''; var x = document.createElement('p'); x.className = 'pempty'; x.textContent = e.message; list.appendChild(x); });
+      }
+
+      F.api('GET', '/api/forum/categories').then(function (cats) {
+        var sel = document.getElementById('fCat');
+        sel.innerHTML = '<option value="">Choose a category</option>';
+        [null].concat(cats).forEach(function (c) {
+          var b = document.createElement('button');
+          b.type = 'button'; b.className = 'chip' + (c === null ? ' on' : '');
+          b.textContent = c === null ? 'All' : c;
+          b.addEventListener('click', function () {
+            chips.querySelectorAll('.chip').forEach(function (x) { x.classList.remove('on'); });
+            b.classList.add('on'); state.category = c; state.page = 1; load(false);
+          });
+          chips.appendChild(b);
+          if (c) { var o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); }
+        });
+      });
+
+      moreBtn.addEventListener('click', function () { state.page++; load(true); });
+      document.getElementById('newBtn').addEventListener('click', function () { form.hidden = false; document.getElementById('fCat').focus(); });
+      document.getElementById('fCancel').addEventListener('click', function () { form.hidden = true; msg.textContent = ''; });
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = document.getElementById('fSubmit');
+        msg.className = 'fmsg'; msg.textContent = '';
+        btn.disabled = true;
+        F.api('POST', '/api/forum/posts', {
+          category: document.getElementById('fCat').value,
+          title: document.getElementById('fTitle').value,
+          body: document.getElementById('fBody').value
+        }).then(function (d) { window.location.href = '/forum/' + d.id; })
+          .catch(function (err) { msg.className = 'fmsg err'; F.showError(msg, err); btn.disabled = false; });
+      });
+
+      load(false);
+    })();
+  </script>
+</body>
+</html>

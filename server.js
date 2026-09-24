@@ -30,6 +30,8 @@ const {
   createVerificationDocument, getPendingVerificationDocuments, getVerificationDocumentsForMember,
   getVerificationDocument, reviewVerificationDocument, setWorkEmailToken, confirmWorkEmailToken,
   getDocumentsDueForPurge, markDocumentPurged,
+  listForumPosts, getForumPost, createForumPost, createForumReply, removeForumItem,
+  restoreForumItem, reportForumItem, clearForumReport, getForumModerationQueue,
 } = require('./database');
 const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT } = require('./storage');
 const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
@@ -38,6 +40,11 @@ const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
 const { renderBrandPage, renderBrandNotFound } = require('./templates/brand-page');
 const { renderOfferPage, renderOfferNotFound } = require('./templates/offer-page');
 const { renderNav } = require('./templates/nav');
+// Shared header with the drawer footer switched to My Dashboard / Log out
+// when the visitor has a member session.
+function navFor(req, opts = {}) {
+  return renderNav({ ...opts, loggedIn: !!(req.session && req.session.membershipNumber) });
+}
 const { renderFooter } = require('./templates/footer');
 const { renderNewsCards, renderNewsItemListJsonLd } = require('./templates/news-feed');
 
@@ -568,19 +575,19 @@ app.get('/api/uk-towns', (_req, res) => res.json({ towns: UK_TOWNS }));
 // ── Per-role SEO landing pages ───────────────────────────────────
 app.get('/logistics-rewards/:slug', (req, res) => {
   const entry = JOB_ROLE_BY_SLUG[req.params.slug];
-  if (!entry) return res.status(404).send(renderRoleNotFound());
-  res.send(renderRolePage(entry));
+  if (!entry) return res.status(404).send(renderRoleNotFound().replace('<!-- SHARED_NAV -->', navFor(req, {})));
+  res.send(renderRolePage(entry).replace('<!-- SHARED_NAV -->', navFor(req, {})));
 });
 
 // ── Partner brand pages — reached by clicking a logo on Partnerships ──
 app.get('/deals/:slug', async (req, res) => {
   try {
     const brand = await getPartnerBrandBySlug(req.params.slug);
-    if (!brand) return res.status(404).send(renderBrandNotFound().replace('<!-- SHARED_NAV -->', renderNav({})));
+    if (!brand) return res.status(404).send(renderBrandNotFound().replace('<!-- SHARED_NAV -->', navFor(req, {})));
 
     const offers = await getActiveOffersByMerchant(brand.brandName);
     const publicOffers = offers.map(({ id, title, category, discountText }) => ({ id, title, category, discountText }));
-    res.send(renderBrandPage({ brand, offers: publicOffers }).replace('<!-- SHARED_NAV -->', renderNav({})));
+    res.send(renderBrandPage({ brand, offers: publicOffers }).replace('<!-- SHARED_NAV -->', navFor(req, {})));
   } catch (err) {
     console.error('Brand page error:', err.message);
     res.status(500).send('Something went wrong loading this page. Please try again.');
@@ -650,8 +657,9 @@ app.get('/t&cs', (_req, res) => {
 
 // ── Shared nav injection (see templates/nav.js) ───────────────────
 const NAV_OPTIONS_BY_PAGE = {
-  '/index.html':               { tagline: true },
-  '/':                         { tagline: true },
+  '/index.html':               { active: 'home' },
+  '/':                         { active: 'home' },
+  '/checkout.html':            {},
   '/categories.html':          { tagline: true, active: 'categories' },
   '/qualify.html':             { tagline: true, active: 'qualify' },
   '/things-to-do.html':        { active: 'things-to-do' },
@@ -694,12 +702,12 @@ const NAV_OPTIONS_BY_PAGE = {
 // are rendered into the HTML on every request instead of being fetched
 // client-side, so the page has real, crawlable content and each story
 // links to a relevant Logicard discount page, not just its source.
-app.get('/logistics-news.html', async (_req, res) => {
+app.get('/logistics-news.html', async (req, res) => {
   try {
     const items = await getRecentNewsItems(30);
     const html = fs.readFileSync(path.join(__dirname, 'public', 'logistics-news.html'), 'utf8');
     const out = html
-      .replace('<!-- SHARED_NAV -->', renderNav({ active: 'logistics-news' }))
+      .replace('<!-- SHARED_NAV -->', navFor(req, { active: 'logistics-news' }))
       .replace('<!-- SHARED_FOOTER -->', renderFooter())
       .replace('<!-- NEWS_LIST -->', renderNewsCards(items))
       .replace('<!-- NEWS_JSONLD -->', renderNewsItemListJsonLd(items));
@@ -717,7 +725,7 @@ app.get(Object.keys(NAV_OPTIONS_BY_PAGE), (req, res) => {
   // pages that haven't adopted <!-- SHARED_FOOTER --> yet (the narrow
   // auth-flow pages: login/signup/forgot/reset-password) are unaffected.
   const out = html
-    .replace('<!-- SHARED_NAV -->', renderNav(NAV_OPTIONS_BY_PAGE[req.path]))
+    .replace('<!-- SHARED_NAV -->', navFor(req, NAV_OPTIONS_BY_PAGE[req.path]))
     .replace('<!-- SHARED_FOOTER -->', renderFooter());
   res.type('html').send(out);
 });
@@ -789,12 +797,19 @@ async function requireMobileVerified(req, res, next) {
 }
 
 // ── Member pages ───────────────────────────────────────────────
-app.get('/member-offers', requireAuth, (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'member-offers.html'));
+// Member views get the same shared gold header + drawer as public pages,
+// injected at <!-- SHARED_NAV --> (their own member toolbar sits below it).
+function sendView(req, res, file, navOpts = {}) {
+  const html = fs.readFileSync(path.join(__dirname, 'views', file), 'utf8');
+  res.type('html').send(html.replace('<!-- SHARED_NAV -->', navFor(req, navOpts)));
+}
+
+app.get('/member-offers', requireAuth, (req, res) => {
+  sendView(req, res, 'member-offers.html');
 });
 
-app.get('/member-dashboard', requireAuth, (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'member-dashboard.html'));
+app.get('/member-dashboard', requireAuth, (req, res) => {
+  sendView(req, res, 'member-dashboard.html');
 });
 
 // Old URL, kept as a redirect so nothing already bookmarked/emailed breaks.
@@ -807,10 +822,10 @@ app.get('/business-services.html', (_req, res) => res.redirect(301, '/utilities-
 // NAV_OPTIONS_BY_PAGE (that mechanism assumes path === filename, and the
 // file on disk is partner.html). This is what partnerships.html's hero
 // "Become a Partner" button links to.
-app.get('/partner', (_req, res) => {
+app.get('/partner', (req, res) => {
   const html = fs.readFileSync(path.join(__dirname, 'public', 'partner.html'), 'utf8');
   const out = html
-    .replace('<!-- SHARED_NAV -->', renderNav({ active: 'partnerships' }))
+    .replace('<!-- SHARED_NAV -->', navFor(req, { active: 'partnerships' }))
     .replace('<!-- SHARED_FOOTER -->', renderFooter());
   res.type('html').send(out);
 });
@@ -824,32 +839,45 @@ app.get('/partner', (_req, res) => {
 // real gambling affiliate links until that's replaced with a real
 // third-party verification provider and gambling-advertising compliance
 // has been checked.
-app.get('/adult', (_req, res) => {
+app.get('/adult', (req, res) => {
   const html = fs.readFileSync(path.join(__dirname, 'public', 'adult.html'), 'utf8');
   const out = html
-    .replace('<!-- SHARED_NAV -->', renderNav({}))
+    .replace('<!-- SHARED_NAV -->', navFor(req, {}))
     .replace('<!-- SHARED_FOOTER -->', renderFooter());
   res.type('html').send(out);
 });
 
 app.get('/api/offer-categories', requireAuth, (_req, res) => res.json(OFFER_CATEGORIES));
 
-app.get('/report', requireAuth, (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'report.html'));
+app.get('/report', requireAuth, (req, res) => {
+  sendView(req, res, 'report.html');
 });
 
-app.get('/edit-details', requireAuth, (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'edit-details.html'));
+app.get('/edit-details', requireAuth, (req, res) => {
+  sendView(req, res, 'edit-details.html');
 });
 
 // Public SEO page — deliberately not behind requireAuth, since the whole
 // point is to be crawlable/indexable by search engines.
-app.get('/brands/initial', (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'brands-initial.html'));
+app.get('/brands/initial', (req, res) => {
+  sendView(req, res, 'brands-initial.html');
 });
 
-app.get('/verify', requireAuth, (_req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'verify.html'));
+app.get('/verify', requireAuth, (req, res) => {
+  sendView(req, res, 'verify.html');
+});
+
+// ── Members Forum pages ─────────────────────────────────────────
+// Logged-in members only (requireAuth redirects to /login.html). Posting
+// additionally needs a verified member — enforced on the API, not here, so
+// unverified members can still read.
+app.get('/forum', requireAuth, (req, res) => {
+  sendView(req, res, 'forum.html', { active: 'forum' });
+});
+
+app.get('/forum/:id', requireAuth, (req, res, next) => {
+  if (!/^\d{1,9}$/.test(req.params.id)) return next();
+  sendView(req, res, 'forum-post.html', { active: 'forum' });
 });
 
 // ── Admin pages ────────────────────────────────────────────────
@@ -871,6 +899,10 @@ app.get('/admin/partner-brands', requireAdmin, (_req, res) => {
 
 app.get('/admin/verifications', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-verifications.html'));
+});
+
+app.get('/admin/forum', requireAdmin, (_req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'admin-forum.html'));
 });
 
 app.get('/admin/news', requireAdmin, (_req, res) => {
@@ -1797,6 +1829,140 @@ function filterOffersForMember(offers, memberGender) {
 // category, discount headline and image only. No voucher code or
 // affiliate URL is ever returned here, and claiming still requires
 // signing up and verifying, same as it always has.
+// ── Members Forum API ─────────────────────────────────────────────
+const FORUM_CATEGORIES = [
+  'General Chat', 'Drivers', 'Warehouse & Operations', 'Deals & Savings',
+  'Jobs & Careers', 'Health & Wellbeing', 'Help & Support',
+];
+
+// Per-member limits (keyed on the session, so a shared depot/Wi-Fi IP
+// doesn't lump many members together). requireAuth always runs first, so
+// membershipNumber is set by the time these run.
+function forumLimiter(max, what) {
+  return rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    keyGenerator: (req) => `member:${req.session.membershipNumber}`,
+    message: { error: `You've hit the limit for ${what}. Please try again in an hour.` },
+  });
+}
+const forumPostLimiter   = forumLimiter(10, 'new posts');
+const forumReplyLimiter  = forumLimiter(40, 'replies');
+const forumReportLimiter = forumLimiter(20, 'reports');
+const forumReadLimiter   = rateLimit({ windowMs: 60 * 1000, max: 120, standardHeaders: true, legacyHeaders: false });
+
+// Free text: strip control characters (keeping newlines/tabs), trim, and
+// collapse runs of blank lines. Output is always escaped/textContent on the
+// page, so this is tidy-up plus length limits, not the XSS defence itself.
+function cleanForumText(v, max) {
+  if (typeof v !== 'string') return '';
+  return v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+    .replace(/\r\n?/g, '\n').replace(/\n{3,}/g, '\n\n').trim().slice(0, max + 1);
+}
+
+function forumId(v) {
+  const n = Number(v);
+  return Number.isInteger(n) && n > 0 && n < 1e9 ? n : null;
+}
+
+app.get('/api/forum/categories', requireAuth, (_req, res) => res.json(FORUM_CATEGORIES));
+
+app.get('/api/forum/posts', requireAuth, forumReadLimiter, async (req, res) => {
+  const category = FORUM_CATEGORIES.includes(req.query.category) ? req.query.category : null;
+  const page = Math.min(Math.max(parseInt(req.query.page, 10) || 1, 1), 500);
+  const limit = 20;
+  const posts = await listForumPosts({ category, limit: limit + 1, offset: (page - 1) * limit, viewer: req.session.membershipNumber });
+  res.json({
+    posts: posts.slice(0, limit).map(p => ({ ...p, body: p.body.length > 220 ? p.body.slice(0, 217) + '...' : p.body })),
+    hasMore: posts.length > limit,
+    page,
+  });
+});
+
+app.get('/api/forum/posts/:id', requireAuth, forumReadLimiter, async (req, res) => {
+  const id = forumId(req.params.id);
+  if (!id) return res.status(400).json({ error: 'Invalid post.' });
+  const member = await getMemberByNumber(req.session.membershipNumber);
+  const post = await getForumPost(id, req.session.membershipNumber);
+  if (!post) return res.status(404).json({ error: 'This post was not found or has been removed.' });
+  res.json({ ...post, canPost: !!(member && member.verified) });
+});
+
+app.post('/api/forum/posts', requireAuth, requireVerified, forumPostLimiter, async (req, res) => {
+  const category = req.body && req.body.category;
+  const title = cleanForumText(req.body && req.body.title, 120);
+  const body = cleanForumText(req.body && req.body.body, 5000);
+  if (!FORUM_CATEGORIES.includes(category)) return res.status(400).json({ error: 'Please choose a category.' });
+  if (title.length < 5 || title.length > 120) return res.status(400).json({ error: 'Titles need to be 5 to 120 characters.' });
+  if (body.length < 10 || body.length > 5000) return res.status(400).json({ error: 'Posts need to be 10 to 5,000 characters.' });
+  const id = await createForumPost({ membershipNumber: req.session.membershipNumber, category, title, body });
+  res.status(201).json({ id });
+});
+
+app.post('/api/forum/posts/:id/replies', requireAuth, requireVerified, forumReplyLimiter, async (req, res) => {
+  const postId = forumId(req.params.id);
+  if (!postId) return res.status(400).json({ error: 'Invalid post.' });
+  const body = cleanForumText(req.body && req.body.body, 3000);
+  if (body.length < 2 || body.length > 3000) return res.status(400).json({ error: 'Replies need to be 2 to 3,000 characters.' });
+  const id = await createForumReply({ postId, membershipNumber: req.session.membershipNumber, body });
+  if (!id) return res.status(404).json({ error: 'This post was not found or has been removed.' });
+  res.status(201).json({ id });
+});
+
+// Members can take down their own posts/replies.
+app.delete('/api/forum/:type(posts|replies)/:id', requireAuth, forumReplyLimiter, async (req, res) => {
+  const id = forumId(req.params.id);
+  if (!id) return res.status(400).json({ error: 'Invalid item.' });
+  const ok = await removeForumItem(req.params.type === 'replies' ? 'reply' : 'post', id, req.session.membershipNumber);
+  if (!ok) return res.status(404).json({ error: 'Not found, or not yours to delete.' });
+  res.json({ success: true });
+});
+
+app.post('/api/forum/:type(posts|replies)/:id/report', requireAuth, forumReportLimiter, async (req, res) => {
+  const id = forumId(req.params.id);
+  if (!id) return res.status(400).json({ error: 'Invalid item.' });
+  const type = req.params.type === 'replies' ? 'reply' : 'post';
+  const ok = await reportForumItem(type, id);
+  if (!ok) return res.status(404).json({ error: 'Not found.' });
+  if (resend && process.env.ADMIN_EMAIL) {
+    resend.emails.send({
+      from: 'Logicard <welcome@logicard.co.uk>',
+      to: process.env.ADMIN_EMAIL,
+      subject: 'Logicard forum: a ' + type + ' was reported',
+      html: `<p>A member reported forum ${escapeHtml(type)} #${id}.</p><p>Review it in <a href="https://logicard.co.uk/admin/forum">Forum Moderation</a>.</p>`,
+    }).catch(err => console.error('Forum report email failed:', err.message));
+  }
+  res.json({ success: true });
+});
+
+// ── Forum moderation (admin) ──
+app.get('/api/admin/forum', requireAdmin, async (_req, res) => {
+  res.json(await getForumModerationQueue());
+});
+
+app.post('/api/admin/forum/:type(post|reply)/:id/:action(remove|restore|dismiss)', requireAdmin, async (req, res) => {
+  const id = forumId(req.params.id);
+  if (!id) return res.status(400).json({ error: 'Invalid item.' });
+  const { type, action } = req.params;
+  if (action === 'remove') await removeForumItem(type, id, null);
+  else if (action === 'restore') await restoreForumItem(type, id);
+  else await clearForumReport(type, id);
+  res.json({ success: true });
+});
+
+// Powers the /deals.html browser: every active offer, teaser fields only
+// (no voucher codes or affiliate URLs; those stay behind the member login,
+// same as the featured teasers below). Gender-targeted offers are left out
+// because there's no member to target.
+app.get('/api/public/offers', publicOffersLimiter, async (_req, res) => {
+  const offers = (await getActiveOffers()).filter(o => !o.targetGender);
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, slug }) => ({
+    id, merchantName, title, description, category, discountText, imageUrl, slug,
+  })));
+});
+
 app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
   const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender);
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, slug }) => ({
@@ -2199,7 +2365,7 @@ app.get('/:slug', async (req, res, next) => {
       merchantName: offer.merchantName, title: offer.title, description: offer.description,
       category: offer.category, discountText: offer.discountText, imageUrl: offer.imageUrl, slug,
     };
-    res.send(renderOfferPage({ offer: publicOffer }).replace('<!-- SHARED_NAV -->', renderNav({})));
+    res.send(renderOfferPage({ offer: publicOffer }).replace('<!-- SHARED_NAV -->', navFor(req, {})));
   } catch (err) {
     console.error('Offer page error:', err.message);
     next();

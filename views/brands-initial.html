@@ -17,30 +17,25 @@
     "isPartOf": { "@id": "https://logicard.co.uk/#website" }
   }
   </script>
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --gold: #FFB300; --gold-dark: #E09A00;
-      --navy: #071d40; --navy-mid: #0d3b80;
+      --navy: #0a0a0a; --navy-mid: #1f1f1f;
       --white: #ffffff;
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', sans-serif; background: var(--navy); color: #fff; min-height: 100vh; }
 
-    .site-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 16px 40px; background: var(--navy); border-bottom: 1px solid rgba(255,179,0,0.15); position: sticky; top: 0; z-index: 100; }
-    .site-header-logo { display: inline-flex; align-items: center; border: 2.5px solid rgba(255,179,0,0.55); padding: 9px 18px; border-radius: 6px; background: rgba(255,255,255,0.05); text-decoration: none; font-size: 24px; font-weight: 900; letter-spacing: -1px; }
-    .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: var(--gold); }
-    .site-header-actions { display: flex; align-items: center; gap: 16px; }
-    .site-header-signin { font-size: 14px; font-weight: 600; color: #fff; text-decoration: none; }
-    .site-header-join { background: var(--gold); color: var(--navy); font-weight: 800; font-size: 13px; padding: 9px 18px; border-radius: 6px; text-decoration: none; }
-    @media (max-width: 640px) { .site-header { padding: 14px 20px; } }
+    /* header styles: /nav.css (shared) */
 
     .hero { text-align: center; padding: 64px 24px 40px; max-width: 780px; margin: 0 auto; }
     .eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 2.5px; color: var(--gold); text-transform: uppercase; margin-bottom: 18px; }
     .hero h1 { font-family: 'Raleway', sans-serif; font-size: clamp(30px, 4.5vw, 48px); font-weight: 900; line-height: 1.1; margin-bottom: 18px; }
-    .hero p { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+    .hero p { font-size: 16px; color: rgba(255,255,255,0.9); line-height: 1.7; }
 
     .jump-nav { max-width: 1100px; margin: 0 auto 8px; padding: 0 24px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
     .jump-nav a { display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px; padding: 0 6px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--gold); font-size: 12.5px; font-weight: 700; text-decoration: none; transition: background 0.15s; }
@@ -53,27 +48,21 @@
     .brand-card { background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px 18px; }
     .brand-name { font-family: 'Raleway', sans-serif; font-size: 15.5px; font-weight: 800; margin-bottom: 2px; }
     .brand-seo { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--gold); opacity: 0.85; margin-bottom: 8px; }
-    .brand-partner { font-size: 12.5px; color: rgba(255,255,255,0.75); line-height: 1.5; margin-bottom: 6px; }
-    .brand-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.55; }
+    .brand-partner { font-size: 12.5px; color: rgba(255,255,255,0.9); line-height: 1.5; margin-bottom: 6px; }
+    .brand-desc { font-size: 13px; color: rgba(255,255,255,0.9); line-height: 1.55; }
 
     .cta-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 48px 24px; text-align: center; }
     .cta-band h2 { font-family: 'Raleway', sans-serif; font-size: clamp(24px, 3.5vw, 34px); font-weight: 900; color: var(--navy); margin-bottom: 14px; }
-    .cta-band p { color: rgba(7,29,64,0.75); font-size: 15px; margin-bottom: 24px; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .cta-band p { color: rgba(10,10,10,0.75); font-size: 15px; margin-bottom: 24px; max-width: 560px; margin-left: auto; margin-right: auto; }
     .cta-btn { display: inline-block; background: var(--navy); color: #fff; font-weight: 800; font-size: 15px; padding: 15px 34px; border-radius: 100px; text-decoration: none; }
 
-    .site-footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.07); font-size: 12px; color: rgba(255,255,255,0.35); }
-    .site-footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    .site-footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.07); font-size: 12px; color: rgba(255,255,255,0.75); }
+    .site-footer a { color: rgba(255,255,255,0.9); text-decoration: none; }
   </style>
 </head>
 <body>
 
-  <header class="site-header">
-    <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
-    <div class="site-header-actions">
-      <a href="/login.html" class="site-header-signin">Log In</a>
-      <a href="/signup.html" class="site-header-join">Sign Up</a>
-    </div>
-  </header>
+<!-- SHARED_NAV -->
 
   <div class="hero">
     <span class="eyebrow">Brand Partners</span>
@@ -2699,12 +2688,12 @@
 
   <div class="cta-band">
     <h2>Not a Logicard member yet?</h2>
-    <p>Join free and start unlocking discounts across every brand on this page.</p>
+    <p>Join today (first year free, then £10/year) and start unlocking discounts across every brand on this page.</p>
     <a href="/signup.html" class="cta-btn">Join Logicard Free</a>
   </div>
 
   <footer class="site-footer">
-    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">Join Free</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
+    <p>&copy; 2026 Logicard &nbsp;|&nbsp; <a href="/">Home</a> &nbsp;|&nbsp; <a href="/signup.html">First Year Free</a> &nbsp;|&nbsp; <a href="/login.html">Member Login</a></p>
   </footer>
 
 </body>

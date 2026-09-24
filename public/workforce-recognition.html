@@ -19,16 +19,16 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
       --orange: #FFB300;
       --orange-dark: #E09A00;
-      --navy-deep: #071d40; /* alias of --navy, per BRAND.md */
-      --navy: #071d40;
-      --navy-mid: #0d3b80;
+      --navy-deep: #0a0a0a; /* alias of --navy, per BRAND.md */
+      --navy: #0a0a0a;
+      --navy-mid: #1f1f1f;
       --blue-accent: #1a6cc8;
       --white: #ffffff;
       --text-muted: #666666;
@@ -64,7 +64,7 @@
       margin-bottom: 22px;
     }
     .wr-subtitle {
-      font-size: 17px; color: rgba(255,255,255,0.6); line-height: 1.75;
+      font-size: 17px; color: rgba(255,255,255,0.9); line-height: 1.75;
       margin-bottom: 36px;
       max-width: 620px;
       margin-left: auto; margin-right: auto;
@@ -106,11 +106,11 @@
       color: var(--navy);
     }
     #wr-how .wr-section-title, #wr-form .wr-section-title { color: var(--navy); }
-    #wr-how .wr-section-sub, #wr-form .wr-section-sub { color: rgba(7,29,64,0.7); }
+    #wr-how .wr-section-sub, #wr-form .wr-section-sub { color: rgba(10,10,10,0.7); }
     #wr-how .wr-section-eyebrow, #wr-form .wr-section-eyebrow { color: var(--navy); opacity: 0.75; }
-    #wr-how .wr-step { background: rgba(255,255,255,0.9); border-color: rgba(7,29,64,0.1); }
+    #wr-how .wr-step { background: rgba(255,255,255,0.9); border-color: rgba(10,10,10,0.1); }
     #wr-how .wr-step h3 { color: var(--navy); }
-    #wr-how .wr-step p { color: rgba(7,29,64,0.7); }
+    #wr-how .wr-step p { color: rgba(10,10,10,0.7); }
     #wr-how .wr-step-num { background: var(--navy); color: var(--white); }
     .wr-section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
     .wr-section-eyebrow {
@@ -121,7 +121,7 @@
       font-size: clamp(26px, 3.5vw, 40px); font-weight: 900;
       letter-spacing: -0.5px; margin-bottom: 14px; line-height: 1.15;
     }
-    .wr-section-sub { font-size: 15.5px; color: rgba(255,255,255,0.55); line-height: 1.7; }
+    .wr-section-sub { font-size: 15.5px; color: rgba(255,255,255,0.9); line-height: 1.7; }
 
     /* Why cards */
     .wr-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
@@ -148,7 +148,7 @@
     }
     .wr-why-icon svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 2; }
     .wr-why-card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
-    .wr-why-card p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+    .wr-why-card p { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.65; }
 
     /* How it works */
     .wr-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: step; }
@@ -163,13 +163,13 @@
     .wr-step-num {
       display: inline-flex; align-items: center; justify-content: center;
       width: 34px; height: 34px;
-      background: var(--orange); color: #071d40;
+      background: var(--orange); color: #0a0a0a;
       font-weight: 900; font-size: 15px;
       border-radius: 50%;
       margin-bottom: 18px;
     }
     .wr-step h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 10px; }
-    .wr-step p { font-size: 13.5px; color: rgba(255,255,255,0.55); line-height: 1.65; }
+    .wr-step p { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.65; }
 
     /* Founder-style callout */
     .wr-callout {
@@ -191,16 +191,16 @@
     .wr-form-section { background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.06); }
     .wr-form-card {
       max-width: 640px; margin: 0 auto;
-      background: rgba(7,29,64,0.6);
+      background: rgba(10,10,10,0.6);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 20px;
       padding: 40px;
     }
     .wr-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .wr-field { display: flex; flex-direction: column; gap: 6px; }
-    .wr-field label { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.6); }
+    .wr-field label { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.9); }
     .wr-field input, .wr-field select, .wr-field textarea {
-      background: rgba(4,14,34,0.8);
+      background: rgba(5,5,5,0.8);
       border: 1px solid rgba(255,179,0,0.2);
       border-radius: 8px;
       color: #fff;
@@ -212,7 +212,7 @@
     }
     .wr-field input:focus, .wr-field select:focus, .wr-field textarea:focus { border-color: var(--orange); }
     .wr-field textarea { resize: vertical; min-height: 90px; }
-    .wr-field select option { background: #071d40; }
+    .wr-field select option { background: #0a0a0a; }
     .wr-submit-btn {
       width: 100%;
       background: linear-gradient(135deg, var(--orange), var(--orange-dark));

@@ -19,7 +19,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     /* Flat navy / flat-gold only, per BRAND.md — same component system as
@@ -30,7 +30,7 @@
        background, so the flat-fill rule for section backgrounds still holds. */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --navy: #071d40; --navy-mid: #0d3b80; --orange: #FFB300; --orange-dark: #E09A00;
+      --navy: #0a0a0a; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
       --white: #ffffff; --text-muted: #5b6577;
       --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
     }
@@ -52,7 +52,7 @@
     /* Hero — navy */
     .hiw-hero { padding: 96px 24px 72px; text-align: center; }
     .hiw-hero h1 { font-size: clamp(36px, 5.4vw, 60px); font-weight: 900; letter-spacing: -1.2px; margin-bottom: 18px; text-wrap: balance; }
-    .hiw-hero p { font-size: 17px; color: rgba(255,255,255,0.65); line-height: 1.7; max-width: 620px; margin: 0 auto; }
+    .hiw-hero p { font-size: 17px; color: rgba(255,255,255,0.9); line-height: 1.7; max-width: 620px; margin: 0 auto; }
 
     /* ── Shared "eyebrow" style — base is navy-on-gold; sections on a
        navy background override it locally. ── */
@@ -66,7 +66,7 @@
       text-align: center; position: relative; overflow: hidden;
     }
     .hiw-step--featured { background: linear-gradient(135deg, var(--navy), var(--navy-mid)); border: 1px solid rgba(255,179,0,0.25); }
-    .hiw-step-num { position: absolute; top: 16px; right: 22px; font-size: 64px; font-weight: 900; line-height: 1; color: rgba(7,29,64,0.06); letter-spacing: -2px; }
+    .hiw-step-num { position: absolute; top: 16px; right: 22px; font-size: 64px; font-weight: 900; line-height: 1; color: rgba(10,10,10,0.06); letter-spacing: -2px; }
     .hiw-step--featured .hiw-step-num { color: rgba(255,255,255,0.06); }
     .hiw-step-icon {
       width: 60px; height: 60px; border-radius: 16px; margin: 0 auto 24px;
@@ -79,7 +79,7 @@
     .hiw-step h3 { font-size: 19px; font-weight: 800; color: var(--navy); margin-bottom: 12px; letter-spacing: -0.2px; }
     .hiw-step--featured h3 { color: var(--white); }
     .hiw-step p { font-size: 14.5px; color: var(--text-muted); line-height: 1.65; margin-bottom: 22px; }
-    .hiw-step--featured p { color: rgba(255,255,255,0.6); }
+    .hiw-step--featured p { color: rgba(255,255,255,0.9); }
     .hiw-step-link { font-size: 14px; font-weight: 700; color: var(--orange-dark); text-decoration: none; }
     .hiw-step--featured .hiw-step-link { color: var(--orange); }
     .hiw-step-link:hover { text-decoration: underline; }
@@ -88,7 +88,7 @@
     .eco-section { padding: 88px 24px 96px; background: var(--navy); text-align: center; }
     .eco-section .section-eyebrow { color: var(--orange); opacity: 1; }
     .eco-section h2 { font-size: clamp(28px, 3.8vw, 42px); font-weight: 900; color: var(--white); letter-spacing: -0.8px; margin-bottom: 18px; text-wrap: balance; }
-    .eco-section .lead { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.75; max-width: 680px; margin: 0 auto 56px; }
+    .eco-section .lead { font-size: 16px; color: rgba(255,255,255,0.9); line-height: 1.75; max-width: 680px; margin: 0 auto 56px; }
     .eco-flow { display: flex; align-items: stretch; justify-content: center; gap: 0; flex-wrap: wrap; max-width: 1100px; margin: 0 auto; }
     .eco-node { background: var(--white); border-radius: 16px; padding: 26px 18px; width: 174px; display: flex; flex-direction: column; align-items: center; text-align: center; }
     .eco-node-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 14px; background: linear-gradient(135deg, var(--navy), var(--navy-mid)); display: flex; align-items: center; justify-content: center; }
@@ -98,18 +98,18 @@
     .eco-node p { font-size: 12.5px; color: var(--text-muted); line-height: 1.5; }
     .eco-arrow { display: flex; align-items: center; justify-content: center; width: 34px; flex-shrink: 0; }
     .eco-arrow svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7; }
-    .eco-footnote { margin: 44px auto 0; font-size: 14.5px; color: rgba(255,255,255,0.55); max-width: 620px; line-height: 1.7; font-weight: 600; }
+    .eco-footnote { margin: 44px auto 0; font-size: 14.5px; color: rgba(255,255,255,0.9); max-width: 620px; line-height: 1.7; font-weight: 600; }
 
     /* ── Ecosystem photo section — gold, photo in a contained card ── */
     .epx-section { padding: 88px 24px 96px; background: var(--gold-grad); }
     .epx-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
     .epx-text h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 900; color: var(--navy); letter-spacing: -0.6px; margin-bottom: 18px; text-wrap: balance; }
-    .epx-text p { font-size: 15.5px; color: rgba(7,29,64,0.72); line-height: 1.75; margin-bottom: 16px; }
+    .epx-text p { font-size: 15.5px; color: rgba(10,10,10,0.72); line-height: 1.75; margin-bottom: 16px; }
     .epx-photo { position: relative; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
     .epx-photo img { display: block; width: 100%; height: 100%; object-fit: cover; aspect-ratio: 4 / 5; }
     .epx-credit {
       position: absolute; bottom: 12px; right: 14px; font-size: 10.5px;
-      color: rgba(255,255,255,0.6); background: rgba(7,29,64,0.55);
+      color: rgba(255,255,255,0.9); background: rgba(10,10,10,0.55);
       padding: 4px 10px; border-radius: 100px; text-decoration: none;
     }
     .epx-credit:hover { color: #fff; }
@@ -117,7 +117,7 @@
     /* ── Final CTA — navy ── */
     .hiw-cta { text-align: center; padding: 88px 24px; }
     .hiw-cta h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.6px; color: var(--white); }
-    .hiw-cta p { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 32px; }
+    .hiw-cta p { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 32px; }
 
     @media (max-width: 900px) {
       .hiw-steps { grid-template-columns: 1fr; gap: 18px; }
@@ -143,7 +143,7 @@
 
   <div class="hiw-hero">
     <h1>How It Works</h1>
-    <p>Join thousands of logistics workers already saving money on fuel, hotels, dining and more. It takes under 2 minutes to sign up — just £10/year. Use promo code FREE at checkout for your first year at £0.</p>
+    <p>Join thousands of logistics workers already saving money on fuel, hotels, dining and more. It takes under 2 minutes to sign up. Your first year is free, then it's just £10/year.</p>
   </div>
 
   <section class="hiw-section">
@@ -159,7 +159,7 @@
           </svg>
         </div>
         <h3>Sign up free</h3>
-        <p>Create your Logicard account in under 2 minutes. Just £10/year — or use promo code FREE at checkout for your first year at no cost.</p>
+        <p>Create your Logicard account in under 2 minutes. First year free, then £10/year - the FREE code is applied for you at checkout.</p>
         <a href="/signup.html" class="hiw-step-link">Create account →</a>
       </div>
 
@@ -292,9 +292,9 @@
 
   <section class="hiw-cta">
     <h2>Ready to start saving?</h2>
-    <p>Join Logicard for free today and unlock hundreds of exclusive discounts built for logistics workers.</p>
+    <p>Join Logicard today - first year free, then £10/year -  and unlock hundreds of exclusive discounts built for logistics workers.</p>
     <a href="/signup.html" class="btn-primary">
-      Get Free Membership
+      Get Your First Year Free
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
   </section>

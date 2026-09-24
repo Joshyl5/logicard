@@ -4,16 +4,16 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Logicard - The discount card for all Logistics workers</title>
-  <meta name="description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. Join free and start saving today." />
-  <meta name="keywords" content="logistics discount card UK, warehouse worker discounts, freight worker discounts, air freight discounts, sea freight discounts, rail freight discounts, operations staff discounts, logistics industry membership, free membership card UK" />
+  <meta name="description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. First year free, then £10/year. Start saving today." />
+  <meta name="keywords" content="logistics discount card UK, warehouse worker discounts, freight worker discounts, air freight discounts, sea freight discounts, rail freight discounts, operations staff discounts, logistics industry membership, first year free membership card UK" />
   <meta property="og:title" content="Logicard - The discount card for all Logistics workers" />
-  <meta property="og:description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. Join free and start saving today." />
+  <meta property="og:description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. First year free, then £10/year. Start saving today." />
   <meta property="og:url" content="/" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/logicard-logo-hero.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Logicard - The discount card for all Logistics workers" />
-  <meta name="twitter:description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. Join free today." />
+  <meta name="twitter:description" content="Logicard is the discount card for everyone working in logistics — warehousing, operations, freight, air, sea and rail. First year free, then £10/year." />
   <link rel="canonical" href="/" />
   <script type="application/ld+json">
   {
@@ -58,6 +58,7 @@
   }
   </script>
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
+<link rel="stylesheet" href="/nav.css?v=7" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -72,7 +73,7 @@
     --gold-soft: rgba(255,179,0,0.14);
     --gold-line: rgba(255,179,0,0.35);
     --white: #ffffff;
-    --muted: rgba(255,255,255,0.68);
+    --muted: rgba(255,255,255,0.88);
     --display: 'Archivo Black', 'Arial Black', Impact, sans-serif;
     --body: 'Montserrat', 'Segoe UI', Arial, sans-serif;
   }
@@ -99,36 +100,9 @@
   .btn-ghost:hover { background: rgba(255,179,0,0.22); }
   .arrow { font-family: var(--body); font-weight: 700; }
 
-  /* ── Header ── */
-  .header { position: sticky; top: 0; z-index: 50; background: var(--gold); box-shadow: 0 4px 18px rgba(0,0,0,0.35); }
-  .header .logo { background: #0a0a0a; border-color: #0a0a0a; box-shadow: none; }
-  .header .wrap { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+  /* Header + menu: /nav.css (shared with every page) */
   .logo { display: inline-flex; align-items: center; border: 2.5px solid rgba(255,179,0,0.55); padding: 8px 16px; border-radius: 6px; background: rgba(255,255,255,0.05); box-shadow: 0 0 14px rgba(255,179,0,0.12); text-decoration: none; font-family: var(--body); font-size: 23px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
   .logo .logi { color: #fff; } .logo .card { color: var(--gold); }
-  .burger { width: 48px; height: 48px; background: none; border: 0; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px; }
-  .burger span { display: block; height: 3px; border-radius: 2px; background: #111; }
-
-  /* ── Slide-out menu ── */
-  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 90; }
-  .drawer { position: fixed; top: 0; right: 0; height: 100%; width: min(360px, 86vw); background: var(--black); border-left: 1px solid var(--line); z-index: 100; transform: translateX(100%); transition: transform .3s ease; display: flex; flex-direction: column; }
-  body.menu-open .scrim { opacity: 1; pointer-events: auto; }
-  body.menu-open .drawer { transform: none; }
-  body.menu-open { overflow: hidden; }
-  .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--line); }
-  .drawer-head strong { font-family: var(--display); color: var(--gold); letter-spacing: .06em; font-size: 18px; }
-  .drawer-close { background: none; border: 0; color: #fff; font-size: 30px; line-height: 1; cursor: pointer; width: 40px; height: 40px; }
-  .drawer nav { flex: 1; overflow-y: auto; padding: 10px 0; }
-  .drawer nav > a, .drawer summary { display: flex; align-items: center; justify-content: space-between; padding: 18px 24px; font-weight: 700; font-size: 17px; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; cursor: pointer; list-style: none; }
-  .drawer summary::-webkit-details-marker { display: none; }
-  .drawer summary::after { content: ''; width: 9px; height: 9px; border-right: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(45deg); transition: transform .2s; margin-right: 4px; }
-  .drawer details[open] summary::after { transform: rotate(-135deg); }
-  .drawer nav > a.active { color: var(--gold); background: rgba(255,179,0,0.08); }
-  .drawer nav > a:hover, .drawer summary:hover { color: var(--gold); }
-  .drawer .sub a { display: block; padding: 12px 24px 12px 44px; color: var(--muted); text-decoration: none; font-size: 16px; }
-  .drawer .sub a:hover { color: var(--gold); }
-  .drawer-foot { border-top: 1px solid var(--line); padding: 18px 24px 26px; display: grid; gap: 12px; }
-  .drawer-foot .login { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 600; font-size: 17px; padding: 6px 0; }
-  .drawer-foot .btn { padding: 14px; }
 
   /* ── Hero ── */
   .hero { position: relative; padding: 90px 0 80px; text-align: center; overflow: hidden; border-top: 0; min-height: 88vh; display: flex; align-items: center; }
@@ -140,43 +114,45 @@
   .roller .word { display: flex; align-items: center; justify-content: center; min-height: 2.3em; line-height: 1.1; color: var(--gold); transition: opacity .35s, transform .35s; }
   .hero-sub { font-size: clamp(17px, 3.8vw, 21px); font-weight: 500; max-width: 640px; margin: 0 auto 34px; color: rgba(255,255,255,0.9); }
   .roller .word.out { opacity: 0; transform: translateY(12px); }
-  .hero-ctas { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-bottom: 36px; }
-  .hero-ctas .btn { width: min(360px, 100%); }
+  .hero-ctas { display: flex; justify-content: center; gap: 10px; margin-bottom: 32px; }
+  .hero-ctas .btn { width: 150px; padding: 12px 10px; font-size: 14px; white-space: nowrap; }
   .perks { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 22px; list-style: none; font-weight: 600; font-size: 15px; }
   .perks li { display: flex; align-items: center; gap: 8px; }
   .perks li::before { content: '✓'; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: #111; font-size: 13px; font-weight: 800; }
 
   /* ── Rolling adverts ── */
-  .ticker { background: #000; overflow: hidden; padding: 22px 0; border-top: 1px solid var(--gold-line) !important; border-bottom: 1px solid var(--gold-line); position: relative; }
+  .ticker { background: #000; overflow: hidden; padding: 18px 0; border-top: 1px solid var(--gold-line) !important; border-bottom: 1px solid var(--gold-line); position: relative; }
   .ticker::before, .ticker::after { content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }
   .ticker::before { left: 0; background: linear-gradient(to right, #000, transparent); }
   .ticker::after { right: 0; background: linear-gradient(to left, #000, transparent); }
   .ticker-track { display: flex; align-items: center; gap: 18px; width: max-content; padding-right: 18px; animation: scroll 40s linear infinite; }
   .ticker:hover .ticker-track { animation-play-state: paused; }
   /* Brand logo slot: drop an <img> inside to replace the placeholder text */
-  .brand { flex: 0 0 auto; width: 150px; height: 70px; display: grid; place-items: center; padding: 12px 18px; background: #111; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; text-decoration: none; color: rgba(255,255,255,0.55); font-family: var(--display); font-size: 14px; letter-spacing: .04em; transition: border-color .2s, color .2s; }
-  .brand:hover { border-color: var(--gold); color: var(--gold); }
-  .brand img { max-width: 100%; max-height: 46px; object-fit: contain; filter: grayscale(100%) brightness(1.6); transition: filter .2s; }
-  .brand:hover img { filter: none; }
+  .brand { flex: 0 0 auto; height: 90px; display: flex; align-items: center; padding: 0 22px; text-decoration: none; color: #fff; font-family: var(--display); font-size: 22px; white-space: nowrap; opacity: .95; transition: opacity .2s; }
+  .brand:hover { opacity: 1; }
+  .brand img { max-height: 64px; max-width: 190px; object-fit: contain; }
   @keyframes scroll { to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
 
   /* ── Hot deals ── */
-  .deals-head { display: flex; flex-direction: column; align-items: center; }
+  .deals-head { display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
+  .deals-head h2, .deals-head .lead { text-align: left; margin-left: 0; }
+  .deals-head .lead { margin-bottom: 28px; }
   .badge { display: inline-block; background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); border-radius: 999px; padding: 6px 16px; font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; }
-  .slider { display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 20px 20px; margin: 0 -20px; scrollbar-width: none; }
+  .slider { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 20px 20px; margin: 0 -20px; scrollbar-width: none; }
   .slider::-webkit-scrollbar { display: none; }
-  .deal { flex: 0 0 min(280px, 78vw); scroll-snap-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color .2s, transform .2s; }
-  .deal:hover { border-color: var(--gold-line); transform: translateY(-3px); }
+  .deal { flex: 0 0 min(320px, 84vw); scroll-snap-align: start; background: var(--card); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color .2s; }
+  .deal:hover { border-color: var(--gold-line); }
+  .deal-top { height: 190px; display: grid; place-items: center; font-family: var(--display); font-size: 64px; color: var(--gold); position: relative; overflow: hidden; background: #1a1a1a; }
   .deal-top img { width: 100%; height: 100%; object-fit: cover; }
-  .deal-top { height: 150px; display: grid; place-items: center; font-family: var(--display); font-size: 54px; color: var(--gold); position: relative; overflow: hidden; background: radial-gradient(circle at 30% 20%, rgba(255,179,0,0.25), transparent 60%), #1a1a1a; }
-  .deal-off { max-width: calc(100% - 28px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: absolute; top: 14px; right: 14px; background: var(--gold); color: #111; font-family: var(--display); font-size: 14px; padding: 5px 12px; border-radius: 999px; }
-  .deal-body { padding: 20px 22px 24px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-  .deal-cat { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gold); }
-  .deal h3 { font-size: 20px; }
-  .deal p { color: var(--muted); font-size: 14px; flex: 1; }
-  .deal-cta { margin-top: 10px; font-weight: 700; color: var(--gold); font-size: 15px; }
-  .slider-nav { display: flex; justify-content: center; gap: 12px; margin-top: 10px; }
+  .deal-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .deal h3 { font-size: 22px; line-height: 1.2; }
+  .deal p { color: var(--muted); font-size: 15px; flex: 1; }
+  .deal-cat { align-self: flex-start; font-size: 13px; font-weight: 600; color: #fff; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 12px; }
+  .deal-cta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; background: var(--gold); color: #111; font-family: var(--display); font-size: 17px; padding: 14px 18px; border-radius: 10px; }
+  /* Swipe on phones (YLC style); arrows only on wider screens */
+  .slider-nav { display: none; justify-content: center; gap: 12px; margin-top: 10px; }
+  @media (min-width: 760px) { .slider-nav:not([hidden]) { display: flex; } }
   .slider-nav button { width: 48px; height: 48px; border-radius: 50%; background: var(--card); border: 1px solid var(--gold-line); color: var(--gold); font-size: 20px; cursor: pointer; }
   .slider-nav button:hover { background: var(--gold-soft); }
 
@@ -240,7 +216,7 @@
   .loop input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
   .loop .btn { width: 100%; }
   .form-msg { color: var(--gold); font-weight: 600; min-height: 1.6em; }
-  .fineprint { font-size: 13px; color: rgba(255,255,255,0.45); }
+  .fineprint { font-size: 13px; color: rgba(255,255,255,0.8); }
 
   /* ── News ── */
   .news-grid { display: grid; gap: 20px; }
@@ -252,7 +228,7 @@
   .news .pill { display: inline-block; background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 999px; margin-bottom: 12px; }
   .news h3 { font-size: 20px; margin-bottom: 8px; }
   .news p { color: var(--muted); font-size: 14px; }
-  .news time { display: block; margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.45); }
+  .news time { display: block; margin-top: 12px; font-size: 13px; color: rgba(255,255,255,0.8); }
 
   /* ── FAQ ── */
   .faqs { max-width: 800px; margin: 0 auto; display: grid; gap: 12px; }
@@ -282,7 +258,7 @@
   /* ── CTA + footer ── */
   .final-cta { text-align: center; background: radial-gradient(ellipse at 50% 0%, rgba(255,179,0,0.16), transparent 60%), var(--black); }
   .final-cta .btn { margin-top: 10px; }
-  footer { border-top: 1px solid var(--line); padding: 44px 0 90px; text-align: center; color: rgba(255,255,255,0.5); font-size: 14px; }
+  footer { border-top: 1px solid var(--line); padding: 44px 0 90px; text-align: center; color: rgba(255,255,255,0.8); font-size: 14px; }
   footer .logo { margin-bottom: 18px; }
   footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 22px; margin-bottom: 16px; }
   footer nav a { text-decoration: none; color: var(--muted); }
@@ -295,6 +271,9 @@
   .stores { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 28px; }
   .store { display: inline-flex; align-items: center; gap: 10px; background: #000; color: #fff; border: 1.5px solid rgba(255,255,255,0.6); border-radius: 10px; padding: 8px 18px 8px 14px; text-decoration: none; min-width: 170px; transition: border-color .15s, transform .15s; }
   .store:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .app-soon { cursor: default; border-color: var(--gold-line); }
+  .app-soon:hover { transform: none; }
+  .app-soon strong { font-size: 17px; }
   .store svg { width: 28px; height: 28px; fill: #fff; flex: 0 0 28px; }
   .store span { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
   .store small { font-size: 11px; font-weight: 500; }
@@ -308,8 +287,6 @@
     .why-img img { height: 440px; }
     .steps { grid-template-columns: repeat(3, 1fr); }
     .news-grid { grid-template-columns: repeat(3, 1fr); }
-    .hero-ctas { flex-direction: row; justify-content: center; }
-    .hero-ctas .btn { width: auto; }
     .loop form { grid-template-columns: 1fr auto; }
     .loop .btn { width: auto; }
   }
@@ -320,52 +297,7 @@
 </head>
 <body>
 
-<!-- ═══ Header ═══ -->
-<header class="header">
-  <div class="wrap">
-    <a class="logo" href="#top" aria-label="Logicard home"><span class="logi">Logi</span><span class="card">card</span></a>
-    <button class="burger" id="openMenu" aria-label="Open menu" aria-controls="drawer" aria-expanded="false"><span></span><span></span><span></span></button>
-  </div>
-</header>
-
-<div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer" aria-label="Main menu">
-  <div class="drawer-head">
-    <strong>MENU</strong>
-    <button class="drawer-close" id="closeMenu" aria-label="Close menu">&times;</button>
-  </div>
-  <nav>
-    <a href="/" class="active">Home</a>
-    <a href="/deals.html">Deals</a>
-    <details>
-      <summary>About</summary>
-      <div class="sub">
-        <a href="/about.html">About Logicard</a>
-        <a href="/our-story.html">Our Story</a>
-        <a href="/how-it-works.html">How it works</a>
-        <a href="/qualify.html">Who can join</a>
-        <a href="/faqs.html">FAQs</a>
-      </div>
-    </details>
-    <a href="/partnerships.html">Partnerships</a>
-    <a href="/signup.html">Join Logicard</a>
-    <details>
-      <summary>More</summary>
-      <div class="sub">
-        <a href="/categories.html">Deal Categories</a>
-        <a href="/logistics-news.html">Logistics News</a>
-        <a href="/financial-wellbeing.html">Financial Wellbeing</a>
-        <a href="/mental-wellbeing.html">Mental Wellbeing</a>
-        <a href="/workforce-recognition.html">Workforce Recognition</a>
-        <a href="/#contact">Contact Us</a>
-      </div>
-    </details>
-  </nav>
-  <div class="drawer-foot">
-    <a class="login" href="/login.html"><span class="gold">&#10132;</span> Log in</a>
-    <a class="btn btn-gold" href="/signup.html">Join Now</a>
-  </div>
-</aside>
+<!-- SHARED_NAV -->
 
 <main id="top">
 
@@ -376,18 +308,17 @@
       <h1 class="roller">Logicard Is Built For:<span class="word" id="rollWord" aria-live="polite">Warehouse Workers</span></h1>
       <p class="hero-sub">The UK's dedicated rewards and discounts service for those working in and retired from the <span class="gold">logistics industry</span>.</p>
       <div class="hero-ctas">
-        <a class="btn btn-gold" href="/signup.html">Join Now <span class="arrow">&rarr;</span></a>
+        <a class="btn btn-gold" href="/signup.html">Join Now</a>
         <a class="btn btn-ghost" href="#deals">Browse Deals</a>
       </div>
       <ul class="perks">
-        <li>Free to join</li>
+        <li>First year free, then £10/year</li>
         <li>Instant digital card</li>
         <li>Instant access to deals</li>
         <li>And more</li>
       </ul>
-      <div class="stores" hidden><!-- App not live yet: add real store links, then remove hidden -->
-        <a class="store" href="#" aria-label="Download on the App Store"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8c1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-.9-2.4-3.9ZM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
-        <a class="store" href="#" aria-label="Get it on Google Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.4.7-.4 1.2v18c0 .5.1.9.4 1.2l10-10.2-10-10.2Z" fill="#32bbff"/><path d="m17 8.4-3.4 3.4 3.4 3.4 3.9-2.2c1.1-.6 1.1-1.7 0-2.4L17 8.4Z" fill="#ffd400"/><path d="M13.6 11.8 3.6 22c.4.4 1 .4 1.7 0L17 15.2l-3.4-3.4Z" fill="#ff3a44"/><path d="M13.6 11.8 17 8.4 5.3 1.7c-.7-.4-1.3-.3-1.7.1l10 10Z" fill="#00f076"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+      <div class="stores">
+        <div class="store app-soon" role="note"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#FFB300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg><span><small>Logicard App</small><strong>Under Development</strong></span></div>
       </div>
     </div>
   </section>
@@ -403,7 +334,7 @@
       <div class="deals-head">
         <span class="badge">&#128293; Trending now</span>
         <h2><span class="gold">Hot Deals</span></h2>
-        <p class="lead">The deals our members are searching for right now. Swipe to see more.</p>
+        <p class="lead">The deals our members are searching for right now.</p>
       </div>
       <div class="slider" id="slider"></div>
       <p class="center" id="dealsEmpty" hidden><a class="btn btn-ghost" href="/deals.html">Browse all deals <span class="arrow">&rarr;</span></a></p>
@@ -444,7 +375,7 @@
         </div>
         <div class="benefit">
           <div class="benefit-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/><path d="M8 9h8M8 13h5"/></svg></div>
-          <div><h3>Member <span class="gold">Forums</span></h3><p>Swap tips on routes, depots, pay and kit with drivers, pickers and planners across the UK.</p></div>
+          <div><h3>Member <span class="gold">Forums</span></h3><p>Swap tips on routes, depots, pay and kit with drivers, pickers and planners across the UK. <a class="text-link" href="/forum">Visit the forum</a></p></div>
         </div>
         <div class="benefit">
           <div class="benefit-icon"><svg viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8Z"/></svg></div>
@@ -481,10 +412,9 @@
           </div>
         </div>
       </div>
-      <p class="center" style="font-weight:600" hidden>Get the <span class="gold">Logicard app</span> and keep your card in your pocket.</p>
-      <div class="stores" hidden><!-- App not live yet: add real store links, then remove hidden -->
-        <a class="store" href="#" aria-label="Download on the App Store"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.4 12.6c0-2.4 2-3.5 2.1-3.6-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.8-1.6 0-3.1 1-4 2.4-1.7 3-.4 7.3 1.2 9.7.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8s1.9.8 3.2.8c1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.4-.9-2.4-3.9ZM14 5.4c.7-.8 1.1-1.9 1-3-1 0-2.1.7-2.8 1.5-.6.7-1.2 1.8-1 2.9 1.1.1 2.1-.6 2.8-1.4Z"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
-        <a class="store" href="#" aria-label="Get it on Google Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.6 1.8c-.3.3-.4.7-.4 1.2v18c0 .5.1.9.4 1.2l10-10.2-10-10.2Z" fill="#32bbff"/><path d="m17 8.4-3.4 3.4 3.4 3.4 3.9-2.2c1.1-.6 1.1-1.7 0-2.4L17 8.4Z" fill="#ffd400"/><path d="M13.6 11.8 3.6 22c.4.4 1 .4 1.7 0L17 15.2l-3.4-3.4Z" fill="#ff3a44"/><path d="M13.6 11.8 17 8.4 5.3 1.7c-.7-.4-1.3-.3-1.7.1l10 10Z" fill="#00f076"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+      <p class="center" style="font-weight:600">The <span class="gold">Logicard app</span> is on its way - your card will live in your pocket.</p>
+      <div class="stores">
+        <div class="store app-soon" role="note"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#FFB300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg><span><small>Logicard App</small><strong>Under Development</strong></span></div>
       </div>
     </div>
   </section>
@@ -499,7 +429,7 @@
         <div class="step"><div class="step-num">2</div><h3>Receive Your <span class="gold">Card</span></h3><p>Your digital card lands on your phone the moment you're verified.</p></div>
         <div class="step"><div class="step-num">3</div><h3>Start <span class="gold">Saving</span></h3><p>Browse deals, show your card or use your code, and keep more of your pay.</p></div>
       </div>
-      <p class="center" style="margin-top:36px"><a class="btn btn-gold" href="/signup.html">Join Now <span class="arrow">&rarr;</span></a></p>
+      <p class="center" style="margin-top:36px"><a class="btn btn-gold" href="/signup.html">Join Now</a></p>
     </div>
   </section>
 
@@ -568,7 +498,7 @@
         </details>
         <details class="faq">
           <summary>How do I join?</summary>
-          <div><p>Register online to join Logicard. Membership costs just £10 per year - use code <strong>FREE</strong> at checkout for your first year at £0. <a class="text-link" href="/signup.html">Start your sign-up here.</a></p></div>
+          <div><p>Register online to join Logicard. Your first year is free, then membership is just £10 per year. The <strong>FREE</strong> code is applied for you at checkout. <a class="text-link" href="/signup.html">Start your sign-up here.</a></p></div>
         </details>
         <details class="faq">
           <summary>Who can apply?</summary>
@@ -625,7 +555,7 @@
     <div class="wrap">
       <h2>Ready To Start <span class="gold">Saving?</span></h2>
       <p class="lead">Join thousands of logistics workers already saving with Logicard.</p>
-      <a class="btn btn-gold" href="/signup.html">Join Now <span class="arrow">&rarr;</span></a>
+      <a class="btn btn-gold" href="/signup.html">Join Now</a>
     </div>
   </section>
 </main>
@@ -645,14 +575,6 @@
 <button class="to-top" id="toTop" aria-label="Back to top">&#8963;</button>
 
 <script>
-  // Menu
-  var body = document.body, openBtn = document.getElementById('openMenu');
-  function setMenu(open) { body.classList.toggle('menu-open', open); openBtn.setAttribute('aria-expanded', open); }
-  openBtn.addEventListener('click', function () { setMenu(true); });
-  document.getElementById('closeMenu').addEventListener('click', function () { setMenu(false); });
-  document.getElementById('scrim').addEventListener('click', function () { setMenu(false); });
-  document.querySelectorAll('.drawer a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
 
   // Rolling roles in hero
   var roles = ['Warehouse Workers', 'LGV/HGV Drivers', 'Van Drivers', 'Postal Workers', 'Sorters', 'Couriers', 'Managers', 'Directors', 'Purchasing', 'Importers', 'Exporters', 'Logistics Management', 'Admin Roles', 'Planning', 'Engineers', 'Mechanics', 'Support Roles'];
@@ -676,7 +598,8 @@
     brands = (Array.isArray(brands) ? brands : []).filter(function (b) { return isSafeImageUrl(b.logoUrl); });
     if (!brands.length) return;
     var html = brands.map(function (b) {
-      var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" />';
+      // If a logo file is missing, show the brand name instead of a broken image
+      var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" onerror="this.replaceWith(this.alt)" />';
       return '<a class="brand" href="' + (isSafeSlug(b.slug) ? '/deals/' + esc(b.slug) : '/partnerships.html') + '">' + img + '</a>';
     }).join('');
     // Repeat so one pass is wider than the screen, then double it for a seamless loop
@@ -692,10 +615,13 @@
     slider.innerHTML = offers.map(function (o) {
       var top = isSafeImageUrl(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
       var href = isSafeSlug(o.slug) ? '/' + esc(o.slug) : '/deals.html';
-      return '<a class="deal" href="' + href + '"><div class="deal-top">' + top +
-        (o.discountText ? '<span class="deal-off">' + esc(o.discountText) + '</span>' : '') + '</div>' +
-        '<div class="deal-body">' + (o.category ? '<span class="deal-cat">' + esc(o.category) + '</span>' : '') +
-        '<h3>' + esc(o.merchantName) + '</h3><p>' + esc(o.title) + '</p><span class="deal-cta">Get deal &rarr;</span></div></a>';
+      var desc = String(o.description || '');
+      if (desc.length > 110) desc = desc.slice(0, 107).replace(/\s+\S*$/, '') + '...';
+      return '<a class="deal" href="' + href + '"><div class="deal-top">' + top + '</div>' +
+        '<div class="deal-body"><h3>' + esc(o.title || o.merchantName) + '</h3>' +
+        '<p><strong>' + esc(o.merchantName) + '</strong>' + (desc ? ' - ' + esc(desc) : '') + '</p>' +
+        (o.category ? '<span class="deal-cat">' + esc(o.category) + '</span>' : '') +
+        '<span class="deal-cta">Get deal <span>&rarr;</span></span></div></a>';
     }).join('');
     document.getElementById('sliderNav').hidden = offers.length < 2;
   }).catch(function () { document.getElementById('dealsEmpty').hidden = false; });

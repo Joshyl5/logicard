@@ -44,7 +44,7 @@
       </button>
     </div>
 
-    <p style="color:rgba(255,255,255,0.5);font-size:13px;margin:-4px 0 20px;">
+    <p style="color:rgba(255,255,255,0.9);font-size:13px;margin:-4px 0 20px;">
       Just a name and a logo — no deal details needed. These show on the public Partnerships page's "Our Partners" grid to confirm a brand is on board, before there's a live discount to attach. Clicking a logo takes the member to logicard.co.uk/deals/&lt;slug&gt;, which shows a matching offer from Manage Offers automatically (match by brand name) — or a "coming soon" message if there isn't one yet.
     </p>
 
@@ -77,7 +77,7 @@
 
   <!-- Add / Edit Brand Modal -->
   <div id="brandModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;overflow-y:auto;">
-    <div style="background:#0d1a2e;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:36px;max-width:480px;width:90%;margin:40px auto;">
+    <div style="background:#121212;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:36px;max-width:480px;width:90%;margin:40px auto;">
       <h2 id="brandModalTitle" style="color:#fff;font-size:20px;font-weight:800;margin:0 0 20px;">Add Brand</h2>
 
       <form id="brandForm">
@@ -91,7 +91,7 @@
         <div class="lfield" style="margin-bottom:14px;">
           <label for="brandSlug">Page URL Slug</label>
           <input id="brandSlug" type="text" placeholder="e.g. gousto" pattern="[a-z0-9-]+" />
-          <p style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.4);">
+          <p style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.75);">
             The logo links to logicard.co.uk/deals/<span id="brandSlugPreview">…</span> — showing any live Gousto offer, or "coming soon" if there isn't one yet. Auto-filled from the name; edit if you like.
           </p>
         </div>
@@ -100,11 +100,11 @@
           <label for="brandLogoUrl">Logo Image</label>
           <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px;">
             <img id="brandLogoPreview" src="" alt="" style="display:none;width:52px;height:52px;object-fit:contain;background:#fff;border-radius:6px;padding:4px;" />
-            <input id="brandLogoFile" type="file" accept="image/jpeg,image/png,image/webp" style="flex:1;color:rgba(255,255,255,0.6);font-size:13px;" />
+            <input id="brandLogoFile" type="file" accept="image/jpeg,image/png,image/webp" style="flex:1;color:rgba(255,255,255,0.9);font-size:13px;" />
             <button type="button" id="brandUploadBtn" style="padding:9px 16px;border-radius:6px;border:1px solid rgba(255,179,0,0.4);background:rgba(255,179,0,0.12);color:#FFB300;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">Upload</button>
           </div>
           <input id="brandLogoUrl" type="text" placeholder="https://… (or upload a file above)" required />
-          <p id="brandUploadStatus" style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.4);"></p>
+          <p id="brandUploadStatus" style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.75);"></p>
         </div>
 
         <div class="lfield" style="margin-bottom:14px;">
@@ -119,7 +119,7 @@
         <div id="brandFormError" class="form-error" role="alert" style="margin-bottom:14px;"></div>
 
         <div style="display:flex;gap:10px;">
-          <button type="button" id="brandCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:600;cursor:pointer;">Cancel</button>
+          <button type="button" id="brandCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.9);font-weight:600;cursor:pointer;">Cancel</button>
           <button type="submit" id="brandSubmitBtn" style="flex:2;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Save Brand</button>
         </div>
       </form>

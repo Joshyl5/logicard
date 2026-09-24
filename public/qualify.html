@@ -19,7 +19,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,8 +27,8 @@
       --orange: #FFB300;
       --orange-dark: #E09A00;
       --navy-deep: #04040d;
-      --navy: #071d40;
-      --navy-mid: #0d3b80;
+      --navy: #0a0a0a;
+      --navy-mid: #1f1f1f;
       --white: #ffffff;
       --gray-mid: #e5e5e5;
       --text-muted: #666666;
@@ -84,35 +84,35 @@
     .q-search-wrap { max-width: 480px; margin: 0 auto 4px; position: relative; }
     .q-search-input {
       width: 100%; padding: 16px 20px; border-radius: 100px;
-      border: 1px solid rgba(7,29,64,0.15); background: var(--white);
+      border: 1px solid rgba(10,10,10,0.15); background: var(--white);
       color: var(--navy); font-size: 15px; font-weight: 600; outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
-      box-shadow: 0 6px 24px rgba(7,29,64,0.15);
+      box-shadow: 0 6px 24px rgba(10,10,10,0.15);
     }
-    .q-search-input::placeholder { color: rgba(7,29,64,0.4); font-weight: 500; }
-    .q-search-input:focus { border-color: var(--navy); box-shadow: 0 8px 30px rgba(7,29,64,0.22); }
+    .q-search-input::placeholder { color: rgba(10,10,10,0.4); font-weight: 500; }
+    .q-search-input:focus { border-color: var(--navy); box-shadow: 0 8px 30px rgba(10,10,10,0.22); }
     .q-search-results { margin-top: 14px; display: none; flex-wrap: wrap; gap: 8px; justify-content: center; }
     .q-search-results.open { display: flex; }
     .q-search-result {
       font-size: 13px; font-weight: 600; color: var(--navy);
-      background: rgba(7,29,64,0.08); border: 1px solid rgba(7,29,64,0.15);
+      background: rgba(10,10,10,0.08); border: 1px solid rgba(10,10,10,0.15);
       border-radius: 100px; padding: 8px 16px; cursor: pointer;
       transition: background 0.15s, border-color 0.15s;
     }
-    .q-search-result:hover { background: rgba(7,29,64,0.15); border-color: rgba(7,29,64,0.3); }
-    .q-search-empty { display: none; margin-top: 14px; font-size: 13.5px; color: rgba(7,29,64,0.6); }
+    .q-search-result:hover { background: rgba(10,10,10,0.15); border-color: rgba(10,10,10,0.3); }
+    .q-search-empty { display: none; margin-top: 14px; font-size: 13.5px; color: rgba(10,10,10,0.6); }
     .q-search-empty a { color: var(--navy); font-weight: 700; text-decoration: none; }
 
     .q-match {
       display: none; max-width: 480px; margin: 28px auto 0; padding: 24px 28px;
-      border-radius: 16px; background: var(--white); border: 1px solid rgba(7,29,64,0.1);
-      text-align: center; box-shadow: 0 8px 32px rgba(7,29,64,0.12);
+      border-radius: 16px; background: var(--white); border: 1px solid rgba(10,10,10,0.1);
+      text-align: center; box-shadow: 0 8px 32px rgba(10,10,10,0.12);
     }
     .q-match.open { display: block; }
     .q-match h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--navy); }
     .q-match p { font-size: 14px; color: var(--text-muted); margin-bottom: 18px; }
 
-    .q-browse-hint { font-size: 13px; color: rgba(7,29,64,0.5); margin-top: 16px; }
+    .q-browse-hint { font-size: 13px; color: rgba(10,10,10,0.5); margin-top: 16px; }
 
     /* "Logicard World" animated scene — 2nd section, straight on from
        the navy intro above with no seam. Adapted from a full-viewport
@@ -137,7 +137,7 @@
       letter-spacing: 0.05em;
       text-transform: uppercase;
       color: var(--white);
-      background: rgba(7,29,64,0.85);
+      background: rgba(10,10,10,0.85);
       border: 1px solid rgba(255,179,0,0.55);
       padding: 7px 15px;
       border-radius: 100px;
@@ -229,7 +229,7 @@
     .q-sectors-intro h2 .accent { color: var(--orange); }
     .q-sectors-intro p {
       font-size: 16px; font-weight: 700; letter-spacing: 0.2px;
-      color: rgba(255,255,255,0.7);
+      color: rgba(255,255,255,0.9);
     }
 
     /* Sector cards grid — 4th section, navy (was gold, flipped back now
@@ -284,7 +284,7 @@
     }
     .q-sector-chevron {
       width: 18px; height: 18px; flex-shrink: 0;
-      fill: none; stroke: rgba(7,29,64,0.35);
+      fill: none; stroke: rgba(10,10,10,0.35);
       stroke-width: 2; stroke-linecap: round;
       transition: transform 0.25s ease;
     }
@@ -302,13 +302,13 @@
        empty box under it (content added later — this just builds the
        clickable structure and placeholder space for that text). */
     .q-role-item {
-      border: 1px solid rgba(7,29,64,0.09);
+      border: 1px solid rgba(10,10,10,0.09);
       border-radius: 8px;
       overflow: hidden;
     }
     .q-role-toggle {
       width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      background: rgba(7,29,64,0.03); border: none; cursor: pointer;
+      background: rgba(10,10,10,0.03); border: none; cursor: pointer;
       padding: 9px 13px; font-family: inherit; text-align: left;
       transition: background 0.15s;
     }
@@ -318,7 +318,7 @@
     }
     .q-role-chevron {
       width: 15px; height: 15px; flex-shrink: 0;
-      fill: none; stroke: rgba(7,29,64,0.4);
+      fill: none; stroke: rgba(10,10,10,0.4);
       stroke-width: 2; stroke-linecap: round;
       transition: transform 0.2s ease;
     }
@@ -328,9 +328,9 @@
     .q-role-item.open .q-role-detail { display: block; }
     .q-role-box {
       min-height: 22px;
-      border: 1.5px dashed rgba(7,29,64,0.18);
+      border: 1.5px dashed rgba(10,10,10,0.18);
       border-radius: 8px;
-      background: rgba(7,29,64,0.015);
+      background: rgba(10,10,10,0.015);
     }
     .q-roles-join {
       display: none;
@@ -359,11 +359,11 @@
     }
     .q-bottom .q-cta-btn {
       background: var(--navy); color: var(--white);
-      box-shadow: 0 6px 32px rgba(7,29,64,0.28);
+      box-shadow: 0 6px 32px rgba(10,10,10,0.28);
     }
-    .q-bottom .q-cta-btn:hover { background: var(--navy-mid); box-shadow: 0 10px 40px rgba(7,29,64,0.36); }
+    .q-bottom .q-cta-btn:hover { background: var(--navy-mid); box-shadow: 0 10px 40px rgba(10,10,10,0.36); }
     .q-bottom p {
-      font-size: 14px; color: rgba(7,29,64,0.65);
+      font-size: 14px; color: rgba(10,10,10,0.65);
       margin-top: 14px;
     }
     /* Trust stats — filling what was otherwise the quietest spot on the
@@ -432,7 +432,7 @@
     <div class="q-search-wrap">
       <input type="text" id="qSearchInput" class="q-search-input" placeholder="Start typing your job title, e.g. Warehouse…" autocomplete="off" />
       <div class="q-search-results" id="qSearchResults"></div>
-      <p class="q-search-empty" id="qSearchEmpty">No exact match — but you likely still qualify! <a href="/signup.html">Join free anyway →</a></p>
+      <p class="q-search-empty" id="qSearchEmpty">No exact match — but you likely still qualify! <a href="/signup.html">Join anyway - first year free →</a></p>
     </div>
 
     <div class="q-match" id="qMatch">
@@ -634,12 +634,12 @@
       });
       ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
       var fg = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.25, 0, cx, cy, R);
-      fg.addColorStop(0, '#122a50'); fg.addColorStop(1, '#061428');
+      fg.addColorStop(0, '#1a1a1a'); fg.addColorStop(1, '#0a0a0a');
       ctx.fillStyle = fg; ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
       ctx.restore();
       for (j = 1; j < N_LAT; j++) {
         var phi = (j / N_LAT) * Math.PI - Math.PI / 2, lR = R * Math.cos(phi), lY = cy + R * Math.sin(phi), isEq = Math.abs(phi) < 0.05;
-        ctx.strokeStyle = isEq ? GOLD2 + '0.45)' : 'rgba(45,90,185,0.2)'; ctx.lineWidth = isEq ? 2 : 0.8;
+        ctx.strokeStyle = isEq ? GOLD2 + '0.45)' : 'rgba(60,60,60,0.2)'; ctx.lineWidth = isEq ? 2 : 0.8;
         ctx.beginPath(); ctx.ellipse(cx, lY, lR, lR * 0.14, 0, 0, Math.PI * 2); ctx.stroke();
       }
       for (i = 0; i < N_LON; i++) {
@@ -689,7 +689,7 @@
       ctx.beginPath(); ctx.moveTo(-63, -8); ctx.lineTo(-82, -38); ctx.lineTo(-68, -8); ctx.closePath(); ctx.fill();
       ctx.fillStyle = '#b2c6de';
       ctx.beginPath(); ctx.moveTo(-62, 5); ctx.lineTo(-80, 22); ctx.lineTo(-78, 20); ctx.lineTo(-60, 7); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = 'rgba(10,40,110,0.55)';
+      ctx.fillStyle = 'rgba(39,39,39,0.55)';
       for (var wi = 0; wi < 7; wi++) { ctx.beginPath(); ctx.ellipse(48 - wi * 13, -7, 4, 3, 0, 0, Math.PI * 2); ctx.fill(); }
       ctx.restore();
     }
@@ -709,11 +709,11 @@
       ctx.textAlign = 'center'; ctx.fillText('LOGICARD', -130, -30);
       ctx.font = (Math.round(10 * sc) > 4 ? 10 : 6) + 'px Inter, sans-serif';
       ctx.fillStyle = 'rgba(255,179,0,0.6)'; ctx.fillText('GLOBAL LOGISTICS', -130, -14);
-      ctx.fillStyle = '#183462'; ctx.fillRect(-25, -78, 75, 78);
-      ctx.fillStyle = 'rgba(30,70,155,0.75)'; ctx.fillRect(-16, -70, 60, 32);
-      ctx.fillStyle = 'rgba(30,70,155,0.55)'; ctx.fillRect(-16, -30, 24, 14);
-      ctx.fillStyle = '#0f2248'; ctx.fillRect(50, -24, 10, 24);
-      ctx.strokeStyle = '#1e3a60'; ctx.lineWidth = 5;
+      ctx.fillStyle = '#313131'; ctx.fillRect(-25, -78, 75, 78);
+      ctx.fillStyle = 'rgba(60,60,60,0.75)'; ctx.fillRect(-16, -70, 60, 32);
+      ctx.fillStyle = 'rgba(60,60,60,0.55)'; ctx.fillRect(-16, -30, 24, 14);
+      ctx.fillStyle = '#151515'; ctx.fillRect(50, -24, 10, 24);
+      ctx.strokeStyle = '#363636'; ctx.lineWidth = 5;
       ctx.beginPath(); ctx.moveTo(38, -78); ctx.lineTo(38, -104); ctx.stroke();
       for (var si = 0; si < 3; si++) {
         ctx.fillStyle = 'rgba(60,60,70,' + (0.12 - si * 0.04) + ')';
@@ -741,14 +741,14 @@
       ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.beginPath(); ctx.ellipse(-50, 5, 72, 5, 0, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = GOLD; ctx.fillRect(-115, -58, 115, 58);
       ctx.fillStyle = '#d4a017'; ctx.fillRect(-115, -52, 30, 52);
-      ctx.fillStyle = 'rgba(8,24,70,0.7)'; ctx.fillRect(-112, -48, 24, 26);
+      ctx.fillStyle = 'rgba(24,24,24,0.7)'; ctx.fillRect(-112, -48, 24, 26);
       ctx.fillStyle = '#c49010'; ctx.fillRect(-123, -16, 10, 16);
       ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(-12, -58); ctx.lineTo(-12, 0); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-4, -58); ctx.lineTo(-4, 0); ctx.stroke();
       ctx.fillStyle = '#060f1c'; ctx.font = 'bold 13px Inter, sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('LOGICARD', -62, -26);
-      ctx.fillStyle = 'rgba(8,24,70,0.5)';
+      ctx.fillStyle = 'rgba(24,24,24,0.5)';
       ctx.fillRect(-95, -48, 22, 14); ctx.fillRect(-68, -48, 22, 14); ctx.fillRect(-42, -48, 22, 14);
       [-90, -18].forEach(function (wx) {
         ctx.fillStyle = '#111'; ctx.beginPath(); ctx.arc(wx, 3, 13, 0, Math.PI * 2); ctx.fill();
@@ -768,14 +768,14 @@
     function drawShipAt(x, wy, variant) {
       var sc = Math.min(W, H) / 900 * 0.88, HL = 280, HH = 42;
       ctx.save(); ctx.translate(x, wy); ctx.scale(sc, sc);
-      ctx.fillStyle = '#182840';
+      ctx.fillStyle = '#262626';
       ctx.beginPath();
       ctx.moveTo(-HL / 2 - 20, 0); ctx.lineTo(-HL / 2, 16); ctx.lineTo(-HL / 2 + 8, HH);
       ctx.lineTo(HL / 2 - 8, HH); ctx.lineTo(HL / 2, HH * 0.7); ctx.lineTo(HL / 2, 0);
       ctx.closePath(); ctx.fill();
       ctx.strokeStyle = GOLD; ctx.lineWidth = 2.5;
       ctx.beginPath(); ctx.moveTo(-HL / 2, 10); ctx.lineTo(HL / 2, 10); ctx.stroke();
-      ctx.fillStyle = '#1e3048'; ctx.fillRect(-HL / 2 + 10, -14, HL - 20, 14);
+      ctx.fillStyle = '#2d2d2d'; ctx.fillRect(-HL / 2 + 10, -14, HL - 20, 14);
       var CCOLORS = ['#c0392b','#2980b9','#27ae60','#e67e22','#8e44ad','#e74c3c','#16a085'];
       var rows = 3 + (variant % 2), cW = 36, cH = 20, stackX = -HL / 2 + 18, cols = 6;
       for (var row = 0; row < rows; row++) {
@@ -788,8 +788,8 @@
         }
       }
       var bTop = -14 - rows * (cH + 1);
-      ctx.fillStyle = '#243a55'; ctx.fillRect(HL / 2 - 72, bTop - 48, 55, 48);
-      ctx.fillStyle = '#1a2e45'; ctx.fillRect(HL / 2 - 68, bTop - 65, 46, 20);
+      ctx.fillStyle = '#363636'; ctx.fillRect(HL / 2 - 72, bTop - 48, 55, 48);
+      ctx.fillStyle = '#2b2b2b'; ctx.fillRect(HL / 2 - 68, bTop - 65, 46, 20);
       ctx.fillStyle = 'rgba(160,210,255,0.28)';
       for (var wi2 = 0; wi2 < 3; wi2++) { ctx.fillRect(HL / 2 - 67 + wi2 * 15, bTop - 35, 10, 7); }
       ctx.strokeStyle = 'rgba(180,200,230,0.45)'; ctx.lineWidth = 2;
@@ -829,7 +829,7 @@
 
   <section class="q-sectors-grid-section" id="qSectors">
     <div class="q-sectors-grid" id="qSectorsGrid">
-      <p style="text-align:center;color:rgba(255,255,255,0.55)">Loading roles…</p>
+      <p style="text-align:center;color:rgba(255,255,255,0.9)">Loading roles…</p>
     </div>
   </section><!-- /q-sectors -->
 
@@ -852,7 +852,7 @@
       Claim your free Logicard
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </a>
-    <p>£10/year — use code FREE at checkout for your first year at £0</p>
+    <p>First year free, then £10/year</p>
   </div>
 
   <!-- SHARED_FOOTER -->
@@ -929,7 +929,7 @@
           </div>
         `).join('');
       } catch {
-        container.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.55)">Unable to load roles right now — please refresh.</p>';
+        container.innerHTML = '<p style="text-align:center;color:rgba(255,255,255,0.9)">Unable to load roles right now — please refresh.</p>';
       }
     }
 

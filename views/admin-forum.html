@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logicard — Forum Moderation</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/styles.css?v=2" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+  <style>
+    .fm-list { display: grid; gap: 12px; }
+    .fm-item { background: #161616; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; color: #fff; }
+    .fm-item.reported { border-color: #f87171; }
+    .fm-item.removed { opacity: .55; }
+    .fm-top { display: flex; flex-wrap: wrap; gap: 6px 12px; font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 6px; }
+    .fm-tag { font-weight: 700; padding: 2px 8px; border-radius: 6px; background: rgba(255,179,0,0.15); color: #FFB300; }
+    .fm-tag.red { background: rgba(248,113,113,0.15); color: #f87171; }
+    .fm-title { font-weight: 800; margin-bottom: 6px; }
+    .fm-body { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 14px; margin-bottom: 10px; }
+    .fm-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .fm-actions button, .fm-actions a { font: 700 13px Inter, sans-serif; padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #fff; cursor: pointer; text-decoration: none; }
+    .fm-actions .danger { border-color: #f87171; color: #f87171; }
+    .fm-filter { display: flex; gap: 8px; margin-bottom: 16px; }
+    .fm-filter button { font: 700 13px Inter, sans-serif; padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.25); background: transparent; color: #fff; cursor: pointer; }
+    .fm-filter button.on { background: #FFB300; color: #111; border-color: #FFB300; }
+  </style>
+</head>
+<body class="admin-page">
+
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-logo">
+        <img src="/logicard-logo-hero.png" alt="Logicard" class="admin-logo-img" />
+        <span class="admin-panel-badge">Forum Moderation</span>
+      </div>
+      <div class="admin-header-right">
+        <a href="/admin" class="admin-user-label" style="text-decoration:none">← Back to Dashboard</a>
+        <button class="signout-btn" id="adminSignout">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="fm-filter" id="filter">
+      <button type="button" data-f="reported" class="on">Reported</button>
+      <button type="button" data-f="live">All live</button>
+      <button type="button" data-f="removed">Removed</button>
+    </div>
+    <div class="fm-list" id="list"><p style="color:#fff">Loading...</p></div>
+  </main>
+
+  <script>
+    (function () {
+      var items = [], filter = 'reported', list = document.getElementById('list');
+
+      function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+      function act(it, action) {
+        return fetch('/api/admin/forum/' + it.type + '/' + it.id + '/' + action, { method: 'POST' })
+          .then(function (r) { if (!r.ok) throw new Error('Failed'); return load(); })
+          .catch(function () { alert('That did not work - please try again.'); });
+      }
+
+      function render() {
+        list.innerHTML = '';
+        var shown = items.filter(function (it) {
+          if (filter === 'removed') return it.isRemoved;
+          if (filter === 'reported') return it.isReported && !it.isRemoved;
+          return !it.isRemoved;
+        });
+        if (!shown.length) { list.appendChild(el('p', null, 'Nothing here.')).style.color = '#fff'; return; }
+        shown.forEach(function (it) {
+          var card = el('div', 'fm-item' + (it.isReported && !it.isRemoved ? ' reported' : '') + (it.isRemoved ? ' removed' : ''));
+          var top = el('div', 'fm-top');
+          top.appendChild(el('span', 'fm-tag', it.type === 'post' ? 'Post' : 'Reply'));
+          if (it.isReported && !it.isRemoved) top.appendChild(el('span', 'fm-tag red', 'Reported'));
+          if (it.isRemoved) top.appendChild(el('span', 'fm-tag red', 'Removed'));
+          top.appendChild(el('span', null, it.category));
+          top.appendChild(el('span', null, it.authorName + ' (#' + it.membershipNumber + ')'));
+          top.appendChild(el('span', null, new Date(it.createdAt).toLocaleString('en-GB')));
+          card.appendChild(top);
+          card.appendChild(el('div', 'fm-title', (it.type === 'reply' ? 'Re: ' : '') + it.title));
+          card.appendChild(el('div', 'fm-body', it.body));
+          var a = el('div', 'fm-actions');
+          var view = el('a', null, 'Open thread'); view.href = '/forum/' + it.postId; view.target = '_blank'; a.appendChild(view);
+          if (!it.isRemoved) {
+            var rm = el('button', 'danger', 'Remove'); rm.addEventListener('click', function () { if (confirm('Remove this ' + it.type + '?')) act(it, 'remove'); }); a.appendChild(rm);
+            if (it.isReported) { var ok = el('button', null, 'Dismiss report'); ok.addEventListener('click', function () { act(it, 'dismiss'); }); a.appendChild(ok); }
+          } else {
+            var rs = el('button', null, 'Restore'); rs.addEventListener('click', function () { act(it, 'restore'); }); a.appendChild(rs);
+          }
+          card.appendChild(a);
+          list.appendChild(card);
+        });
+      }
+
+      function load() {
+        return fetch('/api/admin/forum').then(function (r) {
+          if (r.status === 401) { window.location.href = '/admin-login.html'; return []; }
+          return r.json();
+        }).then(function (d) { items = Array.isArray(d) ? d : []; render(); });
+      }
+
+      document.getElementById('filter').addEventListener('click', function (e) {
+        var b = e.target.closest('button'); if (!b) return;
+        this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+        filter = b.dataset.f; render();
+      });
+      document.getElementById('adminSignout').addEventListener('click', function () {
+        fetch('/api/admin/logout', { method: 'POST' }).then(function () { window.location.href = '/'; });
+      });
+      load();
+    })();
+  </script>
+</body>
+</html>

@@ -181,3 +181,11 @@ payBtn.addEventListener('click', async () => {
     payBtn.textContent = origLabel;
   }
 });
+
+// "First year free, then £10/year" is the headline offer sitewide, so the
+// FREE code is pre-applied on arrival. The server still validates it in
+// /api/checkout/validate-promo and again at payment, exactly as if typed.
+promoRow.classList.add('open');
+promoToggle.textContent = '− Hide';
+promoInput.value = 'FREE';
+applyPromo();

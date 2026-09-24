@@ -2,8 +2,8 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --blue-deep:   #071d40;
-  --blue-mid:    #0d3b80;
+  --blue-deep:   #0a0a0a;
+  --blue-mid:    #1f1f1f;
   --blue-light:  #1a6cc8;
   --blue-glow:   rgba(26, 108, 200, 0.35);
   --white:       #ffffff;
@@ -14,7 +14,7 @@
   --gold-dark:   #E09A00;
   --gold-glow:   rgba(255, 179, 0, 0.4);
   --border:      rgba(255,255,255,0.12);
-  --card-bg:     rgba(7, 30, 68, 0.75);
+  --card-bg:     rgba(10,10,10, 0.75);
   --radius:      12px;
   --radius-sm:   8px;
   --font:        'Inter', system-ui, sans-serif;
@@ -35,10 +35,10 @@ a     { color: inherit; text-decoration: none; }
   justify-content: center;
   overflow: hidden;
   background: radial-gradient(ellipse at 50% 40%,
-    #1a5fad 0%,
-    #0d3b80 35%,
-    #071d40 70%,
-    #040e22 100%
+    #2a2a2a 0%,
+    #1f1f1f 35%,
+    #0a0a0a 70%,
+    #050505 100%
   );
 }
 
@@ -202,7 +202,7 @@ a     { color: inherit; text-decoration: none; }
   font-size: 0.82rem;
   font-weight: 400;
   letter-spacing: 0.32em;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.75);
   white-space: nowrap;
 }
 
@@ -238,7 +238,7 @@ a     { color: inherit; text-decoration: none; }
 
 /* ── SIGNUP SECTION ──────────────────────────────────────────── */
 .signup {
-  background: linear-gradient(to bottom, #040e22, #071d40);
+  background: linear-gradient(to bottom, #050505, #0a0a0a);
   padding: 90px 24px;
   position: relative;
 }
@@ -276,7 +276,7 @@ a     { color: inherit; text-decoration: none; }
 
 .signup-card {
   width: 100%;
-  background: rgba(8, 24, 58, 0.92);
+  background: rgba(23,23,23, 0.92);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 18px;
   padding: 40px 36px 36px;
@@ -356,7 +356,7 @@ input[type="tel"],
 input[type="date"],
 input[type="password"],
 select {
-  background: rgba(4, 14, 34, 0.8);
+  background: rgba(5,5,5, 0.8);
   border: 1px solid rgba(79, 163, 247, 0.2);
   border-radius: var(--radius-sm);
   color: var(--white);
@@ -382,8 +382,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-select option { background: #071d40; color: var(--white); }
-select optgroup { background: #071d40; color: var(--accent); font-weight: 700; font-style: normal; }
+select option { background: #0a0a0a; color: var(--white); }
+select optgroup { background: #0a0a0a; color: var(--accent); font-weight: 700; font-style: normal; }
 
 /* ── "Why do we ask?" disclosure ─────────────────────────────── */
 .why-we-ask { margin-top: 4px; font-size: 0.8rem; }
@@ -443,7 +443,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   position: fixed;
   max-height: 300px;
   overflow-y: auto;
-  background: #071d40;
+  background: #0a0a0a;
   border: 1px solid rgba(79,163,247,0.3);
   border-radius: var(--radius-sm);
   box-shadow: 0 16px 40px rgba(0,0,0,0.55);
@@ -492,7 +492,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   height: 19px;
   border: 1.5px solid rgba(79, 163, 247, 0.4);
   border-radius: 5px;
-  background: rgba(4, 14, 34, 0.8);
+  background: rgba(5,5,5, 0.8);
   display: grid;
   place-items: center;
   margin-top: 1px;
@@ -636,7 +636,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* ── FOOTER ──────────────────────────────────────────────────── */
 .footer {
-  background: #040e22;
+  background: #050505;
   border-top: 1px solid rgba(255,255,255,0.06);
   padding: 28px 24px;
   text-align: center;
@@ -649,7 +649,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* ── SIGNUP PAGE ─────────────────────────────────────────────── */
 .signup-page {
-  background: linear-gradient(160deg, #071d40 0%, #0a2d5e 50%, #071d40 100%);
+  background: linear-gradient(160deg, #0a0a0a 0%, #161616 50%, #0a0a0a 100%);
   min-height: 100vh;
 }
 
@@ -680,7 +680,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 .page-hero {
   background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
-  color: #071d40;
+  color: #0a0a0a;
   padding: 118px 24px 24px;
   text-align: center;
 }
@@ -691,7 +691,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   margin-bottom: 12px;
 }
 .page-hero p {
-  color: #071d40;
+  color: #0a0a0a;
   font-weight: 500;
   font-size: 1rem;
   max-width: 500px;
@@ -740,7 +740,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
    .site-subbar "< Back" link become flex-row siblings of .login-wrap and
    get centered as a scattered group instead of stacking normally. */
 .login-page {
-  background: radial-gradient(ellipse at 50% 40%, #1a5fad 0%, #0d3b80 35%, #071d40 70%, #040e22 100%);
+  background: radial-gradient(ellipse at 50% 40%, #2a2a2a 0%, #1f1f1f 35%, #0a0a0a 70%, #050505 100%);
   min-height: 100vh;
   overflow: hidden;
 }
@@ -769,7 +769,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 /* Card */
 .login-card {
   width: 100%;
-  background: rgba(8, 24, 58, 0.92);
+  background: rgba(23,23,23, 0.92);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 18px;
   padding: 40px 36px 36px;
@@ -852,13 +852,13 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* ── MEMBERS PAGE ─────────────────────────────────────────────── */
 .members-page {
-  background: #060d1c;
+  background: #080808;
   min-height: 100vh;
 }
 
 /* Header */
 .members-header {
-  background: #071628;
+  background: #0d0d0d;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   position: sticky;
   top: 0;
@@ -1060,7 +1060,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* Offers hero strip */
 .offers-hero {
-  background: linear-gradient(135deg, #071d40 0%, #0d3b80 100%);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1f1f1f 100%);
   padding: 40px 28px;
   border-bottom: 1px solid rgba(255,255,255,0.07);
 }
@@ -1118,7 +1118,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   border-radius: var(--radius);
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.1);
-  background: #0b1a33;
+  background: #111111;
   min-height: 220px;
 }
 
@@ -1207,7 +1207,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 
 .offer-card {
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius);
   overflow: hidden;
@@ -1234,7 +1234,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.9);
   margin-top: auto;
 }
 
@@ -1335,7 +1335,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background: #0b1a33;
+  background: #111111;
 }
 
 .oc-image {
@@ -1401,7 +1401,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .oc-code-copy-btn {
   flex-shrink: 0;
   background: var(--gold);
-  color: #071d40;
+  color: #0a0a0a;
   border: none;
   border-radius: 6px;
   font-family: var(--font);
@@ -1481,12 +1481,12 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* ── ADMIN PAGE ──────────────────────────────────────────────── */
 .admin-page {
-  background: #060d1c;
+  background: #080808;
   min-height: 100vh;
 }
 
 .admin-header {
-  background: #071628;
+  background: #0d0d0d;
   border-bottom: 1px solid rgba(255,255,255,0.08);
   padding: 0 32px;
   position: sticky;
@@ -1553,7 +1553,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 
 .stat-card {
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius);
   padding: 20px 22px;
@@ -1618,7 +1618,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 .search-input {
   width: 100%;
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--radius-sm);
   color: var(--white);
@@ -1651,7 +1651,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* Table */
 .table-wrap {
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius);
   overflow-x: auto;
@@ -1721,7 +1721,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 
 /* ── REFERRAL BANNER ─────────────────────────────────────────── */
 .referral-banner {
-  background: linear-gradient(135deg, #071d40 0%, #0d3b80 100%);
+  background: linear-gradient(135deg, #0a0a0a 0%, #1f1f1f 100%);
   border-top: 1px solid rgba(255,179,0,0.2);
   padding: 24px 28px;
 }
@@ -1743,7 +1743,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 .referral-sub {
   font-size: 0.82rem;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.9);
 }
 .referral-link-wrap {
   display: flex;
@@ -1765,7 +1765,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 .referral-copy-btn {
   background: #FFB300;
-  color: #071d40;
+  color: #0a0a0a;
   border: none;
   border-radius: 6px;
   font-family: var(--font);
@@ -1780,7 +1780,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .referral-copy-btn.copied { background: #10b981; color: #fff; }
 .referral-stats {
   font-size: 0.82rem;
-  color: rgba(255,255,255,0.55);
+  color: rgba(255,255,255,0.9);
   text-align: center;
 }
 .referral-stats strong { color: #FFB300; }
@@ -1833,7 +1833,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 
 .detail-card {
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius);
   padding: 4px 28px;
@@ -1876,11 +1876,11 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .verify-badge--rejected { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
 
 /* ── VERIFY PAGE ─────────────────────────────────────────────── */
-.verify-page { background: #060d1c; min-height: 100vh; }
+.verify-page { background: #080808; min-height: 100vh; }
 .verify-main { max-width: 780px; margin: 0 auto; padding: 44px 24px 80px; }
 
 .verify-status-card {
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius);
   padding: 32px 32px 28px;
@@ -1915,7 +1915,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .verify-method-card > p { color: var(--muted); font-size: 0.85rem; line-height: 1.6; margin-bottom: 18px; }
 
 .verify-select {
-  background: rgba(4, 14, 34, 0.8);
+  background: rgba(5,5,5, 0.8);
   border: 1px solid rgba(79, 163, 247, 0.2);
   border-radius: var(--radius-sm);
   color: var(--white);
@@ -1942,7 +1942,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .verify-dropzone-filename { font-size: 0.84rem; color: var(--white); font-weight: 600; margin-top: 6px; word-break: break-all; }
 
 .verify-note {
-  background: rgba(4, 14, 34, 0.8);
+  background: rgba(5,5,5, 0.8);
   border: 1px solid rgba(79, 163, 247, 0.2);
   border-radius: var(--radius-sm);
   color: var(--white);
@@ -1992,7 +1992,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 }
 .advert-tile {
   display: block;
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius);
   overflow: hidden;
@@ -2005,7 +2005,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .verify-doc-list { display: flex; flex-direction: column; gap: 10px; }
 .verify-doc-item {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  background: #0b1a33; border: 1px solid rgba(255,255,255,0.08);
+  background: #111111; border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-sm); padding: 12px 16px; font-size: 0.85rem;
 }
 .verify-doc-type { font-weight: 600; color: var(--off-white); text-transform: capitalize; }
@@ -2024,7 +2024,7 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 .pending-panel {
   max-width: 640px;
   margin: 40px auto;
-  background: #0b1a33;
+  background: #111111;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius);
   padding: 44px 40px;
@@ -2037,14 +2037,14 @@ select optgroup { background: #071d40; color: var(--accent); font-weight: 700; f
 /* ── ADMIN VERIFICATION QUEUE ────────────────────────────────── */
 .vr-list { display: flex; flex-direction: column; gap: 14px; }
 .vr-item {
-  background: #0b1a33; border: 1px solid rgba(255,255,255,0.08);
+  background: #111111; border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius); padding: 20px 22px;
   display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
 }
 .vr-info { flex: 1; min-width: 220px; }
 .vr-name { font-weight: 700; font-size: 0.95rem; }
 .vr-meta { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
-.vr-note { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 6px; font-style: italic; }
+.vr-note { font-size: 0.8rem; color: rgba(255,255,255,0.9); margin-top: 6px; font-style: italic; }
 .vr-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .vr-btn { padding: 9px 18px; border-radius: 8px; border: none; font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: var(--ease); font-family: var(--font); }
 .vr-btn--view    { background: rgba(79,163,247,0.15); color: var(--accent); border: 1px solid rgba(79,163,247,0.3); }

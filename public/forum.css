@@ -1,0 +1,62 @@
+/* ── Members Forum (/forum, /forum/:id) ──
+   Black/gold, matching the homepage. Header + drawer come from /nav.css. */
+:root {
+  --black: #0a0a0a; --card: #161616; --line: rgba(255,255,255,0.1);
+  --gold: #FFB300; --gold-soft: rgba(255,179,0,0.14); --gold-line: rgba(255,179,0,0.35);
+  --muted: rgba(255,255,255,0.88);
+  --display: 'Archivo Black', 'Arial Black', Impact, sans-serif;
+  --body: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--black); color: #fff; font-family: var(--body); line-height: 1.6; overflow-x: hidden; }
+a { color: inherit; }
+.gold { color: var(--gold); }
+.fwrap { max-width: 860px; margin: 0 auto; padding: 40px 16px 80px; }
+.fhead h1 { font-family: var(--display); font-weight: 400; font-size: clamp(32px, 7vw, 48px); line-height: 1.1; margin-bottom: 10px; }
+.fhead p { color: var(--muted); font-size: 16px; margin-bottom: 24px; }
+
+.fbtn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--display); font-size: 15px; border-radius: 999px; padding: 12px 22px; border: 2px solid transparent; cursor: pointer; text-decoration: none; }
+.fbtn-gold { background: var(--gold); color: #111; }
+.fbtn-ghost { background: var(--gold-soft); color: var(--gold); border-color: var(--gold-line); }
+.fbtn:disabled { opacity: .6; cursor: default; }
+.flink { background: none; border: 0; color: rgba(255,255,255,0.8); font: 600 13px var(--body); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; padding: 0; }
+.flink:hover { color: var(--gold); }
+
+.chips { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 14px; margin-bottom: 10px; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: 0 0 auto; background: var(--card); color: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font: 600 14px var(--body); cursor: pointer; white-space: nowrap; }
+.chip.on { background: var(--gold); color: #111; border-color: var(--gold); }
+
+.fform { background: var(--card); border: 1px solid var(--gold-line); border-radius: 18px; padding: 20px; display: grid; gap: 12px; margin-bottom: 24px; }
+.fform[hidden] { display: none; }
+.fform label { font-weight: 700; font-size: 14px; }
+.fform input, .fform select, .fform textarea { width: 100%; background: #1f1f1f; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 12px; padding: 13px 15px; font: 500 16px var(--body); outline: none; }
+.fform textarea { min-height: 140px; resize: vertical; }
+.fform input:focus, .fform select:focus, .fform textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-soft); }
+.fform-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.fmsg { font-size: 14px; font-weight: 600; min-height: 1.4em; }
+.fmsg.err { color: #ff8a8a; }
+.fnote { background: var(--gold-soft); border: 1px solid var(--gold-line); color: #fff; border-radius: 14px; padding: 14px 16px; font-size: 15px; margin-bottom: 20px; }
+.fnote a { color: var(--gold); font-weight: 700; }
+
+.plist { display: grid; gap: 12px; }
+.pcard { display: block; background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; text-decoration: none; transition: border-color .15s; }
+.pcard:hover { border-color: var(--gold-line); }
+.pcat { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.pcard h2, .pfull h1 { font-family: var(--display); font-weight: 400; line-height: 1.2; }
+.pcard h2 { font-size: 20px; margin-bottom: 6px; }
+.pcard p { color: var(--muted); font-size: 15px; margin-bottom: 10px; overflow-wrap: anywhere; }
+.pmeta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: rgba(255,255,255,0.8); align-items: center; }
+.pmeta b { color: #fff; }
+.pempty { text-align: center; color: var(--muted); padding: 40px 10px; }
+.pmore { text-align: center; margin-top: 18px; }
+
+.pback { display: inline-block; color: var(--gold); font-weight: 700; text-decoration: none; margin-bottom: 18px; }
+.pfull { background: var(--card); border: 1px solid var(--gold-line); border-radius: 18px; padding: 22px; margin-bottom: 26px; }
+.pfull h1 { font-size: clamp(24px, 5.5vw, 34px); margin-bottom: 10px; }
+.pbody { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 16px; margin: 14px 0; }
+.pactions { display: flex; gap: 16px; margin-top: 8px; }
+.rhead { font-family: var(--display); font-weight: 400; font-size: 22px; margin-bottom: 12px; }
+.rlist { display: grid; gap: 10px; margin-bottom: 24px; }
+.reply { background: var(--card); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: 12px; padding: 14px 16px; }
+.reply .pbody { margin: 8px 0; font-size: 15px; }

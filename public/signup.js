@@ -35,7 +35,7 @@ promoInput.addEventListener('input', () => {
 
   if (!code) {
     promoFeedback.textContent = '';
-    btnLabel.textContent = 'Continue to Payment — £10/year';
+    btnLabel.textContent = 'Continue — First Year Free';
     return;
   }
   if (code === 'FREE') {
@@ -43,7 +43,7 @@ promoInput.addEventListener('input', () => {
     btnLabel.textContent = 'Activate Free Membership';
   } else {
     promoFeedback.innerHTML = '<span style="color:#f87171">✗ Invalid promo code</span>';
-    btnLabel.textContent = 'Continue to Payment — £10/year';
+    btnLabel.textContent = 'Continue — First Year Free';
   }
 });
 

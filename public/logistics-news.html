@@ -14,19 +14,19 @@
   <!-- NEWS_JSONLD -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #071d40; --navy-deep: #04040d;
-      --navy-mid: #0d3b80; --white: #ffffff; --text-muted: #666666;
+      --orange: #FFB300; --orange-dark: #E09A00; --navy: #0a0a0a; --navy-deep: #04040d;
+      --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
     }
     body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
 
     .page-hero { background: var(--navy); color: var(--white); padding: 64px 24px; text-align: center; }
     .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
-    .page-hero p { color: rgba(255,255,255,0.7); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
+    .page-hero p { color: rgba(255,255,255,0.9); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
 
     /* Gold band — alternates with the navy hero above and the navy
        bottom-cta below, matching the homepage's section-banding pattern.
@@ -35,17 +35,17 @@
     .news-band { background: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%); padding: 56px 24px 72px; }
     .news-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
     .news-card {
-      display: block; background: rgba(255,255,255,0.92); border: 1px solid rgba(7,29,64,0.1);
+      display: block; background: rgba(255,255,255,0.92); border: 1px solid rgba(10,10,10,0.1);
       border-radius: 14px; padding: 22px 24px; transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-    .news-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(7,29,64,0.15); }
+    .news-card:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(10,10,10,0.15); }
     .news-card-title-link { display: block; text-decoration: none; color: inherit; }
-    .news-card-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: rgba(7,29,64,0.55); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .news-card-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: rgba(10,10,10,0.55); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px; }
     .news-card-meta .dot { opacity: 0.5; }
     .news-card h2 { font-size: 17px; font-weight: 800; color: var(--navy); line-height: 1.4; margin-bottom: 6px; }
     .news-card-title-link:hover h2 { text-decoration: underline; }
-    .news-card p { font-size: 13.5px; color: rgba(7,29,64,0.65); line-height: 1.55; }
-    .news-card-foot { display: flex; justify-content: flex-end; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(7,29,64,0.08); }
+    .news-card p { font-size: 13.5px; color: rgba(10,10,10,0.65); line-height: 1.55; }
+    .news-card-foot { display: flex; justify-content: flex-end; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(10,10,10,0.08); }
     .news-card-discount {
       display: inline-flex; align-items: center; gap: 7px;
       background: var(--navy); color: var(--white);
@@ -54,9 +54,9 @@
     }
     .news-card-discount:hover { background: var(--navy-mid); }
     .news-card-discount svg { width: 14px; height: 14px; stroke: var(--orange); flex-shrink: 0; }
-    .news-empty { max-width: 560px; margin: 0 auto; text-align: center; background: rgba(255,255,255,0.9); border: 1px solid rgba(7,29,64,0.1); border-radius: 16px; padding: 40px 32px; }
+    .news-empty { max-width: 560px; margin: 0 auto; text-align: center; background: rgba(255,255,255,0.9); border: 1px solid rgba(10,10,10,0.1); border-radius: 16px; padding: 40px 32px; }
     .news-empty h2 { color: var(--navy); font-size: 20px; font-weight: 900; margin-bottom: 10px; }
-    .news-empty p { color: rgba(7,29,64,0.7); font-size: 14.5px; line-height: 1.6; }
+    .news-empty p { color: rgba(10,10,10,0.7); font-size: 14.5px; line-height: 1.6; }
 
     .bottom-cta { text-align: center; padding: 56px 24px 80px; }
     .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }

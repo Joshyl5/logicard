@@ -8,12 +8,12 @@
   <meta name="robots" content="noindex,nofollow" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=6" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --navy:    #071d40;
+      --navy:    #0a0a0a;
       --gold:    #FFB300;
       --white:   #ffffff;
       --dim:     rgba(255,255,255,0.55);
@@ -32,7 +32,7 @@
     /* LEFT */
     .co-left {
       flex: 0 0 460px;
-      background: rgba(7,29,64,0.5);
+      background: rgba(10,10,10,0.5);
       border-right: 1px solid var(--border);
       padding: 48px 52px;
       display: flex;
@@ -93,7 +93,7 @@
       font-family: inherit;
     }
     .promo-code-input:focus { border-color: var(--gold); }
-    .promo-code-input::placeholder { text-transform: none; letter-spacing: 0; font-weight: 400; color: rgba(255,255,255,0.3); font-size: 13px; }
+    .promo-code-input::placeholder { text-transform: none; letter-spacing: 0; font-weight: 400; color: rgba(255,255,255,0.75); font-size: 13px; }
     .promo-apply {
       background: rgba(255,179,0,0.12); border: 1px solid rgba(255,179,0,0.35);
       border-radius: 8px; color: var(--gold); font-size: 13px; font-weight: 700;
@@ -148,7 +148,7 @@
     #card-errors { color: #f87171; font-size: 13px; margin-top: 10px; min-height: 18px; }
 
     .pay-btn {
-      width: 100%; background: var(--gold); color: #071d40;
+      width: 100%; background: var(--gold); color: #0a0a0a;
       border: none; border-radius: 10px; font-size: 16px; font-weight: 900;
       padding: 18px 24px; cursor: pointer; transition: all 0.2s;
       margin-top: 24px; letter-spacing: -0.3px; font-family: inherit;
@@ -168,18 +168,10 @@
 </head>
 <body>
 
-  <!-- Minimal header (mid-checkout — no marketing nav, to avoid distracting from payment) -->
-  <div class="site-header-wrap">
-    <nav class="site-header">
-      <a href="/" class="site-header-logo"><span class="logi">Logi</span><span class="card">card</span></a>
-      <div class="site-header-actions">
-        <a href="/login.html" class="site-header-signin">Log In</a>
-        <a href="/signup.html" class="site-header-join">Sign Up</a>
-      </div>
-    </nav>
-    <div class="site-subbar">
-      <a href="/" class="site-subbar-back">&lt; Back</a>
-    </div>
+  <!-- Shared header (same gold bar + menu as every page) -->
+  <!-- SHARED_NAV -->
+  <div class="site-subbar">
+    <a href="/" class="site-subbar-back">&lt; Back</a>
   </div>
 
 <div class="co-wrap">

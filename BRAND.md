@@ -39,37 +39,33 @@ Design and copy decisions should be checked against this list first: does it res
 ## 3. Visual identity
 
 ### Colour palette
-The palette is navy-and-gold, full stop. As of 2026-07, the homepage was swept to remove every near-black/deep-navy background and the blue secondary accent — every section is either flat navy or flat/gradient gold, no exceptions.
+**2026-09-24 black rebrand (signed off by the site owner):** the palette is now **black, white and Logicard gold**. Every former navy background across the public site, member area and admin was converted to black / near-black. The homepage (modelled on yellowlightcard.com) is the reference.
 
 | Token | Hex | Use |
 |---|---|---|
-| `--navy` | `#071d40` | Section backgrounds, cards, buttons that sit on a gold section |
-| `--navy-deep` | `#071d40` (alias of `--navy`) | Kept for backwards compatibility only — no longer a distinct near-black value. Do not reintroduce a near-black background anywhere. |
-| `--navy-mid` | `#0d3b80` | Hover state / secondary panels, always paired with navy, never used as a section background on its own |
-| `--orange` / `--gold` | `#FFB300` | Primary accent — CTAs, highlights, the word "card" in the logo, gold section backgrounds |
+| `--navy` (name kept for backwards compatibility) | `#0a0a0a` | Page and section backgrounds, and dark text on gold/white |
+| `--navy-mid` | `#1f1f1f` | Hover state / secondary panels |
+| `--orange` / `--gold` | `#FFB300` | Primary accent: CTAs, highlighted key words, the top bar, the word "card" in the logo |
 | `--orange-dark` | `#E09A00` | Hover/active state for gold elements |
-| `--blue-accent` | `#1a6cc8` | **Retired.** Previously used sparingly in the founders section (badge + icons); that section is now gold-accented like the rest of the site. The variable is kept defined but unused — do not reintroduce it as a section accent. |
-| `--white` | `#ffffff` | Text on navy, card backgrounds |
+| `--white` | `#ffffff` | Body text on black. Secondary text stays at 0.75 to 0.9 opacity, never dimmer (owner asked for whiter text) |
 
-**Homepage section colour rule:** every `<section>` background is either flat `var(--navy)` or the gold gradient `linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%)`. No section uses a multi-stop navy gradient, a radial glow, a dot-grid texture, or a starfield canvas — those decorative effects were removed sitewide in favour of flat, consistent colour blocks. This applies to every page, not just the homepage — confirmed 2026-09-11 after a photo-background hero was tried on `/about.html` and reverted; there is no page-level exception to this rule.
+**Header:** every page uses the shared header (`templates/nav.js` + `public/nav.css`): a gold top bar, the wordmark top-left and the three-line menu top-right at every screen width, opening the same slide-out drawer. Member pages keep their own toolbar underneath it.
 
-**Sections strictly alternate navy → gold → navy → gold, starting navy at the Hero, all the way to Contact.** Current order: Hero (navy) → Photo Wall (gold) → Everything you need (navy) → How it works (gold) → Who Qualifies (navy) → Built by logistics workers (gold) → Our Partners (navy) → Member benefits/pricing (gold) → Driver Support (navy) → About Us (gold) → FAQs (navy) → CTA banner (gold) → Contact (navy). The header and footer sit outside this rhythm and are always navy, bookending the page. When adding, removing, or reordering a homepage section, re-derive this alternation rather than guessing a colour — inserting or deleting a section shifts every colour below it.
+**Sections:** black backgrounds with white text and key words in gold. Older pages still contain gold-gradient bands (dark text on gold). They are allowed as accent bands until each page is redesigned in the homepage style.
 
-Section vertical padding is normalised to ~88px top/bottom on desktop so no section reads as conspicuously shorter or taller than its neighbours (Photo Wall is the one deliberate exception — its height is driven by the tile grid, not padding).
+**Button contrast rule:** gold-filled buttons sit on black, and black-filled buttons sit on gold. Never put gold on gold or black on black.
 
-**Button contrast rule:** a button's fill always contrasts with the section it sits in — gold-filled buttons on a navy section, navy-filled buttons on a gold section (see `.cat-btn` and `.cta-section .btn-primary` for navy-on-gold examples). Never place a gold button on a gold section or a navy button on a navy section. This also applies to badges/icon chips that sit directly on a section background (see founders-badge), though accent chips *inside* an already-flipped card (e.g. the gold icon inside a navy `.founder-point` card) follow the card's contrast, not the section's.
-
-**Rule:** gold is the *only* accent colour used for calls to action. If a page needs a second accent, it borrows `--blue-accent` deliberately and sparingly — it never competes with gold for attention in the same view.
+**Rule:** gold is the *only* accent colour used for calls to action.
 
 ### Logo
-- Wordmark: "Logi" in white, "card" in gold, set in a bordered pill on a navy background with a soft gold glow border (`rgba(255,179,0,0.55)` border, subtle box-shadow glow). This is the header/UI lockup — used everywhere the header appears.
+- Wordmark: "Logi" in white, "card" in gold, set in a bordered pill on a black background (in the gold top bar the pill is solid black) with a soft gold glow border (`rgba(255,179,0,0.55)` border, subtle box-shadow glow). This is the header/UI lockup — used everywhere the header appears.
 - Illustrated mark: the cloud-and-truck logo (with the percentage badge and price tag) is the marketing/social asset — hero banners, email headers, social previews. It is not a replacement for the wordmark in the site header.
-- Never recolour either version. Never place the wordmark on a light/white background without inverting it properly first — it's designed for navy.
+- Never recolour either version. Never place the wordmark on a light/white background without inverting it properly first — it's designed for black.
 
 ### Typography
-- **Raleway** — brand/display headlines (`--font-brand`).
-- **Inter** — everything else: body copy, UI, forms, buttons (`--font`).
-- Don't introduce a third typeface. If a new page needs a "different feel," that's a layout or colour decision, not a font decision.
+- **Homepage, shared header/menu and Members Forum (2026-09 rebrand):** **Archivo Black** for display headlines and buttons, **Montserrat** for body text.
+- **Older pages:** **Raleway** for headlines (`--font-brand`) and **Inter** for everything else (`--font`). Move them to Archivo Black/Montserrat as each page is redesigned.
+- Don't introduce any further typefaces.
 
 ### Iconography
 - Line icons only: 24×24 viewbox, `stroke-width` 1.8–2, `stroke-linecap`/`stroke-linejoin` round, `fill: none`.
@@ -87,7 +83,7 @@ Not every rule carries the same weight. Use this scale to judge how much justifi
 - The colour palette hex values above.
 - The logo lockup (colours, "Logi"/"card" split, pill treatment).
 - The core voice traits in Section 2 (direct, warm, no corporate jargon, no caricature).
-- The £10/year price point and the FREE promo mechanic, wherever stated.
+- The £10/year price point and the FREE promo mechanic, wherever stated. Headline wording sitewide is **"First year free, then £10/year"**, and checkout pre-applies the FREE code (server still validates it).
 - Legal and compliance copy — Privacy Policy, Terms & Conditions, the complaints process, consent checkbox wording. These were written deliberately to match actual system behaviour (e.g. the 20-day document purge window) — a copy edit here can silently create a compliance gap.
 
 ### 🟡 Tier 2 — Guided

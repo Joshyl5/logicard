@@ -6,12 +6,13 @@
   <title>Logicard — Report an Issue</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/styles.css?v=2" />
+  <link rel="stylesheet" href="/nav.css?v=7" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
   <style>
-    .report-page { background: #060d1c; min-height: 100vh; }
+    .report-page { background: #080808; min-height: 100vh; }
     .report-header {
-      background: #071628;
+      background: #0d0d0d;
       border-bottom: 1px solid rgba(255,255,255,0.08);
       padding: 0 28px;
       display: flex;
@@ -40,7 +41,7 @@
     }
     .report-back:hover { color: #fff; }
     .report-card {
-      background: #0b1a33;
+      background: #111111;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 16px;
       padding: 40px 36px;
@@ -62,7 +63,7 @@
     .report-field label { font-size: 0.83rem; font-weight: 600; color: #d0dff5; }
     .report-field select,
     .report-field textarea {
-      background: rgba(4,14,34,0.8);
+      background: rgba(5,5,5,0.8);
       border: 1px solid rgba(79,163,247,0.2);
       border-radius: 8px;
       color: #fff;
@@ -75,7 +76,7 @@
     }
     .report-field select:focus,
     .report-field textarea:focus { border-color: #4fa3f7; box-shadow: 0 0 0 3px rgba(79,163,247,0.12); }
-    .report-field select option { background: #071d40; }
+    .report-field select option { background: #0a0a0a; }
     .report-field textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
     .report-member-info {
       background: rgba(79,163,247,0.07);
@@ -125,6 +126,7 @@
   </style>
 </head>
 <body class="report-page">
+  <!-- SHARED_NAV -->
 
   <header class="report-header">
     <a href="/member-offers" class="report-header-logo"><span>Logi</span>card</a>
@@ -161,7 +163,7 @@
 
           <div class="report-field">
             <label for="issueTitle">Brief title</label>
-            <input id="issueTitle" type="text" style="background:rgba(4,14,34,0.8);border:1px solid rgba(79,163,247,0.2);border-radius:8px;color:#fff;font-family:Inter,sans-serif;font-size:0.92rem;padding:11px 13px;outline:none;width:100%;transition:border-color 0.2s" placeholder="e.g. Login page not loading" />
+            <input id="issueTitle" type="text" style="background:rgba(5,5,5,0.8);border:1px solid rgba(79,163,247,0.2);border-radius:8px;color:#fff;font-family:Inter,sans-serif;font-size:0.92rem;padding:11px 13px;outline:none;width:100%;transition:border-color 0.2s" placeholder="e.g. Login page not loading" />
           </div>
 
           <div class="report-field">

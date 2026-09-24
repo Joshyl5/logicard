@@ -28,6 +28,10 @@ Every sensitive endpoint has its own tuned limiter — not one generic limiter r
 | Verification document upload | 1 hr | 10 |
 | Work-email confirmation | 1 hr | 5 |
 | CSV export OTP | 15 min | 3 |
+| Forum new post (per member) | 1 hr | 10 |
+| Forum reply / delete own (per member) | 1 hr | 40 |
+| Forum report (per member) | 1 hr | 20 |
+| Forum reads | 1 min | 120 |
 
 **Injection safety**
 - Every database query in `database.js` uses parameterized placeholders (`$1, $2…`) — zero string-concatenated SQL anywhere in the codebase.
@@ -53,6 +57,13 @@ Every sensitive endpoint has its own tuned limiter — not one generic limiter r
 - Tokens are long-lived (30 days) and there is no refresh/rotation or server-side revocation list yet — logging out on mobile just discards the token client-side. Acceptable for an MVP single-device app; revisit if the app needs "log out all devices" or faster-expiring sessions.
 - `mobileLoginLimiter` mirrors the web `loginLimiter` (5 attempts / 15 min).
 - `JWT_SECRET` falls back to an insecure dev default with a boot warning if unset, matching `SESSION_SECRET`'s existing pattern — must be set in Railway before real members use the app.
+
+**Members Forum (user-generated content)**
+- Reading needs `requireAuth`. Posting and replying also need `requireVerified`. Deleting only works on the member's own items (the SQL checks `membership_number`).
+- Text is control-character-stripped and length-capped on the server. On the page it is only ever set with `textContent`, never `innerHTML`.
+- Authors are shown as first name + surname initial + role. Surname, email and membership number are never returned by the member-facing API (the admin moderation API does include them).
+- Moderation: members can report; the report sets `is_reported` and emails `ADMIN_EMAIL`. Admins remove, restore or dismiss at `/admin/forum`. Removal is a soft delete (`is_removed`).
+- The forum limiters key on the member's session, not their IP, so a shared depot Wi-Fi doesn't throttle everyone.
 
 **Secrets**
 - `.env` is gitignored and has never been committed.

@@ -35,7 +35,7 @@
         </svg>
         <input id="searchInput" type="text" class="search-input" placeholder="Search by merchant, title or category…" />
       </div>
-      <select id="sortSelect" style="background:rgba(4,14,34,0.8);border:1px solid rgba(79,163,247,0.2);border-radius:8px;color:#fff;padding:10px 13px;font-size:0.9rem;width:auto;flex-shrink:0;min-width:190px;">
+      <select id="sortSelect" style="background:rgba(5,5,5,0.8);border:1px solid rgba(79,163,247,0.2);border-radius:8px;color:#fff;padding:10px 13px;font-size:0.9rem;width:auto;flex-shrink:0;min-width:190px;">
         <option value="newest">Sort: Newest first</option>
         <option value="oldest">Sort: Oldest first</option>
         <option value="az">Sort: A–Z (merchant)</option>
@@ -85,7 +85,7 @@
 
   <!-- Add / Edit Offer Modal -->
   <div id="offerModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;overflow-y:auto;">
-    <div style="background:#0d1a2e;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:36px;max-width:480px;width:90%;margin:40px auto;">
+    <div style="background:#121212;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:36px;max-width:480px;width:90%;margin:40px auto;">
       <h2 id="offerModalTitle" style="color:#fff;font-size:20px;font-weight:800;margin:0 0 20px;">Add Offer</h2>
 
       <form id="offerForm">
@@ -98,7 +98,7 @@
         <div class="lfield" style="margin-bottom:14px;">
           <label for="offerSlug">Page URL Slug</label>
           <input id="offerSlug" type="text" placeholder="e.g. gousto" pattern="[a-z0-9-]+" />
-          <p style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.4);">
+          <p style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.75);">
             This offer's public page: logicard.co.uk/<span id="offerSlugPreview">…</span> — auto-filled from the merchant name. If another offer from the same merchant already uses that page, add "-2" or similar to give this one its own.
           </p>
         </div>
@@ -189,7 +189,7 @@
         <div id="offerFormError" class="form-error" role="alert" style="margin-bottom:14px;"></div>
 
         <div style="display:flex;gap:10px;">
-          <button type="button" id="offerCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:600;cursor:pointer;">Cancel</button>
+          <button type="button" id="offerCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.9);font-weight:600;cursor:pointer;">Cancel</button>
           <button type="submit" id="offerSubmitBtn" style="flex:2;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Save Offer</button>
         </div>
       </form>
@@ -198,15 +198,15 @@
 
   <!-- Upload Unique Codes Modal -->
   <div id="codesModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:center;justify-content:center;overflow-y:auto;">
-    <div style="background:#0d1a2e;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:36px;max-width:520px;width:90%;margin:40px auto;">
+    <div style="background:#121212;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:36px;max-width:520px;width:90%;margin:40px auto;">
       <h2 id="codesModalTitle" style="color:#fff;font-size:20px;font-weight:800;margin:0 0 8px;">Upload Unique Codes</h2>
-      <p id="codesModalStock" style="color:rgba(255,255,255,0.5);font-size:13px;margin:0 0 18px;"></p>
-      <p style="color:rgba(255,255,255,0.55);font-size:13px;margin:0 0 10px;">Paste codes below — one per line. Each member who reveals a code for this offer gets a unique one, claimed once and never reused.</p>
-      <textarea id="codesTextarea" rows="10" placeholder="10OFF-A1B2C3&#10;10OFF-D4E5F6&#10;10OFF-G7H8I9" style="width:100%;background:rgba(4,14,34,0.8);border:1px solid rgba(255,179,0,0.25);border-radius:8px;color:#fff;padding:12px;font-family:monospace;font-size:13px;margin-bottom:14px;resize:vertical;"></textarea>
+      <p id="codesModalStock" style="color:rgba(255,255,255,0.9);font-size:13px;margin:0 0 18px;"></p>
+      <p style="color:rgba(255,255,255,0.9);font-size:13px;margin:0 0 10px;">Paste codes below — one per line. Each member who reveals a code for this offer gets a unique one, claimed once and never reused.</p>
+      <textarea id="codesTextarea" rows="10" placeholder="10OFF-A1B2C3&#10;10OFF-D4E5F6&#10;10OFF-G7H8I9" style="width:100%;background:rgba(5,5,5,0.8);border:1px solid rgba(255,179,0,0.25);border-radius:8px;color:#fff;padding:12px;font-family:monospace;font-size:13px;margin-bottom:14px;resize:vertical;"></textarea>
       <div id="codesModalError" class="form-error" role="alert" style="margin-bottom:14px;"></div>
       <div id="codesModalSuccess" class="form-success" style="display:none;margin-bottom:14px;"></div>
       <div style="display:flex;gap:10px;">
-        <button type="button" id="codesCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);font-weight:600;cursor:pointer;">Close</button>
+        <button type="button" id="codesCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.9);font-weight:600;cursor:pointer;">Close</button>
         <button type="button" id="codesSubmitBtn" style="flex:2;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Upload Codes</button>
       </div>
     </div>
