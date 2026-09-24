@@ -11,148 +11,122 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=9" />
   <link rel="stylesheet" href="/footer.css?v=2" />
+  <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #000000; --navy-deep: #04040d;
-      --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
-    }
-    body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
-
-
-    .page-hero { background: var(--navy); color: var(--white); padding: 64px 20px; text-align: center; }
-    .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
-    .page-hero p { color: rgba(255,255,255,0.9); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
-
-    .verify-banner { display: flex; align-items: center; justify-content: center; gap: 6px; width: fit-content; margin: 40px auto 40px; background: #1a9c4a; border: 1px solid #14853d; color: var(--white); font-weight: 800; font-size: 14px; padding: 9px 20px; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    
-    .explainer { max-width: 760px; margin: 0 auto; padding: 56px 24px; text-align: center; }
-    .explainer h2 { font-size: 24px; font-weight: 800; margin-bottom: 14px; }
-    .explainer p { color: rgba(255,255,255,0.9); font-size: 15.5px; line-height: 1.8; }
-
-    .category-grid { max-width: 680px; margin: 0 auto; padding: 0 24px 56px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .category-card {
-      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px;
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 22px 16px;
-      text-decoration: none; color: inherit;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-      scroll-margin-top: 120px;
-    }
-    .category-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(0,0,0,0.25); border-color: rgba(255,179,0,0.4); }
-    .category-card-icon {
-      width: 42px; height: 42px; flex-shrink: 0;
-      background: rgba(255,179,0,0.12); border: 1px solid rgba(255,179,0,0.25);
-      border-radius: 11px; display: flex; align-items: center; justify-content: center;
-    }
-    .category-card-icon svg { width: 21px; height: 21px; fill: none; stroke: var(--orange-dark); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .category-card h2 { font-size: 14.5px; font-weight: 800; color: var(--white); line-height: 1.3; }
-
-    /* Gold band around the explainer + category grid — alternates with
-       the navy hero above and navy bottom-cta below, matching the
-       homepage's section-banding pattern. */
-    .cat-gold-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
-    .cat-gold-band .explainer h2 { color: var(--navy); }
-    .cat-gold-band .explainer p { color: rgba(255,255,255,0.88); }
-    .cat-gold-band .category-card { background: #161616; border-color: rgba(255,255,255,0.12); }
-    .cat-gold-band .category-card-icon { background: rgba(10,10,10,0.06); border-color: rgba(10,10,10,0.18); }
-    .cat-gold-band .category-card-icon svg { stroke: var(--orange); }
-    .cat-gold-band .category-card h2 { color: var(--navy); }
-
-    @media (max-width: 560px) {
-      .category-grid { gap: 12px; }
-      .category-card { padding: 16px 12px; }
-      .category-card-icon { width: 36px; height: 36px; }
-      .category-card-icon svg { width: 18px; height: 18px; }
-      .category-card h2 { font-size: 13.5px; }
-    }
-
-    .bottom-cta { text-align: center; padding: 0 24px 80px; }
-    .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
-    .cta-btn:hover { background: var(--orange-dark); }
-
-    footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.9); }
-    footer a { color: rgba(255,255,255,0.9); }
-
+    /* Category page (2026-09 homepage style; shared styles in /theme.css) */
+    .cat-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+    .cat-card { display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #fff; }
+    .cat-card h3 { font-size: 19px; }
+    .cat-card p { font-size: 15px; }
+    a.cat-card:hover { border-color: var(--gold-line); }
+    .cat-card-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-note { margin-top: 18px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 12px; padding: 14px 16px; color: #fff; }
+    .cat-explainer { max-width: 760px; }
+    .cat-explainer p { color: var(--muted); font-size: 17px; }
+    .cat-verified { display: inline-flex; align-items: center; gap: 8px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .cat-deals { display: grid; gap: 18px; }
+    .cat-empty { color: var(--muted); }
+    .dc { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+    .dc-img { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #111; overflow: hidden; font: 400 60px var(--display); color: var(--gold); text-decoration: none; }
+    .dc-img > img { width: 100%; height: 100%; object-fit: contain; }
+    .dc-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+    .dc-logo img { max-height: 34px; max-width: 100%; object-fit: contain; }
+    .dc-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .dc-brand { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+    .dc-body h3 { font-size: 21px; margin: 0; }
+    .dc-cat { align-self: flex-start; font: 600 13px var(--body); border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+    .dc-btns { display: grid; gap: 8px; margin-top: auto; padding-top: 8px; }
+    .dc-btns a { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; border-radius: 10px; padding: 12px 14px; font: 400 15px/1.2 var(--display); text-decoration: none; }
+    .dc-visit { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); }
+    .dc-get { background: var(--gold); color: #111; }
+    @media (min-width: 760px) { .cat-deals { grid-template-columns: repeat(3, 1fr); } }
   </style>
 </head>
 <body>
 
   <!-- SHARED_NAV -->
 
-  <section class="page-hero">
-    <h1>Shopping Cards</h1>
-    <p>Gift cards with a discount on top — buy a card for your favourite retailer, spend less than face value.</p>
+  <section class="t-section">
+    <div class="wrap">
+      <span class="t-eyebrow">Member Deals</span>
+      <h1 class="t-h2">Shopping <span class="gold">Cards</span></h1>
+      <p class="t-lead">Gift cards with a discount on top — buy a card for your favourite retailer, spend less than face value.</p>
+      <div class="t-btns">
+        <a class="t-btn t-btn-gold" href="/signup.html">Join Logicard</a>
+        <a class="t-btn t-btn-ghost" href="/deals.html">See all deals</a>
+      </div>
+    </div>
   </section>
 
-
-  <section class="cat-gold-band">
-  <div class="explainer">
-    <h2>How Shopping Cards will work</h2>
+  <section class="t-section" style="padding-top:0">
+    <div class="wrap cat-explainer">
+      <h2 class="t-h2">How Shopping Cards will work</h2>
     <p>A Logicard Shopping Card is a real gift card for a retailer you already shop with — just bought for less than it's worth. Load it up, then spend it in-store or online exactly like a normal gift card. We're building this out as a dedicated part of your Logicard membership — check back soon, or sign up now to be notified the moment it launches.</p>
-  </div>
-
-  <div class="category-grid">
-    <a class="category-card" id="supermarkets" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span>
-      <h2>Supermarkets</h2>
-
-    </a>
-    <a class="category-card" id="high-street-fashion" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 001 .84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.14a1 1 0 001-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg></span>
-      <h2>High Street Fashion</h2>
-
-    </a>
-    <a class="category-card" id="diy-home" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span>
-      <h2>DIY &amp; Home</h2>
-
-    </a>
-    <a class="category-card" id="electronics-tech" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span>
-      <h2>Electronics &amp; Tech</h2>
-
-    </a>
-    <a class="category-card" id="restaurants-dining" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M4 8h13a3 3 0 010 6h-1M4 8v9a3 3 0 003 3h6a3 3 0 003-3V8M4 8V5h13v3"/></svg></span>
-      <h2>Restaurants &amp; Dining</h2>
-
-    </a>
-    <a class="category-card" id="gaming-entertainment" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M6 10v4M4 12h4"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg></span>
-      <h2>Gaming &amp; Entertainment</h2>
-
-    </a>
-    <a class="category-card" id="holidays-travel" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span>
-      <h2>Holidays &amp; Travel</h2>
-
-    </a>
-    <a class="category-card" id="health-beauty" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span>
-      <h2>Health &amp; Beauty</h2>
-
-    </a>
-    <a class="category-card" id="cinema-streaming" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span>
-      <h2>Cinema &amp; Streaming</h2>
-
-    </a>
-    <a class="category-card" id="fuel-motoring" href="/signup.html">
-      <span class="category-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8 8 5 11.5 5 15a7 7 0 0014 0c0-3.5-3-7-7-13z"/></svg></span>
-      <h2>Fuel &amp; Motoring</h2>
-      
-    </a>
-  </div>
+    </div>
   </section>
 
-  <p class="verify-banner"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified Logistics workers only</p>
+  <section class="t-section" id="live-deals" style="padding-top:0" hidden>
+    <div class="wrap">
+      <h2 class="t-h2">Live <span class="gold">Deals</span></h2>
+      <div class="cat-deals" id="catDeals"></div>
+    </div>
+  </section>
 
-  <div class="bottom-cta">
-    <a href="/signup.html" class="cta-btn">Join Logicard free →</a>
-  </div>
+  <section class="t-section" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="t-h2">What's <span class="gold">Covered</span></h2>
+      <div class="cat-grid">
+          <a class="t-card t-card-gold cat-card" id="supermarkets" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></span><h3>Supermarkets</h3></a>
+          <a class="t-card t-card-gold cat-card" id="high-street-fashion" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 001 .84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.14a1 1 0 001-.84l.58-3.47a2 2 0 00-1.34-2.23z"/></svg></span><h3>High Street Fashion</h3></a>
+          <a class="t-card t-card-gold cat-card" id="diy-home" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg></span><h3>DIY &amp; Home</h3></a>
+          <a class="t-card t-card-gold cat-card" id="electronics-tech" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/></svg></span><h3>Electronics &amp; Tech</h3></a>
+          <a class="t-card t-card-gold cat-card" id="restaurants-dining" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><path d="M4 8h13a3 3 0 010 6h-1M4 8v9a3 3 0 003 3h6a3 3 0 003-3V8M4 8V5h13v3"/></svg></span><h3>Restaurants &amp; Dining</h3></a>
+          <a class="t-card t-card-gold cat-card" id="gaming-entertainment" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="6"/><path d="M6 10v4M4 12h4"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg></span><h3>Gaming &amp; Entertainment</h3></a>
+          <a class="t-card t-card-gold cat-card" id="holidays-travel" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><path d="M22 2L2 9l7 3 3 7 10-17z"/></svg></span><h3>Holidays &amp; Travel</h3></a>
+          <a class="t-card t-card-gold cat-card" id="health-beauty" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.6l-1-1a5.5 5.5 0 00-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 000-7.8z"/></svg></span><h3>Health &amp; Beauty</h3></a>
+          <a class="t-card t-card-gold cat-card" id="cinema-streaming" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></span><h3>Cinema &amp; Streaming</h3></a>
+          <a class="t-card t-card-gold cat-card" id="fuel-motoring" href="/signup.html"><span class="cat-card-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8 8 5 11.5 5 15a7 7 0 0014 0c0-3.5-3-7-7-13z"/></svg></span><h3>Fuel &amp; Motoring</h3></a>
+      </div>
+      
+    </div>
+  </section>
+
+  <section class="t-section t-cta">
+    <div class="wrap">
+      <p class="cat-verified">&#10003; Verified logistics workers only</p>
+      <h2 class="t-h2">Start <span class="gold">Saving</span></h2>
+      <p class="t-lead">First year free, then £10/year.</p>
+      <div class="t-btns"><a class="t-btn t-btn-gold" href="/signup.html">Join Logicard</a></div>
+    </div>
+  </section>
 
   <!-- SHARED_FOOTER -->
 
+  <script src="/deal-links.js?v=2"></script>
+  <script>
+    (function () {
+      var wanted = ["Gifting"];
+      var grid = document.getElementById('catDeals'), section = document.getElementById('live-deals');
+      function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      function img(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
+      if (!wanted.length) return;
+      fetch('/api/public/offers').then(function (r) { return r.ok ? r.json() : []; }).then(function (offers) {
+        var list = (offers || []).filter(function (o) { return wanted.indexOf(o.category) !== -1 && /^[a-z0-9-]+$/i.test(o.slug || ''); });
+        section.hidden = false;
+        if (!list.length) { grid.outerHTML = '<p class="cat-empty">New deals for this category are on their way - join now to be first to see them.</p>'; return; }
+        grid.innerHTML = list.map(function (o) {
+          var page = '/' + o.slug;
+          return '<div class="dc"><a class="dc-img" href="' + page + '">' +
+            (img(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="' + esc(o.merchantName) + '" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0))) +
+            (img(o.logoUrl) ? '<span class="dc-logo"><img src="' + esc(o.logoUrl) + '" alt="' + esc(o.merchantName) + ' logo" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '') +
+            '</a><div class="dc-body"><span class="dc-brand">' + esc(o.merchantName) + '</span><h3>' + esc(o.discountText || o.title) + '</h3>' +
+            (o.category ? '<span class="dc-cat">' + esc(o.category) + '</span>' : '') +
+            '<div class="dc-btns"><a class="dc-visit" href="' + page + '">Visit ' + esc(o.merchantName) + ' page</a>' +
+            '<a class="dc-get" href="/signup.html?src=deal-' + o.slug + '" data-get-deal="' + o.slug + '">Get deal <span aria-hidden="true">&rarr;</span></a></div></div></div>';
+        }).join('');
+        if (window.LogicardDeal) LogicardDeal.apply();
+      }).catch(function () {});
+    })();
+  </script>
 </body>
 </html>

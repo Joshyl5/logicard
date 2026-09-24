@@ -11,72 +11,110 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=9" />
   <link rel="stylesheet" href="/footer.css?v=2" />
+  <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --orange: #FFB300; --orange-dark: #E09A00; --navy: #000000; --navy-deep: #04040d;
-      --navy-mid: #1f1f1f; --white: #ffffff; --text-muted: #666666;
-    }
-    body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; color: var(--white); background: var(--navy); }
-
-
-    .page-hero { background: var(--navy); color: var(--white); padding: 64px 20px; text-align: center; }
-    .page-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; margin-bottom: 12px; letter-spacing: -0.5px; }
-    .page-hero p { color: rgba(255,255,255,0.9); max-width: 640px; margin: 0 auto; font-size: 16px; line-height: 1.6; }
-
-    .verify-banner { display: flex; align-items: center; justify-content: center; gap: 6px; width: fit-content; margin: 40px auto 40px; background: #1a9c4a; border: 1px solid #14853d; color: var(--white); font-weight: 800; font-size: 14px; padding: 9px 20px; border-radius: 100px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-    
-    .category-grid { max-width: 1100px; margin: 0 auto; padding: 56px 20px 80px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 24px; }
-    .category-card { border: 1px solid rgba(255,255,255,0.15); border-radius: 14px; padding: 28px; text-align: center; }
-    .category-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
-    .category-card p { color: rgba(255,255,255,0.9); font-size: 14.5px; line-height: 1.6; margin-bottom: 16px; }
-
-    /* Gold band around the category grid — alternates with the navy hero
-       above and the navy bottom-cta below (navy, gold, navy), matching
-       the homepage's section-banding pattern. Cards flip to a light,
-       navy-text treatment on the gold band, same inverse-contrast
-       convention the homepage's .how-card uses on its own gold section. */
-    .cat-gold-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
-    .cat-gold-band .category-card { background: #161616; border-color: rgba(255,255,255,0.12); }
-    .cat-gold-band .category-card h2 { color: var(--navy); }
-    .cat-gold-band .category-card p { color: rgba(255,255,255,0.88); }
-
-    .bottom-cta { text-align: center; padding: 0 24px 80px; }
-    .cta-btn { display: inline-block; background: var(--orange); color: var(--navy); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
-    .cta-btn:hover { background: var(--orange-dark); }
-
-    footer { text-align: center; padding: 28px 24px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12.5px; color: rgba(255,255,255,0.9); }
-    footer a { color: rgba(255,255,255,0.9); }
-
+    /* Category page (2026-09 homepage style; shared styles in /theme.css) */
+    .cat-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+    .cat-card { display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: #fff; }
+    .cat-card h3 { font-size: 19px; }
+    .cat-card p { font-size: 15px; }
+    a.cat-card:hover { border-color: var(--gold-line); }
+    .cat-card-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-note { margin-top: 18px; background: var(--gold-soft); border: 1px solid var(--gold-line); border-radius: 12px; padding: 14px 16px; color: #fff; }
+    .cat-explainer { max-width: 760px; }
+    .cat-explainer p { color: var(--muted); font-size: 17px; }
+    .cat-verified { display: inline-flex; align-items: center; gap: 8px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+    .cat-deals { display: grid; gap: 18px; }
+    .cat-empty { color: var(--muted); }
+    .dc { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+    .dc-img { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #111; overflow: hidden; font: 400 60px var(--display); color: var(--gold); text-decoration: none; }
+    .dc-img > img { width: 100%; height: 100%; object-fit: contain; }
+    .dc-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+    .dc-logo img { max-height: 34px; max-width: 100%; object-fit: contain; }
+    .dc-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .dc-brand { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+    .dc-body h3 { font-size: 21px; margin: 0; }
+    .dc-cat { align-self: flex-start; font: 600 13px var(--body); border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+    .dc-btns { display: grid; gap: 8px; margin-top: auto; padding-top: 8px; }
+    .dc-btns a { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; border-radius: 10px; padding: 12px 14px; font: 400 15px/1.2 var(--display); text-decoration: none; }
+    .dc-visit { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); }
+    .dc-get { background: var(--gold); color: #111; }
+    @media (min-width: 760px) { .cat-deals { grid-template-columns: repeat(3, 1fr); } }
   </style>
 </head>
 <body>
 
   <!-- SHARED_NAV -->
 
-  <section class="page-hero">
-    <h1>Children &amp; Baby</h1>
-    <p>Everything for the family, discounted — toys, kids' fashion, mum &amp; baby essentials, big purchases and gaming, built for logistics workers.</p>
+  <section class="t-section">
+    <div class="wrap">
+      <span class="t-eyebrow">Member Deals</span>
+      <h1 class="t-h2">Children &amp; <span class="gold">Baby</span></h1>
+      <p class="t-lead">Everything for the family, discounted — toys, kids' fashion, mum &amp; baby essentials, big purchases and gaming, built for logistics workers.</p>
+      <div class="t-btns">
+        <a class="t-btn t-btn-gold" href="/signup.html">Join Logicard</a>
+        <a class="t-btn t-btn-ghost" href="/deals.html">See all deals</a>
+      </div>
+    </div>
   </section>
 
-
-  <section class="cat-gold-band">
-  <div class="category-grid">
-    <div class="category-card"><h2>Children's Toys</h2><p>Discounts on toys, games and gifts for kids of all ages.</p></div>
-    <div class="category-card"><h2>Children's Fashion</h2><p>Savings on everyday and occasion wear for children.</p></div>
-    <div class="category-card"><h2>Mum &amp; Baby</h2><p>Prams, feeding, nursery and baby essentials at member prices.</p></div>
-    <div class="category-card"><h2>Big Purchases</h2><p>Discounts on larger family buys like car seats, furniture and equipment.</p></div>
-    <div class="category-card"><h2>Gaming</h2><p>Savings on consoles, games and family entertainment.</p></div>
-  </div>
+  <section class="t-section" id="live-deals" style="padding-top:0" hidden>
+    <div class="wrap">
+      <h2 class="t-h2">Live <span class="gold">Deals</span></h2>
+      <div class="cat-deals" id="catDeals"></div>
+    </div>
   </section>
 
-  <p class="verify-banner"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Verified Logistics workers only</p>
+  <section class="t-section" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="t-h2">What's <span class="gold">Covered</span></h2>
+      <div class="cat-grid">
+          <div class="t-card t-card-gold cat-card"><h3>Children's Toys</h3><p>Discounts on toys, games and gifts for kids of all ages.</p></div>
+          <div class="t-card t-card-gold cat-card"><h3>Children's Fashion</h3><p>Savings on everyday and occasion wear for children.</p></div>
+          <div class="t-card t-card-gold cat-card"><h3>Mum &amp; Baby</h3><p>Prams, feeding, nursery and baby essentials at member prices.</p></div>
+          <div class="t-card t-card-gold cat-card"><h3>Big Purchases</h3><p>Discounts on larger family buys like car seats, furniture and equipment.</p></div>
+          <div class="t-card t-card-gold cat-card"><h3>Gaming</h3><p>Savings on consoles, games and family entertainment.</p></div>
+      </div>
+      
+    </div>
+  </section>
 
-  <div class="bottom-cta">
-    <a href="/signup.html" class="cta-btn">Join Logicard free →</a>
-  </div>
+  <section class="t-section t-cta">
+    <div class="wrap">
+      <p class="cat-verified">&#10003; Verified logistics workers only</p>
+      <h2 class="t-h2">Start <span class="gold">Saving</span></h2>
+      <p class="t-lead">First year free, then £10/year.</p>
+      <div class="t-btns"><a class="t-btn t-btn-gold" href="/signup.html">Join Logicard</a></div>
+    </div>
+  </section>
 
   <!-- SHARED_FOOTER -->
 
+  <script src="/deal-links.js?v=2"></script>
+  <script>
+    (function () {
+      var wanted = ["Gifting"];
+      var grid = document.getElementById('catDeals'), section = document.getElementById('live-deals');
+      function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      function img(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
+      if (!wanted.length) return;
+      fetch('/api/public/offers').then(function (r) { return r.ok ? r.json() : []; }).then(function (offers) {
+        var list = (offers || []).filter(function (o) { return wanted.indexOf(o.category) !== -1 && /^[a-z0-9-]+$/i.test(o.slug || ''); });
+        section.hidden = false;
+        if (!list.length) { grid.outerHTML = '<p class="cat-empty">New deals for this category are on their way - join now to be first to see them.</p>'; return; }
+        grid.innerHTML = list.map(function (o) {
+          var page = '/' + o.slug;
+          return '<div class="dc"><a class="dc-img" href="' + page + '">' +
+            (img(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="' + esc(o.merchantName) + '" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0))) +
+            (img(o.logoUrl) ? '<span class="dc-logo"><img src="' + esc(o.logoUrl) + '" alt="' + esc(o.merchantName) + ' logo" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '') +
+            '</a><div class="dc-body"><span class="dc-brand">' + esc(o.merchantName) + '</span><h3>' + esc(o.discountText || o.title) + '</h3>' +
+            (o.category ? '<span class="dc-cat">' + esc(o.category) + '</span>' : '') +
+            '<div class="dc-btns"><a class="dc-visit" href="' + page + '">Visit ' + esc(o.merchantName) + ' page</a>' +
+            '<a class="dc-get" href="/signup.html?src=deal-' + o.slug + '" data-get-deal="' + o.slug + '">Get deal <span aria-hidden="true">&rarr;</span></a></div></div></div>';
+        }).join('');
+        if (window.LogicardDeal) LogicardDeal.apply();
+      }).catch(function () {});
+    })();
+  </script>
 </body>
 </html>
