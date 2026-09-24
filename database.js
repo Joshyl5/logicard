@@ -184,6 +184,14 @@ async function initDb() {
   // Brand logo per offer (2026-09): shown on the offer page, deal cards and
   // Hot Deals. Falls back to the matching partner brand's logo when empty.
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS logo_url TEXT`);
+  // Brand page fields (2026-09): everything the public /<slug> page shows.
+  // redeem_type: 'code' (one shared code) | 'unique' (per-member code pool)
+  //              | 'link' (no code, discount via the link) | 'instore' (show card)
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS about_brand TEXT`);
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS how_to_redeem TEXT`);
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS terms TEXT`);
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS end_date DATE`);
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS redeem_type TEXT`);
   await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS offers_slug_idx ON offers (slug) WHERE slug IS NOT NULL`);
   const unslugged = await pool.query('SELECT id, merchant_name FROM offers WHERE slug IS NULL ORDER BY id ASC');
   for (const row of unslugged.rows) {
@@ -422,6 +430,11 @@ function toOffer(row) {
     affiliateUrl:  row.affiliate_url,
     imageUrl:      row.image_url,
     logoUrl:       row.logo_url,
+    aboutBrand:    row.about_brand,
+    howToRedeem:   row.how_to_redeem,
+    terms:         row.terms,
+    endDate:       row.end_date ? new Date(row.end_date).toISOString().slice(0, 10) : null,
+    redeemType:    row.redeem_type,
     isActive:          row.is_active,
     featuredDashboard: !!row.featured_dashboard,
     featuredPublic:    !!row.featured_public,
@@ -619,6 +632,7 @@ async function createOffer(data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null, logoUrl = null,
+    aboutBrand = null, howToRedeem = null, terms = null, endDate = null, redeemType = null,
     isActive = true, featuredDashboard = false, featuredPublic = false,
     targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
@@ -627,13 +641,15 @@ async function createOffer(data) {
     INSERT INTO offers (
       merchant_name, title, description, category, discount_text,
       voucher_code, affiliate_url, image_url, is_active, is_featured,
-      featured_dashboard, featured_public, target_gender, platform, slug, sort_order, logo_url
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
+      featured_dashboard, featured_public, target_gender, platform, slug, sort_order, logo_url,
+      about_brand, how_to_redeem, terms, end_date, redeem_type
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
     targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, logoUrl || null,
+    aboutBrand || null, howToRedeem || null, terms || null, endDate || null, redeemType || null,
   ]);
 
   return toOffer(r.rows[0]);
@@ -643,6 +659,7 @@ async function updateOffer(id, data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null, logoUrl = null,
+    aboutBrand = null, howToRedeem = null, terms = null, endDate = null, redeemType = null,
     isActive = true, featuredDashboard = false, featuredPublic = false,
     targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
@@ -652,13 +669,15 @@ async function updateOffer(id, data) {
       merchant_name = $1, title = $2, description = $3, category = $4,
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
       is_active = $9, is_featured = $10, featured_dashboard = $11, featured_public = $12,
-      target_gender = $13, platform = $14, slug = $15, sort_order = $16, logo_url = $18, updated_at = NOW()
+      target_gender = $13, platform = $14, slug = $15, sort_order = $16, logo_url = $18,
+      about_brand = $19, how_to_redeem = $20, terms = $21, end_date = $22, redeem_type = $23, updated_at = NOW()
     WHERE id = $17
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
     targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, id, logoUrl || null,
+    aboutBrand || null, howToRedeem || null, terms || null, endDate || null, redeemType || null,
   ]);
 
   return toOffer(r.rows[0]);

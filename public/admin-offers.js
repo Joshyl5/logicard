@@ -137,6 +137,7 @@ function openModal(id) {
   offerFormError.textContent = '';
   offerForm.reset();
   showOfferLogoPreview(null);
+  if (typeof syncRedeemType === 'function') setTimeout(syncRedeemType, 0);
   document.getElementById('offerId').value       = '';
   document.getElementById('offerIsActive').checked = true;
   document.getElementById('offerFeaturedDashboard').checked = false;
@@ -160,6 +161,12 @@ function openModal(id) {
       document.getElementById('offerAffiliateUrl').value   = offer.affiliateUrl || '';
       document.getElementById('offerImageUrl').value       = offer.imageUrl || '';
       document.getElementById('offerLogoUrl').value        = offer.logoUrl || '';
+      document.getElementById('offerAboutBrand').value     = offer.aboutBrand || '';
+      document.getElementById('offerHowToRedeem').value    = offer.howToRedeem || '';
+      document.getElementById('offerTerms').value          = offer.terms || '';
+      document.getElementById('offerEndDate').value        = offer.endDate || '';
+      // Older offers: infer the redemption type from what they already have
+      document.getElementById('offerRedeemType').value     = offer.redeemType || (offer.codesTotal != null ? 'unique' : offer.voucherCode ? 'code' : '');
       showOfferLogoPreview(offer.logoUrl);
       document.getElementById('offerSortOrder').value      = offer.sortOrder || 0;
       document.getElementById('offerIsActive').checked     = !!offer.isActive;
@@ -199,6 +206,11 @@ offerForm.addEventListener('submit', async e => {
     affiliateUrl: document.getElementById('offerAffiliateUrl').value.trim(),
     imageUrl:     document.getElementById('offerImageUrl').value.trim() || null,
     logoUrl:      document.getElementById('offerLogoUrl').value.trim() || null,
+    aboutBrand:   document.getElementById('offerAboutBrand').value.trim() || null,
+    howToRedeem:  document.getElementById('offerHowToRedeem').value.trim() || null,
+    terms:        document.getElementById('offerTerms').value.trim() || null,
+    endDate:      document.getElementById('offerEndDate').value || null,
+    redeemType:   document.getElementById('offerRedeemType').value || null,
     sortOrder:    Number(document.getElementById('offerSortOrder').value) || 0,
     isActive:     document.getElementById('offerIsActive').checked,
     featuredDashboard: document.getElementById('offerFeaturedDashboard').checked,
@@ -369,6 +381,48 @@ function showOfferLogoPreview(src) {
       if (!res.ok) { status.textContent = json.error || 'Upload failed.'; return; }
       url.value = json.url;
       showOfferLogoPreview(json.url);
+      status.textContent = 'Uploaded — remember to press Save.';
+    } catch {
+      status.textContent = 'Network error — please try again.';
+    } finally {
+      btn.disabled = false; btn.textContent = 'Upload';
+    }
+  });
+})();
+
+
+// ── Brand page helpers: deal image upload, code field, page link ──
+function syncRedeemType() {
+  const type = document.getElementById('offerRedeemType').value;
+  const code = document.getElementById('offerVoucherCode');
+  const needsCode = type === 'code';
+  code.required = needsCode;
+  document.getElementById('offerVoucherReq').style.display = needsCode ? 'inline' : 'none';
+  document.getElementById('offerVoucherField').style.display = (type === 'code' || type === '') ? '' : 'none';
+  const slug = document.getElementById('offerSlug').value.trim() || (document.getElementById('offerSlugPreview').textContent || '').trim();
+  const link = document.getElementById('offerPageLink');
+  if (document.getElementById('offerId').value && /^[a-z0-9-]+$/.test(slug)) { link.href = '/' + slug; link.style.display = 'inline'; }
+  else link.style.display = 'none';
+}
+(function () {
+  const sel = document.getElementById('offerRedeemType');
+  if (!sel) return;
+  sel.addEventListener('change', syncRedeemType);
+  document.getElementById('offerSlug').addEventListener('input', syncRedeemType);
+  const btn = document.getElementById('offerImageUploadBtn');
+  const file = document.getElementById('offerImageFile');
+  const url = document.getElementById('offerImageUrl');
+  const status = document.getElementById('offerImageStatus');
+  btn.addEventListener('click', async () => {
+    if (!file.files[0]) { status.textContent = 'Choose an image file first.'; return; }
+    btn.disabled = true; btn.textContent = 'Uploading…'; status.textContent = '';
+    try {
+      const fd = new FormData();
+      fd.append('file', file.files[0]);
+      const res = await fetch('/api/admin/partner-brands/upload', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (!res.ok) { status.textContent = json.error || 'Upload failed.'; return; }
+      url.value = json.url;
       status.textContent = 'Uploaded — remember to press Save.';
     } catch {
       status.textContent = 'Network error — please try again.';

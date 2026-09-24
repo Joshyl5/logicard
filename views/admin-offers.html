@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Logicard — Manage Offers</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/styles.css?v=3" />
+  <link rel="stylesheet" href="/styles.css?v=4" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
 </head>
@@ -90,30 +90,22 @@
 
       <form id="offerForm">
         <input type="hidden" id="offerId" />
+        <p class="adm-hint" style="margin:0 0 6px;">Fields marked <span class="adm-req">*</span> are required - they build the brand's own page.</p>
 
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerMerchant">Merchant Name</label>
-          <input id="offerMerchant" type="text" required />
+        <div class="adm-group">Brand page</div>
+        <div class="lfield">
+          <label for="offerMerchant">Brand name <span class="adm-req">*</span></label>
+          <input id="offerMerchant" type="text" placeholder="e.g. Go Ape" required />
         </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerSlug">Page URL Slug</label>
-          <input id="offerSlug" type="text" placeholder="e.g. gousto" pattern="[a-z0-9-]+" />
-          <p style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.75);">
-            This offer's public page: logicard.co.uk/<span id="offerSlugPreview">…</span> — auto-filled from the merchant name. If another offer from the same merchant already uses that page, add "-2" or similar to give this one its own.
-          </p>
+        <div class="lfield">
+          <label for="offerSlug">Page address <span class="adm-req">*</span></label>
+          <input id="offerSlug" type="text" placeholder="e.g. go-ape" pattern="[a-z0-9-]+" />
+          <p class="adm-hint">Creates <strong>logicard.co.uk/<span id="offerSlugPreview">…</span></strong> - filled in from the brand name. Lowercase letters, numbers and hyphens only. <a id="offerPageLink" href="#" target="_blank" rel="noopener" style="color:#FFB300;display:none;">View page</a></p>
         </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerTitle">Title</label>
-          <input id="offerTitle" type="text" required />
-        </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerDescription">Description</label>
-          <textarea id="offerDescription" rows="3" style="width:100%;resize:vertical;"></textarea>
-        </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerCategory">Category</label>
-          <select id="offerCategory">
-            <option value="">— No category —</option>
+        <div class="lfield">
+          <label for="offerCategory">Category <span class="adm-req">*</span></label>
+          <select id="offerCategory" required>
+            <option value="">— Choose a category —</option>
             <option>Home &amp; Garden</option>
             <option>Fashion</option>
             <option>Food &amp; Drink</option>
@@ -131,8 +123,83 @@
             <option>Advice</option>
           </select>
         </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerPlatform">Platform</label>
+        <div class="lfield">
+          <label for="offerDiscountText">Offer headline <span class="adm-req">*</span></label>
+          <input id="offerDiscountText" type="text" placeholder="e.g. 15% off Treetop Adventures" required />
+          <p class="adm-hint">The big headline on the brand page.</p>
+        </div>
+        <div class="lfield">
+          <label for="offerTitle">Offer title for deal cards <span class="adm-req">*</span></label>
+          <input id="offerTitle" type="text" placeholder="e.g. 15% off all courses" required />
+        </div>
+        <div class="lfield">
+          <label for="offerDescription">About this deal <span class="adm-req">*</span></label>
+          <textarea id="offerDescription" rows="3" style="width:100%;resize:vertical;" maxlength="2000" required placeholder="What members get, and anything they should know."></textarea>
+        </div>
+        <div class="lfield">
+          <label for="offerAboutBrand">About the brand <span class="adm-req">*</span></label>
+          <textarea id="offerAboutBrand" rows="3" style="width:100%;resize:vertical;" maxlength="1500" required placeholder="Who the brand is and what they do."></textarea>
+        </div>
+        <div class="lfield">
+          <label for="offerImageUrl">Deal image <span class="adm-req">*</span></label>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+            <input id="offerImageFile" type="file" accept="image/png,image/jpeg,image/webp" style="flex:1;min-width:160px;" />
+            <button type="button" class="export-btn" id="offerImageUploadBtn">Upload</button>
+          </div>
+          <input id="offerImageUrl" type="text" placeholder="https://… (or upload above)" required />
+          <p id="offerImageStatus" class="adm-hint"></p>
+          <p class="adm-hint">Shown in full at the top of the page - never cropped. Landscape works best.</p>
+        </div>
+        <div class="lfield">
+          <label for="offerLogoUrl">Brand logo <span class="adm-req">*</span></label>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
+            <input id="offerLogoFile" type="file" accept="image/png,image/jpeg,image/webp" style="flex:1;min-width:160px;" />
+            <button type="button" class="export-btn" id="offerLogoUploadBtn">Upload</button>
+          </div>
+          <input id="offerLogoUrl" type="text" placeholder="https://… (or upload above)" required />
+          <p id="offerLogoStatus" class="adm-hint"></p>
+          <img id="offerLogoPreview" alt="" style="display:none;max-height:56px;max-width:180px;margin-top:6px;background:#fff;padding:6px;border-radius:8px;" />
+        </div>
+
+        <div class="adm-group">How members redeem</div>
+        <div class="lfield">
+          <label for="offerRedeemType">Redemption type <span class="adm-req">*</span></label>
+          <select id="offerRedeemType" required>
+            <option value="">— Choose —</option>
+            <option value="code">One discount code for everyone</option>
+            <option value="unique">Unique code per member (upload codes after saving)</option>
+            <option value="link">No code - discount applies through the link</option>
+            <option value="instore">In store - member shows their Logicard</option>
+          </select>
+        </div>
+        <div class="lfield" id="offerVoucherField">
+          <label for="offerVoucherCode">Discount code <span id="offerVoucherReq" class="adm-req">*</span></label>
+          <input id="offerVoucherCode" type="text" placeholder="e.g. LOGI15" />
+          <p class="adm-hint">Only shown to logged-in, verified members, with a Copy button.</p>
+        </div>
+        <div class="lfield">
+          <label for="offerAffiliateUrl">Brand website / affiliate link <span class="adm-req">*</span></label>
+          <input id="offerAffiliateUrl" type="url" placeholder="https://…" required />
+          <p class="adm-hint">Where "Click here to find out more about [brand]" takes members.</p>
+        </div>
+        <div class="lfield">
+          <label for="offerHowToRedeem">How to redeem (optional)</label>
+          <textarea id="offerHowToRedeem" rows="3" style="width:100%;resize:vertical;" maxlength="1500" placeholder="One step per line, e.g.&#10;Book online at goape.co.uk&#10;Enter your code at checkout"></textarea>
+          <p class="adm-hint">Leave blank to use standard steps for the redemption type.</p>
+        </div>
+        <div class="lfield">
+          <label for="offerEndDate">Offer end date (optional)</label>
+          <input id="offerEndDate" type="date" />
+          <p class="adm-hint">Blank = "No end date - ongoing offer". After this date the deal is hidden from lists and its page says it has ended.</p>
+        </div>
+        <div class="lfield">
+          <label for="offerTerms">Terms &amp; conditions (optional)</label>
+          <textarea id="offerTerms" rows="3" style="width:100%;resize:vertical;" maxlength="3000" placeholder="e.g. One use per member. Not valid with other offers."></textarea>
+        </div>
+
+        <div class="adm-group">Settings</div>
+        <div class="lfield">
+          <label for="offerPlatform">Affiliate platform</label>
           <select id="offerPlatform">
             <option>AWIN</option>
             <option>Rakuten Advertising</option>
@@ -144,40 +211,14 @@
             <option>Other</option>
           </select>
         </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerTargetGender">Show To</label>
+        <div class="lfield">
+          <label for="offerTargetGender">Show to</label>
           <select id="offerTargetGender">
             <option value="">Everyone</option>
             <option value="M">Male members only</option>
             <option value="F">Female members only</option>
             <option value="Other">Other-gender members only</option>
           </select>
-        </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerDiscountText">Discount Text</label>
-          <input id="offerDiscountText" type="text" placeholder="e.g. 20% off, £10 cashback" />
-        </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerVoucherCode">Voucher Code (optional)</label>
-          <input id="offerVoucherCode" type="text" placeholder="e.g. LOGI20" />
-        </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerAffiliateUrl">Affiliate URL</label>
-          <input id="offerAffiliateUrl" type="url" placeholder="https://…" required />
-        </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerImageUrl">Image URL (optional)</label>
-          <input id="offerImageUrl" type="url" placeholder="https://…" />
-        </div>
-        <div class="lfield" style="margin-bottom:14px;">
-          <label for="offerLogoUrl">Brand Logo (shown on the offer page and deal cards)</label>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;">
-            <input id="offerLogoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" style="flex:1;min-width:180px;" />
-            <button type="button" class="export-btn" id="offerLogoUploadBtn">Upload</button>
-          </div>
-          <input id="offerLogoUrl" type="text" placeholder="https://… (or upload above)" />
-          <p id="offerLogoStatus" style="font-size:12px;margin-top:6px;color:rgba(255,255,255,0.8);"></p>
-          <img id="offerLogoPreview" alt="" style="display:none;max-height:56px;max-width:180px;margin-top:6px;background:#fff;padding:6px;border-radius:8px;" />
         </div>
         <div class="lfield" style="margin-bottom:14px;">
           <label for="offerSortOrder">Sort Order</label>

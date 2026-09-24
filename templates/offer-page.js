@@ -31,8 +31,25 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
     ? `<img src="${escapeHtml(brandLogo)}" alt="${escapeHtml(brand)} logo" onerror="this.replaceWith(document.createTextNode('${escapeHtml(initial)}'))" />`
     : escapeHtml(initial);
 
+  // Admin-written steps (one per line) win; otherwise sensible defaults.
+  const customSteps = String(offer.howToRedeem || '').split(/\r?\n/).map(t => t.trim()).filter(Boolean);
+  const endText = offer.endDate
+    ? `Offer ends ${new Date(offer.endDate + 'T12:00:00Z').toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`
+    : 'No end date — ongoing offer';
+  const stepsHtml = (defaults) => `<ol class="op-steps">${(customSteps.length ? customSteps.map(escapeHtml) : defaults).map(t => `<li>${t}</li>`).join('')}</ol>`;
+
   let redeem;
-  if (viewer.state === 'member') {
+  if (offer.ended) {
+    redeem = `
+        <div class="op-code-box"><span class="op-code-note">This offer has now ended.</span></div>
+        <a href="/deals.html" class="op-claim-btn">See current deals ${arrowIcon}</a>`;
+  } else if (viewer.state === 'member' && viewer.redeemType === 'instore') {
+    redeem = `
+        <div class="op-code-box"><span class="op-code-note">No code needed — show your digital Logicard in store.</span></div>
+        ${stepsHtml(['Open your digital Logicard from your member dashboard.', `Show it at the till in ${escapeHtml(brand)}.`, `Enjoy <strong>${escapeHtml(offer.discountText || offer.title)}</strong>.`])}
+        <a href="/member-dashboard" class="op-claim-btn">Open my Logicard ${arrowIcon}</a>
+        <a href="/api/offers/${escapeHtml(String(viewer.offerId))}/go" class="op-more" target="_blank" rel="noopener">Click here to find out more about ${escapeHtml(brand)}</a>`;
+  } else if (viewer.state === 'member') {
     const codeBox = viewer.code
       ? `<div class="op-code-box op-code-live">
             <span class="op-code" id="opCode">${escapeHtml(viewer.code)}</span>
@@ -47,11 +64,9 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
         : `<div class="op-code-box"><span class="op-code-note">No code needed — your member discount applies when you shop through the link below.</span></div>`;
     redeem = `
         ${codeBox}
-        <ol class="op-steps">
-          <li>Copy your code${viewer.code || viewer.hasPool ? '' : ' (not needed for this deal)'}.</li>
-          <li>Open ${escapeHtml(brand)} using the button below.</li>
-          <li>Paste the code at checkout to get <strong>${escapeHtml(offer.discountText || offer.title)}</strong>.</li>
-        </ol>
+        ${stepsHtml(viewer.code || viewer.hasPool
+          ? ['Copy your code.', `Open ${escapeHtml(brand)} using the button below.`, `Paste the code at checkout to get <strong>${escapeHtml(offer.discountText || offer.title)}</strong>.`]
+          : [`Open ${escapeHtml(brand)} using the button below.`, `Your member discount is applied through the Logicard link — <strong>${escapeHtml(offer.discountText || offer.title)}</strong>.`])}
         <a href="/api/offers/${escapeHtml(String(viewer.offerId))}/go" class="op-claim-btn" target="_blank" rel="noopener">Click here to find out more about ${escapeHtml(brand)} ${arrowIcon}</a>`;
   } else if (viewer.state === 'unverified') {
     redeem = `
@@ -140,6 +155,9 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
     .op-ongoing { display: flex; align-items: center; gap: 8px; margin-top: 16px; font-size: 14px; color: #fff; }
     .op-ongoing svg { color: var(--gold); flex: 0 0 auto; }
     .op-desc { color: var(--muted); font-size: 16px; line-height: 1.7; }
+    .op-terms { font-size: 14px; white-space: pre-line; }
+    .op-lead { color: #fff; font-size: 17px; line-height: 1.6; margin-top: 14px; }
+    .op-more { display: block; text-align: center; margin-top: 12px; color: var(--gold); font-weight: 700; }
     .op-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
     .op-tags span { font-size: 13px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 12px; }
 
@@ -189,23 +207,29 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
 
         <h1 class="op-title">${escapeHtml(offer.discountText || offer.title)}</h1>
         <div class="op-tag-row"><span class="op-members">Exclusive to Logicard members</span></div>
+        ${offer.description ? `<p class="op-lead">${escapeHtml(offer.description)}</p>` : ''}
       </div>
 
       <div class="op-side">
         <div class="op-card op-redeem">
           <h2>How To <span class="gold">Redeem</span></h2>
           ${redeem}
-          <p class="op-ongoing"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>No end date — ongoing offer</p>
+          <p class="op-ongoing"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${escapeHtml(endText)}</p>
         </div>
 
         <div class="op-card">
           <h2>About <span class="gold">${escapeHtml(brand)}</span></h2>
-          <p class="op-desc">${escapeHtml(offer.description || `${offer.title} for Logicard members.`)}</p>
+          <p class="op-desc">${escapeHtml(offer.aboutBrand || offer.description || `${offer.title} for Logicard members.`)}</p>
           <div class="op-tags">
             ${offer.category ? `<span>${escapeHtml(offer.category)}</span>` : ''}
             <span>Exclusive to Logicard</span>
           </div>
         </div>
+        ${offer.terms ? `
+        <div class="op-card">
+          <h2>Terms &amp; <span class="gold">Conditions</span></h2>
+          <p class="op-desc op-terms">${escapeHtml(offer.terms)}</p>
+        </div>` : ''}
       </div>
     </div>
     ${relatedHtml}

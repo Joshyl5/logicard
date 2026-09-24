@@ -1069,6 +1069,13 @@ const GENDER_VALUES = ['M', 'F', 'Other'];
 // vs "AWIN" vs "awin" would otherwise split into three groups).
 const OFFER_PLATFORMS = ['AWIN', 'Rakuten Advertising', 'Impact', 'Partnerize', 'CJ Affiliate', 'TradeDoubler', 'Direct', 'Other'];
 
+const REDEEM_TYPES = ['code', 'unique', 'link', 'instore'];
+
+// Offers whose end date has passed drop out of every public list.
+function offerLive(o) {
+  return !o.endDate || o.endDate >= new Date().toISOString().slice(0, 10);
+}
+
 function validOfferPayload(body) {
   const { merchantName, title, affiliateUrl, category, targetGender, platform, slug } = body;
   if (!merchantName || !String(merchantName).trim()) return 'Merchant name is required.';
@@ -1079,6 +1086,21 @@ function validOfferPayload(body) {
   if (platform && !OFFER_PLATFORMS.includes(platform)) return 'Invalid platform.';
   if (slug && !/^[a-z0-9-]+$/.test(slug)) return 'Page URL slug can only contain lowercase letters, numbers and hyphens.';
   if (body.logoUrl && !/^(https:\/\/|\/local-uploads\/)/i.test(body.logoUrl)) return 'Brand logo must be an https:// link or an uploaded file.';
+  // Everything the public brand page (logicard.co.uk/<slug>) needs.
+  const need = (v) => v && String(v).trim();
+  if (!category) return 'Please choose a category for the brand page.';
+  if (!need(body.discountText)) return 'Offer headline is required (e.g. 20% off everything).';
+  if (!need(body.description)) return 'Please describe the deal.';
+  if (!need(body.aboutBrand)) return 'Please add a short "About the brand" paragraph.';
+  if (!need(body.imageUrl)) return 'A deal image is required.';
+  if (!/^(https:\/\/|\/local-uploads\/)/i.test(body.imageUrl)) return 'Deal image must be an https:// link or an uploaded file.';
+  if (!need(body.logoUrl)) return 'A brand logo is required.';
+  if (!REDEEM_TYPES.includes(body.redeemType)) return 'Please choose how members redeem this offer.';
+  if (body.redeemType === 'code' && !need(body.voucherCode)) return 'Enter the discount code (or choose a different redemption type).';
+  if (body.endDate && !/^\d{4}-\d{2}-\d{2}$/.test(body.endDate)) return 'End date must be a valid date.';
+  for (const [k, max] of [['aboutBrand', 1500], ['howToRedeem', 1500], ['terms', 3000], ['description', 2000]]) {
+    if (body[k] && String(body[k]).length > max) return `That text is too long (max ${max} characters).`;
+  }
   return null;
 }
 
@@ -1958,14 +1980,14 @@ app.post('/api/admin/forum/:type(post|reply)/:id/:action(remove|restore|dismiss)
 // same as the featured teasers below). Gender-targeted offers are left out
 // because there's no member to target.
 app.get('/api/public/offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await getActiveOffers()).filter(o => !o.targetGender);
+  const offers = (await getActiveOffers()).filter(o => !o.targetGender && offerLive(o));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug,
   })));
 });
 
 app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender);
+  const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender && offerLive(o));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug, // slug powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
   })));
@@ -2365,6 +2387,8 @@ app.get('/:slug', async (req, res, next) => {
     const publicOffer = {
       merchantName: offer.merchantName, title: offer.title, description: offer.description,
       category: offer.category, discountText: offer.discountText, imageUrl: offer.imageUrl, slug,
+      aboutBrand: offer.aboutBrand, howToRedeem: offer.howToRedeem, terms: offer.terms, endDate: offer.endDate,
+      ended: !offerLive(offer),
     };
 
     // Who is looking decides what the redeem box shows. The real code and
@@ -2379,8 +2403,10 @@ app.get('/:slug', async (req, res, next) => {
           getMemberClaimedCodes(memberNo, [offer.id]),
         ]);
         const hasPool = !!statsMap[offer.id];
+        // Older offers have no redeem type yet: infer it from what they have
+        const redeemType = offer.redeemType || (hasPool ? 'unique' : offer.voucherCode ? 'code' : 'link');
         viewer = {
-          state: 'member', offerId: offer.id, hasPool,
+          state: 'member', offerId: offer.id, hasPool, redeemType,
           code: hasPool ? (myCodes[offer.id] || null) : (offer.voucherCode || null),
         };
       } else if (member) {
@@ -2395,7 +2421,7 @@ app.get('/:slug', async (req, res, next) => {
     const safeLogo = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '') ? u : null;
     const brandLogo = safeLogo(offer.logoUrl) || (brand ? safeLogo(brand.logoUrl) : null);
     const related = allOffers
-      .filter(o => o.id !== offer.id && o.slug && !o.targetGender && o.category === offer.category)
+      .filter(o => o.id !== offer.id && o.slug && !o.targetGender && offerLive(o) && o.category === offer.category)
       .slice(0, 3)
       .map(o => ({ slug: o.slug, title: o.title, merchantName: o.merchantName, imageUrl: o.imageUrl }));
 

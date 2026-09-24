@@ -2067,3 +2067,21 @@ input.mh-search-input:focus::placeholder, input.search-input:focus::placeholder 
 .mh-search-wrap:has(.mh-search-input:not(:placeholder-shown)) .mh-search-icon,
 .search-wrap:focus-within .search-icon,
 .search-wrap:has(.search-input:not(:placeholder-shown)) .search-icon { display: none; }
+
+/* ── Admin pop-up forms (Add/Edit Offer, Brand, Advert, News, codes, export,
+   reject) ── A compact panel fixed in the middle of the screen that scrolls
+   inside itself, instead of a tall card whose top could end up off-screen
+   and unreachable. The page behind stays still while a pop-up is open. */
+#offerModal > div, #codesModal > div, #brandModal > div, #advertModal > div,
+#newsModal > div, #exportModal > div, #rejectModal > div {
+  max-height: 86vh; overflow-y: auto; overscroll-behavior: contain;
+  margin: auto !important; padding: 22px 22px 18px !important;
+  max-width: 460px !important; width: 92% !important;
+}
+#offerModal > div h2, #codesModal > div h2, #brandModal > div h2, #advertModal > div h2,
+#newsModal > div h2, #exportModal > div h2, #rejectModal > div h2 { font-size: 18px !important; margin-bottom: 14px !important; }
+#offerModal .lfield, #brandModal .lfield, #advertModal .lfield, #newsModal .lfield { margin-bottom: 10px !important; }
+body:has([id$="Modal"][style*="display: flex"]), body:has([id$="Modal"][style*="display:flex"]) { overflow: hidden; }
+.adm-group { margin: 14px 0 8px; padding-top: 12px; border-top: 1px solid rgba(255,179,0,0.3); color: #FFB300; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+.adm-hint { margin: 4px 0 0; font-size: 12px; color: rgba(255,255,255,0.75); }
+.adm-req { color: #FFB300; }
