@@ -1975,6 +1975,16 @@ app.post('/api/admin/forum/:type(post|reply)/:id/:action(remove|restore|dismiss)
   res.json({ success: true });
 });
 
+// Public, no personal data: just tells deal cards where "Get deal" should
+// go (guest -> sign up, unverified -> verify, member -> the deal's code).
+app.get('/api/session', publicOffersLimiter, async (req, res) => {
+  res.set('Cache-Control', 'private, no-store');
+  const no = req.session && req.session.membershipNumber;
+  if (!no) return res.json({ state: 'guest' });
+  const member = await getMemberByNumber(no);
+  res.json({ state: !member ? 'guest' : member.verified ? 'member' : 'unverified' });
+});
+
 // Powers the /deals.html browser: every active offer, teaser fields only
 // (no voucher codes or affiliate URLs; those stay behind the member login,
 // same as the featured teasers below). Gender-targeted offers are left out
@@ -2423,7 +2433,8 @@ app.get('/:slug', async (req, res, next) => {
     const related = allOffers
       .filter(o => o.id !== offer.id && o.slug && !o.targetGender && offerLive(o) && o.category === offer.category)
       .slice(0, 3)
-      .map(o => ({ slug: o.slug, title: o.title, merchantName: o.merchantName, imageUrl: o.imageUrl }));
+      .map(o => ({ slug: o.slug, title: o.title, merchantName: o.merchantName, imageUrl: o.imageUrl,
+        discountText: o.discountText, category: o.category, logoUrl: o.logoUrl }));
 
     // Member views contain a personal code: never let a shared cache keep them.
     if (viewer.state !== 'guest') res.set('Cache-Control', 'private, no-store');

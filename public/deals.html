@@ -257,6 +257,23 @@
       .md-value small { font-size: 12px; }
       .md-search button { padding: 11px 14px; font-size: 14px; }
     }
+
+    /* Deal card: image, brand, headline, category, Visit page + Get deal */
+    .dc { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+    .dc-img { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #111; overflow: hidden; font: 400 60px 'Archivo Black', 'Arial Black', sans-serif; color: #FFB300; text-decoration: none; }
+    .dc-img > img { width: 100%; height: 100%; object-fit: contain; }
+    .dc-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+    .dc-logo img { max-height: 34px; max-width: 100%; object-fit: contain; }
+    .dc-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .dc-brand { font: 700 13px 'Montserrat', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #FFB300; }
+    .dc-body h3 { font: 400 21px/1.2 'Archivo Black', 'Arial Black', sans-serif; margin: 0; }
+    .dc-cat { align-self: flex-start; font: 600 13px 'Montserrat', sans-serif; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+    .dc-btns { display: grid; gap: 8px; margin-top: auto; padding-top: 8px; }
+    .dc-btns a { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; border-radius: 10px; padding: 12px 14px; font: 400 15px/1.2 'Archivo Black', 'Arial Black', sans-serif; text-decoration: none; }
+    .dc-visit { background: rgba(255,179,0,0.14); color: #FFB300; border: 1px solid rgba(255,179,0,0.4); }
+    .dc-visit:hover { background: rgba(255,179,0,0.24); }
+    .dc-get { background: #FFB300; color: #111; }
+    .dc-get:hover { background: #E09A00; }
   </style>
 </head>
 <body>
@@ -405,6 +422,7 @@
   </section>
 
   <!-- SHARED_FOOTER -->
+  <script src="/deal-links.js?v=1"></script>
 
   <script>
     (function () {
@@ -415,6 +433,26 @@
       function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
       function safeImg(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
       function safeSlug(v) { return typeof v === 'string' && /^[a-z0-9-]+$/i.test(v); }
+      var isSafeImg = safeImg;
+
+      function dealCard(o, logoUrl) {
+        var slug = /^[a-z0-9-]+$/i.test(o.slug || '') ? o.slug : '';
+        var page = slug ? '/' + slug : '/deals.html';
+        var img = isSafeImg(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="' + esc(o.merchantName) + '" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
+        var badge = logoUrl ? '<span class="dc-logo"><img src="' + esc(logoUrl) + '" alt="' + esc(o.merchantName) + ' logo" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '';
+        return '<div class="dc">' +
+          '<a class="dc-img" href="' + page + '" aria-label="' + esc(o.merchantName) + ' page">' + img + badge + '</a>' +
+          '<div class="dc-body">' +
+            '<span class="dc-brand">' + esc(o.merchantName) + '</span>' +
+            '<h3>' + esc(o.discountText || o.title) + '</h3>' +
+            (o.category ? '<span class="dc-cat">' + esc(o.category) + '</span>' : '') +
+            '<div class="dc-btns">' +
+              '<a class="dc-visit" href="' + page + '">Visit ' + esc(o.merchantName) + ' page</a>' +
+              '<a class="dc-get" href="/signup.html"' + (slug ? ' data-get-deal="' + slug + '"' : '') + '>Get deal <span aria-hidden="true">&rarr;</span></a>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }
       function key(n) { return String(n || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
 
       function render() {
@@ -423,18 +461,9 @@
           return !q || [o.merchantName, o.title, o.description, o.category].join(' ').toLowerCase().indexOf(q) !== -1;
         });
         grid.innerHTML = shown.map(function (o) {
-          var img = safeImg(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
-          var logo = (safeImg(o.logoUrl) && o.logoUrl) || logos[key(o.merchantName)];
-          var badge = logo ? '<span class="md-logo"><img src="' + esc(logo) + '" alt="' + esc(o.merchantName) + '" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '';
-          var desc = String(o.description || '');
-          if (desc.length > 120) desc = desc.slice(0, 117).replace(/\s+\S*$/, '') + '...';
-          return '<a class="md-card" href="' + (safeSlug(o.slug) ? '/' + esc(o.slug) : '/signup.html') + '">' +
-            '<div class="md-img">' + img + badge + '</div>' +
-            '<div class="md-body"><h3>' + esc(o.title || o.discountText || o.merchantName) + '</h3>' +
-            '<p><strong>' + esc(o.merchantName) + '</strong>' + (desc ? ' - ' + esc(desc) : '') + '</p>' +
-            (o.category ? '<span class="md-cat">' + esc(o.category) + '</span>' : '') +
-            '<span class="md-cta">Get deal <span>&rarr;</span></span></div></a>';
+          return dealCard(o, (safeImg(o.logoUrl) && o.logoUrl) || logos[key(o.merchantName)]);
         }).join('');
+        if (window.LogicardDeal) LogicardDeal.apply();
         count.textContent = offers.length ? (q ? shown.length + ' of ' + offers.length + ' deals match "' + input.value.trim() + '"' : offers.length + ' member deals') : '';
         empty.hidden = shown.length > 0 || !offers.length;
         if (!shown.length && offers.length) empty.innerHTML = 'No deals match that search yet. <a href="#" id="mdClear">Show all deals</a>';

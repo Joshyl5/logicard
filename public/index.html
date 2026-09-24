@@ -142,22 +142,30 @@
   .badge { display: inline-block; background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); border-radius: 999px; padding: 6px 16px; font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 16px; }
   .slider { display: flex; gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 4px 20px 20px; margin: 0 -20px; scroll-padding: 0 20px; scrollbar-width: none; }
   .slider::-webkit-scrollbar { display: none; }
-  .deal { flex: 0 0 min(320px, 84vw); scroll-snap-align: start; background: var(--card); border: 1px solid rgba(255,255,255,0.12); border-radius: 20px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color .2s; }
-  .deal:hover { border-color: var(--gold-line); }
-  .deal-top { height: 190px; display: grid; place-items: center; font-family: var(--display); font-size: 64px; color: var(--gold); position: relative; overflow: hidden; background: #1a1a1a; }
-  .deal-top img { width: 100%; height: 100%; object-fit: contain; }
-  .deal-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
-  .deal-top .deal-logo img { width: auto; height: auto; max-height: 34px; max-width: 100%; object-fit: contain; } /* never crop brand artwork */
-  .deal-body { padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
-  .deal h3 { font-size: 22px; line-height: 1.2; }
-  .deal p { color: var(--muted); font-size: 15px; flex: 1; }
-  .deal-cat { align-self: flex-start; font-size: 13px; font-weight: 600; color: #fff; border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 5px 12px; }
-  .deal-cta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; background: var(--gold); color: #111; font-family: var(--display); font-size: 17px; padding: 14px 18px; border-radius: 10px; }
+  .deal { flex: 0 0 min(320px, 84vw); scroll-snap-align: start; display: flex; }
+  .deal > .dc { flex: 1; }
   /* Swipe on phones (YLC style); arrows only on wider screens */
   .slider-nav { display: none; justify-content: center; gap: 12px; margin-top: 10px; }
   @media (min-width: 760px) { .slider-nav:not([hidden]) { display: flex; } }
   .slider-nav button { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--card); border: 1px solid var(--gold-line); color: var(--gold); font-size: 20px; cursor: pointer; }
   .slider-nav button:hover { background: var(--gold-soft); }
+
+  /* Deal card: image, brand, headline, category, Visit page + Get deal */
+  .dc { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+  .dc-img { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #111; overflow: hidden; font: 400 60px 'Archivo Black', 'Arial Black', sans-serif; color: #FFB300; text-decoration: none; }
+  .dc-img > img { width: 100%; height: 100%; object-fit: contain; }
+  .dc-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+  .dc-logo img { max-height: 34px; max-width: 100%; object-fit: contain; }
+  .dc-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .dc-brand { font: 700 13px 'Montserrat', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #FFB300; }
+  .dc-body h3 { font: 400 21px/1.2 'Archivo Black', 'Arial Black', sans-serif; margin: 0; }
+  .dc-cat { align-self: flex-start; font: 600 13px 'Montserrat', sans-serif; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+  .dc-btns { display: grid; gap: 8px; margin-top: auto; padding-top: 8px; }
+  .dc-btns a { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; border-radius: 10px; padding: 12px 14px; font: 400 15px/1.2 'Archivo Black', 'Arial Black', sans-serif; text-decoration: none; }
+  .dc-visit { background: rgba(255,179,0,0.14); color: #FFB300; border: 1px solid rgba(255,179,0,0.4); }
+  .dc-visit:hover { background: rgba(255,179,0,0.24); }
+  .dc-get { background: #FFB300; color: #111; }
+  .dc-get:hover { background: #E09A00; }
 
   /* ── Why join ── */
   .why-grid { display: grid; gap: 28px; align-items: center; }
@@ -611,22 +619,35 @@
     document.getElementById('brandTicker').hidden = false;
   }).catch(function () {});
 
+  var isSafeImg = isSafeImageUrl;
+
+  function dealCard(o, logoUrl) {
+    var slug = /^[a-z0-9-]+$/i.test(o.slug || '') ? o.slug : '';
+    var page = slug ? '/' + slug : '/deals.html';
+    var img = isSafeImg(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="' + esc(o.merchantName) + '" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
+    var badge = logoUrl ? '<span class="dc-logo"><img src="' + esc(logoUrl) + '" alt="' + esc(o.merchantName) + ' logo" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '';
+    return '<div class="dc">' +
+      '<a class="dc-img" href="' + page + '" aria-label="' + esc(o.merchantName) + ' page">' + img + badge + '</a>' +
+      '<div class="dc-body">' +
+        '<span class="dc-brand">' + esc(o.merchantName) + '</span>' +
+        '<h3>' + esc(o.discountText || o.title) + '</h3>' +
+        (o.category ? '<span class="dc-cat">' + esc(o.category) + '</span>' : '') +
+        '<div class="dc-btns">' +
+          '<a class="dc-visit" href="' + page + '">Visit ' + esc(o.merchantName) + ' page</a>' +
+          '<a class="dc-get" href="/signup.html"' + (slug ? ' data-get-deal="' + slug + '"' : '') + '>Get deal <span aria-hidden="true">&rarr;</span></a>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
   // Hot deals (admin > Offers, featured)
   var slider = document.getElementById('slider');
   getJson('/api/public/featured-offers').then(function (offers) {
     if (!Array.isArray(offers) || !offers.length) throw new Error('none');
     slider.innerHTML = offers.map(function (o) {
-      var top = isSafeImageUrl(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0));
-      var href = isSafeSlug(o.slug) ? '/' + esc(o.slug) : '/deals.html';
-      var desc = String(o.description || '');
-      if (desc.length > 110) desc = desc.slice(0, 107).replace(/\s+\S*$/, '') + '...';
-      var logo = isSafeImageUrl(o.logoUrl) ? '<span class="deal-logo"><img src="' + esc(o.logoUrl) + '" alt="' + esc(o.merchantName) + '" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '';
-      return '<a class="deal" href="' + href + '"><div class="deal-top">' + top + logo + '</div>' +
-        '<div class="deal-body"><h3>' + esc(o.title || o.merchantName) + '</h3>' +
-        '<p><strong>' + esc(o.merchantName) + '</strong>' + (desc ? ' - ' + esc(desc) : '') + '</p>' +
-        (o.category ? '<span class="deal-cat">' + esc(o.category) + '</span>' : '') +
-        '<span class="deal-cta">Get deal <span>&rarr;</span></span></div></a>';
+      return '<div class="deal">' + dealCard(o, isSafeImageUrl(o.logoUrl) ? o.logoUrl : null) + '</div>';
     }).join('');
+    if (window.LogicardDeal) LogicardDeal.apply();
     document.getElementById('sliderNav').hidden = offers.length < 2;
   }).catch(function () { document.getElementById('dealsEmpty').hidden = false; });
 
@@ -684,5 +705,6 @@
   document.getElementById('yr').textContent = new Date().getFullYear();
 </script>
 <script src="/contact.js"></script>
+<script src="/deal-links.js?v=1"></script>
 </body>
 </html>

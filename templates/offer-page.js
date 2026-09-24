@@ -80,15 +80,27 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
         <p class="op-small">First year free, then £10/year. Already a member? <a href="/login.html?next=${back}">Log in</a></p>`;
   }
 
+  // "Get deal" on related cards: guests -> sign up, unverified -> verify,
+  // members -> straight to that deal's code.
+  const getHref = (slug) => viewer.state === 'member' ? `/${slug}#redeem` : viewer.state === 'unverified' ? '/verify' : '/signup.html';
+  const safeImg = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '');
   const relatedHtml = related.length ? `
     <section class="op-related">
       <h2>More <span class="gold">Deals Like This</span></h2>
       <div class="op-rel-grid">
         ${related.map(r => `
-        <a class="op-rel" href="/${escapeHtml(r.slug)}">
-          <div class="op-rel-img">${r.imageUrl ? `<img src="${escapeHtml(r.imageUrl)}" alt="" loading="lazy" />` : escapeHtml((r.merchantName || '?').charAt(0))}</div>
-          <div class="op-rel-body"><strong>${escapeHtml(r.title)}</strong><span>${escapeHtml(r.merchantName)}</span></div>
-        </a>`).join('')}
+        <div class="dc">
+          <a class="dc-img" href="/${escapeHtml(r.slug)}" aria-label="${escapeHtml(r.merchantName)} page">${safeImg(r.imageUrl) ? `<img src="${escapeHtml(r.imageUrl)}" alt="${escapeHtml(r.merchantName)}" loading="lazy" />` : escapeHtml((r.merchantName || '?').charAt(0))}${safeImg(r.logoUrl) ? `<span class="dc-logo"><img src="${escapeHtml(r.logoUrl)}" alt="${escapeHtml(r.merchantName)} logo" loading="lazy" onerror="this.parentNode.remove()" /></span>` : ''}</a>
+          <div class="dc-body">
+            <span class="dc-brand">${escapeHtml(r.merchantName)}</span>
+            <h3>${escapeHtml(r.discountText || r.title)}</h3>
+            ${r.category ? `<span class="dc-cat">${escapeHtml(r.category)}</span>` : ''}
+            <div class="dc-btns">
+              <a class="dc-visit" href="/${escapeHtml(r.slug)}">Visit ${escapeHtml(r.merchantName)} page</a>
+              <a class="dc-get" href="${getHref(escapeHtml(r.slug))}">Get deal <span aria-hidden="true">&rarr;</span></a>
+            </div>
+          </div>
+        </div>`).join('')}
       </div>
     </section>` : '';
 
@@ -138,7 +150,7 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
 
     .op-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
     .op-card h2 { font-size: 22px; margin-bottom: 14px; }
-    .op-redeem { border-color: var(--gold-line); }
+    .op-redeem { border-color: var(--gold-line); scroll-margin-top: 96px; }
     .op-code-box { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; background: #000; border: 2px dashed var(--gold-line); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; }
     .op-code { font-family: var(--display); font-size: 24px; letter-spacing: .06em; color: var(--gold); word-break: break-all; }
     .op-code-masked { color: rgba(255,255,255,0.75); letter-spacing: .2em; }
@@ -164,12 +176,19 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
     .op-related { margin-top: 40px; }
     .op-related h2 { font-size: clamp(24px, 5vw, 32px); margin-bottom: 16px; }
     .op-rel-grid { display: grid; gap: 14px; }
-    .op-rel { display: flex; gap: 14px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 10px; text-decoration: none; }
-    .op-rel:hover { border-color: var(--gold-line); }
-    .op-rel-img { flex: 0 0 120px; height: 68px; border-radius: 10px; overflow: hidden; background: #111; display: grid; place-items: center; font-family: var(--display); color: var(--gold); font-size: 26px; }
-    .op-rel-img img { width: 100%; height: 100%; object-fit: contain; }
-    .op-rel-body strong { display: block; font-family: var(--display); font-weight: 400; font-size: 16px; line-height: 1.2; }
-    .op-rel-body span { font-size: 14px; color: var(--muted); }
+    .dc { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+    .dc-img { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #111; overflow: hidden; font: 400 60px var(--display); color: var(--gold); text-decoration: none; }
+    .dc-img > img { width: 100%; height: 100%; object-fit: contain; }
+    .dc-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+    .dc-logo img { max-height: 34px; max-width: 100%; object-fit: contain; }
+    .dc-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .dc-brand { font: 700 13px var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+    .dc-body h3 { font-size: 21px; margin: 0; }
+    .dc-cat { align-self: flex-start; font: 600 13px var(--body); border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+    .dc-btns { display: grid; gap: 8px; margin-top: auto; padding-top: 8px; }
+    .dc-btns a { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; border-radius: 10px; padding: 12px 14px; font: 400 15px/1.2 var(--display); text-decoration: none; }
+    .dc-visit { background: var(--gold-soft); color: var(--gold); border: 1px solid var(--gold-line); }
+    .dc-get { background: var(--gold); color: #111; }
 
     @media (min-width: 880px) {
       .op-grid { grid-template-columns: 1.5fr 1fr; align-items: start; }
@@ -211,7 +230,7 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
       </div>
 
       <div class="op-side">
-        <div class="op-card op-redeem">
+        <div class="op-card op-redeem" id="redeem">
           <h2>How To <span class="gold">Redeem</span></h2>
           ${redeem}
           <p class="op-ongoing"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${escapeHtml(endText)}</p>
