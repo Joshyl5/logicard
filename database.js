@@ -879,7 +879,7 @@ async function upsertNewsItem({ title, link, source, summary, publishedAt }) {
 }
 
 // True if an auto-pulled story was added within the last `days` days
-// (the weekly news job uses this so it adds at most one story a week,
+// (the news job uses this so it adds at most one story a day,
 // however often the server restarts).
 async function hasAutoNewsSince(days) {
   const r = await pool.query(
@@ -890,15 +890,15 @@ async function hasAutoNewsSince(days) {
   return r.rowCount > 0;
 }
 
-// Public news: one auto-pulled story per week (the newest that week), plus
+// Public news: one auto-pulled story per day (the newest that day), plus
 // every story added by hand in Manage News.
 async function getRecentNewsItems(limit = 30) {
   const r = await pool.query(
     `SELECT * FROM (
        SELECT * FROM (
-         SELECT DISTINCT ON (date_trunc('week', COALESCE(published_at, fetched_at))) *
+         SELECT DISTINCT ON (date_trunc('day', COALESCE(published_at, fetched_at))) *
            FROM news_items WHERE NOT COALESCE(is_manual, FALSE)
-          ORDER BY date_trunc('week', COALESCE(published_at, fetched_at)) DESC, COALESCE(published_at, fetched_at) DESC
+          ORDER BY date_trunc('day', COALESCE(published_at, fetched_at)) DESC, COALESCE(published_at, fetched_at) DESC
        ) weekly
        UNION ALL
        SELECT * FROM news_items WHERE is_manual

@@ -50,6 +50,25 @@ function navFor(req, opts = {}) {
   return renderNav({ ...opts, loggedIn: !!(req.session && req.session.membershipNumber) });
 }
 
+// ── Short in-memory cache for the public lists every visitor asks for ──
+// (deals, partner logos, news). At busy moments thousands of visitors get
+// the same answer from memory instead of each asking the database. Any
+// admin save clears it, so changes still show straight away.
+const publicCache = new Map();
+const PUBLIC_CACHE_MS = 60 * 1000;
+function cached(key, loader) {
+  const hit = publicCache.get(key);
+  if (hit && hit.expires > Date.now()) return hit.promise;
+  const promise = Promise.resolve().then(loader);
+  publicCache.set(key, { promise, expires: Date.now() + PUBLIC_CACHE_MS });
+  promise.catch(() => publicCache.delete(key)); // never cache a failure
+  return promise;
+}
+const cachedActiveOffers    = () => cached('activeOffers', getActiveOffers);
+const cachedFeaturedPublic  = () => cached('featuredPublic', getFeaturedOffersForPublic);
+const cachedPartnerBrands   = () => cached('partnerBrands', getActivePartnerBrands);
+const cachedRecentNews      = () => cached('recentNews', () => getRecentNewsItems(30));
+
 // ── Site analytics helpers (admin > Analytics) ──
 // Page views are counted server-side; search engines and other bots are
 // skipped so the numbers reflect real people. Fire-and-forget: a failed
@@ -155,6 +174,13 @@ async function runVerificationPurge() {
 // Powers /logistics-news.html (under More). Verified working and on-topic
 // as of 2026-09 — if a feed goes stale or 404s, it's skipped (logged),
 // not fatal to the others.
+//
+// SOURCE POLICY (site owner, 2026-09): news is only ever taken from this
+// fixed, approved list. Before adding a source, check it is a reputable
+// trade/news publication and has NOT been widely reported for serious
+// misconduct such as racism or other breaches of human rights; if a listed
+// source later is, remove it here. Individual stories can be removed in
+// admin > Manage News.
 const LOGISTICS_NEWS_FEEDS = [
   { url: 'https://theloadstar.com/feed/', source: 'The Loadstar' },
   { url: 'https://www.logisticsmanager.com/feed/', source: 'Logistics Manager' },
@@ -171,10 +197,10 @@ function cleanNewsSummary(snippet) {
   return cleaned ? cleaned.slice(0, 400) : null;
 }
 
-// One story a week: if an auto-pulled story was added in the last 7 days,
+// One story a day: if an auto-pulled story was added in the last 24 hours,
 // do nothing (no feeds are even downloaded). Otherwise read the feeds and
 // add the single newest headline we don't already have.
-const NEWS_STORIES_EVERY_DAYS = 7;
+const NEWS_STORIES_EVERY_DAYS = 1;
 async function fetchLogisticsNews() {
   try {
     if (await hasAutoNewsSince(NEWS_STORIES_EVERY_DAYS)) return;
@@ -203,7 +229,8 @@ async function fetchLogisticsNews() {
   candidates.sort((a, b) => new Date(b.publishedAt || 0) - new Date(a.publishedAt || 0));
   for (const item of candidates) {
     if (await upsertNewsItem(item)) {
-      console.log(`[news] Added this week's story: "${item.title}" (${item.source})`);
+      console.log(`[news] Added today's story: "${item.title}" (${item.source})`);
+      publicCache.clear();
       return;
     }
   }
@@ -739,7 +766,7 @@ const NAV_OPTIONS_BY_PAGE = {
 // links to a relevant Logicard discount page, not just its source.
 app.get('/logistics-news.html', async (req, res) => {
   try {
-    const items = await getRecentNewsItems(30);
+    const items = await cachedRecentNews();
     const html = fs.readFileSync(path.join(__dirname, 'public', 'logistics-news.html'), 'utf8');
     const out = html
       .replace('<!-- SHARED_NAV -->', navFor(req, { active: 'logistics-news' }))
@@ -774,6 +801,10 @@ app.use(express.static(path.join(__dirname, 'public'), {
     // cached copy after a deploy changes them.
     if (filePath.endsWith('.css') || filePath.endsWith('.js')) {
       res.setHeader('Cache-Control', 'no-cache');
+    } else if (/\.(webp|png|jpe?g|svg|gif|ico)$/i.test(filePath)) {
+      // Photos and icons rarely change (a changed image gets a new file
+      // name), so browsers and Cloudflare can keep them for 30 days.
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
     }
   },
 }));
@@ -918,6 +949,11 @@ app.get('/forum/:id', requireAuth, (req, res, next) => {
 });
 
 // ── Admin pages ────────────────────────────────────────────────
+app.use('/api/admin', (req, _res, next) => {
+  if (req.method !== 'GET') publicCache.clear();
+  next();
+});
+
 app.get('/admin', requireAdmin, (_req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin-dashboard.html'));
 });
@@ -2090,14 +2126,14 @@ app.get('/api/admin/analytics/csv', requireAdmin, async (req, res) => {
 // same as the featured teasers below). Gender-targeted offers are left out
 // because there's no member to target.
 app.get('/api/public/offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await getActiveOffers()).filter(o => !o.targetGender && offerLive(o));
+  const offers = (await cachedActiveOffers()).filter(o => !o.targetGender && offerLive(o));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug,
   })));
 });
 
 app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await getFeaturedOffersForPublic()).filter(o => !o.targetGender && offerLive(o));
+  const offers = (await cachedFeaturedPublic()).filter(o => !o.targetGender && offerLive(o));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug, // slug powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
   })));
@@ -2107,14 +2143,14 @@ app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) =>
 // to the original article only (see fetchLogisticsNews above). Same
 // public, no-auth pattern as the deal teasers above.
 app.get('/api/public/logistics-news', publicOffersLimiter, async (_req, res) => {
-  const items = await getRecentNewsItems(30);
+  const items = await cachedRecentNews();
   res.json(items.map(({ title, link, source, summary, publishedAt }) => ({ title, link, source, summary, publishedAt })));
 });
 
 // Powers the "Our Partners" grid on partnerships.html — same public,
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
-  const brands = await getActivePartnerBrands();
+  const brands = await cachedPartnerBrands();
   res.json(brands.map(({ id, brandName, logoUrl, slug }) => ({ id, brandName, logoUrl, slug })));
 });
 
@@ -2630,7 +2666,7 @@ app.get('/:slug', async (req, res, next) => {
 
     // Brand logo: the matching partner brand's logo, if one is set up.
     const norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-    const [brands, allOffers] = await Promise.all([getActivePartnerBrands(), getActiveOffers()]);
+    const [brands, allOffers] = await Promise.all([cachedPartnerBrands(), cachedActiveOffers()]);
     const brand = brands.find(b => norm(b.brandName) === norm(offer.merchantName));
     const safeLogo = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '') ? u : null;
     const brandLogo = safeLogo(offer.logoUrl) || (brand ? safeLogo(brand.logoUrl) : null);
@@ -2653,7 +2689,7 @@ app.get('/:slug', async (req, res, next) => {
 });
 
 const PURGE_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
-const NEWS_FETCH_INTERVAL_MS  = 6 * 60 * 60 * 1000;  // check every 6 hours; adds at most one story a week
+const NEWS_FETCH_INTERVAL_MS  = 2 * 60 * 60 * 1000;  // check every 2 hours; adds at most one story a day
 
 app.listen(PORT, () => {
   console.log(`Logicard running at http://localhost:${PORT}`);
