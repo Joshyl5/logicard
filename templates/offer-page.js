@@ -40,7 +40,7 @@ function renderOfferPage({ offer }) {
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=7" />
+  <link rel="stylesheet" href="/nav.css?v=8" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -203,7 +203,7 @@ function renderOfferNotFound() {
   <title>Offer Not Found — Logicard</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="stylesheet" href="/nav.css?v=7" />
+  <link rel="stylesheet" href="/nav.css?v=8" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #0a0a0a; color: #fff; }
