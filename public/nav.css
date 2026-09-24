@@ -37,7 +37,7 @@ img, video, iframe { max-width: 100%; }
 .site-header-logo { flex-shrink: 0; display: inline-flex; align-items: center; border: 2.5px solid #0a0a0a; padding: 8px 16px; border-radius: 6px; background: #000000; text-decoration: none; font-family: 'Montserrat', 'Inter', 'Segoe UI', Arial, sans-serif; font-size: 23px; font-weight: 900; letter-spacing: -1px; line-height: 1; }
 .site-header-logo .logi { color: #fff; } .site-header-logo .card { color: #FFB300; }
 
-.site-burger { width: 48px; height: 48px; background: none; border: 0; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px; flex-shrink: 0; margin-left: auto; }
+.site-burger { width: 48px; height: 48px; background: none; border: 0; cursor: pointer; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px; flex-shrink: 0; margin-left: auto; margin-right: -10px; } /* lines end exactly on the text edge */
 .site-burger span { display: block; height: 3px; border-radius: 2px; background: #111; }
 
 /* ── Slide-out drawer ── */

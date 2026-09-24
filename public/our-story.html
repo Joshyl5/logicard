@@ -19,7 +19,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=8" />
+  <link rel="stylesheet" href="/nav.css?v=9" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,7 +42,7 @@
     .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
 
     /* Hero — navy */
-    .story-hero { padding: 96px 24px 56px; text-align: center; }
+    .story-hero { padding: 96px 20px 56px; text-align: center; }
     .story-badge {
       display: inline-flex; align-items: center; gap: 8px;
       background: rgba(255,179,0,0.1); border: 1px solid rgba(255,179,0,0.35);
@@ -56,7 +56,7 @@
        narrative). Two-tone heading mirrors the hero's own white-base/
        gold-accent pattern, just inverted for a gold section: navy base
        text, white accent word. */
-    .wmd-section { padding: 88px 24px 96px; background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
+    .wmd-section { padding: 88px 20px 96px; background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; }
     .wmd-inner { max-width: 980px; margin: 0 auto; }
     .wmd-title { text-align: center; font-size: clamp(28px, 4vw, 42px); font-weight: 900; color: var(--navy); letter-spacing: -0.6px; margin-bottom: 56px; text-wrap: balance; }
     .wmd-title .accent { color: var(--orange); }
@@ -73,7 +73,7 @@
 
     /* Points — navy (continues the alternation after What Makes Us
        Different/gold above) */
-    .story-section { padding: 72px 24px 96px; background: var(--navy); }
+    .story-section { padding: 72px 20px 96px; background: var(--navy); }
     .story-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 1100px; margin: 0 auto; }
     .story-point { background: var(--white); border-radius: 20px; padding: 40px 32px; }
     .story-point-icon {
@@ -99,7 +99,7 @@
 
     @media (max-width: 900px) {
       .story-points { grid-template-columns: 1fr; gap: 18px; }
-      .story-section { padding: 56px 24px 72px; }
+      .story-section { padding: 56px 20px 72px; }
       .wmd-grid { grid-template-columns: 1fr; gap: 32px; }
     }
     @media (max-width: 600px) {

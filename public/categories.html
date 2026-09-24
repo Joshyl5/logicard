@@ -9,7 +9,7 @@
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=8" />
+  <link rel="stylesheet" href="/nav.css?v=9" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -46,7 +46,7 @@
       grid-template-columns: 1.5fr 1fr;
       gap: 48px;
       align-items: end; /* stats card's bottom lines up with Popular searches' bottom, not top-aligned with the headline */
-      max-width: 1400px;
+      max-width: 1080px; /* 1120 header column minus its 20px gutters */
       margin: 0 auto;
     }
     .deals-eyebrow {
@@ -190,7 +190,7 @@
     /* ── Featured Deals — navy band (middle of the gold/navy/gold rhythm).
        Same component/API as the homepage's, so a deal admin marks
        "Featured" shows up in both places automatically. ── */
-    .featured-deals-section { background: var(--navy); padding: 64px 24px 76px; }
+    .featured-deals-section { background: var(--navy); padding: 64px 20px 76px; }
     .featured-deals-head { text-align: center; margin-bottom: 40px; }
     .featured-deals-heading { font-size: clamp(22px, 3vw, 30px); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
     .featured-deals-subtitle { font-size: 15px; color: rgba(255,255,255,0.9); }
@@ -234,7 +234,7 @@
 
     .bottom-cta {
       background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
-      text-align: center; padding: 56px 24px;
+      text-align: center; padding: 56px 20px;
     }
     .cta-btn { display: inline-block; background: var(--navy); color: var(--white); font-weight: 800; padding: 16px 40px; border-radius: 6px; text-decoration: none; }
     .cta-btn:hover { background: var(--navy-mid); }

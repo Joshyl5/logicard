@@ -2,8 +2,8 @@ const { slugify } = require('../job-roles');
 
 const NAV_HEAD = `
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="/styles.css?v=2" />
-  <link rel="stylesheet" href="/nav.css?v=8" />
+  <link rel="stylesheet" href="/styles.css?v=3" />
+  <link rel="stylesheet" href="/nav.css?v=9" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
@@ -14,11 +14,11 @@ const NAV_HEAD = `
        turns out to already be the correct contrast color for a gold
        background — only the background and CTA needed flipping. */
     body{font-family:'Montserrat',Arial,sans-serif;color:var(--navy);background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a}
-    .rp-hero{background:linear-gradient(140deg,#04040d 0%,#0a0a0a 45%,#1f1f1f 100%);color:#fff;padding:64px 24px;text-align:center}
+    .rp-hero{background:linear-gradient(140deg,#04040d 0%,#0a0a0a 45%,#1f1f1f 100%);color:#fff;padding:64px 20px;text-align:center}
     .rp-hero .eyebrow{color:var(--orange);font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:13px}
     .rp-hero h1{font-size:clamp(28px,4vw,42px);font-weight:900;margin:12px 0;letter-spacing:-0.5px}
     .rp-hero p{color:rgba(255,255,255,0.9);font-size:17px;max-width:640px;margin:0 auto}
-    .rp-body{max-width:720px;margin:0 auto;padding:48px 24px;line-height:1.7;font-size:16px}
+    .rp-body{max-width:720px;margin:0 auto;padding:48px 20px;line-height:1.7;font-size:16px}
     .rp-cta{display:inline-block;background:var(--navy);color:var(--white);font-weight:800;padding:16px 36px;border-radius:6px;text-decoration:none;margin-top:16px}
     .rp-cta:hover{background:var(--navy-mid)}
     .rp-back{display:block;text-align:center;padding:24px;color:rgba(10,10,10,0.6);text-decoration:none}

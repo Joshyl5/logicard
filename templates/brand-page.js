@@ -58,7 +58,7 @@ function renderBrandPage({ brand, offers }) {
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=8" />
+  <link rel="stylesheet" href="/nav.css?v=9" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -76,7 +76,7 @@ function renderBrandPage({ brand, offers }) {
     }
     .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
 
-    .bp-hero { padding: 72px 24px 56px; text-align: center; }
+    .bp-hero { padding: 72px 20px 56px; text-align: center; }
     .bp-logo-card {
       width: 220px; height: 130px; margin: 0 auto 28px; background: var(--white);
       border-radius: 16px; display: flex; align-items: center; justify-content: center;
@@ -136,7 +136,7 @@ function renderBrandNotFound() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brand Not Found — Logicard</title>
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="stylesheet" href="/nav.css?v=8" />
+  <link rel="stylesheet" href="/nav.css?v=9" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }

@@ -2052,3 +2052,18 @@ select optgroup { background: #000000; color: var(--accent); font-weight: 700; f
 .vr-btn--reject  { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
 .vr-btn:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
 .vr-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Search boxes with a magnifying glass (members + admin) ──
+   The generic input[type="text"] rule above is more specific than a single
+   class, so it was resetting the left padding and the placeholder sat
+   underneath the icon. input.<class> outranks it. When the box is tapped,
+   or has text in it, the icon and placeholder go and typing starts at the
+   left edge. */
+input.mh-search-input, input.search-input { padding-left: 46px; }
+input.mh-search-input:focus, input.mh-search-input:not(:placeholder-shown),
+input.search-input:focus, input.search-input:not(:placeholder-shown) { padding-left: 18px; }
+input.mh-search-input:focus::placeholder, input.search-input:focus::placeholder { color: transparent; }
+.mh-search-wrap:focus-within .mh-search-icon,
+.mh-search-wrap:has(.mh-search-input:not(:placeholder-shown)) .mh-search-icon,
+.search-wrap:focus-within .search-icon,
+.search-wrap:has(.search-input:not(:placeholder-shown)) .search-icon { display: none; }
