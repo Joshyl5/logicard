@@ -2365,7 +2365,43 @@ app.get('/:slug', async (req, res, next) => {
       merchantName: offer.merchantName, title: offer.title, description: offer.description,
       category: offer.category, discountText: offer.discountText, imageUrl: offer.imageUrl, slug,
     };
-    res.send(renderOfferPage({ offer: publicOffer }).replace('<!-- SHARED_NAV -->', navFor(req, {})));
+
+    // Who is looking decides what the redeem box shows. The real code and
+    // the tracked brand link are only ever rendered for a verified member.
+    let viewer = { state: 'guest' };
+    const memberNo = req.session && req.session.membershipNumber;
+    if (memberNo) {
+      const member = await getMemberByNumber(memberNo);
+      if (member && member.verified) {
+        const [statsMap, myCodes] = await Promise.all([
+          getCouponStatsForOffers([offer.id]),
+          getMemberClaimedCodes(memberNo, [offer.id]),
+        ]);
+        const hasPool = !!statsMap[offer.id];
+        viewer = {
+          state: 'member', offerId: offer.id, hasPool,
+          code: hasPool ? (myCodes[offer.id] || null) : (offer.voucherCode || null),
+        };
+      } else if (member) {
+        viewer = { state: 'unverified' };
+      }
+    }
+
+    // Brand logo: the matching partner brand's logo, if one is set up.
+    const norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const [brands, allOffers] = await Promise.all([getActivePartnerBrands(), getActiveOffers()]);
+    const brand = brands.find(b => norm(b.brandName) === norm(offer.merchantName));
+    const brandLogo = brand && /^(https:\/\/|\/(?!\/))/i.test(brand.logoUrl || '') ? brand.logoUrl : null;
+    const related = allOffers
+      .filter(o => o.id !== offer.id && o.slug && !o.targetGender && o.category === offer.category)
+      .slice(0, 3)
+      .map(o => ({ slug: o.slug, title: o.title, merchantName: o.merchantName, imageUrl: o.imageUrl }));
+
+    // Member views contain a personal code: never let a shared cache keep them.
+    if (viewer.state !== 'guest') res.set('Cache-Control', 'private, no-store');
+    res.send(renderOfferPage({ offer: publicOffer, viewer, brandLogo, related })
+      .replace('<!-- SHARED_NAV -->', navFor(req, {}))
+      .replace('<!-- SHARED_FOOTER -->', renderFooter()));
   } catch (err) {
     console.error('Offer page error:', err.message);
     next();

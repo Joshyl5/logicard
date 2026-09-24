@@ -54,7 +54,11 @@ form.addEventListener('submit', async e => {
       return;
     }
 
-    window.location.href = '/member-offers';
+    // ?next=/buture returns members to the deal page they came from. Only a
+    // single same-site path segment is accepted, so this can't be used as an
+    // open redirect to another site.
+    const next = new URLSearchParams(window.location.search).get('next');
+    window.location.href = next && /^\/[a-z0-9-]{1,80}$/i.test(next) ? next : '/member-offers';
 
   } catch {
     showError('Network error — please check your connection and try again.');

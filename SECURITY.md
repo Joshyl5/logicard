@@ -65,6 +65,11 @@ Every sensitive endpoint has its own tuned limiter — not one generic limiter r
 - Moderation: members can report; the report sets `is_reported` and emails `ADMIN_EMAIL`. Admins remove, restore or dismiss at `/admin/forum`. Removal is a soft delete (`is_removed`).
 - The forum limiters key on the member's session, not their IP, so a shared depot Wi-Fi doesn't throttle everyone.
 
+**Offer pages (/:slug, e.g. /buture)**
+- The offer itself is public. The voucher code, the Copy button and the tracked brand link (`/api/offers/:id/go`) are only rendered server-side for a logged-in **verified** member. Guests and unverified members get a masked placeholder, so the code never appears in their page source.
+- Member-rendered pages are sent with `Cache-Control: private, no-store` so no shared cache can store a page that contains a code.
+- `login.js` honours `?next=` only for a single same-site path segment (`/^\/[a-z0-9-]{1,80}$/i`), so it can't be used as an open redirect.
+
 **Secrets**
 - `.env` is gitignored and has never been committed.
 - All credentials (`SESSION_SECRET`, `ADMIN_PASSWORD`, `RESEND_API_KEY`, `R2_*`, `STRIPE_SECRET_KEY`, `DATABASE_URL`) are Railway environment variables, never hardcoded.
