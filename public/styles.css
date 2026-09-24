@@ -17,8 +17,8 @@
   --card-bg:     rgba(10,10,10, 0.75);
   --radius:      12px;
   --radius-sm:   8px;
-  --font:        'Inter', system-ui, sans-serif;
-  --font-brand:  'Raleway', 'Inter', system-ui, sans-serif;
+  --font:        'Montserrat', 'Segoe UI', Arial, sans-serif;
+  --font-brand:  'Archivo Black', 'Arial Black', sans-serif;
   --ease:        0.2s ease;
 }
 
@@ -930,7 +930,7 @@ select optgroup { background: #000000; color: var(--accent); font-weight: 700; f
   display: inline-flex; align-items: center; flex-shrink: 0;
   border: 2px solid rgba(255,179,0,0.5); border-radius: 100px;
   padding: 9px 24px; text-decoration: none;
-  font-family: 'Inter', sans-serif; font-size: 25px; font-weight: 900;
+  font-family: 'Montserrat', sans-serif; font-size: 25px; font-weight: 900;
   letter-spacing: -0.5px; line-height: 1;
   background: rgba(255,255,255,0.03);
 }

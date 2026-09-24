@@ -39,7 +39,7 @@ function renderOfferPage({ offer }) {
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=8" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -47,7 +47,7 @@ function renderOfferPage({ offer }) {
       --navy: #000000; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
       --white: #ffffff; --text-muted: #5b6577;
     }
-    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
     a { color: inherit; }
 
     .op-wrap { max-width: 1080px; margin: 0 auto; padding: 24px 24px 80px; }
@@ -76,7 +76,7 @@ function renderOfferPage({ offer }) {
     .op-members-tag { display: inline-flex; align-items: center; gap: 6px; color: var(--orange); font-weight: 800; }
     .op-members-row .op-join { color: rgba(255,255,255,0.75); }
     .op-image { width: 100%; border-radius: 14px; overflow: hidden; margin-bottom: 22px; aspect-ratio: 16 / 8; background: rgba(255,255,255,0.05); }
-    .op-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .op-image img { width: 100%; height: 100%; object-fit: contain; display: block; } /* never crop brand artwork */
     .op-image-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 900; color: rgba(255,179,0,0.35); }
     .op-desc { font-size: 15px; color: rgba(255,255,255,0.9); line-height: 1.7; margin-bottom: 20px; }
     .op-tags { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -206,7 +206,7 @@ function renderOfferNotFound() {
   <link rel="stylesheet" href="/nav.css?v=8" />
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }
+    body { margin: 0; font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }
     .nf { text-align: center; padding: 120px 24px; }
     .nf h1 { font-size: 32px; font-weight: 900; margin-bottom: 14px; }
     .nf p { color: rgba(255,255,255,0.9); margin-bottom: 28px; }

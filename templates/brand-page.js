@@ -57,7 +57,7 @@ function renderBrandPage({ brand, offers }) {
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=8" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -65,7 +65,7 @@ function renderBrandPage({ brand, offers }) {
       --navy: #000000; --navy-mid: #1f1f1f; --orange: #FFB300; --orange-dark: #E09A00;
       --white: #ffffff; --text-muted: #5b6577;
     }
-    body { font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: var(--navy); color: var(--white); -webkit-font-smoothing: antialiased; }
     .bp-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; }
     .btn-primary {
       display: inline-flex; align-items: center; gap: 8px;
@@ -139,7 +139,7 @@ function renderBrandNotFound() {
   <link rel="stylesheet" href="/nav.css?v=8" />
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }
+    body { margin: 0; font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }
     .nf { text-align: center; padding: 120px 24px; }
     .nf h1 { font-size: 32px; font-weight: 900; margin-bottom: 14px; }
     .nf p { color: rgba(255,255,255,0.9); margin-bottom: 28px; }

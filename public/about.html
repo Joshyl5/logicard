@@ -18,384 +18,138 @@
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=8" />
   <link rel="stylesheet" href="/footer.css?v=2" />
+  <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
-    /* Palette matches BRAND.md section 3 exactly — flat navy / flat-or-gradient
-       gold only, no near-black, no radial glow, no third accent colour.
-       Sections strictly alternate navy → gold, starting navy at the hero,
-       same rhythm as the homepage. */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --navy: #000000;
-      --navy-mid: #1f1f1f;
-      --orange: #FFB300;
-      --orange-dark: #E09A00;
-      --white: #ffffff;
-      --text-muted: #5b6577;
-      --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-      background: var(--navy);
-      color: var(--white);
-      -webkit-font-smoothing: antialiased;
-    }
-    .ab-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-    a { color: inherit; }
-
-    /* ── Shared buttons — same spec as the homepage's .btn-primary/.btn-secondary ── */
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--orange); color: var(--navy);
-      padding: 16px 34px; font-weight: 900; font-size: 15px; letter-spacing: 0.3px;
-      text-decoration: none; border-radius: 4px;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .btn-primary:hover { background: var(--orange-dark); transform: translateY(-1px); }
-    .btn-primary.on-gold { background: var(--navy); color: var(--white); }
-    .btn-primary.on-gold:hover { background: var(--navy-mid); }
-    .btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: transparent; color: var(--white);
-      padding: 16px 34px; font-weight: 700; font-size: 15px;
-      border: 2px solid rgba(255,255,255,0.35);
-      text-decoration: none; border-radius: 4px;
-      transition: border-color 0.15s;
-    }
-    .btn-secondary:hover { border-color: rgba(255,255,255,0.7); }
-
-    /* ── Hero — flat navy, per BRAND.md §3 (no exceptions) ── */
-    .ab-hero { background: var(--navy); }
-    .ab-hero-inner {
-      max-width: 1280px; margin: 0 auto; padding: 108px 24px 96px;
-      display: flex; align-items: center; justify-content: space-between; gap: 48px;
-    }
-    .ab-hero-content { max-width: 620px; flex: 1 1 auto; min-width: 0; }
-    .ab-hero h1 {
-      font-size: clamp(38px, 5vw, 60px); font-weight: 900; line-height: 1.08;
-      letter-spacing: -1.5px; margin-bottom: 24px; text-wrap: balance;
-    }
-    .ab-hero h1 .gold { color: var(--orange); }
-    .ab-hero p.ab-body {
-      font-size: 17px; color: rgba(255,255,255,0.9); line-height: 1.7;
-      max-width: 520px; margin-bottom: 36px;
-    }
-    .ab-hero-cta {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--orange); color: var(--navy);
-      padding: 18px 34px; font-weight: 800; font-size: 15.5px;
-      border-radius: 100px; text-decoration: none;
-      transition: background 0.15s, transform 0.1s;
-    }
-    .ab-hero-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
-
-    /* Emblem — Logicard's own wordmark, unrecoloured ("Logi" white / "card"
-       gold, per BRAND.md — never a different combination), set in a circular
-       badge to match the reference's circular brand-mark treatment. */
-    .ab-hero-badge { flex-shrink: 0; display: none; }
-    .ab-badge-circle {
-      width: 300px; height: 300px; border-radius: 50%;
-      background: var(--navy); border: 10px solid var(--orange);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-      display: flex; align-items: center; justify-content: center;
-      text-align: center;
-    }
-    .ab-badge-circle .wordmark { font-size: 40px; font-weight: 900; letter-spacing: -1.5px; line-height: 1; }
-    .ab-badge-circle .wordmark .logi { color: var(--white); }
-    .ab-badge-circle .wordmark .card { color: var(--orange); }
-
-    @media (min-width: 860px) {
-      .ab-hero-badge { display: block; }
-    }
-
-    /* ── Section shell ── */
-    .ab-section { padding: 88px 24px; }
-    .ab-section.gold { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; color: var(--navy); }
-    .ab-section.navy { background: var(--navy); color: var(--white); }
-    .ab-section-eyebrow {
-      display: block; font-size: 12px; font-weight: 800; letter-spacing: 1.5px;
-      text-transform: uppercase; margin-bottom: 14px;
-    }
-    .ab-section.navy .ab-section-eyebrow { color: var(--orange); }
-    .ab-section.gold .ab-section-eyebrow { color: var(--navy); opacity: 0.7; }
-    .ab-section-title {
-      font-size: clamp(28px, 3.8vw, 44px); font-weight: 900;
-      letter-spacing: -0.6px; line-height: 1.12; margin-bottom: 16px; text-wrap: balance;
-    }
-    .ab-section-sub { font-size: 16px; line-height: 1.7; }
-    .ab-section.navy .ab-section-sub { color: rgba(255,255,255,0.9); }
-    .ab-section.gold .ab-section-sub { color: rgba(255,255,255,0.88); }
-
-    /* ── Origin story (gold) ── */
-    .ab-story { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
-    .ab-story-head { max-width: 480px; }
-    .ab-story-text p { font-size: 16.5px; line-height: 1.85; color: rgba(255,255,255,0.88); margin-bottom: 18px; }
-    .ab-story-text p:last-child { margin-bottom: 0; }
-    .ab-story-card {
-      position: relative; overflow: hidden;
-      background: var(--white); border-radius: 18px; padding: 36px 32px;
-      box-shadow: 0 12px 40px rgba(10,10,10,0.18);
-    }
-    .ab-story-card-bg {
-      position: absolute; right: -18px; bottom: -22px;
-      width: 210px; height: 178px;
-      opacity: 0.07; pointer-events: none; z-index: 0;
-    }
-    .ab-story-card-bg svg { width: 100%; height: 100%; display: block; }
-    .ab-shift-row {
-      position: relative; z-index: 1;
-      display: flex; align-items: center; justify-content: space-between; gap: 16px;
-      padding: 16px 0; border-bottom: 1px solid rgba(10,10,10,0.1);
-    }
-    .ab-shift-row:first-child { padding-top: 0; }
-    .ab-shift-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .ab-shift-row .was { font-size: 15px; color: rgba(255,255,255,0.88); text-decoration: line-through; }
-    .ab-shift-row .arrow { color: rgba(255,255,255,0.88); flex-shrink: 0; }
-    .ab-shift-row .now-group { display: flex; align-items: center; gap: 8px; }
-    .ab-shift-row .now { font-size: 16px; font-weight: 800; color: var(--navy); }
-    .ab-shift-row .tick { width: 19px; height: 19px; flex-shrink: 0; }
-    .ab-shift-row .tick svg { width: 100%; height: 100%; display: block; }
-
-    /* ── Card grid (used on both navy and gold sections) ── */
-    .ab-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 48px; }
-    .ab-card {
-      background: var(--white); border-radius: 16px; padding: 32px 28px;
-      box-shadow: 0 2px 20px rgba(10,10,10,0.07);
-    }
-    .ab-card-icon {
-      width: 46px; height: 46px; border-radius: 12px;
-      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-    }
-    .ab-card-icon svg { width: 22px; height: 22px; stroke: var(--white); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .ab-card h3 { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 10px; letter-spacing: -0.2px; }
-    .ab-card p { font-size: 14.5px; color: var(--text-muted); line-height: 1.7; }
-
-    /* ── Newsletter (gold section, navy card) ── */
-    .ab-newsletter-card {
-      max-width: 620px; margin: 48px auto 0;
-      background: #161616; border: 1px solid rgba(255,179,0,0.35); border-radius: 20px; padding: 44px 40px;
-      text-align: center; box-shadow: 0 16px 44px rgba(0,0,0,0.4);
-    }
-    .ab-newsletter-icon {
-      width: 52px; height: 52px; margin: 0 auto 20px; border-radius: 14px;
-      background: rgba(255,179,0,0.15); border: 1px solid rgba(255,179,0,0.35);
-      display: flex; align-items: center; justify-content: center;
-    }
-    .ab-newsletter-icon svg { width: 24px; height: 24px; stroke: var(--orange); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .ab-newsletter-card h2 { font-size: 24px; font-weight: 900; color: var(--white); margin-bottom: 10px; letter-spacing: -0.3px; }
-    .ab-newsletter-card > p { font-size: 14.5px; color: rgba(255,255,255,0.9); line-height: 1.65; margin-bottom: 26px; max-width: 440px; margin-left: auto; margin-right: auto; }
-    .ab-newsletter-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .ab-newsletter-row input {
-      flex: 1; min-width: 160px;
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 6px; color: var(--white); font-family: inherit; font-size: 14px;
-      padding: 13px 14px; outline: none; transition: border-color 0.2s;
-    }
-    .ab-newsletter-row input::placeholder { color: rgba(255,255,255,0.75); }
-    .ab-newsletter-row input:focus { border-color: var(--orange); }
-    .ab-newsletter-btn {
-      background: var(--orange); color: #111; font-weight: 800; font-size: 14px;
-      padding: 13px 24px; border: none; border-radius: 6px; cursor: pointer;
-      white-space: nowrap; transition: background 0.15s;
-    }
-    .ab-newsletter-btn:hover:not(:disabled) { background: var(--orange-dark); }
-    .ab-newsletter-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .ab-newsletter-msg { font-size: 13px; margin-top: 14px; padding: 10px 14px; border-radius: 8px; display: none; text-align: left; }
-    .ab-newsletter-msg.error { display: block; color: #ff8a8a; background: rgba(255,80,80,0.1); border: 1px solid rgba(255,80,80,0.25); }
-    .ab-newsletter-msg.success { display: block; color: #4ade80; background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.3); }
-    .ab-newsletter-fine { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 16px; }
-
-    /* ── Final CTA (navy) ── */
-    .ab-cta { text-align: center; }
-    .ab-cta h2 { font-size: clamp(26px, 3.6vw, 40px); font-weight: 900; margin-bottom: 14px; letter-spacing: -0.6px; }
-    .ab-cta p { font-size: 16px; color: rgba(255,255,255,0.9); margin-bottom: 32px; }
-
-    /* ── Footer ── */
-
-    @media (max-width: 900px) {
-      .ab-story { grid-template-columns: 1fr; gap: 36px; }
-      .ab-cards { grid-template-columns: 1fr 1fr; }
-      .ab-section { padding: 64px 24px; }
-    }
-    @media (max-width: 600px) {
-      .ab-hero-inner { padding: 64px 20px 56px; }
-      .ab-hero-cta { width: 100%; justify-content: center; }
-      .ab-section { padding: 52px 20px; }
-      .ab-cards { grid-template-columns: 1fr; }
-      .ab-story-card { padding: 28px 24px; }
-      .ab-newsletter-card { padding: 32px 24px; }
-      .ab-newsletter-row { flex-direction: column; }
-      .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-    }
+    /* About page extras (shared styles in /theme.css) */
+    .ab-shift { display: grid; gap: 10px; }
+    .ab-shift-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; }
+    .ab-shift-row .was { color: rgba(255,255,255,0.6); text-decoration: line-through; font-weight: 600; }
+    .ab-shift-row .arrow { color: var(--gold); display: grid; place-items: center; }
+    .ab-shift-row .now { font-family: var(--display); color: #fff; display: flex; align-items: center; gap: 8px; }
+    .ab-shift-row .now svg { width: 22px; height: 22px; }
+    .ab-story p { color: var(--muted); font-size: 17px; margin-bottom: 14px; }
+    .ab-news { max-width: 620px; margin: 0 auto; background: var(--card); border: 1px solid var(--gold-line); border-radius: 20px; padding: 28px 22px; }
+    @media (min-width: 640px) { .ab-news .t-form { grid-template-columns: 1fr 1fr auto; } }
   </style>
 </head>
 <body>
 
   <!-- SHARED_NAV -->
-  <div class="site-subbar">
-    <a href="/" class="site-subbar-back">&lt; Back</a>
-  </div>
 
-  <!-- Hero — navy -->
-  <div class="ab-hero">
-    <div class="ab-hero-inner">
-      <div class="ab-hero-content">
-        <h1>Built By Logistics Workers,<br/>For The People Who<br/><span class="gold">Keep Britain Moving</span></h1>
-        <p class="ab-body">Logicard is the UK's dedicated discount and recognition card, built for logistics workers — drivers, warehouse teams, freight and supply chain staff. We believe the people who keep Britain moving deserve real rewards.</p>
-        <a href="/signup.html" class="ab-hero-cta">
-          Join Logicard
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div class="ab-hero-badge">
-        <div class="ab-badge-circle">
-          <span class="wordmark"><span class="logi">Logi</span><span class="card">card</span></span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Origin story — gold -->
-  <section class="ab-section gold" id="ab-story">
-    <div class="ab-inner">
-      <div class="ab-story">
-        <div class="ab-story-head">
-          <span class="ab-section-eyebrow">Our Story</span>
-          <h2 class="ab-section-title">We've lived the graft ourselves</h2>
-          <div class="ab-story-text">
-            <p>Logicard was created by logistics workers, for logistics workers. We know this industry from the inside — because we've worked in it.</p>
-            <p>Too often, we felt overworked, underpaid, and overlooked. Long shifts, tight schedules and thankless miles are the norm across warehousing, transport, freight and supply chain roles — yet the people doing that work rarely get the recognition they've earned.</p>
-            <p>So we built the thing we wished existed: a card that says thank you in a way that actually helps.</p>
-          </div>
-        </div>
-        <div class="ab-story-card">
-          <div class="ab-story-card-bg" aria-hidden="true">
-            <svg viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 200V80a20 20 0 0 1 20-20h140a20 20 0 0 1 20 20v120" stroke="var(--navy)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M20 122h200" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
-              <rect x="8" y="90" width="16" height="24" rx="4" stroke="var(--navy)" stroke-width="5"/>
-              <circle cx="120" cy="96" r="46" stroke="var(--navy)" stroke-width="6"/>
-              <path d="M78 79a42 42 0 0 1 84 0" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
-              <path d="M74 81h92" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
-              <circle cx="102" cy="101" r="5" fill="var(--navy)"/>
-              <circle cx="138" cy="101" r="5" fill="var(--navy)"/>
-              <path d="M100 116q20 18 40 0" stroke="var(--navy)" stroke-width="6" stroke-linecap="round"/>
-              <circle cx="62" cy="200" r="20" stroke="var(--navy)" stroke-width="6"/>
-              <circle cx="198" cy="200" r="20" stroke="var(--navy)" stroke-width="6"/>
-            </svg>
-          </div>
-          <div class="ab-shift-row"><span class="was">Overworked</span><span class="arrow">&rarr;</span><span class="now-group"><span class="now">Valued</span><span class="tick" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></div>
-          <div class="ab-shift-row"><span class="was">Underpaid</span><span class="arrow">&rarr;</span><span class="now-group"><span class="now">Rewarded</span><span class="tick" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></div>
-          <div class="ab-shift-row"><span class="was">Overlooked</span><span class="arrow">&rarr;</span><span class="now-group"><span class="now">Recognised</span><span class="tick" aria-hidden="true"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></div>
-        </div>
+  <!-- Hero -->
+  <section class="t-hero">
+    <div class="t-hero-bg" style="background-image:url('/images/photo-wall/Warehouseworkers.png.png')" role="img" aria-label="Logicard warehouse team"></div>
+    <div class="wrap">
+      <span class="t-eyebrow">About Logicard</span>
+      <h1>Built By Logistics Workers, For The People Who <span class="gold">Keep Britain Moving</span></h1>
+      <p>Logicard is the UK's dedicated discount and recognition card, built for logistics workers — drivers, warehouse teams, freight and supply chain staff. We believe the people who keep Britain moving deserve real rewards.</p>
+      <div class="t-btns">
+        <a href="/signup.html" class="t-btn t-btn-gold">Join Logicard</a>
+        <a href="/deals.html" class="t-btn t-btn-ghost">Browse Deals</a>
       </div>
     </div>
   </section>
 
-  <!-- What we do — navy -->
-  <section class="ab-section navy" id="ab-what-we-do">
-    <div class="ab-inner">
-      <span class="ab-section-eyebrow">What We Do</span>
-      <h2 class="ab-section-title">Real savings, found and vetted for you</h2>
-      <p class="ab-section-sub">We go out and find the very best deals for logistics workers — across fuel, vehicles, workwear, food, days out and more — so you don't have to hunt for them yourself.</p>
-      <div class="ab-cards">
-        <div class="ab-card">
-          <div class="ab-card-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-          <h3>We find the best deals</h3>
+  <!-- Our story -->
+  <section class="t-section" id="ab-story">
+    <div class="wrap t-split">
+      <div class="ab-story">
+        <span class="t-eyebrow">Our Story</span>
+        <h2 class="t-h2">We've Lived <span class="gold">The Graft</span> Ourselves</h2>
+        <p>Logicard was created by logistics workers, for logistics workers. We know this industry from the inside — because we've worked in it.</p>
+        <p>Too often, we felt overworked, underpaid, and overlooked. Long shifts, tight schedules and thankless miles are the norm across warehousing, transport, freight and supply chain roles — yet the people doing that work rarely get the recognition they've earned.</p>
+        <p>So we built the thing we wished existed: a card that says thank you in a way that actually helps.</p>
+      </div>
+      <div class="ab-shift" aria-label="What Logicard changes">
+        <div class="ab-shift-row"><span class="was">Overworked</span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="now">Valued <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="ab-shift-row"><span class="was">Underpaid</span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="now">Rewarded <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        <div class="ab-shift-row"><span class="was">Overlooked</span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="now">Recognised <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="10" fill="#22C55E"/><path d="M6 10.3l2.6 2.6L14.3 7" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What we do -->
+  <section class="t-section" id="ab-what-we-do">
+    <div class="wrap">
+      <span class="t-eyebrow">What We Do</span>
+      <h2 class="t-h2">Real Savings, <span class="gold">Found And Vetted</span> For You</h2>
+      <p class="t-lead">We go out and find the very best deals for logistics workers — across fuel, vehicles, workwear, food, days out and more — so you don't have to hunt for them yourself.</p>
+      <div class="t-grid t-grid-3">
+        <div class="t-card t-card-gold">
+          <div class="t-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg></div>
+          <h3>We Find The <span class="gold">Best Deals</span></h3>
           <p>Our team sources and negotiates genuine discounts with brands that matter to logistics workers — not filler offers nobody uses.</p>
         </div>
-        <div class="ab-card">
-          <div class="ab-card-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
-          <h3>We recognise your work</h3>
+        <div class="t-card t-card-gold">
+          <div class="t-icon"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+          <h3>We Recognise <span class="gold">Your Work</span></h3>
           <p>From HGV drivers to warehouse operatives, freight forwarders to supply chain managers — every part of the industry qualifies and deserves recognition.</p>
         </div>
-        <div class="ab-card">
-          <div class="ab-card-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
-          <h3>We keep you in the loop</h3>
+        <div class="t-card t-card-gold">
+          <div class="t-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
+          <h3>We Keep You <span class="gold">In The Loop</span></h3>
           <p>Our newsletter keeps you up to date with logistics news and fresh deals as they land — no spam, just what's useful.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Newsletter — gold -->
-  <section class="ab-section gold" id="ab-newsletter">
-    <div class="ab-inner" style="text-align:center;">
-      <span class="ab-section-eyebrow">Stay In The Loop</span>
-      <h2 class="ab-section-title">Logistics news, straight to your inbox</h2>
-      <p class="ab-section-sub" style="max-width:520px;margin:0 auto;">Sign up for the latest logistics industry news, plus new deals as we add them.</p>
-      <div class="ab-newsletter-card">
-        <div class="ab-newsletter-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6l-10 7L2 6"/></svg></div>
-        <h2>Subscribe to the newsletter</h2>
-        <p>No spam — just logistics news and deals, whenever there's something worth sending.</p>
-        <form id="newsletterForm">
-          <div class="ab-newsletter-row">
-            <input id="newsletterName" type="text" placeholder="Full name" autocomplete="name" required />
-            <input id="newsletterEmail" type="email" placeholder="you@example.com" autocomplete="email" required />
-            <button type="submit" class="ab-newsletter-btn" id="newsletterBtn">Subscribe</button>
-          </div>
-          <div class="ab-newsletter-msg" id="newsletterMsg"></div>
+  <!-- Newsletter -->
+  <section class="t-section t-center" id="ab-newsletter">
+    <div class="wrap">
+      <span class="t-eyebrow">Stay In The Loop</span>
+      <h2 class="t-h2">Logistics News, <span class="gold">Straight To Your Inbox</span></h2>
+      <p class="t-lead">Sign up for the latest logistics industry news, plus new deals as we add them. No spam — just what's worth sending.</p>
+      <div class="ab-news">
+        <form id="newsletterForm" class="t-form">
+          <input id="newsletterName" type="text" placeholder="Full name" autocomplete="name" aria-label="Full name" required />
+          <input id="newsletterEmail" type="email" placeholder="you@example.com" autocomplete="email" aria-label="Email address" required />
+          <button type="submit" class="t-btn t-btn-gold" id="newsletterBtn">Subscribe</button>
         </form>
-        <p class="ab-newsletter-fine">Unsubscribe any time.</p>
+        <p class="t-msg" id="newsletterMsg" role="status" style="margin-top:10px"></p>
+        <p class="t-fine">Unsubscribe any time.</p>
       </div>
     </div>
   </section>
 
-  <!-- Final CTA — navy -->
-  <section class="ab-section navy ab-cta">
-    <h2>Ready to feel valued?</h2>
-    <p>Join thousands of logistics workers already saving money, every single day.</p>
-    <a href="/signup.html" class="btn-primary">
-      Claim Your First Year Free
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
+  <!-- Final CTA -->
+  <section class="t-section t-cta">
+    <div class="wrap">
+      <h2 class="t-h2">Ready To Feel <span class="gold">Valued?</span></h2>
+      <p class="t-lead">Join thousands of logistics workers already saving money, every single day. First year free, then £10/year.</p>
+      <div class="t-btns"><a href="/signup.html" class="t-btn t-btn-gold">Claim Your First Year Free</a></div>
+    </div>
   </section>
 
   <!-- SHARED_FOOTER -->
 
   <script>
     (function () {
-      const form   = document.getElementById('newsletterForm');
-      const btn    = document.getElementById('newsletterBtn');
-      const msgBox = document.getElementById('newsletterMsg');
-
-      function showMsg(text, ok) {
-        msgBox.textContent = text;
-        msgBox.className = 'ab-newsletter-msg ' + (ok ? 'success' : 'error');
-      }
-
-      form.addEventListener('submit', async e => {
+      var form = document.getElementById('newsletterForm');
+      var btn = document.getElementById('newsletterBtn');
+      var msgBox = document.getElementById('newsletterMsg');
+      function showMsg(text, ok) { msgBox.textContent = text; msgBox.className = 't-msg ' + (ok ? 'ok' : 'err'); }
+      form.addEventListener('submit', function (e) {
         e.preventDefault();
-        const name  = document.getElementById('newsletterName').value.trim();
-        const email = document.getElementById('newsletterEmail').value.trim();
+        var name = document.getElementById('newsletterName').value.trim();
+        var email = document.getElementById('newsletterEmail').value.trim();
         if (!name || !email) { showMsg('Please enter your name and email.', false); return; }
-
-        btn.disabled = true;
-        btn.textContent = 'Subscribing…';
-        try {
-          const res  = await fetch('/api/contact', {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body:    JSON.stringify({ name, email, newsletterOptIn: true, source: 'Newsletter Signup — About Page' }),
+        btn.disabled = true; btn.textContent = 'Subscribing…';
+        fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, newsletterOptIn: true, source: 'Newsletter Signup — About Page' })
+        }).then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (json) {
+            if (!res.ok) showMsg(json.error || 'Something went wrong. Please try again.', false);
+            else { showMsg("You're subscribed — thanks for joining!", true); form.reset(); }
           });
-          const json = await res.json();
-          if (!res.ok) {
-            showMsg(json.error || 'Something went wrong. Please try again.', false);
-          } else {
-            showMsg('You\'re subscribed — thanks for joining!', true);
-            form.reset();
-          }
-        } catch {
+        }).catch(function () {
           showMsg('Network error — please check your connection and try again.', false);
-        } finally {
-          btn.disabled = false;
-          btn.textContent = 'Subscribe';
-        }
+        }).then(function () { btn.disabled = false; btn.textContent = 'Subscribe'; });
       });
     })();
   </script>

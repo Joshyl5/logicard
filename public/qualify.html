@@ -18,7 +18,7 @@
   }
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=8" />
   <link rel="stylesheet" href="/footer.css?v=2" />
   <style>
@@ -38,7 +38,7 @@
       --gold-grad: linear-gradient(135deg, #FF8C00 0%, #FFB800 55%, #FF9200 100%);
     }
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       background: var(--navy);
       color: var(--white);
       min-height: 100vh;
@@ -131,7 +131,7 @@
     #qgLabels { position: absolute; inset: 0; pointer-events: none; }
     .lbl {
       position: absolute;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       font-weight: 800;
       font-size: clamp(0.72rem, 1.3vw, 0.92rem);
       letter-spacing: 0.05em;
@@ -705,9 +705,9 @@
         ctx.beginPath(); ctx.moveTo(rx, -68); ctx.lineTo(rx, 0); ctx.stroke();
       }
       ctx.fillStyle = GOLD;
-      ctx.font = 'bold ' + (Math.round(18 * sc) > 5 ? 18 : 8) + 'px Inter, sans-serif';
+      ctx.font = 'bold ' + (Math.round(18 * sc) > 5 ? 18 : 8) + 'px Montserrat, sans-serif';
       ctx.textAlign = 'center'; ctx.fillText('LOGICARD', -130, -30);
-      ctx.font = (Math.round(10 * sc) > 4 ? 10 : 6) + 'px Inter, sans-serif';
+      ctx.font = (Math.round(10 * sc) > 4 ? 10 : 6) + 'px Montserrat, sans-serif';
       ctx.fillStyle = 'rgba(255,179,0,0.6)'; ctx.fillText('GLOBAL LOGISTICS', -130, -14);
       ctx.fillStyle = '#313131'; ctx.fillRect(-25, -78, 75, 78);
       ctx.fillStyle = 'rgba(60,60,60,0.75)'; ctx.fillRect(-16, -70, 60, 32);
@@ -746,7 +746,7 @@
       ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(-12, -58); ctx.lineTo(-12, 0); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(-4, -58); ctx.lineTo(-4, 0); ctx.stroke();
-      ctx.fillStyle = '#060f1c'; ctx.font = 'bold 13px Inter, sans-serif'; ctx.textAlign = 'center';
+      ctx.fillStyle = '#060f1c'; ctx.font = 'bold 13px Montserrat, sans-serif'; ctx.textAlign = 'center';
       ctx.fillText('LOGICARD', -62, -26);
       ctx.fillStyle = 'rgba(24,24,24,0.5)';
       ctx.fillRect(-95, -48, 22, 14); ctx.fillRect(-68, -48, 22, 14); ctx.fillRect(-42, -48, 22, 14);

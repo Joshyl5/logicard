@@ -5,7 +5,7 @@ const NAV_HEAD = `
   <link rel="stylesheet" href="/styles.css?v=2" />
   <link rel="stylesheet" href="/nav.css?v=8" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Raleway:wght@300;400;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     :root{--orange:#FFB300;--orange-dark:#E09A00;--navy:#000000;--navy-deep:#04040d;--navy-mid:#1f1f1f;--white:#fff;--text-muted:#666}
@@ -13,7 +13,7 @@ const NAV_HEAD = `
        (homepage is the reference). The body's text was already navy, which
        turns out to already be the correct contrast color for a gold
        background — only the background and CTA needed flipping. */
-    body{font-family:'Inter',Arial,sans-serif;color:var(--navy);background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a}
+    body{font-family:'Montserrat',Arial,sans-serif;color:var(--navy);background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a}
     .rp-hero{background:linear-gradient(140deg,#04040d 0%,#0a0a0a 45%,#1f1f1f 100%);color:#fff;padding:64px 24px;text-align:center}
     .rp-hero .eyebrow{color:var(--orange);font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:13px}
     .rp-hero h1{font-size:clamp(28px,4vw,42px);font-weight:900;margin:12px 0;letter-spacing:-0.5px}

@@ -7,6 +7,12 @@
    so the white "Logi" stays legible on gold), three-line menu top-right at
    every screen width, opening the same slide-out drawer on every page. */
 
+/* ── Sitewide type (2026-09 rebrand) ──
+   Headings in Archivo Black like the homepage; it has a single weight, so
+   font-synthesis is off to stop browsers faking a smudgy bold version of it. */
+html { font-synthesis-weight: none; font-synthesis: none; }
+body h1, body h2, body h3 { font-family: 'Archivo Black', 'Arial Black', sans-serif !important; font-weight: 400 !important; letter-spacing: -0.01em !important; }
+
 /* ── Page lock (every page loads this file) ──
    The page only ever scrolls up/down: anything wider than the screen is
    clipped instead of letting the whole page slide sideways. Sliders and
