@@ -2113,3 +2113,18 @@ body:has([id$="Modal"][style*="display: flex"]), body:has([id$="Modal"][style*="
 .signup-card .inline-link, .signup-card a:not(.submit-btn) { color: #111111 !important; font-weight: 700; text-decoration: underline; text-decoration-color: #FFB300; text-decoration-thickness: 2px; text-underline-offset: 3px; }
 .signup-card .submit-btn { background: #FFB300 !important; color: #111111 !important; }
 .signup-card .why-we-ask summary, .signup-card .check-text strong { color: #111111 !important; }
+
+/* ── Member sign-in form: white card, black text, gold key words (matches sign-up) ── */
+.login-card { background: #ffffff !important; color: #111111; border: 0 !important; border-top: 6px solid #FFB300 !important; backdrop-filter: none !important; }
+.login-card .gold { color: #FFB300; }
+.login-card .login-title { color: #111111; }
+.login-card .login-subtitle, .login-card .login-footer-text { color: #333333 !important; }
+.login-card label { color: #111111 !important; }
+.login-card input[type="email"], .login-card input[type="password"], .login-card input[type="text"] {
+  background: #f4f6f9 !important; color: #111111 !important; border: 1px solid rgba(0,0,0,0.18) !important;
+}
+.login-card input::placeholder { color: rgba(0,0,0,0.45) !important; }
+.login-card input:focus { border-color: #FFB300 !important; box-shadow: 0 0 0 3px rgba(255,179,0,0.25) !important; }
+.login-card .pw-toggle { color: #333333 !important; }
+.login-card a { color: #111111 !important; font-weight: 700; text-decoration: underline; text-decoration-color: #FFB300; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.login-card .login-submit-btn { background: #FFB300 !important; color: #111111 !important; }

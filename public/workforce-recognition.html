@@ -21,226 +21,59 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=9" />
   <link rel="stylesheet" href="/footer.css?v=2" />
+  <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --orange: #FFB300;
-      --orange-dark: #E09A00;
-      --navy-deep: #000000; /* alias of --navy, per BRAND.md */
-      --navy: #000000;
-      --navy-mid: #1f1f1f;
-      --blue-accent: #1a6cc8;
-      --white: #ffffff;
-      --text-muted: #666666;
-    }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: var(--navy);
-      color: #fff;
-      min-height: 100vh;
-    }
-
-    /* Nav moved to /nav.css (single source, see templates/nav.js) */
-
-    /* Hero */
-    .wr-hero {
-      text-align: center;
-      padding: 88px 20px 64px;
-      max-width: 780px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .wr-eyebrow {
-      display: inline-block;
-      font-size: 12px; font-weight: 800; letter-spacing: 2.5px;
-      color: var(--orange); text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-    .wr-title {
-      font-size: clamp(36px, 5.5vw, 64px);
-      font-weight: 900; line-height: 1.06;
-      letter-spacing: -1px;
-      margin-bottom: 22px;
-    }
-    .wr-subtitle {
-      font-size: 17px; color: rgba(255,255,255,0.9); line-height: 1.75;
-      margin-bottom: 36px;
-      max-width: 620px;
-      margin-left: auto; margin-right: auto;
-    }
-    .wr-hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .wr-btn-primary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
-      color: #fff;
-      font-size: 15px; font-weight: 800;
-      padding: 15px 34px; border-radius: 100px;
-      text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 6px 28px rgba(255,179,0,0.35);
-    }
-    .wr-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(255,179,0,0.45); }
-    .wr-btn-secondary {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: transparent; color: #fff;
-      font-size: 15px; font-weight: 700;
-      padding: 15px 30px; border-radius: 100px;
-      border: 2px solid rgba(255,255,255,0.25);
-      text-decoration: none;
-      transition: border-color 0.15s;
-    }
-    .wr-btn-secondary:hover { border-color: rgba(255,255,255,0.6); }
-
-    /* Sections */
-    .wr-section { padding: 72px 20px; max-width: 1100px; margin: 0 auto; }
-
-    /* Gold panels — alternates navy,navy,gold,navy,gold (hero + Why stay
-       navy, How It Works and the form panel go gold), matching the
-       homepage's section-banding pattern. Rounded/inset rather than
-       full-bleed since every section on this page is already a boxed
-       max-width column, not an edge-to-edge band like the homepage's. */
-    #wr-how, #wr-form {
-      background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a;
-      border-radius: 28px;
-      color: var(--navy);
-    }
-    #wr-how .wr-section-title, #wr-form .wr-section-title { color: var(--navy); }
-    #wr-how .wr-section-sub, #wr-form .wr-section-sub { color: rgba(255,255,255,0.88); }
-    #wr-how .wr-section-eyebrow, #wr-form .wr-section-eyebrow { color: var(--navy); opacity: 0.75; }
-    #wr-how .wr-step { background: #161616; border-color: rgba(255,255,255,0.12); }
-    #wr-how .wr-step h3 { color: var(--navy); }
-    #wr-how .wr-step p { color: rgba(255,255,255,0.88); }
-    #wr-how .wr-step-num { background: var(--navy); color: var(--white); }
-    .wr-section-head { text-align: center; max-width: 640px; margin: 0 auto 48px; }
-    .wr-section-eyebrow {
-      display: block; font-size: 11px; font-weight: 800; letter-spacing: 2px;
-      text-transform: uppercase; color: var(--orange); margin-bottom: 14px;
-    }
-    .wr-section-title {
-      font-size: clamp(26px, 3.5vw, 40px); font-weight: 900;
-      letter-spacing: -0.5px; margin-bottom: 14px; line-height: 1.15;
-    }
-    .wr-section-sub { font-size: 15.5px; color: rgba(255,255,255,0.9); line-height: 1.7; }
-
-    /* Why cards */
-    .wr-why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-    .wr-why-card {
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 16px;
-      padding: 28px 22px;
-      text-align: center;
-      transition: transform 0.2s, border-color 0.2s, background 0.2s;
-    }
-    .wr-why-card:hover {
-      transform: translateY(-4px);
-      background: rgba(255,179,0,0.06);
-      border-color: rgba(255,179,0,0.3);
-    }
-    .wr-why-icon {
-      width: 46px; height: 46px;
-      background: linear-gradient(135deg, rgba(255,179,0,0.18), rgba(26,108,200,0.18));
-      border: 1px solid rgba(255,179,0,0.25);
-      border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 18px;
-    }
-    .wr-why-icon svg { width: 22px; height: 22px; stroke: var(--orange); fill: none; stroke-width: 2; }
-    .wr-why-card h3 { font-size: 15.5px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; }
-    .wr-why-card p { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.65; }
-
-    /* How it works */
-    .wr-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; counter-reset: step; }
-    .wr-step {
-      background: rgba(255,255,255,0.035);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 18px;
-      padding: 32px 26px;
-      text-align: center;
-      position: relative;
-    }
-    .wr-step-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 34px; height: 34px;
-      background: var(--orange); color: #0a0a0a;
-      font-weight: 900; font-size: 15px;
-      border-radius: 50%;
-      margin-bottom: 18px;
-    }
-    .wr-step h3 { font-size: 16.5px; font-weight: 800; margin-bottom: 10px; }
-    .wr-step p { font-size: 13.5px; color: rgba(255,255,255,0.9); line-height: 1.65; }
-
-    /* Founder-style callout */
-    .wr-callout {
-      background: linear-gradient(135deg, rgba(255,179,0,0.1), rgba(26,108,200,0.08));
-      border: 1px solid rgba(255,179,0,0.25);
-      border-radius: 20px;
-      padding: 40px 44px;
-      text-align: center;
-      max-width: 780px;
-      margin: 0 auto;
-    }
-    .wr-callout p {
-      font-size: 17px; line-height: 1.75; color: rgba(255,255,255,0.85);
-      font-weight: 500;
-    }
-    .wr-callout strong { color: var(--orange); }
-
-    /* Form */
-    .wr-form-section { background: rgba(255,255,255,0.02); border-top: 1px solid rgba(255,255,255,0.06); }
-    .wr-form-card {
-      max-width: 640px; margin: 0 auto;
-      background: rgba(10,10,10,0.6);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 40px;
-    }
-    .wr-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    /* Workforce Recognition (2026-09 homepage style; shared styles in /theme.css).
+       Content and the enquiry form (workforce-recognition.js) are unchanged. */
+    .site-subbar { display: none; }
+    .wr-hero { position: relative; overflow: hidden; padding: 72px 20px 56px; }
+    .wr-hero::before { content: ''; position: absolute; inset: 0; background: url('/images/photo-wall/Leadership.webp') center 30% / cover no-repeat; opacity: .4; }
+    .wr-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.7) 55%, rgba(0,0,0,.45) 100%), linear-gradient(to bottom, transparent 70%, #000 100%); }
+    .wr-hero > * { position: relative; z-index: 1; max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .wr-eyebrow, .wr-section-eyebrow { display: block; font-family: var(--display); font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+    .wr-title { font-size: clamp(36px, 7.5vw, 64px); margin-bottom: 18px; }
+    .wr-subtitle { font-size: clamp(16px, 2.4vw, 19px); color: rgba(255,255,255,.92); max-width: 640px !important; margin-left: 0 !important; margin-bottom: 26px; text-shadow: 0 2px 12px rgba(0,0,0,.8); }
+    .wr-hero-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+    .wr-btn-primary, .wr-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--display); font-size: 16px; text-decoration: none; border-radius: 999px; padding: 15px 30px; border: 2px solid transparent; }
+    .wr-btn-primary { background: var(--gold); color: #111; box-shadow: 0 8px 28px rgba(255,179,0,0.3); }
+    .wr-btn-primary svg { display: none; }
+    .wr-btn-secondary { background: var(--gold-soft); color: var(--gold); border-color: var(--gold-line); }
+    .wr-section { padding: 64px 20px; }
+    .wr-section > * { max-width: 1080px; margin-left: auto; margin-right: auto; }
+    .wr-section-head { margin-bottom: 28px; }
+    .wr-section-title { font-size: clamp(30px, 6vw, 46px); margin-bottom: 12px; }
+    .wr-section-sub { color: var(--muted); font-size: 17px; max-width: 680px; }
+    .wr-why-grid { display: grid; gap: 16px; }
+    .wr-why-card { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--gold); border-radius: 18px; padding: 24px; }
+    .wr-why-icon { width: 56px; height: 56px; border-radius: 50%; background: var(--gold-soft); border: 1px solid var(--gold-line); display: grid; place-items: center; margin-bottom: 14px; }
+    .wr-why-icon svg { width: 26px; height: 26px; stroke: var(--gold); fill: none; }
+    .wr-why-card h3, .wr-step h3 { font-size: 21px; margin-bottom: 8px; }
+    .wr-why-card p, .wr-step p { color: var(--muted); }
+    .wr-steps { display: grid; gap: 16px; }
+    .wr-step { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 28px 24px; }
+    .wr-step-num { width: 58px; height: 58px; border-radius: 50%; background: var(--gold); color: #111; font-family: var(--display); font-size: 26px; display: grid; place-items: center; box-shadow: 0 0 0 8px var(--gold-soft); margin-bottom: 16px; }
+    .wr-callout { background: var(--card); border: 1px solid var(--gold-line); border-left: 6px solid var(--gold); border-radius: 18px; padding: 28px 24px; }
+    .wr-callout p { font-size: clamp(18px, 3.6vw, 22px); line-height: 1.5; color: #fff; }
+    .wr-callout strong { color: var(--gold); }
+    /* Enquiry form: white card, black text, gold key words */
+    .wr-form-card { max-width: 720px !important; margin-left: 0 !important; background: #fff; color: #111; border-radius: 20px; border-top: 6px solid var(--gold); padding: 28px 22px; }
+    .wr-form-row { display: grid; gap: 12px; margin-bottom: 12px; }
     .wr-field { display: flex; flex-direction: column; gap: 6px; }
-    .wr-field label { font-size: 12.5px; font-weight: 600; color: rgba(255,255,255,0.9); }
-    .wr-field input, .wr-field select, .wr-field textarea {
-      background: rgba(5,5,5,0.8);
-      border: 1px solid rgba(255,179,0,0.2);
-      border-radius: 8px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 14px;
-      padding: 11px 13px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-    .wr-field input:focus, .wr-field select:focus, .wr-field textarea:focus { border-color: var(--orange); }
-    .wr-field textarea { resize: vertical; min-height: 90px; }
-    .wr-field select option { background: #000000; }
-    .wr-submit-btn {
-      width: 100%;
-      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
-      color: #fff; font-weight: 800; font-size: 14px; letter-spacing: 0.5px;
-      text-transform: uppercase;
-      padding: 15px; border: none; border-radius: 10px;
-      cursor: pointer; margin-top: 8px;
-      transition: transform 0.15s;
-    }
-    .wr-submit-btn:hover:not(:disabled) { transform: translateY(-1px); }
-    .wr-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .wr-form-msg { font-size: 13px; margin-top: 14px; padding: 10px 14px; border-radius: 8px; display: none; }
-    .wr-form-msg.error { display: block; color: #ff7070; background: rgba(255,80,80,0.08); border: 1px solid rgba(255,80,80,0.22); }
-    .wr-form-msg.success { display: block; color: #4ade80; background: rgba(47,133,90,0.12); border: 1px solid rgba(74,222,128,0.3); }
-
-    /* Footer */
-
-    @media (max-width: 900px) {
+    .wr-field label { font-size: 13px; font-weight: 700; color: #111; }
+    .wr-field input, .wr-field select, .wr-field textarea { background: #f4f6f9; border: 1px solid rgba(0,0,0,.18); border-radius: 10px; color: #111; font: 500 16px var(--body); padding: 13px 14px; outline: none; }
+    .wr-field textarea { min-height: 100px; resize: vertical; }
+    .wr-field input:focus, .wr-field select:focus, .wr-field textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(255,179,0,.25); }
+    .wr-submit-btn { width: 100%; background: var(--gold); color: #111; border: 0; border-radius: 999px; padding: 15px; font: 400 16px var(--display); cursor: pointer; }
+    .wr-submit-btn:disabled { opacity: .6; cursor: default; }
+    .wr-form-msg { margin-top: 12px; font-weight: 600; font-size: 14px; }
+    .wr-form-msg.error { color: #b91c1c; }
+    .wr-form-msg.success { color: #15803d; }
+    @media (min-width: 760px) {
+      .wr-hero { padding: 104px 20px 80px; }
+      .wr-section { padding: 88px 20px; }
       .wr-why-grid { grid-template-columns: repeat(2, 1fr); }
-      .wr-steps { grid-template-columns: 1fr; }
-      .wr-form-row { grid-template-columns: 1fr; }
-    }
-    @media (max-width: 600px) {
-      .wr-hero { padding: 56px 20px 48px; }
-      .wr-section { padding: 52px 20px; }
-      .wr-why-grid { grid-template-columns: 1fr; }
-      .wr-callout { padding: 28px 24px; }
-      .wr-form-card { padding: 28px 22px; }
+      .wr-steps { grid-template-columns: repeat(3, 1fr); }
+      .wr-form-row { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -253,7 +86,7 @@
 
   <div class="wr-hero">
     <span class="wr-eyebrow">For Employers</span>
-    <h1 class="wr-title">Workforce Recognition</h1>
+    <h1 class="wr-title">Workforce <span class="gold">Recognition</span></h1>
     <p class="wr-subtitle">Your team keeps the country moving — often unseen, and often undervalued. Partner with Logicard to give your logistics workforce free access to hundreds of everyday discounts, at no cost to your business.</p>
     <div class="wr-hero-btns">
       <a href="#wr-form" class="wr-btn-primary">
@@ -267,7 +100,7 @@
   <section class="wr-section" id="wr-why">
     <div class="wr-section-head">
       <span class="wr-section-eyebrow">Why Partner With Logicard</span>
-      <h2 class="wr-section-title">A real way to say thank you</h2>
+      <h2 class="wr-section-title">A Real Way To Say <span class="gold">Thank You</span></h2>
       <p class="wr-section-sub">Pay rises and awards ceremonies aren't always possible. Logicard is something every business can offer — free to set up, genuinely useful, and felt every single day.</p>
     </div>
     <div class="wr-why-grid">
@@ -297,7 +130,7 @@
   <section class="wr-section" id="wr-how">
     <div class="wr-section-head">
       <span class="wr-section-eyebrow">How It Works</span>
-      <h2 class="wr-section-title">Set up in three simple steps</h2>
+      <h2 class="wr-section-title">Set Up In <span class="gold">Three Simple Steps</span></h2>
       <p class="wr-section-sub">No contracts, no complicated onboarding — just tell us about your team and we'll take it from there.</p>
     </div>
     <div class="wr-steps">
@@ -328,7 +161,7 @@
   <section class="wr-section wr-form-section" id="wr-form">
     <div class="wr-section-head">
       <span class="wr-section-eyebrow">Get Started</span>
-      <h2 class="wr-section-title">Tell us about your team</h2>
+      <h2 class="wr-section-title">Tell Us About <span class="gold">Your Team</span></h2>
       <p class="wr-section-sub">We'll get back to you within one working day to set things up.</p>
     </div>
 
