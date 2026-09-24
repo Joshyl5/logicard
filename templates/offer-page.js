@@ -125,7 +125,7 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=9" />
+  <link rel="stylesheet" href="/nav.css?v=10" />
   <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
     .op-wrap { max-width: 1120px; margin: 0 auto; padding: 22px 20px 64px; }
@@ -304,7 +304,7 @@ function renderOfferNotFound() {
   <title>Offer Not Found — Logicard</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="stylesheet" href="/nav.css?v=9" />
+  <link rel="stylesheet" href="/nav.css?v=10" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }

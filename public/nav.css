@@ -91,6 +91,22 @@ body.site-menu-open { overflow: hidden; }
 .site-header-wrap ~ .members-header .mh-topbar, .site-header-wrap ~ .members-header .mh-navbar,
 .site-header-wrap ~ .members-header .mh-inner, .oh-inner, .offers-container { max-width: 1080px !important; }
 
+/* Member toolbar: Welcome / My Dashboard / Sign Out sit at the far right,
+   their right edge on the same line as the menu lines and the page text. */
+.site-header-wrap ~ .members-header .mh-topbar-actions,
+.site-header-wrap ~ .members-header .mh-user { margin-left: auto !important; justify-content: flex-end; }
+.site-header-wrap ~ .members-header .mh-inner { justify-content: flex-end; }
+@media (max-width: 640px) {
+  .site-header-wrap ~ .members-header .mh-topbar-actions { width: 100%; justify-content: flex-end; }
+  .site-header-wrap ~ .members-header .mh-user { width: 100%; justify-content: flex-end; flex-wrap: wrap; }
+}
+/* Edit details / report pages: Sign Out on the right of the same column */
+.site-header-wrap ~ .report-header {
+  justify-content: flex-end !important;
+  padding-left: max(20px, calc((100% - 1080px) / 2)) !important;
+  padding-right: max(20px, calc((100% - 1080px) / 2)) !important;
+}
+
 /* ── Back link (optional, placed right after SHARED_NAV — used by
    login/signup/checkout and other narrow-flow pages). ── */
 .site-subbar { display: flex; justify-content: flex-end; padding: 16px 40px 0; }
