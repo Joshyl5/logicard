@@ -51,7 +51,7 @@ function renderFooter() {
       </div>
 
       <div class="sf-bottom">
-        <span class="sf-copy">&copy; 2026 Logicard. All rights reserved.</span>
+        <span class="sf-copy">&copy; 2026 Logicard Ltd. All rights reserved. Company number 17474646.</span>
         <ul class="sf-bottom-links">
           <li><a href="/privacy.html">Privacy</a></li>
           <li><a href="/t&amp;cs">Terms</a></li>
