@@ -66,9 +66,26 @@
       <button type="button" class="brand-tab" data-tab="live">Live</button>
       <button type="button" class="brand-tab" data-tab="cold">Cold list</button>
     </div>
+    <div id="brandFilters" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:0 0 14px;">
+      <select id="fLogo" class="brand-filter" aria-label="Filter by logo">
+        <option value="">Logo: any</option><option value="yes">Has a logo</option><option value="no">No logo</option>
+      </select>
+      <select id="fCarousel" class="brand-filter" aria-label="Filter by carousel">
+        <option value="">Carousel: any</option><option value="yes">On the carousel</option><option value="no">Not on the carousel</option>
+      </select>
+      <select id="fOffers" class="brand-filter" aria-label="Filter by offers">
+        <option value="">Offers: any</option><option value="yes">Has live offers</option><option value="no">No offers</option>
+      </select>
+      <select id="fCategory" class="brand-filter" aria-label="Filter by category">
+        <option value="">Category: any</option>
+      </select>
+      <button type="button" class="brand-tab" id="fReset">Reset filters</button>
+    </div>
     <style>
       .brand-tab { padding:10px 16px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer; background:transparent; color:rgba(255,255,255,0.9); border:1px solid rgba(255,255,255,0.2); }
       .brand-tab.active { background:#FFB300; color:#000; border-color:#FFB300; }
+      .brand-filter { padding:9px 12px; border-radius:8px; background:#0a0a0a; color:#fff; border:1px solid rgba(255,255,255,0.2); font-size:13px; font-weight:600; cursor:pointer; }
+      .brand-filter.on { border-color:#FFB300; color:#FFB300; }
       /* Bulk buttons stay pinned under the admin header while scrolling the list */
       #bulkBar { position: sticky; top: var(--admin-header-h, 64px); z-index: 90; background: #0a0a0a; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .imp-table { width:100%; border-collapse:collapse; font-size:13px; margin:8px 0 16px; }
@@ -273,6 +290,6 @@
   </div>
 
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="/admin-partner-brands.js?v=13"></script>
+  <script src="/admin-partner-brands.js?v=15"></script>
 </body>
 </html>

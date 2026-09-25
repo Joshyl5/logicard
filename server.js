@@ -1475,7 +1475,10 @@ app.get('/api/admin/partner-brands', requireAdmin, async (_req, res) => {
   const [brands, offers] = await Promise.all([getAllPartnerBrands(), getActiveOffers()]);
   const norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   // "Offers available" column: how many live offers with a discount match the brand
-  res.json(brands.map(b => ({ ...b, liveOffers: offers.filter(o => offerListed(o) && norm(o.merchantName) === norm(b.brandName)).length })));
+  res.json(brands.map(b => {
+    const mine = offers.filter(o => offerListed(o) && norm(o.merchantName) === norm(b.brandName));
+    return { ...b, liveOffers: mine.length, liveOfferIds: mine.map(o => o.id) };
+  }));
 });
 
 app.post('/api/admin/partner-brands', requireAdmin, async (req, res) => {

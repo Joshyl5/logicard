@@ -26,7 +26,7 @@ function renderTable(brands) {
       <td>${b.logoUrl ? `<img src="${escapeHtml(b.logoUrl)}" alt="" loading="lazy" style="width:60px;height:40px;object-fit:contain;background:#fff;border-radius:4px;display:block;" />` : `<span title="No logo yet" style="width:60px;height:40px;border-radius:4px;display:grid;place-items:center;background:#FFB300;color:#000;font-weight:900;">${escapeHtml((b.brandName || '?').charAt(0).toUpperCase())}</span>`}</td>
       <td>${escapeHtml(b.brandName)}</td>
       <td>${b.slug ? `<a href="/deals/${escapeHtml(b.slug)}" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5);font-size:12px;">/deals/${escapeHtml(b.slug)}</a>` : '—'}</td>
-      <td>${b.liveOffers ? `<span style="color:#4ade80;font-weight:700;">Yes</span> (${b.liveOffers})` : '<span style="color:#f87171;font-weight:700;">No</span> - page says "No offer at present"'}</td>
+      <td>${b.liveOffers ? `<a href="${b.liveOffers === 1 && b.liveOfferIds ? '/admin/offers?edit=' + b.liveOfferIds[0] : '/admin/offers?search=' + encodeURIComponent(b.brandName)}" title="Open ${b.liveOffers === 1 ? 'this offer' : 'these offers'} in Manage Offers" style="color:#4ade80;font-weight:700;">Yes (${b.liveOffers}) &rarr;</a>` : '<span style="color:#f87171;font-weight:700;">No</span> - page says "No offer at present"'}</td>
       <td>${b.sortOrder || 0}</td>
       <td>${b.featuredCarousel ? '<span title="On the homepage brands carousel" style="color:#FFB300;">&#9733; Carousel</span><br>' : ''}${isLive(b) ? '<span style="color:#4ade80;font-weight:700;">Live</span>' : b.logoUrl ? '<span style="color:#FFB300;font-weight:700;">Cold</span> - logo added, tick Live when ready' : '<span style="color:#FFB300;font-weight:700;">Cold</span> - needs a logo'}</td>
       <td>
@@ -56,11 +56,20 @@ function renderTable(brands) {
   });
 }
 
+// Column filters (logo / carousel / offers / category) combine with the
+// All / Live / Cold tabs and the search box.
+function filterValue(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function matchYesNo(value, has) { return !value || (value === 'yes') === has; }
 function filterBrands(query) {
   const q = (query || '').toLowerCase();
+  const logo = filterValue('fLogo'), carousel = filterValue('fCarousel'), offers = filterValue('fOffers'), cat = filterValue('fCategory');
   return allBrands.filter(b =>
     (activeTab === 'all' || (activeTab === 'live') === isLive(b)) &&
-    (!q || (b.brandName || '').toLowerCase().includes(q)));
+    (!q || (b.brandName || '').toLowerCase().includes(q)) &&
+    matchYesNo(logo, !!b.logoUrl) &&
+    matchYesNo(carousel, !!b.featuredCarousel) &&
+    matchYesNo(offers, (b.liveOffers || 0) > 0) &&
+    (!cat || b.category === cat));
 }
 
 function updateTabCounts() {
@@ -305,6 +314,24 @@ async function init() {
 
   document.getElementById('searchInput').addEventListener('input', refreshTable);
   document.querySelectorAll('.brand-tab[data-tab]').forEach(t => t.addEventListener('click', () => { activeTab = t.dataset.tab; refreshTable(); }));
+  // Column filters
+  const catSel = document.getElementById('fCategory');
+  if (catSel) {
+    [...document.querySelectorAll('#brandCategory option')].filter(o => o.value).forEach(o => {
+      const opt = document.createElement('option'); opt.value = o.value; opt.textContent = o.value; catSel.appendChild(opt);
+    });
+    const syncFilters = () => {
+      document.querySelectorAll('.brand-filter').forEach(s => s.classList.toggle('on', !!s.value));
+      refreshTable();
+    };
+    document.querySelectorAll('.brand-filter').forEach(s => s.addEventListener('change', syncFilters));
+    document.getElementById('fReset').addEventListener('click', () => {
+      document.querySelectorAll('.brand-filter').forEach(s => { s.value = ''; });
+      document.getElementById('searchInput').value = '';
+      activeTab = 'all';
+      syncFilters();
+    });
+  }
   initImport();
 
   document.getElementById('adminSignout').addEventListener('click', async () => {

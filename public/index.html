@@ -128,7 +128,11 @@
   .ticker::before { left: 0; background: linear-gradient(to right, #000, transparent); }
   .ticker::after { right: 0; background: linear-gradient(to left, #000, transparent); }
   .ticker-track { display: flex; align-items: stretch; gap: 1px; width: max-content; padding-right: 1px; animation: scroll 40s linear infinite; }
-  .ticker:hover .ticker-track { animation-play-state: paused; }
+  .ticker-track { animation: none !important; will-change: transform; }
+  .ticker-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 3; width: 52px; height: 52px; border-radius: 50%; border: 0; background: rgba(0,0,0,0.72); color: #FFB300; font: 400 40px/1 'Archivo Black', 'Arial Black', sans-serif; display: grid; place-items: center; padding: 0 0 6px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.45); transition: background .15s, transform .15s; }
+  .ticker-arrow:hover, .ticker-arrow:focus-visible { background: #FFB300; color: #000; transform: translateY(-50%) scale(1.06); }
+  .ticker-prev { left: 12px; } .ticker-next { right: 12px; }
+  @media (max-width: 640px) { .ticker-arrow { width: 40px; height: 40px; font-size: 30px; } .ticker-prev { left: 6px; } .ticker-next { right: 6px; } }
   /* Brand logo slot: drop an <img> inside to replace the placeholder text */
   /* Big clickable advert tiles, 1px apart: the brand's banner image when it has one
      (logo in the corner), otherwise its logo on a white tile */
@@ -344,6 +348,8 @@
   <!-- ═══ Rolling adverts ═══ -->
   <section class="ticker" id="brandTicker" aria-label="Our partner brands" hidden>
     <div class="ticker-track" id="ticker"></div>
+    <button type="button" class="ticker-arrow ticker-prev" id="tickerPrev" aria-label="Previous brands">&#8249;</button>
+    <button type="button" class="ticker-arrow ticker-next" id="tickerNext" aria-label="More brands">&#8250;</button>
   </section>
 
   <!-- ═══ Hot deals ═══ -->
@@ -629,9 +635,35 @@
     var one = new Array(repeats + 1).join(html);
     var track = document.getElementById('ticker');
     track.innerHTML = one + one;
-    // Keep the scroll speed steady (about 4 seconds per tile) however many brands there are
-    track.style.animationDuration = Math.max(20, brands.length * repeats * 4) + 's';
-    document.getElementById('brandTicker').hidden = false;
+    var ticker = document.getElementById('brandTicker');
+    ticker.hidden = false;
+
+    // Scrolls itself at about 4 seconds per tile, pauses while hovered, and
+    // the arrows jump 3 tiles either way. The track holds the list twice, so
+    // wrapping at half its width loops seamlessly.
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var pos = 0, target = null, paused = false, last = null;
+    function tileStep() { var t = track.querySelector('.brand'); return t ? t.getBoundingClientRect().width + 1 : 321; }
+    function wrap(v) { var half = track.scrollWidth / 2; if (!half) return v; v %= half; return v < 0 ? v + half : v; }
+    function frame(now) {
+      var dt = last == null ? 0 : Math.min(64, now - last); last = now;
+      if (target != null) {
+        var d = target - pos;
+        if (Math.abs(d) < 0.5) { pos = target; target = null; } else pos += d * Math.min(1, dt / 90);
+      } else if (!paused && !still) {
+        pos += (tileStep() / 4000) * dt;
+      }
+      var shown = wrap(pos);
+      if (shown !== pos) { if (target != null) target += shown - pos; pos = shown; }
+      track.style.transform = 'translateX(' + (-pos) + 'px)';
+      requestAnimationFrame(frame);
+    }
+    function jump(dir) { var from = target != null ? target : pos; target = from + dir * 3 * tileStep(); }
+    document.getElementById('tickerNext').addEventListener('click', function () { jump(1); });
+    document.getElementById('tickerPrev').addEventListener('click', function () { jump(-1); });
+    ticker.addEventListener('mouseenter', function () { paused = true; });
+    ticker.addEventListener('mouseleave', function () { paused = false; });
+    requestAnimationFrame(frame);
   }).catch(function () {});
 
   var isSafeImg = isSafeImageUrl;

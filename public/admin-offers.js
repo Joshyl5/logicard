@@ -378,6 +378,13 @@ async function init() {
   document.getElementById('searchInput').addEventListener('input', refreshTable);
   document.getElementById('sortSelect').addEventListener('change', refreshTable);
 
+  // Links from Manage Partner Brands: ?edit=<offer id> opens that offer,
+  // ?search=<brand> shows just that brand's offers
+  const params = new URLSearchParams(location.search);
+  if (params.get('search')) { document.getElementById('searchInput').value = params.get('search'); refreshTable(); }
+  const editId = Number(params.get('edit'));
+  if (editId && allOffers.some(o => o.id === editId)) openModal(editId);
+
   document.getElementById('adminSignout').addEventListener('click', async () => {
     await fetch('/api/admin/logout', { method: 'POST' });
     window.location.href = '/';
