@@ -21,7 +21,7 @@ function renderTable(brands) {
 
   tbody.innerHTML = brands.map(b => `
     <tr>
-      <td>${b.logoUrl ? `<img src="${escapeHtml(b.logoUrl)}" alt="" style="width:60px;height:40px;object-fit:contain;background:#fff;border-radius:4px;display:block;" />` : `<span title="No logo yet" style="width:60px;height:40px;border-radius:4px;display:grid;place-items:center;background:#FFB300;color:#000;font-weight:900;">${escapeHtml((b.brandName || '?').charAt(0).toUpperCase())}</span>`}</td>
+      <td>${b.logoUrl ? `<img src="${escapeHtml(b.logoUrl)}" alt="" loading="lazy" style="width:60px;height:40px;object-fit:contain;background:#fff;border-radius:4px;display:block;" />` : `<span title="No logo yet" style="width:60px;height:40px;border-radius:4px;display:grid;place-items:center;background:#FFB300;color:#000;font-weight:900;">${escapeHtml((b.brandName || '?').charAt(0).toUpperCase())}</span>`}</td>
       <td>${escapeHtml(b.brandName)}</td>
       <td>${b.slug ? `<a href="/deals/${escapeHtml(b.slug)}" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5);font-size:12px;">/deals/${escapeHtml(b.slug)}</a>` : '—'}</td>
       <td>${b.liveOffers ? `<span style="color:#4ade80;font-weight:700;">Yes</span> (${b.liveOffers})` : '<span style="color:#f87171;font-weight:700;">No</span> - page says "No offer at present"'}</td>
@@ -408,7 +408,7 @@ function renderImportPreview() {
 
   box.innerHTML = `
     <p class="imp-note"><strong>${named.length}</strong> brands read: <strong style="color:#4ade80;">${fresh.length} new</strong> will go on the cold list${already ? `, <strong>${already}</strong> already exist` : ''}${dupes ? `, <strong>${dupes}</strong> repeated in the file (first one used)` : ''}${noName ? `, ${noName} row${noName > 1 ? 's' : ''} with no brand name (ignored)` : ''}.</p>
-    ${already ? `<label class="imp-note" style="display:flex;gap:8px;align-items:center;"><input type="checkbox" id="importUpdate" style="width:auto;" /> Update the category and description of the ${already} that already exist (their logo and live status are not changed)</label>` : ''}
+    ${already ? `<label class="imp-note" style="display:flex;gap:8px;align-items:center;"><input type="checkbox" id="importUpdate" style="width:auto;" /> Update the category, description and website link of the ${already} that already exist (their logo and live status are not changed)</label>` : ''}
     ${withLogo ? `<p class="imp-note">${withLogo} brand${withLogo > 1 ? 's come' : ' comes'} with a logo link. ${withLogo > 1 ? 'They' : 'It'} still stay on the cold list until you check the logo and tick Live.</p>` : ''}
     ${noDesc ? `<p class="imp-note">${noDesc} brand${noDesc > 1 ? 's have' : ' has'} no description. You can add ${noDesc > 1 ? 'them' : 'it'} later from Edit.</p>` : ''}
     ${longDesc ? `<p class="imp-note" style="color:#f87171;">${longDesc} description${longDesc > 1 ? 's are' : ' is'} over 1,500 characters and will be skipped. Shorten ${longDesc > 1 ? 'them' : 'it'} in the file first.</p>` : ''}

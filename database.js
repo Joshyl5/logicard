@@ -909,9 +909,9 @@ async function importPartnerBrands(rows, updateExisting) {
         'SELECT id FROM partner_brands WHERE slug = $1 OR lower(brand_name) = lower($2) LIMIT 1', [row.slug, row.brandName]);
       if (existing.rows[0]) {
         if (!updateExisting) { result.skipped++; continue; }
-        // Refresh category + About; only fill in a logo or website where there isn't one yet
+        // Refresh category, About and website link (e.g. a tracked Awin link); only fill in a logo where there isn't one yet
         await client.query(`UPDATE partner_brands SET category = $1, about_brand = $2,
-            logo_url = COALESCE(NULLIF(logo_url, ''), $4), website_url = COALESCE(NULLIF(website_url, ''), $5), updated_at = NOW() WHERE id = $3`,
+            logo_url = COALESCE(NULLIF(logo_url, ''), $4), website_url = COALESCE($5, website_url), updated_at = NOW() WHERE id = $3`,
           [row.category, row.aboutBrand, existing.rows[0].id, row.logoUrl || null, row.websiteUrl || null]);
         result.updated++;
       } else {
@@ -928,6 +928,23 @@ async function importPartnerBrands(rows, updateExisting) {
   } finally {
     client.release();
   }
+}
+
+// Images still hot-linked from Awin's servers (brand logos, deal images and
+// deal logos). Awin serves them uncached and ad-blockers often block the
+// domain, so they are copied to Logicard's own storage (see server.js).
+const AWIN_IMAGE_SQL = "~* '^https://(ui\\.awin\\.com|www\\.awin1\\.com)/'";
+async function listAwinHostedImages() {
+  const brands = await pool.query(`SELECT id, brand_name, logo_url FROM partner_brands WHERE logo_url ${AWIN_IMAGE_SQL} ORDER BY id`);
+  const offers = await pool.query(`SELECT id, merchant_name, image_url, logo_url FROM offers WHERE image_url ${AWIN_IMAGE_SQL} OR logo_url ${AWIN_IMAGE_SQL} ORDER BY id`);
+  return { brands: brands.rows, offers: offers.rows };
+}
+
+// Swap one image link for its Logicard copy, only if it hasn't been changed meanwhile.
+async function replaceImageUrl(table, id, field, fromUrl, toUrl) {
+  const allowed = { partner_brands: ['logo_url'], offers: ['image_url', 'logo_url'] };
+  if (!(allowed[table] || []).includes(field)) throw new Error('Unsupported image field');
+  await pool.query(`UPDATE ${table} SET ${field} = $1, updated_at = NOW() WHERE id = $2 AND ${field} = $3`, [toUrl, id, fromUrl]);
 }
 
 async function setPartnerBrandLogo(id, logoUrl) {
@@ -1711,7 +1728,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,

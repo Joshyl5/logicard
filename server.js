@@ -21,7 +21,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -1487,6 +1487,7 @@ app.post('/api/admin/partner-brands/import', requireAdmin, async (req, res) => {
   try {
     const result = await importPartnerBrands(clean, !!req.body.updateExisting);
     res.json({ ...result, invalid });
+    localiseAwinImages(); // copy any Awin-hosted logos to Logicard in the background
   } catch (err) {
     console.error('Brand import error:', err.message);
     res.status(500).json({ error: 'Import failed, nothing was saved. Please try again.' });
@@ -2818,6 +2819,63 @@ async function repairBrandLogos() {
   }
 }
 
+// ── Keep Awin-hosted images on Logicard ──────────────────────────
+// Brand logos (e.g. from the spreadsheet import) and deal images often point
+// at ui.awin.com / awin1.com. Awin serves them uncached and many ad-blockers
+// block the domain, so they randomly show as broken. Each one is downloaded
+// once, saved to permanent storage and the link switched to the local copy.
+// Runs after start-up and after every brand import; skips if storage isn't
+// permanent, and only replaces a link that still points at Awin.
+const AWIN_IMAGE_RE = /^https:\/\/(ui\.awin\.com|www\.awin1\.com)\//i;
+const IMAGE_EXT = { 'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp', 'image/gif': 'gif' };
+async function copyRemoteImage(url, keyPrefix) {
+  const res = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20000), headers: { 'User-Agent': 'Mozilla/5.0 (Logicard image cache)' } });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const type = (res.headers.get('content-type') || '').split(';')[0].trim().toLowerCase();
+  if (!IMAGE_EXT[type]) throw new Error('not an image (' + type + ')');
+  const buffer = Buffer.from(await res.arrayBuffer());
+  if (!buffer.length || buffer.length > 5 * 1024 * 1024) throw new Error('bad size ' + buffer.length);
+  const { url: saved } = await uploadPublicFile(buffer, { mimeType: type, extension: IMAGE_EXT[type], keyPrefix });
+  if (!saved) throw new Error('no public URL');
+  return saved;
+}
+
+let localisingImages = false;
+async function localiseAwinImages() {
+  if (localisingImages) return;
+  const store = publicUploadsPermanent();
+  if (!store.ok) { console.warn('[images] Not copying Awin images: ' + store.reason); return; }
+  localisingImages = true;
+  let done = 0, failed = 0;
+  try {
+    const { brands, offers } = await listAwinHostedImages();
+    const jobs = [];
+    brands.forEach(b => jobs.push({ table: 'partner_brands', id: b.id, field: 'logo_url', url: b.logo_url, prefix: 'partner-brands', name: b.brand_name }));
+    offers.forEach(o => {
+      if (AWIN_IMAGE_RE.test(o.image_url || '')) jobs.push({ table: 'offers', id: o.id, field: 'image_url', url: o.image_url, prefix: 'offers', name: o.merchant_name });
+      if (AWIN_IMAGE_RE.test(o.logo_url || '')) jobs.push({ table: 'offers', id: o.id, field: 'logo_url', url: o.logo_url, prefix: 'partner-brands', name: o.merchant_name });
+    });
+    if (!jobs.length) return;
+    console.log('[images] Copying ' + jobs.length + ' Awin-hosted images to Logicard storage…');
+    for (const j of jobs) {
+      try {
+        const saved = await copyRemoteImage(j.url, j.prefix);
+        await replaceImageUrl(j.table, j.id, j.field, j.url, saved);
+        done++;
+      } catch (err) {
+        failed++;
+        console.warn('[images] ' + j.name + ' (' + j.table + ' ' + j.field + '): kept Awin link, ' + err.message);
+      }
+      await new Promise(r => setTimeout(r, 150)); // gentle on Awin
+    }
+    console.log('[images] Done: ' + done + ' copied, ' + failed + ' left on Awin (will retry on next start-up).');
+  } catch (err) {
+    console.error('[images] Copy job failed:', err.message);
+  } finally {
+    localisingImages = false;
+  }
+}
+
 const PURGE_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
 const NEWS_FETCH_INTERVAL_MS  = 2 * 60 * 60 * 1000;  // check every 2 hours; adds at most one story a day
 
@@ -2835,6 +2893,7 @@ app.listen(PORT, () => {
 
   // Give the DB pool a moment on cold start, then run daily thereafter.
   setTimeout(repairBrandLogos, 5 * 1000);
+  setTimeout(localiseAwinImages, 30 * 1000);
   setTimeout(runVerificationPurge, 60 * 1000);
   setInterval(runVerificationPurge, PURGE_SWEEP_INTERVAL_MS);
 
