@@ -42,10 +42,26 @@
         </svg>
         Add Brand
       </button>
+      <button class="export-btn" id="importBrandsBtn" type="button">Import brands (spreadsheet)</button>
     </div>
 
+    <div id="brandTabs" style="display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;">
+      <button type="button" class="brand-tab" data-tab="all">All</button>
+      <button type="button" class="brand-tab" data-tab="live">Live</button>
+      <button type="button" class="brand-tab" data-tab="cold">Cold list</button>
+    </div>
+    <style>
+      .brand-tab { padding:10px 16px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer; background:transparent; color:rgba(255,255,255,0.9); border:1px solid rgba(255,255,255,0.2); }
+      .brand-tab.active { background:#FFB300; color:#000; border-color:#FFB300; }
+      .imp-table { width:100%; border-collapse:collapse; font-size:13px; margin:8px 0 16px; }
+      .imp-table th, .imp-table td { text-align:left; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.9); vertical-align:top; }
+      .imp-table select { width:100%; padding:6px; border-radius:6px; background:#0a0a0a; color:#fff; border:1px solid rgba(255,255,255,0.2); }
+      .imp-table select.imp-missing { border-color:#f87171; }
+      .imp-note { font-size:13px; color:rgba(255,255,255,0.85); margin:0 0 10px; }
+    </style>
+
     <p style="color:rgba(255,255,255,0.9);font-size:13px;margin:-4px 0 20px;">
-      Just a name and a logo — no deal details needed. These show on the public Partnerships page's "Our Partners" grid to confirm a brand is on board, before there's a live discount to attach. Clicking a logo takes the member to logicard.co.uk/deals/&lt;slug&gt;, which shows a matching offer from Manage Offers automatically (match by brand name) — or a "coming soon" message if there isn't one yet.
+      <strong>Live</strong> brands show on the public Partnerships page's "Our Partners" grid and have a page at logicard.co.uk/deals/&lt;slug&gt;, showing any matching offers from Manage Offers (matched by brand name), or "No offer at present". <strong>Cold list</strong> brands (e.g. from an import) are admin-only: nothing appears on the live site until you attach a logo and tick Live.
     </p>
 
     <!-- Table -->
@@ -58,7 +74,7 @@
             <th>Page</th>
             <th>Offers available</th>
             <th>Sort Order</th>
-            <th>Active</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -104,7 +120,7 @@
             <input id="brandLogoFile" type="file" accept="image/jpeg,image/png,image/webp" style="flex:1;color:rgba(255,255,255,0.9);font-size:13px;" />
             <button type="button" id="brandUploadBtn" style="padding:9px 16px;border-radius:6px;border:1px solid rgba(255,179,0,0.4);background:rgba(255,179,0,0.12);color:#FFB300;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap;">Upload</button>
           </div>
-          <input id="brandLogoUrl" type="text" placeholder="https://… (or upload a file above)" required />
+          <input id="brandLogoUrl" type="text" placeholder="https://… (or upload a file above) - needed before going live" />
           <p id="brandUploadStatus" style="margin:6px 0 0;font-size:12px;color:rgba(255,255,255,0.75);"></p>
         </div>
 
@@ -112,22 +128,28 @@
           <label for="brandCategory">Category <span class="adm-req">*</span></label>
           <select id="brandCategory">
             <option value="">— Choose a category —</option>
-            <option>Home &amp; Garden</option>
-            <option>Fashion</option>
-            <option>Food &amp; Drink</option>
-            <option>Business</option>
-            <option>Benefits</option>
-            <option>Travel</option>
-            <option>Health &amp; Beauty</option>
-            <option>Gifting</option>
-            <option>Motoring</option>
-            <option>E-learning</option>
-            <option>Tech &amp; Electronic</option>
-            <option>Days Out &amp; Entertainment</option>
-            <option>Finance &amp; Insurance</option>
-            <option>Sport &amp; Fitness</option>
+            <option>Adult</option>
             <option>Advice</option>
+            <option>Beauty &amp; Wellness</option>
+            <option>Benefits</option>
+            <option>Children &amp; Baby</option>
+            <option>E-learning</option>
+            <option>Events &amp; Experiences</option>
+            <option>Family, Leisure &amp; Travel</option>
+            <option>Fashion &amp; Lifestyle</option>
+            <option>Financial Wellbeing</option>
+            <option>Food &amp; Drink</option>
+            <option>Gifts &amp; Flowers</option>
+            <option>Home &amp; Garden</option>
+            <option>Mental Wellbeing</option>
+            <option>Pets</option>
+            <option>Shopping Cards</option>
+            <option>Sport &amp; Fitness</option>
+            <option>Technology &amp; Office</option>
+            <option>Things to Do</option>
+            <option>Trade Supplies &amp; Tools</option>
             <option>Utilities &amp; Mobile</option>
+            <option>Vehicles &amp; Motoring</option>
             <option>Workwear</option>
           </select>
         </div>
@@ -155,7 +177,7 @@
         </div>
         <div class="lfield" style="margin-bottom:20px;display:flex;align-items:center;gap:8px;">
           <input id="brandIsActive" type="checkbox" checked style="width:auto;" />
-          <label for="brandIsActive" style="margin:0;">Active (visible on Partnerships page)</label>
+          <label for="brandIsActive" style="margin:0;">Live (brand page + Partnerships grid; needs a logo)</label>
         </div>
 
         <div id="brandFormError" class="form-error" role="alert" style="margin-bottom:14px;"></div>
@@ -168,6 +190,22 @@
     </div>
   </div>
 
-  <script src="/admin-partner-brands.js?v=3"></script>
+  <!-- Import brands modal -->
+  <div id="importModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;">
+    <div style="background:#121212;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:32px;max-width:860px;width:94%;margin:40px auto;">
+      <h2 style="color:#fff;font-size:20px;font-weight:800;margin:0 0 8px;">Import brands to the cold list</h2>
+      <p class="imp-note">Upload an Excel (.xlsx), OpenDocument (.ods) or CSV file with one brand per row and columns for <strong>brand name</strong>, <strong>category</strong> and <strong>description</strong>. Imported brands are admin-only until you attach a logo and switch them live.</p>
+      <input id="importFile" type="file" accept=".xlsx,.xls,.ods,.csv" style="color:#fff;margin:6px 0 14px;" />
+      <div id="importPreview"></div>
+      <div id="importError" class="form-error" role="alert" style="margin:10px 0;"></div>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button type="button" id="importCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.9);font-weight:600;cursor:pointer;">Close</button>
+        <button type="button" id="importGoBtn" disabled style="flex:2;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="/admin-partner-brands.js?v=5"></script>
 </body>
 </html>

@@ -301,6 +301,21 @@ async function initDb() {
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS category TEXT`);
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS banner_url TEXT`);
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS website_url TEXT`);
+  // Imported brands start on a "cold list": inactive with no logo yet. A
+  // brand can only be switched live once it has a logo (checked in server.js).
+  await pool.query(`ALTER TABLE partner_brands ALTER COLUMN logo_url DROP NOT NULL`);
+
+  // 2026-09-25: categories renamed to match the public category pages.
+  // Idempotent: once renamed, the old names no longer match anything.
+  const CATEGORY_RENAMES = [
+    ['Fashion', 'Fashion & Lifestyle'], ['Business', 'Trade Supplies & Tools'], ['Travel', 'Family, Leisure & Travel'],
+    ['Health & Beauty', 'Beauty & Wellness'], ['Gifting', 'Gifts & Flowers'], ['Motoring', 'Vehicles & Motoring'],
+    ['Tech & Electronic', 'Technology & Office'], ['Days Out & Entertainment', 'Things to Do'], ['Finance & Insurance', 'Financial Wellbeing'],
+  ];
+  for (const [from, to] of CATEGORY_RENAMES) {
+    await pool.query('UPDATE offers SET category = $2 WHERE category = $1', [from, to]);
+    await pool.query('UPDATE partner_brands SET category = $2 WHERE category = $1', [from, to]);
+  }
   // Advert fields (2026-09): who it's for, image description, schedule,
   // and optionally a Logicard offer page to open instead of an outside link.
   await pool.query(`ALTER TABLE adverts ADD COLUMN IF NOT EXISTS advertiser TEXT`);
@@ -877,6 +892,42 @@ async function updatePartnerBrand(id, data) {
   `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id, aboutBrand, category, bannerUrl || null, websiteUrl || null]);
 
   return toPartnerBrand(r.rows[0]);
+}
+
+// Bulk import from the admin spreadsheet upload. Every new brand goes on the
+// cold list (inactive, no logo). A brand that already exists (same slug or
+// same name) is skipped, or has its category and About text refreshed when
+// updateExisting is set; its logo and live status are never touched.
+// One transaction, so a failure part-way leaves nothing half-imported.
+async function importPartnerBrands(rows, updateExisting) {
+  const client = await pool.connect();
+  const result = { created: 0, updated: 0, skipped: 0 };
+  try {
+    await client.query('BEGIN');
+    for (const row of rows) {
+      const existing = await client.query(
+        'SELECT id FROM partner_brands WHERE slug = $1 OR lower(brand_name) = lower($2) LIMIT 1', [row.slug, row.brandName]);
+      if (existing.rows[0]) {
+        if (!updateExisting) { result.skipped++; continue; }
+        // Refresh category + About; only fill in a logo or website where there isn't one yet
+        await client.query(`UPDATE partner_brands SET category = $1, about_brand = $2,
+            logo_url = COALESCE(NULLIF(logo_url, ''), $4), website_url = COALESCE(NULLIF(website_url, ''), $5), updated_at = NOW() WHERE id = $3`,
+          [row.category, row.aboutBrand, existing.rows[0].id, row.logoUrl || null, row.websiteUrl || null]);
+        result.updated++;
+      } else {
+        await client.query(`INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, website_url)
+          VALUES ($1, $2, $3, false, 0, $4, $5, $6)`, [row.brandName, row.logoUrl || null, row.slug, row.aboutBrand, row.category, row.websiteUrl || null]);
+        result.created++;
+      }
+    }
+    await client.query('COMMIT');
+    return result;
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
 }
 
 async function setPartnerBrandLogo(id, logoUrl) {
@@ -1660,7 +1711,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,

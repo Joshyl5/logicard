@@ -58,6 +58,13 @@
     </div>
   </section>
 
+  <section class="t-section" id="live-deals" style="padding-top:0" hidden>
+    <div class="wrap">
+      <h2 class="t-h2">Live <span class="gold">Deals</span></h2>
+      <div class="cat-deals" id="catDeals"></div>
+    </div>
+  </section>
+
   <section class="t-section" style="padding-top:0">
     <div class="wrap">
       <h2 class="t-h2">What's <span class="gold">Covered</span></h2>
@@ -83,5 +90,31 @@
   </section>
 
   <!-- SHARED_FOOTER -->
+  <script src="/deal-links.js?v=2"></script>
+  <script>
+    (function () {
+      var wanted = ["Pets"];
+      var grid = document.getElementById('catDeals'), section = document.getElementById('live-deals');
+      function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      function img(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
+      if (!wanted.length) return;
+      fetch('/api/public/offers').then(function (r) { return r.ok ? r.json() : []; }).then(function (offers) {
+        var list = (offers || []).filter(function (o) { return wanted.indexOf(o.category) !== -1 && /^[a-z0-9-]+$/i.test(o.slug || ''); });
+        section.hidden = false;
+        if (!list.length) { grid.outerHTML = '<p class="cat-empty">New deals for this category are on their way - join now to be first to see them.</p>'; return; }
+        grid.innerHTML = list.map(function (o) {
+          var page = '/' + o.slug;
+          return '<div class="dc"><a class="dc-img" href="' + page + '">' +
+            (img(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="' + esc(o.merchantName) + '" loading="lazy" />' : esc((o.merchantName || 'L').charAt(0))) +
+            (img(o.logoUrl) ? '<span class="dc-logo"><img src="' + esc(o.logoUrl) + '" alt="' + esc(o.merchantName) + ' logo" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '') +
+            '</a><div class="dc-body"><span class="dc-brand">' + esc(o.merchantName) + '</span><h3>' + esc(o.discountText || o.title) + '</h3>' +
+            (o.category ? '<span class="dc-cat">' + esc(o.category) + '</span>' : '') +
+            '<div class="dc-btns"><a class="dc-visit" href="' + page + '">Visit ' + esc(o.merchantName) + ' page</a>' +
+            '<a class="dc-get" href="/signup.html?src=deal-' + o.slug + '" data-get-deal="' + o.slug + '">Get deal <span aria-hidden="true">&rarr;</span></a></div></div></div>';
+        }).join('');
+        if (window.LogicardDeal) LogicardDeal.apply();
+      }).catch(function () {});
+    })();
+  </script>
 </body>
 </html>

@@ -5,3 +5,8 @@ members.json
 package-lock.json
 uploads/
 backups/
+
+# Awin exports and other working spreadsheets: never deploy these
+*.csv
+*.xlsx
+*.ods

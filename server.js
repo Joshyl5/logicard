@@ -21,7 +21,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -109,10 +109,10 @@ function escapeHtml(str) {
 }
 
 const OFFER_CATEGORIES = [
-  'Home & Garden', 'Fashion', 'Food & Drink', 'Business', 'Benefits',
-  'Travel', 'Health & Beauty', 'Gifting', 'Motoring', 'E-learning',
-  'Tech & Electronic', 'Days Out & Entertainment', 'Finance & Insurance', 'Sport & Fitness', 'Advice',
-  'Utilities & Mobile', 'Workwear',
+  'Adult', 'Advice', 'Beauty & Wellness', 'Benefits', 'Children & Baby', 'E-learning',
+  'Events & Experiences', 'Family, Leisure & Travel', 'Fashion & Lifestyle', 'Financial Wellbeing', 'Food & Drink', 'Gifts & Flowers',
+  'Home & Garden', 'Mental Wellbeing', 'Pets', 'Shopping Cards', 'Sport & Fitness', 'Technology & Office',
+  'Things to Do', 'Trade Supplies & Tools', 'Utilities & Mobile', 'Vehicles & Motoring', 'Workwear',
 ];
 
 // ── Verification uploads ────────────────────────────────────────
@@ -595,7 +595,11 @@ app.use(helmet({
   contentSecurityPolicy: false, // disabled — site uses inline scripts/styles
   crossOriginEmbedderPolicy: false,
 }));
-app.use(express.json({ limit: '50kb' }));
+// The brand spreadsheet import (up to 2,000 rows) needs a bigger body than
+// every other route, so it gets its own limit.
+const jsonSmall = express.json({ limit: '50kb' });
+const jsonImport = express.json({ limit: '3mb' });
+app.use((req, res, next) => (req.path === '/api/admin/partner-brands/import' ? jsonImport : jsonSmall)(req, res, next));
 app.use(session({
   store: new pgSession({
     conString: process.env.DATABASE_URL,
@@ -1401,10 +1405,11 @@ app.delete('/api/admin/news-items/:id', requireAdmin, async (req, res) => {
 function validPartnerBrandPayload(body) {
   const { brandName, logoUrl, slug } = body;
   if (!brandName || !String(brandName).trim()) return 'Brand name is required.';
-  if (!logoUrl || !String(logoUrl).trim()) return 'Logo URL is required.';
+  // No logo = stays on the cold list: it can't be switched live without one.
+  if (body.isActive && (!logoUrl || !String(logoUrl).trim())) return 'Add a logo before switching this brand live (untick Active to keep it on the cold list).';
   // Accept a full URL (pasted directly, or an R2 upload) or the root-relative
   // path the local-disk upload fallback returns (e.g. /local-uploads/...).
-  if (!/^https?:\/\//i.test(logoUrl) && !logoUrl.startsWith('/')) {
+  if (logoUrl && !/^https?:\/\//i.test(logoUrl) && !logoUrl.startsWith('/')) {
     return 'Logo URL must start with http://, https://, or / (from Upload Logo).';
   }
   if (!body.aboutBrand || !String(body.aboutBrand).trim()) return 'Please add a short "About the brand" paragraph for the brand page.';
@@ -1451,6 +1456,40 @@ app.put('/api/admin/partner-brands/:id', requireAdmin, async (req, res) => {
     if (err.code === '23505') return res.status(400).json({ error: 'That slug is already in use by another brand.' });
     console.error('Update partner brand error:', err.message);
     res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+// Spreadsheet import: brand name, category, description per row. New brands
+// land on the cold list (inactive, no logo) — nothing goes on the live site
+// until a logo is attached and the brand is switched to Active.
+app.post('/api/admin/partner-brands/import', requireAdmin, async (req, res) => {
+  const rows = Array.isArray(req.body && req.body.rows) ? req.body.rows : null;
+  if (!rows || !rows.length) return res.status(400).json({ error: 'No rows to import.' });
+  if (rows.length > 2000) return res.status(400).json({ error: 'Please import at most 2,000 brands at a time.' });
+
+  const clean = [], invalid = [], seen = new Set();
+  rows.forEach((r, i) => {
+    const line = Number(r && r.line) || i + 2;
+    const brandName = String((r && r.brandName) || '').trim().slice(0, 120);
+    const category = String((r && r.category) || '').trim();
+    const aboutBrand = String((r && r.aboutBrand) || '').trim();
+    const slug = brandSlug(brandName);
+    if (!brandName || !slug) return invalid.push({ line, error: 'No brand name' });
+    if (!OFFER_CATEGORIES.includes(category)) return invalid.push({ line, brandName, error: 'Unknown category "' + category + '"' });
+    if (aboutBrand.length > 1500) return invalid.push({ line, brandName, error: 'Description over 1,500 characters' });
+    if (seen.has(slug)) return invalid.push({ line, brandName, error: 'Duplicate of an earlier row' });
+    seen.add(slug);
+    // Optional website and logo links (e.g. from an Awin export); https only
+    const link = v => { const u = String(v || '').trim().replace(/^http:\/\//i, 'https://'); return /^https:\/\/[^\s]+$/i.test(u) && u.length <= 500 ? u : null; };
+    clean.push({ brandName, slug, category, aboutBrand: aboutBrand || null, websiteUrl: link(r.websiteUrl), logoUrl: link(r.logoUrl) });
+  });
+
+  try {
+    const result = await importPartnerBrands(clean, !!req.body.updateExisting);
+    res.json({ ...result, invalid });
+  } catch (err) {
+    console.error('Brand import error:', err.message);
+    res.status(500).json({ error: 'Import failed, nothing was saved. Please try again.' });
   }
 });
 
