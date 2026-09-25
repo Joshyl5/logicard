@@ -304,6 +304,8 @@ async function initDb() {
   // Imported brands start on a "cold list": inactive with no logo yet. A
   // brand can only be switched live once it has a logo (checked in server.js).
   await pool.query(`ALTER TABLE partner_brands ALTER COLUMN logo_url DROP NOT NULL`);
+  // Search tags (comma separated), e.g. "spa, relaxation, days out"
+  await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS tags TEXT`);
   // "Feature on brands carousel" (the homepage logo strip). When the column is
   // first added, brands that are live now stay on it so nothing changes.
   const hasCarousel = await pool.query(`SELECT 1 FROM information_schema.columns WHERE table_name = 'partner_brands' AND column_name = 'featured_carousel'`);
@@ -577,6 +579,7 @@ function toPartnerBrand(row) {
     slug:      row.slug,
     isActive:  row.is_active,
     featuredCarousel: !!row.featured_carousel,
+    tags:      row.tags || '',
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -876,28 +879,28 @@ async function getPartnerBrandById(id) {
 
 async function createPartnerBrand(data) {
   const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0,
-          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null, featuredCarousel = false } = data;
+          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null, featuredCarousel = false, tags = null } = data;
 
   const r = await pool.query(`
-    INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, banner_url, website_url, featured_carousel)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+    INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, banner_url, website_url, featured_carousel, tags)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
     RETURNING *
-  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, aboutBrand, category, bannerUrl || null, websiteUrl || null, !!featuredCarousel]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, aboutBrand, category, bannerUrl || null, websiteUrl || null, !!featuredCarousel, tags || null]);
 
   return toPartnerBrand(r.rows[0]);
 }
 
 async function updatePartnerBrand(id, data) {
   const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0,
-          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null, featuredCarousel = false } = data;
+          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null, featuredCarousel = false, tags = null } = data;
 
   const r = await pool.query(`
     UPDATE partner_brands SET
       brand_name = $1, logo_url = $2, slug = $3, is_active = $4, sort_order = $5,
-      about_brand = $7, category = $8, banner_url = $9, website_url = $10, featured_carousel = $11, updated_at = NOW()
+      about_brand = $7, category = $8, banner_url = $9, website_url = $10, featured_carousel = $11, tags = $12, updated_at = NOW()
     WHERE id = $6
     RETURNING *
-  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id, aboutBrand, category, bannerUrl || null, websiteUrl || null, !!featuredCarousel]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id, aboutBrand, category, bannerUrl || null, websiteUrl || null, !!featuredCarousel, tags || null]);
 
   return toPartnerBrand(r.rows[0]);
 }
@@ -919,12 +922,12 @@ async function importPartnerBrands(rows, updateExisting) {
         if (!updateExisting) { result.skipped++; continue; }
         // Refresh category, About and website link (e.g. a tracked Awin link); only fill in a logo where there isn't one yet
         await client.query(`UPDATE partner_brands SET category = $1, about_brand = $2,
-            logo_url = COALESCE(NULLIF(logo_url, ''), $4), website_url = COALESCE($5, website_url), updated_at = NOW() WHERE id = $3`,
-          [row.category, row.aboutBrand, existing.rows[0].id, row.logoUrl || null, row.websiteUrl || null]);
+            logo_url = COALESCE(NULLIF(logo_url, ''), $4), website_url = COALESCE($5, website_url), tags = COALESCE($6, tags), updated_at = NOW() WHERE id = $3`,
+          [row.category, row.aboutBrand, existing.rows[0].id, row.logoUrl || null, row.websiteUrl || null, row.tags || null]);
         result.updated++;
       } else {
-        await client.query(`INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, website_url)
-          VALUES ($1, $2, $3, false, 0, $4, $5, $6)`, [row.brandName, row.logoUrl || null, row.slug, row.aboutBrand, row.category, row.websiteUrl || null]);
+        await client.query(`INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, website_url, tags)
+          VALUES ($1, $2, $3, false, 0, $4, $5, $6, $7)`, [row.brandName, row.logoUrl || null, row.slug, row.aboutBrand, row.category, row.websiteUrl || null, row.tags || null]);
         result.created++;
       }
     }
@@ -968,6 +971,19 @@ async function setPartnerBrandsLive(ids, live) {
 async function setPartnerBrandsCarousel(ids, on) {
   const r = await pool.query('UPDATE partner_brands SET featured_carousel = $2, updated_at = NOW() WHERE id = ANY($1::int[]) RETURNING id', [ids, !!on]);
   return r.rowCount;
+}
+
+// Fill empty tags from the bundled list (never overwrites tags set in admin)
+async function fillEmptyBrandTags(tagsFor) {
+  const r = await pool.query("SELECT id, brand_name FROM partner_brands WHERE tags IS NULL OR tags = ''");
+  let n = 0;
+  for (const row of r.rows) {
+    const tags = tagsFor(row.brand_name);
+    if (!tags) continue;
+    await pool.query("UPDATE partner_brands SET tags = $1 WHERE id = $2 AND (tags IS NULL OR tags = '')", [tags, row.id]);
+    n++;
+  }
+  return n;
 }
 
 async function setPartnerBrandLogo(id, logoUrl) {
@@ -1769,7 +1785,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel, fillEmptyBrandTags,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,

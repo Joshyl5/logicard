@@ -65,7 +65,7 @@ function filterBrands(query) {
   const logo = filterValue('fLogo'), carousel = filterValue('fCarousel'), offers = filterValue('fOffers'), cat = filterValue('fCategory');
   return allBrands.filter(b =>
     (activeTab === 'all' || (activeTab === 'live') === isLive(b)) &&
-    (!q || (b.brandName || '').toLowerCase().includes(q)) &&
+    (!q || (b.brandName || '').toLowerCase().includes(q) || (b.tags || '').toLowerCase().includes(q)) &&
     matchYesNo(logo, !!b.logoUrl) &&
     matchYesNo(carousel, !!b.featuredCarousel) &&
     matchYesNo(offers, (b.liveOffers || 0) > 0) &&
@@ -192,6 +192,7 @@ function openModal(id) {
       document.getElementById('brandAbout').value     = brand.aboutBrand || '';
       document.getElementById('brandBannerUrl').value = brand.bannerUrl || '';
       document.getElementById('brandWebsite').value   = brand.websiteUrl || '';
+      document.getElementById('brandTags').value      = brand.tags || '';
       document.getElementById('brandIsActive').checked = !!brand.isActive;
       document.getElementById('brandCarousel').checked = !!brand.featuredCarousel;
       brandSlugInput.value = brand.slug || '';
@@ -253,6 +254,7 @@ brandForm.addEventListener('submit', async e => {
     aboutBrand: document.getElementById('brandAbout').value.trim() || null,
     bannerUrl:  document.getElementById('brandBannerUrl').value.trim() || null,
     websiteUrl: document.getElementById('brandWebsite').value.trim() || null,
+    tags: document.getElementById('brandTags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean).join(', ') || null,
     isActive:  document.getElementById('brandIsActive').checked,
     featuredCarousel: document.getElementById('brandCarousel').checked,
   };
@@ -409,7 +411,7 @@ function readImportRows(sheetRows) {
   if (headerIdx !== -1 && headerIdx < 10) {
     const h = sheetRows[headerIdx].map(c => String(c).toLowerCase().trim());
     const find = (test, fallback) => { const i = h.findIndex(test); return i === -1 ? fallback : i; };
-    col = { cat: find(isCat, 1), desc: find(isDesc, 2), web: find(x => /website|web site|homepage/.test(x), -1), logo: find(x => /logo/.test(x), -1) };
+    col = { cat: find(isCat, 1), desc: find(isDesc, 2), web: find(x => /website|web site|homepage/.test(x), -1), logo: find(x => /logo/.test(x), -1), tags: find(x => /\btags?\b|keywords/.test(x), -1) };
     col.name = h.findIndex((x, i) => isName(x) && i !== col.cat && i !== col.desc);
     if (col.name === -1) col.name = 0;
   } else headerIdx = -1;
@@ -420,8 +422,9 @@ function readImportRows(sheetRows) {
     const aboutBrand = String(r[col.desc] ?? '').trim();
     const websiteUrl = col.web >= 0 ? String(r[col.web] ?? '').trim() : '';
     const logoUrl = col.logo >= 0 ? String(r[col.logo] ?? '').trim() : '';
+    const tags = col.tags >= 0 ? String(r[col.tags] ?? '').trim() : '';
     if (!brandName && !rawCategory && !aboutBrand) return; // blank line
-    rows.push({ line: headerIdx + 2 + i, brandName, rawCategory, aboutBrand, websiteUrl, logoUrl });
+    rows.push({ line: headerIdx + 2 + i, brandName, rawCategory, aboutBrand, websiteUrl, logoUrl, tags });
   });
   return rows;
 }
@@ -513,7 +516,7 @@ function initImport() {
   go.addEventListener('click', async () => {
     err.textContent = '';
     const rows = importRows.filter(r => r.brandName && r.aboutBrand.length <= 1500)
-      .map(r => ({ line: r.line, brandName: r.brandName, category: importMap[r.rawCategory], aboutBrand: r.aboutBrand, websiteUrl: r.websiteUrl, logoUrl: r.logoUrl }));
+      .map(r => ({ line: r.line, brandName: r.brandName, category: importMap[r.rawCategory], aboutBrand: r.aboutBrand, websiteUrl: r.websiteUrl, logoUrl: r.logoUrl, tags: r.tags }));
     const upd = document.getElementById('importUpdate');
     go.disabled = true; go.textContent = 'Importing…';
     try {

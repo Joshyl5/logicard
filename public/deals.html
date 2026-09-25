@@ -458,7 +458,7 @@
       function render() {
         var q = input.value.trim().toLowerCase();
         var shown = offers.filter(function (o) {
-          return !q || [o.merchantName, o.title, o.description, o.category].join(' ').toLowerCase().indexOf(q) !== -1;
+          return !q || [o.merchantName, o.title, o.description, o.category, o.tags].join(' ').toLowerCase().indexOf(q) !== -1;
         });
         grid.innerHTML = shown.map(function (o) {
           return dealCard(o, (safeImg(o.logoUrl) && o.logoUrl) || logos[key(o.merchantName)]);

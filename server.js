@@ -21,7 +21,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel, fillEmptyBrandTags,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -80,6 +80,11 @@ function brandKey(name) {
   return String(name || '').toLowerCase().replace(/^the\s+/, '').replace(/\((uk|global|sweden|uk & ie)\)/g, '')
     .replace(/\b(uk|gb|ltd|limited)\b/g, '').replace(/[^a-z0-9]/g, '');
 }
+// Search tags bundled with the site (data/brand-tags.json), used to fill any
+// brand whose Tags are empty; admins can edit tags on the brand afterwards.
+let BRAND_TAGS = {};
+try { BRAND_TAGS = require('./data/brand-tags.json').brands || {}; }
+catch (err) { console.warn('[tags] data/brand-tags.json not loaded:', err.message); }
 function webRank(name) {
   const hit = BRAND_POPULARITY[brandKey(name)];
   return hit && hit.rank ? hit.rank : Number.MAX_SAFE_INTEGER;
@@ -1532,7 +1537,8 @@ app.post('/api/admin/partner-brands/import', requireAdmin, async (req, res) => {
     seen.add(slug);
     // Optional website and logo links (e.g. from an Awin export); https only
     const link = v => { const u = String(v || '').trim().replace(/^http:\/\//i, 'https://'); return /^https:\/\/[^\s]+$/i.test(u) && u.length <= 500 ? u : null; };
-    clean.push({ brandName, slug, category, aboutBrand: aboutBrand || null, websiteUrl: link(r.websiteUrl), logoUrl: link(r.logoUrl) });
+    const tags = String((r && r.tags) || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean).slice(0, 25).join(', ').slice(0, 600);
+    clean.push({ brandName, slug, category, aboutBrand: aboutBrand || null, websiteUrl: link(r.websiteUrl), logoUrl: link(r.logoUrl), tags: tags || null });
   });
 
   try {
@@ -2375,8 +2381,10 @@ app.get('/api/admin/analytics/csv', requireAdmin, async (req, res) => {
 // because there's no member to target.
 app.get('/api/public/offers', publicOffersLimiter, async (_req, res) => {
   const offers = await rankOffers((await cachedActiveOffers()).filter(o => !o.targetGender && offerListed(o)));
+  const tagsByBrand = new Map((await cachedPartnerBrands()).map(b => [brandKey(b.brandName), b.tags || '']));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug,
+    tags: tagsByBrand.get(brandKey(merchantName)) || BRAND_TAGS[brandKey(merchantName)] || '',
   })));
 });
 
@@ -2399,7 +2407,7 @@ app.get('/api/public/logistics-news', publicOffersLimiter, async (_req, res) => 
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
   const brands = await rankBrands(await cachedPartnerBrands());
-  res.json(brands.map(({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl }) => ({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl })));
+  res.json(brands.map(({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl, tags }) => ({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl, tags })));
 });
 
 // ── Offers (closed-group — verified members only) ───────────────
@@ -3038,6 +3046,9 @@ app.listen(PORT, () => {
   // Give the DB pool a moment on cold start, then run daily thereafter.
   setTimeout(repairBrandLogos, 5 * 1000);
   setTimeout(localiseAwinImages, 30 * 1000);
+  setTimeout(() => fillEmptyBrandTags(name => BRAND_TAGS[brandKey(name)] || null)
+    .then(n => { if (n) console.log('[tags] Filled search tags for ' + n + ' brands.'); })
+    .catch(err => console.error('[tags] fill failed:', err.message)), 10 * 1000);
   setTimeout(runVerificationPurge, 60 * 1000);
   setInterval(runVerificationPurge, PURGE_SWEEP_INTERVAL_MS);
 

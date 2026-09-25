@@ -275,6 +275,18 @@
       .featured-deals-section { padding: 8px 20px 56px; }
       .featured-deals-grid { grid-template-columns: 1fr; gap: 16px; }
     }
+
+    /* Every section below the hero sits on the same 1080px column as the
+       logo, text left-aligned to the logo's left edge. */
+    .deals-cats-section, .featured-deals-section, .bottom-cta {
+      padding-left: max(20px, calc(50% - 540px)); padding-right: max(20px, calc(50% - 540px)); text-align: left;
+    }
+    .deals-cats-grid, .featured-deals-grid { max-width: none; }
+    .featured-deals-head { text-align: left; }
+    .featured-deals-empty { text-align: left; }
+    .deals-cats-grid { grid-template-columns: repeat(5, 1fr); }
+    @media (max-width: 700px) { .deals-cats-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 600px) { .deals-cats-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
@@ -397,7 +409,8 @@
         });
       }
       function isSafeImageUrl(u) {
-        return typeof u === 'string' && /^https:\/\//i.test(u);
+        // https links, or images saved on Logicard (/local-uploads/…, /images/…)
+        return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u));
       }
 
       fetch('/api/public/featured-offers')
@@ -447,6 +460,11 @@
     .dbc-row-head a:hover { text-decoration: underline; }
     .dbc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 18px; }
     .dbc-empty { color: rgba(255,255,255,0.85); }
+    .dbc-brands { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 14px; }
+    .dbc-brand { display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; color: #fff; }
+    .dbc-brand-logo { box-sizing: border-box; width: 100%; height: 110px; background: #fff; border-radius: 14px; display: flex; align-items: center; justify-content: center; padding: 14px; overflow: hidden; }
+    .dbc-brand-logo img { max-width: 100%; max-height: 82px; object-fit: contain; }
+    .dbc-brand-name { font: 600 14px 'Montserrat', sans-serif; text-align: center; }
     .dbc-empty a { color: #FFB300; }
   </style>
   <script>
@@ -478,7 +496,7 @@
       var body = document.getElementById('dbcBody');
       var heading = document.getElementById('dbcHeading'), sub = document.getElementById('dbcSub');
       var form = document.getElementById('dealSearch'), input = document.getElementById('dealQuery');
-      var offers = [];
+      var offers = [], brands = [];
 
       function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
       function safeImg(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
@@ -508,16 +526,29 @@
         body.innerHTML = rows || '<p class="dbc-empty">New deals are on their way. Join now to be first to see them.</p>';
       }
 
+      function brandTile(b) {
+        return '<a class="dbc-brand" href="/deals/' + esc(b.slug) + '"><span class="dbc-brand-logo"><img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + ' logo" loading="lazy" onerror="var t=this.closest(\'.dbc-brand\'); if (t) t.remove();" /></span><span class="dbc-brand-name">' + esc(b.brandName) + '</span></a>';
+      }
+
+      // Searches deals AND partner brands: name, deal text, category and tags
       function renderSearch(q) {
         var words = q.toLowerCase().split(/\s+/).filter(Boolean);
-        var list = offers.filter(function (o) {
-          var hay = [o.merchantName, o.title, o.discountText, o.category].join(' ').toLowerCase();
-          return words.every(function (w) { return hay.indexOf(w) !== -1; });
+        // each word must start a word in the text ("spa" finds Spabreaks, not Homespace)
+        var res = words.map(function (w) { return new RegExp('(^|[^a-z0-9])' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')); });
+        function hit(text) { text = text.toLowerCase(); return res.every(function (re) { return re.test(text); }); }
+        var list = offers.filter(function (o) { return hit([o.merchantName, o.title, o.discountText, o.category, o.tags].join(' ')); });
+        var withDeal = {};
+        list.forEach(function (o) { withDeal[String(o.merchantName || '').toLowerCase().replace(/[^a-z0-9]/g, '')] = 1; });
+        var brandHits = brands.filter(function (b) {
+          return safeImg(b.logoUrl) && hit([b.brandName, b.category, b.tags].join(' ')) &&
+            !withDeal[String(b.brandName || '').toLowerCase().replace(/[^a-z0-9]/g, '')];
         });
         heading.innerHTML = 'Results for <span class="gold">' + esc(q) + '</span>';
-        sub.textContent = list.length + ' deal' + (list.length !== 1 ? 's' : '') + ' found.';
-        body.innerHTML = list.length ? '<div class="dbc-grid">' + list.map(card).join('') + '</div>'
-          : '<p class="dbc-empty">No deals match that search yet. <a href="#" id="dbcClear">Show all categories</a></p>';
+        sub.textContent = list.length + ' deal' + (list.length !== 1 ? 's' : '') + ' and ' + brandHits.length + ' partner brand' + (brandHits.length !== 1 ? 's' : '') + ' found.';
+        var html = '';
+        if (list.length) html += '<div class="dbc-row"><div class="dbc-row-head"><h3>Deals</h3></div><div class="dbc-grid">' + list.map(card).join('') + '</div></div>';
+        if (brandHits.length) html += '<div class="dbc-row"><div class="dbc-row-head"><h3>Partner brands</h3></div><div class="dbc-brands">' + brandHits.map(brandTile).join('') + '</div></div>';
+        body.innerHTML = html || '<p class="dbc-empty">Nothing matches that search yet. <a href="#" id="dbcClear">Show all categories</a></p>';
         var clear = document.getElementById('dbcClear');
         if (clear) clear.addEventListener('click', function (e) { e.preventDefault(); input.value = ''; renderCategories(); });
       }
@@ -532,7 +563,12 @@
       var timer;
       input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { run(false); }, 200); });
 
-      fetch('/api/public/offers').then(function (r) { return r.ok ? r.json() : []; }).then(function (list) {
+      Promise.all([
+        fetch('/api/public/offers').then(function (r) { return r.ok ? r.json() : []; }),
+        fetch('/api/public/partner-brands').then(function (r) { return r.ok ? r.json() : []; }).catch(function () { return []; })
+      ]).then(function (res) {
+        var list = res[0];
+        brands = (Array.isArray(res[1]) ? res[1] : []).filter(function (b) { return safeSlug(b.slug); });
         offers = (Array.isArray(list) ? list : []).filter(function (o) { return safeSlug(o.slug); });
         var q = new URLSearchParams(location.search).get('q');
         if (q) { input.value = q; run(true); } else run(false);
