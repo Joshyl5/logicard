@@ -9,7 +9,7 @@
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=11" />
+  <link rel="stylesheet" href="/nav.css?v=12" />
   <link rel="stylesheet" href="/footer.css?v=3" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -291,10 +291,10 @@
         <h1 class="deals-hero-title">Rewarding The People Who <span class="gold">Keep Britain Moving.</span></h1>
         <p class="deals-hero-sub">Member-only discounts on fuel, vehicles, workwear, food, days out and more - built for drivers, warehouse teams and everyone in the UK supply chain.</p>
 
-        <form class="deals-search-bar" onsubmit="return false;">
+        <form class="deals-search-bar" id="dealSearch" role="search">
           <div class="deals-search-input-wrap">
             <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" placeholder="Search deals, brands or categories…" />
+            <input type="search" id="dealQuery" placeholder="Search deals, brands or categories…" aria-label="Search deals" />
           </div>
           <button type="submit">Search</button>
         </form>
@@ -428,6 +428,115 @@
           }).join('');
         })
         .catch(function () { empty.hidden = false; });
+    })();
+  </script>
+
+  <!-- Deals by category + search results -->
+  <section class="featured-deals-section" id="deals-by-category">
+    <div class="featured-deals-head">
+      <h2 class="featured-deals-heading" id="dbcHeading">Deals by <span class="gold">Category</span></h2>
+      <p class="featured-deals-subtitle" id="dbcSub">Every live deal, grouped by category.</p>
+    </div>
+    <div id="dbcBody"></div>
+  </section>
+  <style>
+    .dbc-row { margin: 0 0 40px; }
+    .dbc-row-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 14px; flex-wrap: wrap; }
+    .dbc-row-head h3 { font: 400 24px 'Archivo Black', 'Arial Black', sans-serif; margin: 0; color: #fff; }
+    .dbc-row-head a { color: #FFB300; font-weight: 700; text-decoration: none; white-space: nowrap; }
+    .dbc-row-head a:hover { text-decoration: underline; }
+    .dbc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); gap: 18px; }
+    .dbc-empty { color: rgba(255,255,255,0.85); }
+    .dbc-empty a { color: #FFB300; }
+  </style>
+  <script>
+    (function () {
+      // Public category pages and the deal categories each one shows (same as the pages themselves)
+      var PAGES = [
+        ['trade-supplies-tools', 'Trade Supplies & Tools', ['Trade Supplies & Tools']],
+        ['workwear', 'Workwear', ['Workwear']],
+        ['vehicles-motoring', 'Vehicles & Motoring', ['Vehicles & Motoring']],
+        ['technology-office', 'Technology & Office', ['Technology & Office']],
+        ['home-garden', 'Home & Garden', ['Home & Garden']],
+        ['food-drink', 'Food & Drink', ['Food & Drink']],
+        ['fashion', 'Fashion & Lifestyle', ['Fashion & Lifestyle']],
+        ['family-leisure-travel', 'Family, Leisure & Travel', ['Family, Leisure & Travel']],
+        ['utilities-mobile', 'Utilities & Mobile', ['Utilities & Mobile']],
+        ['events-experiences', 'Events & Experiences', ['Events & Experiences']],
+        ['things-to-do', 'Things to Do', ['Things to Do']],
+        ['beauty-wellness', 'Beauty & Wellness', ['Beauty & Wellness']],
+        ['sport-fitness', 'Sport & Fitness', ['Sport & Fitness']],
+        ['children-baby', 'Children & Baby', ['Children & Baby']],
+        ['gifts-flowers', 'Gifts & Flowers', ['Gifts & Flowers']],
+        ['shopping-cards', 'Shopping Cards', ['Shopping Cards']],
+        ['pets', 'Pets', ['Pets']],
+        ['e-learning', 'E-learning', ['E-learning']],
+        ['financial-wellbeing', 'Financial Wellbeing', ['Financial Wellbeing', 'Advice', 'Benefits']],
+        ['mental-wellbeing', 'Mental Wellbeing', ['Mental Wellbeing', 'Advice', 'Benefits']]
+      ];
+      var PER_ROW = 4;
+      var body = document.getElementById('dbcBody');
+      var heading = document.getElementById('dbcHeading'), sub = document.getElementById('dbcSub');
+      var form = document.getElementById('dealSearch'), input = document.getElementById('dealQuery');
+      var offers = [];
+
+      function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+      function safeImg(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
+      function safeSlug(v) { return typeof v === 'string' && /^[a-z0-9-]+$/i.test(v); }
+
+      function card(o) {
+        var img = safeImg(o.imageUrl) ? '<img src="' + esc(o.imageUrl) + '" alt="" loading="lazy" />'
+          : '<div class="deal-card-image-fallback">' + esc((o.merchantName || 'Deal').charAt(0)) + '</div>';
+        return '<div class="deal-card"><div class="deal-card-image">' + img + '</div><div class="deal-card-body">' +
+          '<div class="deal-card-badges">' + (o.category ? '<span class="deal-card-badge">' + esc(o.category) + '</span>' : '') +
+          '<span class="deal-card-badge deal-card-badge--exclusive">Exclusive to Logicard</span></div>' +
+          '<h3 class="deal-card-brand">' + esc(o.merchantName) + '</h3>' +
+          '<p class="deal-card-title">' + esc(o.discountText || o.title) + '</p>' +
+          '<div class="deal-card-footer"><a href="/' + esc(o.slug) + '" class="deal-card-claim">Find out more</a></div></div></div>';
+      }
+
+      function renderCategories() {
+        heading.innerHTML = 'Deals by <span class="gold">Category</span>';
+        sub.textContent = 'Every live deal, grouped by category.';
+        var rows = PAGES.map(function (p) {
+          var list = offers.filter(function (o) { return p[2].indexOf(o.category) !== -1; });
+          if (!list.length) return '';
+          return '<div class="dbc-row"><div class="dbc-row-head"><h3>' + esc(p[1]) + '</h3>' +
+            '<a href="/' + p[0] + '.html">See all ' + list.length + ' &rarr;</a></div>' +
+            '<div class="dbc-grid">' + list.slice(0, PER_ROW).map(card).join('') + '</div></div>';
+        }).join('');
+        body.innerHTML = rows || '<p class="dbc-empty">New deals are on their way. Join now to be first to see them.</p>';
+      }
+
+      function renderSearch(q) {
+        var words = q.toLowerCase().split(/\s+/).filter(Boolean);
+        var list = offers.filter(function (o) {
+          var hay = [o.merchantName, o.title, o.discountText, o.category].join(' ').toLowerCase();
+          return words.every(function (w) { return hay.indexOf(w) !== -1; });
+        });
+        heading.innerHTML = 'Results for <span class="gold">' + esc(q) + '</span>';
+        sub.textContent = list.length + ' deal' + (list.length !== 1 ? 's' : '') + ' found.';
+        body.innerHTML = list.length ? '<div class="dbc-grid">' + list.map(card).join('') + '</div>'
+          : '<p class="dbc-empty">No deals match that search yet. <a href="#" id="dbcClear">Show all categories</a></p>';
+        var clear = document.getElementById('dbcClear');
+        if (clear) clear.addEventListener('click', function (e) { e.preventDefault(); input.value = ''; renderCategories(); });
+      }
+
+      function run(scroll) {
+        var q = input.value.trim();
+        if (q) renderSearch(q); else renderCategories();
+        if (scroll) document.getElementById('deals-by-category').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      form.addEventListener('submit', function (e) { e.preventDefault(); run(true); });
+      var timer;
+      input.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { run(false); }, 200); });
+
+      fetch('/api/public/offers').then(function (r) { return r.ok ? r.json() : []; }).then(function (list) {
+        offers = (Array.isArray(list) ? list : []).filter(function (o) { return safeSlug(o.slug); });
+        var q = new URLSearchParams(location.search).get('q');
+        if (q) { input.value = q; run(true); } else run(false);
+      }).catch(function () { body.innerHTML = '<p class="dbc-empty">Deals could not be loaded just now. Please refresh.</p>'; });
     })();
   </script>
 

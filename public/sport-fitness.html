@@ -9,7 +9,7 @@
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=11" />
+  <link rel="stylesheet" href="/nav.css?v=12" />
   <link rel="stylesheet" href="/footer.css?v=3" />
   <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
@@ -117,7 +117,7 @@
             (img(o.logoUrl) ? '<span class="dc-logo"><img src="' + esc(o.logoUrl) + '" alt="' + esc(o.merchantName) + ' logo" loading="lazy" onerror="this.parentNode.remove()" /></span>' : '') +
             '</a><div class="dc-body"><span class="dc-brand">' + esc(o.merchantName) + '</span><h3>' + esc(o.discountText || o.title) + '</h3>' +
             (o.category ? '<span class="dc-cat">' + esc(o.category) + '</span>' : '') +
-            '<div class="dc-btns"><a class="dc-visit" href="' + page + '">Visit ' + esc(o.merchantName) + ' page</a>' +
+            '<div class="dc-btns"><a class="dc-visit" href="' + page + '">Find out more</a>' +
             '<a class="dc-get" href="/signup.html?src=deal-' + o.slug + '" data-get-deal="' + o.slug + '">Get deal <span aria-hidden="true">&rarr;</span></a></div></div></div>';
         }).join('');
         if (window.LogicardDeal) LogicardDeal.apply();

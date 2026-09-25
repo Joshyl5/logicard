@@ -1669,6 +1669,24 @@ async function getLinkClickReport(linkId) {
 
 
 // ── Site analytics ────────────────────────────────────────────────
+// Popularity scores for ranking (last 90 days of activity + all-time link clicks)
+async function getPopularityScores() {
+  const offers = await pool.query(`
+    SELECT o.id, COALESCE(o.click_count, 0) + COUNT(e.id) AS score
+      FROM offers o
+      LEFT JOIN site_events e ON e.target = o.slug AND e.type IN ('view_offer', 'get_deal', 'copy_code')
+                             AND e.created_at > NOW() - INTERVAL '90 days'
+     GROUP BY o.id`);
+  const brands = await pool.query(`
+    SELECT target, COUNT(*) AS score FROM site_events
+     WHERE type = 'view_brand' AND created_at > NOW() - INTERVAL '90 days'
+     GROUP BY target`);
+  return {
+    offers: Object.fromEntries(offers.rows.map(r => [r.id, Number(r.score)])),
+    brands: Object.fromEntries(brands.rows.map(r => [r.target, Number(r.score)])),
+  };
+}
+
 async function recordSiteEvent(type, target, actor = null, membershipNumber = null) {
   await pool.query(
     'INSERT INTO site_events (type, target, actor, membership_number) VALUES ($1, $2, $3, $4)',
@@ -1751,7 +1769,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive, setPartnerBrandsCarousel,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,

@@ -21,7 +21,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive, setPartnerBrandsCarousel,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -68,6 +68,53 @@ const cachedActiveOffers    = () => cached('activeOffers', getActiveOffers);
 const cachedFeaturedPublic  = () => cached('featuredPublic', getFeaturedOffersForPublic);
 const cachedPartnerBrands   = () => cached('partnerBrands', getActivePartnerBrands);
 const cachedRecentNews      = () => cached('recentNews', () => getRecentNewsItems(30));
+const cachedPopularity      = () => cached('popularity', () => getPopularityScores().catch(() => ({ offers: {}, brands: {} })));
+
+// Brand notability from outside Logicard: each brand's website rank in the
+// Tranco top-1M list (data/brand-popularity.json; lower = bigger brand).
+// Brands not in the list rank after all that are.
+let BRAND_POPULARITY = {};
+try { BRAND_POPULARITY = require('./data/brand-popularity.json').brands || {}; }
+catch (err) { console.warn('[ranking] data/brand-popularity.json not loaded:', err.message); }
+function brandKey(name) {
+  return String(name || '').toLowerCase().replace(/^the\s+/, '').replace(/\((uk|global|sweden|uk & ie)\)/g, '')
+    .replace(/\b(uk|gb|ltd|limited)\b/g, '').replace(/[^a-z0-9]/g, '');
+}
+function webRank(name) {
+  const hit = BRAND_POPULARITY[brandKey(name)];
+  return hit && hit.rank ? hit.rank : Number.MAX_SAFE_INTEGER;
+}
+
+// ── Ranking: highest discount first, then most popular ──────────
+// "25% off" beats "10% off"; a percentage beats a £ saving; "£50 off" beats
+// "£10 off"; then the biggest brand (website traffic rank, above); then
+// Logicard activity (clicks + views / Get deal / code copies in the last
+// 90 days); then name. Used for every list of deals and brands.
+function discountRank(text) {
+  const t = String(text || '');
+  const pcts = (t.match(/(\d+(?:\.\d+)?)\s*%/g) || []).map(x => parseFloat(x));
+  const gbps = (t.match(/£\s*(\d+(?:[.,]\d+)?)/g) || []).map(x => parseFloat(x.replace(/[£\s,]/g, '')));
+  return { pct: pcts.length ? Math.max(...pcts) : -1, gbp: gbps.length ? Math.max(...gbps) : -1 };
+}
+function compareRank(a, b) {
+  return (b.pct - a.pct) || (b.gbp - a.gbp) || (a.web - b.web) || (b.pop - a.pop) || String(a.name).localeCompare(String(b.name));
+}
+async function rankOffers(offers) {
+  const pop = (await cachedPopularity()).offers;
+  return offers.map(o => ({ o, ...discountRank(o.discountText || o.title), web: webRank(o.merchantName), pop: pop[o.id] || 0, name: o.merchantName }))
+    .sort(compareRank).map(x => x.o);
+}
+async function rankBrands(brands) {
+  const [pop, offers] = await Promise.all([cachedPopularity(), cachedActiveOffers()]);
+  const norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  const live = offers.filter(o => !o.targetGender && offerListed(o));
+  return brands.map(b => {
+    const mine = live.filter(o => norm(o.merchantName) === norm(b.brandName));
+    const best = mine.map(o => discountRank(o.discountText || o.title)).sort((x, y) => (y.pct - x.pct) || (y.gbp - x.gbp))[0] || { pct: -1, gbp: -1 };
+    const offerPop = mine.reduce((n, o) => n + (pop.offers[o.id] || 0), 0);
+    return { b, pct: best.pct, gbp: best.gbp, web: webRank(b.brandName), pop: offerPop + (pop.brands[b.slug] || 0), name: b.brandName };
+  }).sort(compareRank).map(x => x.b);
+}
 
 // ── Site analytics helpers (admin > Analytics) ──
 // Page views are counted server-side; search engines and other bots are
@@ -677,6 +724,7 @@ app.get('/deals/:slug', async (req, res) => {
       const m = await getMemberByNumber(req.session.membershipNumber);
       viewerState = m && m.verified ? 'member' : m ? 'unverified' : 'guest';
     }
+    trackView(req, 'view_brand', req.params.slug, viewerState);
     res.send(renderBrandPage({ brand, offers: publicOffers, viewerState })
       .replace('<!-- SHARED_NAV -->', navFor(req, {}))
       .replace('<!-- SHARED_FOOTER -->', renderFooter()));
@@ -2323,7 +2371,7 @@ app.get('/api/admin/analytics/csv', requireAdmin, async (req, res) => {
 // same as the featured teasers below). Gender-targeted offers are left out
 // because there's no member to target.
 app.get('/api/public/offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await cachedActiveOffers()).filter(o => !o.targetGender && offerListed(o));
+  const offers = await rankOffers((await cachedActiveOffers()).filter(o => !o.targetGender && offerListed(o)));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug,
   })));
@@ -2347,14 +2395,14 @@ app.get('/api/public/logistics-news', publicOffersLimiter, async (_req, res) => 
 // Powers the "Our Partners" grid on partnerships.html — same public,
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
-  const brands = await cachedPartnerBrands();
+  const brands = await rankBrands(await cachedPartnerBrands());
   res.json(brands.map(({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl }) => ({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl })));
 });
 
 // ── Offers (closed-group — verified members only) ───────────────
 app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
   const member = await getMemberByNumber(req.session.membershipNumber);
-  const offers = filterOffersForMember((await getActiveOffers()).filter(offerListed), member ? member.gender : null);
+  const offers = await rankOffers(filterOffersForMember((await getActiveOffers()).filter(offerListed), member ? member.gender : null));
   const offerIds = offers.map(o => o.id);
   const [statsMap, myCodes, waitlisted] = await Promise.all([
     getCouponStatsForOffers(offerIds),

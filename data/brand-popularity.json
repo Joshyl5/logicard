@@ -1,0 +1,1042 @@
+{
+ "source": "Tranco list of the top 1 million websites by traffic (tranco-list.eu), downloaded 2026-09-25",
+ "note": "Lower rank = more popular website. Keys are brand names in lower case with spaces, punctuation, a leading The, and UK/Ltd removed.",
+ "brands": {
+  "1pmobile": {
+   "rank": 196060,
+   "domain": "1pmobile.com"
+  },
+  "5pmco": {
+   "rank": 421958,
+   "domain": "5pm.co.uk"
+  },
+  "8wines": {
+   "rank": 154215,
+   "domain": "8wines.com"
+  },
+  "academy": {
+   "rank": 468462,
+   "domain": "newskillsacademy.co.uk"
+  },
+  "affordablegolf": {
+   "rank": 147528,
+   "domain": "affordablegolf.co.uk"
+  },
+  "akko": {
+   "rank": 385649,
+   "domain": "akkogear.eu"
+  },
+  "alphabiolabs": {
+   "rank": 872028,
+   "domain": "alphabiolabs.co.uk"
+  },
+  "alpinetrek": {
+   "rank": 107105,
+   "domain": "alpinetrek.co.uk"
+  },
+  "ambassadorcruiseline": {
+   "rank": 172115,
+   "domain": "ambassadorcruiseline.com"
+  },
+  "apebornfitness": {
+   "rank": 449988,
+   "domain": "apebornfitness.com"
+  },
+  "arlosecurity": {
+   "rank": 3906,
+   "domain": "arlo.com"
+  },
+  "bakerross": {
+   "rank": 134049,
+   "domain": "bakerross.co.uk"
+  },
+  "bakerdays": {
+   "rank": 439360,
+   "domain": "bakerdays.com"
+  },
+  "beaverbrooks": {
+   "rank": 233306,
+   "domain": "beaverbrooks.co.uk"
+  },
+  "bedsco": {
+   "rank": 216692,
+   "domain": "beds.co.uk"
+  },
+  "bigdug": {
+   "rank": 328372,
+   "domain": "bigdug.co.uk"
+  },
+  "bookshoporg": {
+   "rank": 5525,
+   "domain": "bookshop.org"
+  },
+  "breezeesim": {
+   "rank": 445796,
+   "domain": "breezesim.com"
+  },
+  "britishmadegifts": {
+   "rank": 921862,
+   "domain": "britishmade.gifts"
+  },
+  "bstn": {
+   "rank": 40666,
+   "domain": "bstn.com"
+  },
+  "bulk": {
+   "rank": 49875,
+   "domain": "bulk.com"
+  },
+  "bunchesco": {
+   "rank": 593840,
+   "domain": "bunches.co.uk"
+  },
+  "buyfencingdirect": {
+   "rank": 440533,
+   "domain": "buyfencingdirect.co.uk"
+  },
+  "cadburygiftsdirect": {
+   "rank": 231842,
+   "domain": "cadburygiftsdirect.co.uk"
+  },
+  "caesersrewards": {
+   "rank": 7652,
+   "domain": "caesars.com"
+  },
+  "caesarsrewardshotels": {
+   "rank": 7652,
+   "domain": "caesars.com"
+  },
+  "calendarclubco": {
+   "rank": 253987,
+   "domain": "calendarclub.co.uk"
+  },
+  "candlesdirect": {
+   "rank": 565233,
+   "domain": "candlesdirect.com"
+  },
+  "caraudiocentre": {
+   "rank": 906668,
+   "domain": "caraudiocentre.co.uk"
+  },
+  "cardfactory": {
+   "rank": 108457,
+   "domain": "cardfactory.co.uk"
+  },
+  "cartridgepeople": {
+   "rank": 148764,
+   "domain": "cartridgepeople.com"
+  },
+  "castore": {
+   "rank": 63763,
+   "domain": "castore.com"
+  },
+  "chalkys": {
+   "rank": 251674,
+   "domain": "chalkys.com"
+  },
+  "championstravel": {
+   "rank": 612498,
+   "domain": "champions-travel.com"
+  },
+  "choicefurnituresuperstore": {
+   "rank": 278191,
+   "domain": "choicefurnituresuperstore.co.uk"
+  },
+  "christmastreeworld": {
+   "rank": 424480,
+   "domain": "christmastreeworld.co.uk"
+  },
+  "coversall": {
+   "rank": 611793,
+   "domain": "coversandall.co.uk"
+  },
+  "craftbuddy": {
+   "rank": 993740,
+   "domain": "craftbuddyshop.com"
+  },
+  "craftbuddyshop": {
+   "rank": 993740,
+   "domain": "craftbuddyshop.com"
+  },
+  "cronjager": {
+   "rank": 456522,
+   "domain": "cronjager.com"
+  },
+  "cruisenation": {
+   "rank": 524632,
+   "domain": "cruisenation.com"
+  },
+  "cuvva": {
+   "rank": 668441,
+   "domain": "cuvva.com"
+  },
+  "cvvillas": {
+   "rank": 951962,
+   "domain": "cvvillas.com"
+  },
+  "cybex": {
+   "rank": 40127,
+   "domain": "cybex-online.com"
+  },
+  "cyclestore": {
+   "rank": 479594,
+   "domain": "cyclestore.co.uk"
+  },
+  "dfranklin": {
+   "rank": 138243,
+   "domain": "dfranklincreation.com"
+  },
+  "dashwater": {
+   "rank": 749529,
+   "domain": "dash-water.com"
+  },
+  "debenhams": {
+   "rank": 22163,
+   "domain": "debenhams.com"
+  },
+  "decoratingcentreonline": {
+   "rank": 544120,
+   "domain": "decoratingcentreonline.co.uk"
+  },
+  "deerrun": {
+   "rank": 205958,
+   "domain": "deerruntreadmill.com"
+  },
+  "designersofas4u": {
+   "rank": 668844,
+   "domain": "designersofas4u.co.uk"
+  },
+  "didrikson": {
+   "rank": 336385,
+   "domain": "didriksons.com"
+  },
+  "direct365": {
+   "rank": 467788,
+   "domain": "direct365.co.uk"
+  },
+  "doulton": {
+   "rank": 668627,
+   "domain": "doulton.com"
+  },
+  "dreamhomestore": {
+   "rank": 648232,
+   "domain": "dreamhomestore.co.uk"
+  },
+  "dulux": {
+   "rank": 107131,
+   "domain": "dulux.co.uk"
+  },
+  "dusk": {
+   "rank": 65169,
+   "domain": "dusk.com"
+  },
+  "easylife": {
+   "rank": 608148,
+   "domain": "easylife.co.uk"
+  },
+  "ecoflow": {
+   "rank": 11055,
+   "domain": "ecoflow.com"
+  },
+  "ecovacs": {
+   "rank": 24786,
+   "domain": "ecovacs.com"
+  },
+  "ee": {
+   "rank": 12793,
+   "domain": "ee.co.uk"
+  },
+  "eemobile": {
+   "rank": 12793,
+   "domain": "ee.co.uk"
+  },
+  "electricshopcom": {
+   "rank": 605530,
+   "domain": "electricshop.com"
+  },
+  "elixirgardensupplies": {
+   "rank": 636996,
+   "domain": "elixirgardensupplies.co.uk"
+  },
+  "emma": {
+   "rank": 452661,
+   "domain": "emma-sleep.co.uk"
+  },
+  "emp": {
+   "rank": 146504,
+   "domain": "emp.co.uk"
+  },
+  "enjoythewood": {
+   "rank": 353775,
+   "domain": "enjoythewood.com"
+  },
+  "envirofonetradein": {
+   "rank": 479810,
+   "domain": "envirofone.com"
+  },
+  "esrtech": {
+   "rank": 111102,
+   "domain": "esrtech.com"
+  },
+  "esr": {
+   "rank": 111102,
+   "domain": "esrtech.com"
+  },
+  "eurosender": {
+   "rank": 191132,
+   "domain": "eurosender.com"
+  },
+  "fasttechnology": {
+   "rank": 71476,
+   "domain": "fastestvpn.com"
+  },
+  "fila": {
+   "rank": 711274,
+   "domain": "fila.co.uk"
+  },
+  "fishingtackleandbait": {
+   "rank": 600912,
+   "domain": "fishingtackleandbait.co.uk"
+  },
+  "fitjeans": {
+   "rank": 444358,
+   "domain": "fitjeans.com"
+  },
+  "flibcoglobal": {
+   "rank": 132692,
+   "domain": "flibco.com"
+  },
+  "floridatix": {
+   "rank": 627462,
+   "domain": "floridatix.com"
+  },
+  "footballticketnet": {
+   "rank": 146400,
+   "domain": "footballticketnet.com"
+  },
+  "foreo": {
+   "rank": 77846,
+   "domain": "foreo.com"
+  },
+  "formulaoneautocentres": {
+   "rank": 172673,
+   "domain": "f1autocentres.co.uk"
+  },
+  "fredolsencruiselines": {
+   "rank": 134079,
+   "domain": "fredolsencruises.com"
+  },
+  "freesoul": {
+   "rank": 534659,
+   "domain": "freesoul.com"
+  },
+  "frenchicpaint": {
+   "rank": 484846,
+   "domain": "frenchicpaint.co.uk"
+  },
+  "funko": {
+   "rank": 15266,
+   "domain": "funko.com"
+  },
+  "furnitureinfashion": {
+   "rank": 228506,
+   "domain": "furnitureinfashion.net"
+  },
+  "furniturebox": {
+   "rank": 494549,
+   "domain": "furniturebox.co.uk"
+  },
+  "gainsnutrition": {
+   "rank": 674328,
+   "domain": "gainsnutrition.uk"
+  },
+  "gardenista": {
+   "rank": 551293,
+   "domain": "gardenistauk.com"
+  },
+  "gilbertrugby": {
+   "rank": 672461,
+   "domain": "gilbertrugby.com"
+  },
+  "giraffetools": {
+   "rank": 381950,
+   "domain": "giraffetools.com"
+  },
+  "giraffetoolsinc": {
+   "rank": 381950,
+   "domain": "giraffetools.com"
+  },
+  "glasses2you": {
+   "rank": 551883,
+   "domain": "glasses2you.co.uk"
+  },
+  "goape": {
+   "rank": 171199,
+   "domain": "goape.co.uk"
+  },
+  "gousto": {
+   "rank": 151737,
+   "domain": "gousto.co.uk"
+  },
+  "gracestella": {
+   "rank": 953366,
+   "domain": "graceandstella.com"
+  },
+  "greatmagazines": {
+   "rank": 426496,
+   "domain": "greatmagazines.co.uk"
+  },
+  "grenade": {
+   "rank": 280653,
+   "domain": "grenade.com"
+  },
+  "gsequestrian": {
+   "rank": 262388,
+   "domain": "gsequestrian.co.uk"
+  },
+  "gsfcar": {
+   "rank": 48219,
+   "domain": "gsfcarparts.com"
+  },
+  "gsfcarparts": {
+   "rank": 48219,
+   "domain": "gsfcarparts.com"
+  },
+  "gtech": {
+   "rank": 338845,
+   "domain": "gtech.co.uk"
+  },
+  "gtechco": {
+   "rank": 338845,
+   "domain": "gtech.co.uk"
+  },
+  "hamleys": {
+   "rank": 118789,
+   "domain": "hamleys.com"
+  },
+  "hayloftplants": {
+   "rank": 231397,
+   "domain": "hayloft.co.uk"
+  },
+  "holidayextras": {
+   "rank": 39861,
+   "domain": "holidayextras.com"
+  },
+  "holydrinks": {
+   "rank": 66593,
+   "domain": "holy.com"
+  },
+  "holy": {
+   "rank": 66593,
+   "domain": "holy.com"
+  },
+  "hoppa": {
+   "rank": 215060,
+   "domain": "hoppa.com"
+  },
+  "houseofisabella": {
+   "rank": 388930,
+   "domain": "houseofisabella.co.uk"
+  },
+  "houseofwatches": {
+   "rank": 337306,
+   "domain": "houseofwatches.co.uk"
+  },
+  "housekeep": {
+   "rank": 481710,
+   "domain": "housekeep.com"
+  },
+  "hss": {
+   "rank": 295879,
+   "domain": "hss.com"
+  },
+  "hsshire": {
+   "rank": 295879,
+   "domain": "hss.com"
+  },
+  "hughes": {
+   "rank": 275022,
+   "domain": "hughes.co.uk"
+  },
+  "hyperoptic": {
+   "rank": 86401,
+   "domain": "hyperoptic.com"
+  },
+  "hyundaipowerproducts": {
+   "rank": 400374,
+   "domain": "hyundaipowerequipment.co.uk"
+  },
+  "idealworld": {
+   "rank": 182057,
+   "domain": "idealworld.tv"
+  },
+  "idealworldtv": {
+   "rank": 182057,
+   "domain": "idealworld.tv"
+  },
+  "iheat": {
+   "rank": 966793,
+   "domain": "iheat.co.uk"
+  },
+  "impericon": {
+   "rank": 49728,
+   "domain": "impericon.com"
+  },
+  "instantprint": {
+   "rank": 254119,
+   "domain": "instantprint.co.uk"
+  },
+  "jackery": {
+   "rank": 51785,
+   "domain": "jackery.com"
+  },
+  "joom": {
+   "rank": 4889,
+   "domain": "joom.com"
+  },
+  "joybuy": {
+   "rank": 42032,
+   "domain": "joybuy.co.uk"
+  },
+  "juicycouture": {
+   "rank": 631973,
+   "domain": "juicycouture.co.uk"
+  },
+  "justgoholidays": {
+   "rank": 676476,
+   "domain": "justgoholidays.com"
+  },
+  "katkin": {
+   "rank": 585794,
+   "domain": "katkin.com"
+  },
+  "krastase": {
+   "rank": 431561,
+   "domain": "kerastase.co.uk"
+  },
+  "kikomilano": {
+   "rank": 34845,
+   "domain": "kikocosmetics.com"
+  },
+  "kinguin": {
+   "rank": 25324,
+   "domain": "kinguin.net"
+  },
+  "kiteclothing": {
+   "rank": 281797,
+   "domain": "kite-clothing.co.uk"
+  },
+  "lakelandfashion": {
+   "rank": 384553,
+   "domain": "lakelandleather.co.uk"
+  },
+  "landofrugs": {
+   "rank": 323523,
+   "domain": "landofrugs.com"
+  },
+  "lateroomscom": {
+   "rank": 47692,
+   "domain": "laterooms.com"
+  },
+  "leisurelakesbikes": {
+   "rank": 278865,
+   "domain": "leisurelakesbikes.com"
+  },
+  "lightingdirect": {
+   "rank": 132461,
+   "domain": "lighting-direct.co.uk"
+  },
+  "lloydspharmacy": {
+   "rank": 90466,
+   "domain": "lloydspharmacy.com"
+  },
+  "londonboxoffice": {
+   "rank": 381402,
+   "domain": "londonboxoffice.co.uk"
+  },
+  "lovense": {
+   "rank": 15043,
+   "domain": "lovense.com"
+  },
+  "lovereading": {
+   "rank": 225975,
+   "domain": "lovereading.co.uk"
+  },
+  "lovetovisit": {
+   "rank": 262357,
+   "domain": "lovetovisit.com"
+  },
+  "lwtheatres": {
+   "rank": 176270,
+   "domain": "lwtheatres.co.uk"
+  },
+  "lycamobile": {
+   "rank": 313860,
+   "domain": "lycamobile.co.uk"
+  },
+  "lyco": {
+   "rank": 954088,
+   "domain": "lyco.co.uk"
+  },
+  "lylescott": {
+   "rank": 322936,
+   "domain": "lyleandscott.com"
+  },
+  "macdonaldhotels": {
+   "rank": 158531,
+   "domain": "macdonaldhotels.co.uk"
+  },
+  "machinemart": {
+   "rank": 129387,
+   "domain": "machinemart.co.uk"
+  },
+  "magazinesdirect": {
+   "rank": 57251,
+   "domain": "magazinesdirect.com"
+  },
+  "makemyblinds": {
+   "rank": 331048,
+   "domain": "makemyblinds.co.uk"
+  },
+  "materialsmarkettrading": {
+   "rank": 443145,
+   "domain": "materialsmarket.com"
+  },
+  "meaco": {
+   "rank": 119925,
+   "domain": "meaco.com"
+  },
+  "mindfulchef": {
+   "rank": 508383,
+   "domain": "mindfulchef.com"
+  },
+  "momcozy": {
+   "rank": 21699,
+   "domain": "momcozy.com"
+  },
+  "montirex": {
+   "rank": 178352,
+   "domain": "montirex.com"
+  },
+  "moo": {
+   "rank": 36284,
+   "domain": "moo.com"
+  },
+  "mothersearth": {
+   "rank": 689891,
+   "domain": "mothersearth.com"
+  },
+  "mytoolshed": {
+   "rank": 458147,
+   "domain": "mytoolshed.co.uk"
+  },
+  "mylee": {
+   "rank": 491939,
+   "domain": "mylee.co.uk"
+  },
+  "myprotein": {
+   "rank": 26258,
+   "domain": "myprotein.com"
+  },
+  "namesco": {
+   "rank": 156733,
+   "domain": "names.co.uk"
+  },
+  "naturalbabyshower": {
+   "rank": 290986,
+   "domain": "naturalbabyshower.co.uk"
+  },
+  "navimov": {
+   "rank": 44681,
+   "domain": "segway.com"
+  },
+  "navimoweu": {
+   "rank": 44681,
+   "domain": "segway.com"
+  },
+  "naylors": {
+   "rank": 389457,
+   "domain": "naylors.com"
+  },
+  "neweracap": {
+   "rank": 212265,
+   "domain": "neweracap.co.uk"
+  },
+  "newblinds": {
+   "rank": 948321,
+   "domain": "newblinds.co.uk"
+  },
+  "newblindsco": {
+   "rank": 948321,
+   "domain": "newblinds.co.uk"
+  },
+  "nextbase": {
+   "rank": 300548,
+   "domain": "nextbase.co.uk"
+  },
+  "nichebeauty": {
+   "rank": 52906,
+   "domain": "niche-beauty.com"
+  },
+  "nordicspirit": {
+   "rank": 525092,
+   "domain": "nordicspirit.co.uk"
+  },
+  "nourishlondon": {
+   "rank": 915443,
+   "domain": "nourishskinrange.com"
+  },
+  "o2": {
+   "rank": 18550,
+   "domain": "o2.co.uk"
+  },
+  "odsdesignerclothing": {
+   "rank": 692217,
+   "domain": "odsdesignerclothing.com"
+  },
+  "optimumnutrition": {
+   "rank": 98301,
+   "domain": "optimumnutrition.com"
+  },
+  "orangecountycbd": {
+   "rank": 866740,
+   "domain": "orangecounty-cbd.com"
+  },
+  "oxfordonlinepharmacy": {
+   "rank": 267740,
+   "domain": "oxfordonlinepharmacy.co.uk"
+  },
+  "pacoperfumerias": {
+   "rank": 649148,
+   "domain": "pacoperfumerias.co.uk"
+  },
+  "parcelabc": {
+   "rank": 353983,
+   "domain": "parcelabc.com"
+  },
+  "parkholidays": {
+   "rank": 163781,
+   "domain": "parkholidays.com"
+  },
+  "passmefast": {
+   "rank": 682978,
+   "domain": "passmefast.co.uk"
+  },
+  "porscheshop": {
+   "rank": 3816,
+   "domain": "porsche.com"
+  },
+  "posturite": {
+   "rank": 371430,
+   "domain": "posturite.co.uk"
+  },
+  "poundfun": {
+   "rank": 694797,
+   "domain": "poundfun.com"
+  },
+  "powertoolsdirect": {
+   "rank": 308788,
+   "domain": "powertoolsdirect.com"
+  },
+  "prepkitchen": {
+   "rank": 916759,
+   "domain": "prepkitchen.co.uk"
+  },
+  "proviz": {
+   "rank": 335843,
+   "domain": "provizsports.com"
+  },
+  "purpleparking": {
+   "rank": 516034,
+   "domain": "purpleparking.com"
+  },
+  "reebok": {
+   "rank": 61038,
+   "domain": "reebok.eu"
+  },
+  "reefsandals": {
+   "rank": 826753,
+   "domain": "reefsandals.co.uk"
+  },
+  "reliant": {
+   "rank": 353025,
+   "domain": "reliant.co.uk"
+  },
+  "renogy": {
+   "rank": 106171,
+   "domain": "renogy.com"
+  },
+  "rentaroof": {
+   "rank": 248049,
+   "domain": "rentaroof.co.uk"
+  },
+  "ribblecycles": {
+   "rank": 309019,
+   "domain": "ribblecycles.co.uk"
+  },
+  "riverisland": {
+   "rank": 15957,
+   "domain": "riverisland.com"
+  },
+  "riverislandie": {
+   "rank": 15957,
+   "domain": "riverisland.com"
+  },
+  "roadangelo": {
+   "rank": 649930,
+   "domain": "roadangelgroup.com"
+  },
+  "roadangel": {
+   "rank": 649930,
+   "domain": "roadangelgroup.com"
+  },
+  "rotarywatches": {
+   "rank": 468580,
+   "domain": "rotarywatches.com"
+  },
+  "ryman": {
+   "rank": 100661,
+   "domain": "ryman.co.uk"
+  },
+  "salomon": {
+   "rank": 24144,
+   "domain": "salomon.com"
+  },
+  "samboat": {
+   "rank": 300850,
+   "domain": "samboat.com"
+  },
+  "savillerow": {
+   "rank": 359909,
+   "domain": "savilerowco.com"
+  },
+  "savilerowcompany": {
+   "rank": 359909,
+   "domain": "savilerowco.com"
+  },
+  "schuh": {
+   "rank": 43741,
+   "domain": "schuh.co.uk"
+  },
+  "scottsdalegolf": {
+   "rank": 396501,
+   "domain": "scottsdalegolf.co.uk"
+  },
+  "scribbler": {
+   "rank": 370170,
+   "domain": "scribbler.com"
+  },
+  "seetickets": {
+   "rank": 16222,
+   "domain": "seetickets.com"
+  },
+  "shark": {
+   "rank": 50469,
+   "domain": "sharkninja.co.uk"
+  },
+  "sharkninja": {
+   "rank": 50469,
+   "domain": "sharkninja.co.uk"
+  },
+  "simplelighting": {
+   "rank": 512701,
+   "domain": "simplelighting.co.uk"
+  },
+  "simplysupplements": {
+   "rank": 175243,
+   "domain": "simplysupplements.co.uk"
+  },
+  "sirui": {
+   "rank": 280932,
+   "domain": "sirui.com"
+  },
+  "smilewhite": {
+   "rank": 902751,
+   "domain": "smilewhite.co.uk"
+  },
+  "spabreakscom": {
+   "rank": 125719,
+   "domain": "spabreaks.com"
+  },
+  "spacegoods": {
+   "rank": 416371,
+   "domain": "spacegoods.com"
+  },
+  "sportitfirst": {
+   "rank": 483820,
+   "domain": "sportitfirst.co.uk"
+  },
+  "spotlightoralcare": {
+   "rank": 967275,
+   "domain": "spotlightoralcare.com"
+  },
+  "starselect": {
+   "rank": 52306,
+   "domain": "startselect.com"
+  },
+  "startselect": {
+   "rank": 52306,
+   "domain": "startselect.com"
+  },
+  "suitdirect": {
+   "rank": 328425,
+   "domain": "suitdirect.co.uk"
+  },
+  "suttons": {
+   "rank": 283350,
+   "domain": "suttons.co.uk"
+  },
+  "tails": {
+   "rank": 318856,
+   "domain": "tails.com"
+  },
+  "tailscom": {
+   "rank": 318856,
+   "domain": "tails.com"
+  },
+  "tefal": {
+   "rank": 260931,
+   "domain": "tefal.co.uk"
+  },
+  "beautystore": {
+   "rank": 421377,
+   "domain": "thebeautystore.com"
+  },
+  "bottleclub": {
+   "rank": 414221,
+   "domain": "thebottleclub.com"
+  },
+  "cornishseaweedbathcompany": {
+   "rank": 654308,
+   "domain": "cornishseaweedbath.co.uk"
+  },
+  "foldlondon": {
+   "rank": 404410,
+   "domain": "thefoldlondon.com"
+  },
+  "gymking": {
+   "rank": 324729,
+   "domain": "thegymking.com"
+  },
+  "healthlottery": {
+   "rank": 378782,
+   "domain": "healthlottery.co.uk"
+  },
+  "jockeyclub": {
+   "rank": 105881,
+   "domain": "thejockeyclub.co.uk"
+  },
+  "towelshop": {
+   "rank": 840541,
+   "domain": "thetowelshop.co.uk"
+  },
+  "whiskyexchange": {
+   "rank": 65615,
+   "domain": "thewhiskyexchange.com"
+  },
+  "woolroom": {
+   "rank": 310654,
+   "domain": "thewoolroom.com"
+  },
+  "thistlehotels": {
+   "rank": 371613,
+   "domain": "thistle.com"
+  },
+  "thompsonmorgan": {
+   "rank": 49100,
+   "domain": "thompson-morgan.com"
+  },
+  "tigersheds": {
+   "rank": 400941,
+   "domain": "tigersheds.com"
+  },
+  "tooledup": {
+   "rank": 236198,
+   "domain": "tooled-up.com"
+  },
+  "touchnote": {
+   "rank": 915667,
+   "domain": "touchnote.com"
+  },
+  "towerhousewares": {
+   "rank": 486576,
+   "domain": "towerhousewares.co.uk"
+  },
+  "trotec": {
+   "rank": 190356,
+   "domain": "trotec.com"
+  },
+  "turbopass": {
+   "rank": 225021,
+   "domain": "turbopass.com"
+  },
+  "ultrahumanhealthcare": {
+   "rank": 43091,
+   "domain": "ultrahuman.com"
+  },
+  "vapoholic": {
+   "rank": 324413,
+   "domain": "vapoholic.co.uk"
+  },
+  "venchi": {
+   "rank": 110479,
+   "domain": "venchi.com"
+  },
+  "victoriabeckham": {
+   "rank": 139415,
+   "domain": "victoriabeckham.com"
+  },
+  "vino": {
+   "rank": 242308,
+   "domain": "vino.com"
+  },
+  "vipcars": {
+   "rank": 355983,
+   "domain": "vipcars.com"
+  },
+  "virtualcollege": {
+   "rank": 467922,
+   "domain": "virtual-college.co.uk"
+  },
+  "vitabiotics": {
+   "rank": 126036,
+   "domain": "vitabiotics.com"
+  },
+  "warrantywise": {
+   "rank": 636225,
+   "domain": "warrantywise.co.uk"
+  },
+  "waterdropfilter": {
+   "rank": 680421,
+   "domain": "waterdropfilter.co.uk"
+  },
+  "waterstones": {
+   "rank": 10875,
+   "domain": "waterstones.com"
+  },
+  "webbsmotorcycles": {
+   "rank": 680905,
+   "domain": "webbsmotorcycles.co.uk"
+  },
+  "weightworld": {
+   "rank": 420689,
+   "domain": "weightworld.uk"
+  },
+  "weirdfish": {
+   "rank": 75769,
+   "domain": "weirdfish.co.uk"
+  },
+  "worldsim": {
+   "rank": 572406,
+   "domain": "worldsim.com"
+  },
+  "yalestore": {
+   "rank": 412238,
+   "domain": "yalehome.co.uk"
+  },
+  "yourparkingspace": {
+   "rank": 135518,
+   "domain": "yourparkingspace.co.uk"
+  }
+ }
+}

@@ -270,7 +270,7 @@ function renderOffers(offers) {
         ${o.category ? `<span class="dc-cat">${escapeHtml(o.category)}</span>` : ''}
         ${o.openedAt ? `<span class="dc-opened">Opened ${new Date(o.openedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>` : ''}
         <div class="dc-btns">
-          <a class="dc-visit" href="${page}">Visit ${escapeHtml(o.merchantName)} page</a>
+          <a class="dc-visit" href="${page}">Find out more</a>
           <a class="dc-get" href="${get}">Get deal <span aria-hidden="true">&rarr;</span></a>
         </div>
       </div>

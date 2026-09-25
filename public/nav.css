@@ -96,6 +96,9 @@ body.site-menu-open { overflow: hidden; }
 .site-header-wrap ~ .members-header .mh-topbar-actions,
 .site-header-wrap ~ .members-header .mh-user { margin-left: auto !important; justify-content: flex-end; }
 .site-header-wrap ~ .members-header .mh-inner { justify-content: flex-end; }
+/* Dashboard/verify: My Offers + My Dashboard sit at the left, on the logo line */
+.site-header-wrap ~ .members-header .cat-nav { padding-left: 0; margin-right: auto; }
+@media (max-width: 640px) { .site-header-wrap ~ .members-header .cat-nav { justify-content: flex-start; } }
 @media (max-width: 640px) {
   .site-header-wrap ~ .members-header .mh-topbar-actions { width: 100%; justify-content: flex-end; }
   .site-header-wrap ~ .members-header .mh-user { width: 100%; justify-content: flex-end; flex-wrap: wrap; }

@@ -30,7 +30,7 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
             <h3>${escapeHtml(o.discountText || o.title)}</h3>
             ${o.category ? `<span class="dc-cat">${escapeHtml(o.category)}</span>` : ''}
             <div class="dc-btns">
-              <a class="dc-visit" href="/${escapeHtml(o.slug)}">Visit ${escapeHtml(o.merchantName || name)} page</a>
+              <a class="dc-visit" href="/${escapeHtml(o.slug)}">Find out more</a>
               <a class="dc-get" href="${getHref(escapeHtml(o.slug))}" data-get-deal="${escapeHtml(o.slug)}">Get deal <span aria-hidden="true">&rarr;</span></a>
             </div>
           </div>
@@ -70,7 +70,7 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=11" />
+  <link rel="stylesheet" href="/nav.css?v=12" />
   <link rel="stylesheet" href="/footer.css?v=3" />
   <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
@@ -143,7 +143,7 @@ function renderBrandNotFound() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brand Not Found — Logicard</title>
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="stylesheet" href="/nav.css?v=11" />
+  <link rel="stylesheet" href="/nav.css?v=12" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }
