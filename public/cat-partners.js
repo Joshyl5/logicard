@@ -27,13 +27,12 @@
 
   fetch('/api/public/partner-brands').then(function (r) { return r.ok ? r.json() : []; }).then(function (brands) {
     var list = (brands || []).filter(function (b) {
-      return cats.indexOf(b.category) !== -1 && /^[a-z0-9-]+$/i.test(b.slug || '');
+      return cats.indexOf(b.category) !== -1 && /^[a-z0-9-]+$/i.test(b.slug || '') && safeImg(b.logoUrl);
     }).slice(0, MAX);
     if (!list.length) return;
     box.innerHTML = list.map(function (b) {
-      var logo = safeImg(b.logoUrl)
-        ? '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + ' logo" loading="lazy" onerror="this.outerHTML=\'<span class=&quot;cp-initial&quot;>' + esc((b.brandName || '?').charAt(0)) + '</span>\'" />'
-        : '<span class="cp-initial">' + esc((b.brandName || '?').charAt(0)) + '</span>';
+      // No logo, or a logo that fails to load: the brand is left out entirely
+      var logo = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + ' logo" loading="lazy" onerror="var t=this.closest(\'.cp-tile\'); if (t) t.remove();" />';
       return '<a class="cp-tile" href="/deals/' + esc(b.slug) + '"><span class="cp-logo">' + logo + '</span><span class="cp-name">' + esc(b.brandName) + '</span></a>';
     }).join('');
     section.hidden = false;

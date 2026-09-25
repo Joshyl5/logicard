@@ -304,6 +304,13 @@ async function initDb() {
   // Imported brands start on a "cold list": inactive with no logo yet. A
   // brand can only be switched live once it has a logo (checked in server.js).
   await pool.query(`ALTER TABLE partner_brands ALTER COLUMN logo_url DROP NOT NULL`);
+  // "Feature on brands carousel" (the homepage logo strip). When the column is
+  // first added, brands that are live now stay on it so nothing changes.
+  const hasCarousel = await pool.query(`SELECT 1 FROM information_schema.columns WHERE table_name = 'partner_brands' AND column_name = 'featured_carousel'`);
+  if (!hasCarousel.rowCount) {
+    await pool.query(`ALTER TABLE partner_brands ADD COLUMN featured_carousel BOOLEAN NOT NULL DEFAULT FALSE`);
+    await pool.query(`UPDATE partner_brands SET featured_carousel = is_active`);
+  }
 
   // 2026-09-25: categories renamed to match the public category pages.
   // Idempotent: once renamed, the old names no longer match anything.
@@ -569,6 +576,7 @@ function toPartnerBrand(row) {
     websiteUrl: row.website_url,
     slug:      row.slug,
     isActive:  row.is_active,
+    featuredCarousel: !!row.featured_carousel,
     sortOrder: row.sort_order,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -868,28 +876,28 @@ async function getPartnerBrandById(id) {
 
 async function createPartnerBrand(data) {
   const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0,
-          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null } = data;
+          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null, featuredCarousel = false } = data;
 
   const r = await pool.query(`
-    INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, banner_url, website_url)
-    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+    INSERT INTO partner_brands (brand_name, logo_url, slug, is_active, sort_order, about_brand, category, banner_url, website_url, featured_carousel)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     RETURNING *
-  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, aboutBrand, category, bannerUrl || null, websiteUrl || null]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, aboutBrand, category, bannerUrl || null, websiteUrl || null, !!featuredCarousel]);
 
   return toPartnerBrand(r.rows[0]);
 }
 
 async function updatePartnerBrand(id, data) {
   const { brandName, logoUrl, slug = null, isActive = true, sortOrder = 0,
-          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null } = data;
+          aboutBrand = null, category = null, bannerUrl = null, websiteUrl = null, featuredCarousel = false } = data;
 
   const r = await pool.query(`
     UPDATE partner_brands SET
       brand_name = $1, logo_url = $2, slug = $3, is_active = $4, sort_order = $5,
-      about_brand = $7, category = $8, banner_url = $9, website_url = $10, updated_at = NOW()
+      about_brand = $7, category = $8, banner_url = $9, website_url = $10, featured_carousel = $11, updated_at = NOW()
     WHERE id = $6
     RETURNING *
-  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id, aboutBrand, category, bannerUrl || null, websiteUrl || null]);
+  `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id, aboutBrand, category, bannerUrl || null, websiteUrl || null, !!featuredCarousel]);
 
   return toPartnerBrand(r.rows[0]);
 }
@@ -954,6 +962,11 @@ async function setPartnerBrandsLive(ids, live) {
     `UPDATE partner_brands SET is_active = $2, updated_at = NOW()
       WHERE id = ANY($1::int[]) AND ($2 = false OR (logo_url IS NOT NULL AND logo_url <> ''))
       RETURNING id`, [ids, !!live]);
+  return r.rowCount;
+}
+
+async function setPartnerBrandsCarousel(ids, on) {
+  const r = await pool.query('UPDATE partner_brands SET featured_carousel = $2, updated_at = NOW() WHERE id = ANY($1::int[]) RETURNING id', [ids, !!on]);
   return r.rowCount;
 }
 
@@ -1738,7 +1751,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive, setPartnerBrandsCarousel,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,

@@ -607,11 +607,12 @@
 
   // Partner brand ticker (admin > Partner Brands). Stays hidden if there are none.
   getJson('/api/public/partner-brands').then(function (brands) {
-    brands = (Array.isArray(brands) ? brands : []).filter(function (b) { return isSafeImageUrl(b.logoUrl); });
+    // Only brands ticked "Feature on brands carousel" in admin
+    brands = (Array.isArray(brands) ? brands : []).filter(function (b) { return b.featuredCarousel && isSafeImageUrl(b.logoUrl); });
     if (!brands.length) return;
     var html = brands.map(function (b) {
-      // If a logo file is missing, show the brand name instead of a broken image
-      var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" onerror="this.replaceWith(this.alt)" />';
+      // If a logo file is missing, drop that brand rather than show text or a broken image
+      var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" onerror="this.parentNode.remove()" />';
       return '<a class="brand" href="' + (isSafeSlug(b.slug) ? '/deals/' + esc(b.slug) : '/partnerships.html') + '">' + img + '</a>';
     }).join('');
     // Repeat so one pass is wider than the screen, then double it for a seamless loop

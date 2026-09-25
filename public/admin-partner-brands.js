@@ -28,7 +28,7 @@ function renderTable(brands) {
       <td>${b.slug ? `<a href="/deals/${escapeHtml(b.slug)}" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5);font-size:12px;">/deals/${escapeHtml(b.slug)}</a>` : '—'}</td>
       <td>${b.liveOffers ? `<span style="color:#4ade80;font-weight:700;">Yes</span> (${b.liveOffers})` : '<span style="color:#f87171;font-weight:700;">No</span> - page says "No offer at present"'}</td>
       <td>${b.sortOrder || 0}</td>
-      <td>${isLive(b) ? '<span style="color:#4ade80;font-weight:700;">Live</span>' : b.logoUrl ? '<span style="color:#FFB300;font-weight:700;">Cold</span> - logo added, tick Live when ready' : '<span style="color:#FFB300;font-weight:700;">Cold</span> - needs a logo'}</td>
+      <td>${b.featuredCarousel ? '<span title="On the homepage brands carousel" style="color:#FFB300;">&#9733; Carousel</span><br>' : ''}${isLive(b) ? '<span style="color:#4ade80;font-weight:700;">Live</span>' : b.logoUrl ? '<span style="color:#FFB300;font-weight:700;">Cold</span> - logo added, tick Live when ready' : '<span style="color:#FFB300;font-weight:700;">Cold</span> - needs a logo'}</td>
       <td>
         <button type="button" class="table-link brand-offer-btn" data-id="${b.id}" style="margin-right:10px;background:none;border:none;cursor:pointer;color:#FFB300;font-weight:700;">+ Offer</button>
         <button type="button" class="table-link brand-edit-btn" data-id="${b.id}" style="margin-right:10px;background:none;border:none;cursor:pointer;">Edit</button>
@@ -66,7 +66,7 @@ function filterBrands(query) {
 function updateTabCounts() {
   const live = allBrands.filter(isLive).length;
   const n = { all: allBrands.length, live, cold: allBrands.length - live };
-  document.querySelectorAll('.brand-tab').forEach(t => {
+  document.querySelectorAll('.brand-tab[data-tab]').forEach(t => {
     t.textContent = { all: 'All', live: 'Live', cold: 'Cold list' }[t.dataset.tab] + ' (' + n[t.dataset.tab] + ')';
     t.classList.toggle('active', t.dataset.tab === activeTab);
   });
@@ -166,6 +166,7 @@ function openModal(id) {
   brandForm.reset();
   document.getElementById('brandId').value        = '';
   document.getElementById('brandIsActive').checked = true;
+  document.getElementById('brandCarousel').checked = false;
   document.getElementById('brandSortOrder').value  = 0;
   slugTouched = false;
   showLogoPreview('');
@@ -183,6 +184,7 @@ function openModal(id) {
       document.getElementById('brandBannerUrl').value = brand.bannerUrl || '';
       document.getElementById('brandWebsite').value   = brand.websiteUrl || '';
       document.getElementById('brandIsActive').checked = !!brand.isActive;
+      document.getElementById('brandCarousel').checked = !!brand.featuredCarousel;
       brandSlugInput.value = brand.slug || '';
       slugTouched = !!brand.slug; // don't clobber an existing slug on name edit
       showLogoPreview(brand.logoUrl || '');
@@ -243,6 +245,7 @@ brandForm.addEventListener('submit', async e => {
     bannerUrl:  document.getElementById('brandBannerUrl').value.trim() || null,
     websiteUrl: document.getElementById('brandWebsite').value.trim() || null,
     isActive:  document.getElementById('brandIsActive').checked,
+    featuredCarousel: document.getElementById('brandCarousel').checked,
   };
 
   brandSubmitBtn.disabled    = true;
@@ -301,7 +304,7 @@ async function init() {
   }
 
   document.getElementById('searchInput').addEventListener('input', refreshTable);
-  document.querySelectorAll('.brand-tab').forEach(t => t.addEventListener('click', () => { activeTab = t.dataset.tab; refreshTable(); }));
+  document.querySelectorAll('.brand-tab[data-tab]').forEach(t => t.addEventListener('click', () => { activeTab = t.dataset.tab; refreshTable(); }));
   initImport();
 
   document.getElementById('adminSignout').addEventListener('click', async () => {
@@ -554,6 +557,21 @@ async function bulkSetLive(live) {
     document.getElementById('bulkNamesMsg').textContent = ticked + ' ticked.' + (missing.length ? ' Not found: ' + missing.join(', ') : '');
   });
   document.getElementById('bulkLive').addEventListener('click', () => bulkSetLive(true));
+  const bulkCarousel = async on => {
+    const msg = document.getElementById('bulkMsg');
+    if (!selectedIds.size) { msg.textContent = 'Tick some brands first.'; return; }
+    msg.textContent = 'Saving…';
+    try {
+      const res = await fetch('/api/admin/partner-brands/bulk-carousel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: [...selectedIds], on }) });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Could not update the carousel.');
+      msg.textContent = json.changed + (on ? ' added to' : ' removed from') + ' the carousel' + (on ? ' (it only shows live brands with a logo).' : '.');
+      selectedIds.clear();
+      await loadBrands();
+    } catch (e) { msg.textContent = e.message; }
+  };
+  document.getElementById('bulkCarouselOn').addEventListener('click', () => bulkCarousel(true));
+  document.getElementById('bulkCarouselOff').addEventListener('click', () => bulkCarousel(false));
   document.getElementById('bulkCold').addEventListener('click', () => bulkSetLive(false));
 })();
 

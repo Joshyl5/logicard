@@ -50,6 +50,8 @@
       <button type="button" class="brand-tab" id="bulkClear">Clear</button>
       <button type="button" class="brand-tab" id="bulkLive" style="border-color:#4ade80;color:#4ade80;">Make selected live</button>
       <button type="button" class="brand-tab" id="bulkCold">Move selected to cold list</button>
+      <button type="button" class="brand-tab" id="bulkCarouselOn">Add selected to carousel</button>
+      <button type="button" class="brand-tab" id="bulkCarouselOff">Remove selected from carousel</button>
       <span id="bulkCount" class="imp-note" style="margin:0;">0 selected</span>
       <span id="bulkMsg" class="imp-note" style="margin:0;"></span>
     </div>
@@ -194,6 +196,10 @@
           <input id="brandIsActive" type="checkbox" checked style="width:auto;" />
           <label for="brandIsActive" style="margin:0;">Live (brand page + Partnerships grid; needs a logo)</label>
         </div>
+        <div class="lfield" style="margin-bottom:20px;display:flex;align-items:center;gap:8px;">
+          <input id="brandCarousel" type="checkbox" style="width:auto;" />
+          <label for="brandCarousel" style="margin:0;">Feature on brands carousel (homepage logo strip; only shows while Live)</label>
+        </div>
 
         <div id="brandFormError" class="form-error" role="alert" style="margin-bottom:14px;"></div>
 
@@ -265,6 +271,6 @@
   </div>
 
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="/admin-partner-brands.js?v=10"></script>
+  <script src="/admin-partner-brands.js?v=12"></script>
 </body>
 </html>

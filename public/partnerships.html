@@ -155,7 +155,7 @@
           brands = (Array.isArray(brands) ? brands : []).filter(function (b) { return isSafeImageUrl(b.logoUrl); });
           if (!brands.length) return;
           var cards = brands.map(function (b) {
-            var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" onerror="this.replaceWith(this.alt)" />';
+            var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" onerror="this.parentNode.remove()" />';
             return isSafeSlug(b.slug)
               ? '<a class="pt-logo" href="/deals/' + esc(b.slug) + '">' + img + '</a>'
               : '<div class="pt-logo">' + img + '</div>';

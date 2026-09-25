@@ -21,7 +21,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive, setPartnerBrandsCarousel,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -1509,6 +1509,18 @@ app.post('/api/admin/partner-brands/bulk-live', requireAdmin, async (req, res) =
   }
 });
 
+// Bulk add/remove ticked brands on the homepage brands carousel
+app.post('/api/admin/partner-brands/bulk-carousel', requireAdmin, async (req, res) => {
+  const ids = Array.isArray(req.body && req.body.ids) ? req.body.ids.map(Number).filter(Number.isInteger) : [];
+  if (!ids.length) return res.status(400).json({ error: 'No brands selected.' });
+  try {
+    res.json({ changed: await setPartnerBrandsCarousel(ids, !!req.body.on) });
+  } catch (err) {
+    console.error('Bulk carousel error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
 // Quick offer: everything except the deal itself (name, category, About,
 // logo, image, tracked link) comes from the partner brand, so the admin only
 // types the headline, how to redeem, code, T&Cs and end date. It goes through
@@ -2336,7 +2348,7 @@ app.get('/api/public/logistics-news', publicOffersLimiter, async (_req, res) => 
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
   const brands = await cachedPartnerBrands();
-  res.json(brands.map(({ id, brandName, logoUrl, slug, category }) => ({ id, brandName, logoUrl, slug, category })));
+  res.json(brands.map(({ id, brandName, logoUrl, slug, category, featuredCarousel }) => ({ id, brandName, logoUrl, slug, category, featuredCarousel })));
 });
 
 // ── Offers (closed-group — verified members only) ───────────────
