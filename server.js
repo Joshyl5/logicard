@@ -21,7 +21,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -37,7 +37,7 @@ const {
   getLinkClickReport, recordSiteEvent, getAnalytics, getOfferMembers,
 } = require('./database');
 const { renderGuideList, renderGuidePage } = require('./templates/guide-page');
-const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT } = require('./storage');
+const { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, UPLOADS_PERSISTENT, PUBLIC_ROOT, publicUploadsPermanent } = require('./storage');
 const { categories: JOB_ROLE_CATEGORIES, roleBySlug: JOB_ROLE_BY_SLUG, allRoles: ALL_JOB_ROLES } = require('./job-roles');
 const { UK_TOWNS } = require('./uk-towns');
 const { renderRolePage, renderRoleNotFound } = require('./templates/role-page');
@@ -112,6 +112,7 @@ const OFFER_CATEGORIES = [
   'Home & Garden', 'Fashion', 'Food & Drink', 'Business', 'Benefits',
   'Travel', 'Health & Beauty', 'Gifting', 'Motoring', 'E-learning',
   'Tech & Electronic', 'Days Out & Entertainment', 'Finance & Insurance', 'Sport & Fitness', 'Advice',
+  'Utilities & Mobile', 'Workwear',
 ];
 
 // ── Verification uploads ────────────────────────────────────────
@@ -647,7 +648,7 @@ app.get('/deals/:slug', async (req, res) => {
     const brand = await getPartnerBrandBySlug(req.params.slug);
     if (!brand) return res.status(404).send(renderBrandNotFound().replace('<!-- SHARED_NAV -->', navFor(req, {})));
 
-    const offers = (await getActiveOffersByMerchant(brand.brandName)).filter(o => !o.targetGender && offerLive(o));
+    const offers = (await getActiveOffersByMerchant(brand.brandName)).filter(o => !o.targetGender && offerListed(o));
     const publicOffers = offers.map(({ id, title, category, discountText, merchantName, imageUrl, logoUrl, slug }) =>
       ({ id, title, category, discountText, merchantName, imageUrl, logoUrl: logoUrl || brand.logoUrl, slug }));
     let viewerState = 'guest';
@@ -682,6 +683,7 @@ const STATIC_SITEMAP_PAGES = [
   { path: '/fashion.html',                changefreq: 'monthly', priority: '0.6' },
   { path: '/gifts-flowers.html',          changefreq: 'monthly', priority: '0.6' },
   { path: '/trade-supplies-tools.html',   changefreq: 'monthly', priority: '0.6' },
+  { path: '/workwear.html',               changefreq: 'monthly', priority: '0.6' },
   { path: '/vehicles-motoring.html',      changefreq: 'monthly', priority: '0.6' },
   { path: '/technology-office.html',      changefreq: 'monthly', priority: '0.6' },
   { path: '/home-garden.html',            changefreq: 'monthly', priority: '0.6' },
@@ -743,6 +745,7 @@ const NAV_OPTIONS_BY_PAGE = {
   '/fashion.html':             { activeDropdown: 'fashion' },
   '/gifts-flowers.html':       { activeDropdown: 'gifts-flowers' },
   '/trade-supplies-tools.html':   { activeDropdown: 'trade-supplies-tools' },
+  '/workwear.html':               { activeDropdown: 'workwear' },
   '/vehicles-motoring.html':      { activeDropdown: 'vehicles-motoring' },
   '/technology-office.html':      { activeDropdown: 'technology-office' },
   '/home-garden.html':            { activeDropdown: 'home-garden' },
@@ -1157,6 +1160,12 @@ function offerLive(o) {
   return !o.endDate || o.endDate >= new Date().toISOString().slice(0, 10);
 }
 
+// Shown in deal lists: live, and actually has a discount. Offers saved as
+// "Discount available: No" only have their own page, which says so.
+function offerListed(o) {
+  return offerLive(o) && o.hasDiscount !== false;
+}
+
 function validOfferPayload(body) {
   const { merchantName, title, affiliateUrl, category, targetGender, platform, slug } = body;
   if (!merchantName || !String(merchantName).trim()) return 'Merchant name is required.';
@@ -1166,16 +1175,18 @@ function validOfferPayload(body) {
   if (targetGender && !GENDER_VALUES.includes(targetGender)) return 'Invalid target gender.';
   if (platform && !OFFER_PLATFORMS.includes(platform)) return 'Invalid platform.';
   if (slug && !/^[a-z0-9-]+$/.test(slug)) return 'Page URL slug can only contain lowercase letters, numbers and hyphens.';
-  if (body.logoUrl && !/^(https:\/\/|\/local-uploads\/)/i.test(body.logoUrl)) return 'Brand logo must be an https:// link or an uploaded file.';
+  if (body.logoUrl && !/^(https:\/\/|\/local-uploads\/|\/images\/)/i.test(body.logoUrl)) return 'Brand logo must be an https:// link or an uploaded file.';
   // Everything the public brand page (logicard.co.uk/<slug>) needs.
   const need = (v) => v && String(v).trim();
   if (!category) return 'Please choose a category for the brand page.';
-  if (!need(body.discountText)) return 'Offer headline is required (e.g. 20% off everything).';
-  if (!need(body.description)) return 'Please describe the deal.';
+  if (typeof body.hasDiscount !== 'boolean') return 'Please say whether a discount is available.';
   if (!need(body.aboutBrand)) return 'Please add a short "About the brand" paragraph.';
   if (!need(body.imageUrl)) return 'A deal image is required.';
-  if (!/^(https:\/\/|\/local-uploads\/)/i.test(body.imageUrl)) return 'Deal image must be an https:// link or an uploaded file.';
+  if (!/^(https:\/\/|\/local-uploads\/|\/images\/)/i.test(body.imageUrl)) return 'Deal image must be an https:// link or an uploaded file.';
   if (!need(body.logoUrl)) return 'A brand logo is required.';
+  if (!body.hasDiscount) return null; // no discount: the deal details below aren't needed
+  if (!need(body.discountText)) return 'Offer headline is required (e.g. 20% off everything).';
+  if (!need(body.description)) return 'Please describe the deal.';
   if (!REDEEM_TYPES.includes(body.redeemType)) return 'Please choose how members redeem this offer.';
   if (body.redeemType === 'code' && !need(body.voucherCode)) return 'Enter the discount code (or choose a different redemption type).';
   if (body.endDate && !/^\d{4}-\d{2}-\d{2}$/.test(body.endDate)) return 'End date must be a valid date.';
@@ -1374,7 +1385,7 @@ function validPartnerBrandPayload(body) {
   if (!body.aboutBrand || !String(body.aboutBrand).trim()) return 'Please add a short "About the brand" paragraph for the brand page.';
   if (String(body.aboutBrand).length > 1500) return '"About the brand" is too long (max 1,500 characters).';
   if (!body.category || !OFFER_CATEGORIES.includes(body.category)) return 'Please choose a category for the brand.';
-  if (body.bannerUrl && !/^(https:\/\/|\/local-uploads\/)/i.test(body.bannerUrl)) return 'Banner image must be an https:// link or an uploaded file.';
+  if (body.bannerUrl && !/^(https:\/\/|\/local-uploads\/|\/images\/)/i.test(body.bannerUrl)) return 'Banner image must be an https:// link or an uploaded file.';
   if (body.websiteUrl && !/^https:\/\/[^\s]+$/i.test(body.websiteUrl)) return 'Website must be a full https:// link.';
   if (slug && !/^[a-z0-9-]+$/.test(slug)) {
     return 'Slug can only contain lowercase letters, numbers and hyphens.';
@@ -1423,6 +1434,10 @@ app.post('/api/admin/partner-brands/upload', requireAdmin, (req, res) => {
   logoUpload.single('file')(req, res, async (err) => {
     if (err) return res.status(400).json({ error: err.message || 'Upload failed.' });
     if (!req.file) return res.status(400).json({ error: 'Please choose an image to upload.' });
+
+    // Refuse rather than save an image the next deploy would wipe.
+    const store = publicUploadsPermanent();
+    if (!store.ok) return res.status(503).json({ error: "Upload blocked: images can't be stored permanently right now. " + store.reason + ' Paste an https:// image link instead, or fix storage in Railway and try again.' });
 
     const extension = LOGO_MIME_EXT[req.file.mimetype];
     try {
@@ -2147,14 +2162,14 @@ app.get('/api/admin/analytics/csv', requireAdmin, async (req, res) => {
 // same as the featured teasers below). Gender-targeted offers are left out
 // because there's no member to target.
 app.get('/api/public/offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await cachedActiveOffers()).filter(o => !o.targetGender && offerLive(o));
+  const offers = (await cachedActiveOffers()).filter(o => !o.targetGender && offerListed(o));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug,
   })));
 });
 
 app.get('/api/public/featured-offers', publicOffersLimiter, async (_req, res) => {
-  const offers = (await cachedFeaturedPublic()).filter(o => !o.targetGender && offerLive(o));
+  const offers = (await cachedFeaturedPublic()).filter(o => !o.targetGender && offerListed(o));
   res.json(offers.map(({ id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug }) => ({
     id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug, // slug powers the "Get Deal" link to /:slug (see the per-offer route near the bottom of this file)
   })));
@@ -2178,7 +2193,7 @@ app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => 
 // ── Offers (closed-group — verified members only) ───────────────
 app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
   const member = await getMemberByNumber(req.session.membershipNumber);
-  const offers = filterOffersForMember(await getActiveOffers(), member ? member.gender : null);
+  const offers = filterOffersForMember((await getActiveOffers()).filter(offerListed), member ? member.gender : null);
   const offerIds = offers.map(o => o.id);
   const [statsMap, myCodes, waitlisted] = await Promise.all([
     getCouponStatsForOffers(offerIds),
@@ -2186,10 +2201,10 @@ app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
     getMemberWaitlistedOfferIds(req.session.membershipNumber, offerIds),
   ]);
 
-  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl, slug }) => {
+  res.json(offers.map(({ id, merchantName, title, description, category, discountText, voucherCode, imageUrl, logoUrl, slug }) => {
     const stats = statsMap[id];
     return {
-      id, merchantName, title, description, category, discountText, imageUrl, slug,
+      id, merchantName, title, description, category, discountText, imageUrl, logoUrl, slug,
       voucherCode:    stats ? undefined : voucherCode, // legacy shared code only applies when no unique-code pool exists
       hasCodePool:    !!stats,
       codesAvailable: stats ? stats.available : null,
@@ -2203,7 +2218,7 @@ app.get('/api/offers', requireAuth, requireVerified, async (req, res) => {
 // lightweight slice of the same offers data, not a separate content type.
 app.get('/api/offers/featured', requireAuth, requireVerified, async (req, res) => {
   const member = await getMemberByNumber(req.session.membershipNumber);
-  const offers = filterOffersForMember(await getFeaturedOffersForDashboard(), member ? member.gender : null);
+  const offers = filterOffersForMember((await getFeaturedOffersForDashboard()).filter(offerListed), member ? member.gender : null);
   res.json(offers.map(({ id, merchantName, title, imageUrl, slug }) => ({ id, merchantName, title, imageUrl, slug })));
 });
 
@@ -2306,7 +2321,7 @@ app.get('/api/mobile/offer-categories', requireMobileAuth, (_req, res) => res.js
 
 app.get('/api/mobile/offers', requireMobileAuth, requireMobileVerified, async (req, res) => {
   const member = await getMemberByNumber(req.membershipNumber);
-  const offers = filterOffersForMember(await getActiveOffers(), member ? member.gender : null);
+  const offers = filterOffersForMember((await getActiveOffers()).filter(offerListed), member ? member.gender : null);
   const offerIds = offers.map(o => o.id);
   const [statsMap, myCodes, waitlisted] = await Promise.all([
     getCouponStatsForOffers(offerIds),
@@ -2594,7 +2609,7 @@ function validGuide(b) {
   if (String(b.body).length > 50000) return 'The guide is too long (max 50,000 characters).';
   if (b.summary && String(b.summary).length > 400) return 'The summary is too long (max 400 characters).';
   if (b.category && String(b.category).length > 60) return 'Category is too long.';
-  if (b.heroImageUrl && !/^(https:\/\/|\/local-uploads\/)/i.test(b.heroImageUrl)) return 'Image must be an https:// link or an uploaded file.';
+  if (b.heroImageUrl && !/^(https:\/\/|\/local-uploads\/|\/images\/)/i.test(b.heroImageUrl)) return 'Image must be an https:// link or an uploaded file.';
   return null;
 }
 function validLink(b) {
@@ -2662,6 +2677,7 @@ app.get('/:slug', async (req, res, next) => {
       category: offer.category, discountText: offer.discountText, imageUrl: offer.imageUrl, slug,
       aboutBrand: offer.aboutBrand, howToRedeem: offer.howToRedeem, terms: offer.terms, endDate: offer.endDate,
       ended: !offerLive(offer),
+      hasDiscount: offer.hasDiscount !== false,
     };
 
     // Who is looking decides what the redeem box shows. The real code and
@@ -2694,7 +2710,7 @@ app.get('/:slug', async (req, res, next) => {
     const safeLogo = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '') ? u : null;
     const brandLogo = safeLogo(offer.logoUrl) || (brand ? safeLogo(brand.logoUrl) : null);
     const related = allOffers
-      .filter(o => o.id !== offer.id && o.slug && !o.targetGender && offerLive(o) && o.category === offer.category)
+      .filter(o => o.id !== offer.id && o.slug && !o.targetGender && offerListed(o) && o.category === offer.category)
       .slice(0, 3)
       .map(o => ({ slug: o.slug, title: o.title, merchantName: o.merchantName, imageUrl: o.imageUrl,
         discountText: o.discountText, category: o.category, logoUrl: o.logoUrl }));
@@ -2710,6 +2726,27 @@ app.get('/:slug', async (req, res, next) => {
     next();
   }
 });
+
+// Brand logos uploaded before the Railway Volume existed were wiped by a
+// redeploy. Copies of those logos ship with the site in
+// public/images/partners/<brand slug>.png, so on start-up any brand whose
+// uploaded logo file is missing is pointed at its bundled copy instead.
+async function repairBrandLogos() {
+  const bundled = path.join(__dirname, 'public', 'images', 'partners');
+  try {
+    for (const b of await getAllPartnerBrands()) {
+      const url = String(b.logoUrl || '');
+      if (!b.slug || !url.startsWith('/local-uploads/')) continue;
+      if (fs.existsSync(path.join(PUBLIC_ROOT, url.slice('/local-uploads/'.length)))) continue;
+      const file = ['png', 'jpg', 'webp'].map(ext => b.slug + '.' + ext).find(f => fs.existsSync(path.join(bundled, f)));
+      if (!file) { console.warn('[logos] ' + b.brandName + ': uploaded logo is missing and there is no bundled copy — re-upload it in admin.'); continue; }
+      await setPartnerBrandLogo(b.id, '/images/partners/' + file);
+      console.log('[logos] ' + b.brandName + ': missing upload replaced with /images/partners/' + file);
+    }
+  } catch (err) {
+    console.error('[logos] repair failed:', err.message);
+  }
+}
 
 const PURGE_SWEEP_INTERVAL_MS = 24 * 60 * 60 * 1000; // daily
 const NEWS_FETCH_INTERVAL_MS  = 2 * 60 * 60 * 1000;  // check every 2 hours; adds at most one story a day
@@ -2727,6 +2764,7 @@ app.listen(PORT, () => {
   verifyResendConnection();
 
   // Give the DB pool a moment on cold start, then run daily thereafter.
+  setTimeout(repairBrandLogos, 5 * 1000);
   setTimeout(runVerificationPurge, 60 * 1000);
   setInterval(runVerificationPurge, PURGE_SWEEP_INTERVAL_MS);
 

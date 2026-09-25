@@ -9,6 +9,27 @@
   <link rel="stylesheet" href="/nav.css?v=10" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* Deal card, same as the public Deals page: image, brand, headline,
+       category, Visit page + Get deal. auto-fill keeps a lone card at
+       normal width instead of stretching across the row. */
+    .offers-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .dc { background: #161616; border: 1px solid rgba(255,255,255,0.12); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+    .dc-img { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; background: #111; overflow: hidden; font: 400 60px 'Archivo Black', 'Arial Black', sans-serif; color: #FFB300; text-decoration: none; }
+    .dc-img > img { width: 100%; height: 100%; object-fit: contain; }
+    .dc-logo { position: absolute; top: 12px; right: 12px; background: #fff; border-radius: 8px; padding: 6px 10px; height: 46px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+    .dc-logo img { max-height: 34px; max-width: 100%; object-fit: contain; }
+    .dc-body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .dc-brand { font: 700 13px 'Montserrat', sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #FFB300; }
+    .dc-body h3 { font: 400 21px/1.2 'Archivo Black', 'Arial Black', sans-serif; margin: 0; color: #fff; }
+    .dc-cat { align-self: flex-start; font: 600 13px 'Montserrat', sans-serif; border: 1px solid rgba(255,255,255,0.35); border-radius: 8px; padding: 4px 12px; }
+    .dc-btns { display: grid; gap: 8px; margin-top: auto; padding-top: 8px; }
+    .dc-btns a { display: flex; align-items: center; justify-content: center; gap: 8px; text-align: center; border-radius: 10px; padding: 12px 14px; font: 400 15px/1.2 'Archivo Black', 'Arial Black', sans-serif; text-decoration: none; }
+    .dc-visit { background: rgba(255,179,0,0.14); color: #FFB300; border: 1px solid rgba(255,179,0,0.4); }
+    .dc-visit:hover { background: rgba(255,179,0,0.24); }
+    .dc-get { background: #FFB300; color: #111; }
+    .dc-get:hover { background: #E09A00; }
+  </style>
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#0a0a0a" />
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
@@ -103,7 +124,7 @@
     <p>© 2026 Logicard. All rights reserved. &nbsp;|&nbsp; <a href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp; <a href="/t&amp;cs">Terms &amp; Conditions</a> &nbsp;|&nbsp; <a href="/report">Report an Issue</a></p>
   </footer>
 
-  <script src="/member-offers.js"></script>
+  <script src="/member-offers.js?v=2"></script>
   <script src="/pwa.js" defer></script>
 </body>
 </html>

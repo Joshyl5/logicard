@@ -2,6 +2,7 @@ const CATEGORIES = [
   'Home & Garden', 'Fashion', 'Food & Drink', 'Business', 'Benefits',
   'Travel', 'Health & Beauty', 'Gifting', 'Motoring', 'E-learning',
   'Tech & Electronic', 'Days Out & Entertainment', 'Finance & Insurance', 'Sport & Fitness', 'Advice',
+  'Utilities & Mobile', 'Workwear',
 ];
 
 const CATEGORY_ICONS = {
@@ -19,6 +20,8 @@ const CATEGORY_ICONS = {
   'Days Out & Entertainment': '<svg viewBox="0 0 24 24"><path d="M12 22s7-6.5 7-12a7 7 0 00-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>',
   'Finance & Insurance': '<svg viewBox="0 0 24 24"><path d="M12 3c4 4 8 5 8 5v6c0 5-3.5 7.5-8 8-4.5-.5-8-3-8-8V8s4-1 8-5z"/></svg>',
   'Sport & Fitness': '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg>',
+  'Utilities & Mobile': '<svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="11" y1="18" x2="13" y2="18"/></svg>',
+  'Workwear': '<svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 001 .84H6v10a2 2 0 002 2h8a2 2 0 002-2V10h2.15a1 1 0 001-.84l.58-3.47a2 2 0 00-1.35-2.23z"/><line x1="6" y1="14" x2="18" y2="14"/></svg>',
   'Advice': '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 4"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
 };
 
@@ -212,43 +215,10 @@ async function loadOffers() {
   }
 }
 
-function renderCodeSection(o) {
-  if (o.hasCodePool) {
-    if (o.myCode) {
-      return `
-        <div class="oc-code-wrap">
-          <div class="oc-code-box">
-            <span class="oc-code-value">${escapeHtml(o.myCode)}</span>
-            <button type="button" class="oc-code-copy-btn" data-code="${escapeHtml(o.myCode)}">Copy</button>
-          </div>
-        </div>`;
-    }
-    if (o.codesAvailable > 0) {
-      return `
-        <div class="oc-code-wrap">
-          <button type="button" class="oc-reveal-btn" data-id="${o.id}">Reveal My Unique Code</button>
-        </div>`;
-    }
-    if (o.onWaitlist) {
-      return `
-        <div class="oc-code-wrap">
-          <p class="oc-code-empty">All codes claimed</p>
-          <button type="button" class="oc-waitlist-btn" disabled>✓ We'll email you when more are added</button>
-        </div>`;
-    }
-    return `
-      <div class="oc-code-wrap">
-        <p class="oc-code-empty">All codes claimed</p>
-        <button type="button" class="oc-waitlist-btn" data-id="${o.id}">Notify Me When More Are Added</button>
-      </div>`;
-  }
-
-  if (o.voucherCode) {
-    return `<button type="button" class="oc-copy-btn" data-code="${escapeHtml(o.voucherCode)}">Code: ${escapeHtml(o.voucherCode)} — Copy</button>`;
-  }
-
-  return '';
-}
+// Offer card: image, brand, headline, category, "Visit <brand> page" and
+// "Get deal". Codes (single, unique-pool or in-store) live on the offer's
+// own page at /<slug>#redeem, so the grid stays short and even.
+function safeImg(u) { return typeof u === 'string' && (/^https:\/\//i.test(u) || /^\/(?!\/)/.test(u)); }
 
 function renderOffers(offers) {
   const grid = document.getElementById('offersGrid');
@@ -258,105 +228,30 @@ function renderOffers(offers) {
     return;
   }
 
-  grid.innerHTML = offers.map(o => `
-    <div class="offer-card">
-      ${o.imageUrl ? `
-        <div class="oc-image-wrap">
-          <img class="oc-image" src="${escapeHtml(o.imageUrl)}" alt="${escapeHtml(o.merchantName)}" loading="lazy" />
-          <div class="oc-image-overlay">
-            ${o.category ? `<span class="oc-cat">${escapeHtml(o.category)}</span>` : ''}
-            <h3 class="oc-title oc-title--overlay">${escapeHtml(o.merchantName)} — ${escapeHtml(o.title)}</h3>
-          </div>
+  grid.innerHTML = offers.map(o => {
+    const slug = /^[a-z0-9-]+$/i.test(o.slug || '') ? o.slug : '';
+    const page = slug ? '/' + slug : '/api/offers/' + o.id + '/go';
+    const get = slug ? '/' + slug + '#redeem' : page;
+    const img = safeImg(o.imageUrl)
+      ? `<img src="${escapeHtml(o.imageUrl)}" alt="${escapeHtml(o.merchantName)}" loading="lazy" />`
+      : escapeHtml((o.merchantName || 'L').charAt(0));
+    const logo = safeImg(o.logoUrl)
+      ? `<span class="dc-logo"><img src="${escapeHtml(o.logoUrl)}" alt="${escapeHtml(o.merchantName)} logo" loading="lazy" onerror="this.parentNode.remove()" /></span>`
+      : '';
+    return `
+    <div class="dc">
+      <a class="dc-img" href="${page}" aria-label="${escapeHtml(o.merchantName)} page">${img}${logo}</a>
+      <div class="dc-body">
+        <span class="dc-brand">${escapeHtml(o.merchantName)}</span>
+        <h3>${escapeHtml(o.discountText || o.title)}</h3>
+        ${o.category ? `<span class="dc-cat">${escapeHtml(o.category)}</span>` : ''}
+        <div class="dc-btns">
+          <a class="dc-visit" href="${page}">Visit ${escapeHtml(o.merchantName)} page</a>
+          <a class="dc-get" href="${get}">Get deal <span aria-hidden="true">&rarr;</span></a>
         </div>
-      ` : `
-        <div class="oc-header">
-          ${o.category ? `<span class="oc-cat">${escapeHtml(o.category)}</span>` : ''}
-        </div>
-      `}
-      <div class="oc-body">
-        ${!o.imageUrl ? `<h3 class="oc-title">${escapeHtml(o.merchantName)} — ${escapeHtml(o.title)}</h3>` : ''}
-        ${o.description ? `<p class="oc-desc">${escapeHtml(o.description)}</p>` : ''}
-        <div class="oc-pricing">
-          ${o.discountText ? `<span class="price-badge">${escapeHtml(o.discountText)}</span>` : ''}
-        </div>
-        ${renderCodeSection(o)}
-        <a class="oc-btn" href="${/^[a-z0-9-]+$/i.test(o.slug || '') ? '/' + o.slug + '#redeem' : '/api/offers/' + o.id + '/go'}">Get This Deal</a>
       </div>
-    </div>
-  `).join('');
-
-  grid.querySelectorAll('.oc-copy-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      navigator.clipboard.writeText(btn.dataset.code).then(() => {
-        const original = btn.textContent;
-        btn.textContent = '✓ Copied!';
-        setTimeout(() => { btn.textContent = original; }, 2000);
-      });
-    });
-  });
-
-  grid.querySelectorAll('.oc-code-copy-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      navigator.clipboard.writeText(btn.dataset.code).then(() => {
-        const original = btn.textContent;
-        btn.textContent = '✓ Copied!';
-        setTimeout(() => { btn.textContent = original; }, 2000);
-      });
-    });
-  });
-
-  grid.querySelectorAll('.oc-reveal-btn').forEach(btn => {
-    btn.addEventListener('click', () => revealCode(Number(btn.dataset.id), btn));
-  });
-
-  grid.querySelectorAll('.oc-waitlist-btn:not(:disabled)').forEach(btn => {
-    btn.addEventListener('click', () => joinWaitlist(Number(btn.dataset.id), btn));
-  });
-}
-
-async function joinWaitlist(offerId, btn) {
-  btn.disabled = true;
-  btn.textContent = 'Registering…';
-  try {
-    const res = await fetch(`/api/offers/${offerId}/waitlist`, { method: 'POST' });
-    if (!res.ok) { btn.disabled = false; btn.textContent = 'Notify Me When More Are Added'; return; }
-    btn.textContent = "✓ We'll email you when more are added";
-  } catch {
-    btn.disabled = false;
-    btn.textContent = 'Notify Me When More Are Added';
-  }
-}
-
-async function revealCode(offerId, btn) {
-  btn.disabled = true;
-  btn.textContent = 'Revealing…';
-
-  try {
-    const res = await fetch(`/api/offers/${offerId}/claim`, { method: 'POST' });
-    const json = await res.json();
-
-    if (!res.ok) {
-      const wrap = btn.closest('.oc-code-wrap');
-      wrap.innerHTML = `<p class="oc-code-empty">${escapeHtml(json.error || 'This code could not be revealed.')}</p>`;
-      return;
-    }
-
-    const wrap = btn.closest('.oc-code-wrap');
-    wrap.innerHTML = `
-      <div class="oc-code-box">
-        <span class="oc-code-value">${escapeHtml(json.code)}</span>
-        <button type="button" class="oc-code-copy-btn" data-code="${escapeHtml(json.code)}">Copy</button>
-      </div>`;
-    wrap.querySelector('.oc-code-copy-btn').addEventListener('click', e => {
-      navigator.clipboard.writeText(e.target.dataset.code).then(() => {
-        e.target.textContent = '✓ Copied!';
-        setTimeout(() => { e.target.textContent = 'Copy'; }, 2000);
-      });
-    });
-  } catch {
-    btn.disabled = false;
-    btn.textContent = 'Reveal My Unique Code';
-  }
+    </div>`;
+  }).join('');
 }
 
 document.addEventListener('DOMContentLoaded', init);

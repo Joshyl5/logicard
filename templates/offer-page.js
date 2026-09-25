@@ -17,8 +17,11 @@ function escapeHtml(str) {
 //                  pools), Copy button, and the tracked link to the brand
 function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null, related = [] }) {
   const brand       = offer.merchantName || 'this brand';
-  const title       = `${offer.title} — ${brand} | Logicard`;
-  const description = offer.description
+  const noOffer     = offer.hasDiscount === false;
+  const title       = noOffer ? `${brand} | Logicard` : `${offer.title} — ${brand} | Logicard`;
+  const description = noOffer
+    ? `${brand} on Logicard, the UK's discount card for logistics workers. No offer at present.`
+    : offer.description
     ? `${offer.description} Exclusive to Logicard members — the UK's discount card for logistics workers.`
     : `${offer.discountText || 'Exclusive member discount'} at ${brand} — only for Logicard members.`;
   const canonical = `https://logicard.co.uk/${escapeHtml(offer.slug)}`;
@@ -39,7 +42,11 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
   const stepsHtml = (defaults) => `<ol class="op-steps">${(customSteps.length ? customSteps.map(escapeHtml) : defaults).map(t => `<li>${t}</li>`).join('')}</ol>`;
 
   let redeem;
-  if (offer.ended) {
+  if (noOffer) {
+    redeem = `
+        <div class="op-code-box"><span class="op-code-note">No offer at present.</span></div>
+        <a href="/deals.html" class="op-claim-btn">See current deals ${arrowIcon}</a>`;
+  } else if (offer.ended) {
     redeem = `
         <div class="op-code-box"><span class="op-code-note">This offer has now ended.</span></div>
         <a href="/deals.html" class="op-claim-btn">See current deals ${arrowIcon}</a>`;
@@ -224,9 +231,9 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
           </div>
         </div>
 
-        <h1 class="op-title">${escapeHtml(offer.discountText || offer.title)}</h1>
-        <div class="op-tag-row"><span class="op-members">Exclusive to Logicard members</span></div>
-        ${offer.description ? `<p class="op-lead">${escapeHtml(offer.description)}</p>` : ''}
+        <h1 class="op-title">${noOffer ? 'No offer at present' : escapeHtml(offer.discountText || offer.title)}</h1>
+        ${noOffer ? '' : '<div class="op-tag-row"><span class="op-members">Exclusive to Logicard members</span></div>'}
+        ${!noOffer && offer.description ? `<p class="op-lead">${escapeHtml(offer.description)}</p>` : ''}
       </div>
 
       <div class="op-side">

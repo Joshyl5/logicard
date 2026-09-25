@@ -6,7 +6,7 @@ function cls(active, key) {
 //         'e-learning' | 'financial-wellbeing' | 'mental-wellbeing' |
 //         'logistics-news' | 'qualify' | 'about' | 'how-it-works' |
 //         'our-story' | 'faqs' | 'partnerships' | 'forum' | null
-// activeDropdown: 'trade-supplies-tools' | 'vehicles-motoring' |
+// activeDropdown: 'trade-supplies-tools' | 'workwear' | 'vehicles-motoring' |
 //                 'technology-office' | 'home-garden' | 'food-drink' |
 //                 'fashion' | 'family-leisure-travel' | 'utilities-mobile' |
 //                 'events-experiences' (the 9 pages represented in the
@@ -46,6 +46,7 @@ function renderNav({ active = null, activeDropdown = null, loggedIn = false } = 
         <div class="sub">
           <a href="/categories.html"${cls(active, 'categories')}>All Deal Categories</a>
           <a href="/trade-supplies-tools.html"${dropdownCls('trade-supplies-tools')}>Trade Supplies &amp; Tools</a>
+          <a href="/workwear.html"${dropdownCls('workwear')}>Workwear</a>
           <a href="/vehicles-motoring.html"${dropdownCls('vehicles-motoring')}>Vehicles &amp; Motoring</a>
           <a href="/technology-office.html"${dropdownCls('technology-office')}>Technology &amp; Office</a>
           <a href="/home-garden.html"${dropdownCls('home-garden')}>Home &amp; Garden</a>

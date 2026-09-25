@@ -168,6 +168,7 @@ function openModal(id) {
       // Older offers: infer the redemption type from what they already have
       document.getElementById('offerRedeemType').value     = offer.redeemType || (offer.codesTotal != null ? 'unique' : offer.voucherCode ? 'code' : '');
       showOfferLogoPreview(offer.logoUrl);
+      document.getElementById('offerHasDiscount').value    = offer.hasDiscount === false ? 'no' : 'yes';
       document.getElementById('offerSortOrder').value      = offer.sortOrder || 0;
       document.getElementById('offerIsActive').checked     = !!offer.isActive;
       document.getElementById('offerFeaturedDashboard').checked = !!offer.featuredDashboard;
@@ -182,6 +183,7 @@ function openModal(id) {
   }
 
   updateOfferSlugPreview();
+  syncHasDiscount();
   offerModal.style.display = 'flex';
 }
 
@@ -196,9 +198,11 @@ offerForm.addEventListener('submit', async e => {
   offerFormError.textContent = '';
 
   const id      = document.getElementById('offerId').value;
+  const hasDiscountVal = document.getElementById('offerHasDiscount').value;
   const payload = {
     merchantName: document.getElementById('offerMerchant').value.trim(),
-    title:        document.getElementById('offerTitle').value.trim(),
+    hasDiscount:  hasDiscountVal === 'yes' ? true : hasDiscountVal === 'no' ? false : null,
+    title:        document.getElementById('offerTitle').value.trim() || (hasDiscountVal === 'no' ? 'No offer at present' : ''),
     description:  document.getElementById('offerDescription').value.trim() || null,
     category:     document.getElementById('offerCategory').value.trim() || null,
     discountText: document.getElementById('offerDiscountText').value.trim() || null,
@@ -392,13 +396,30 @@ function showOfferLogoPreview(src) {
 
 
 // ── Brand page helpers: deal image upload, code field, page link ──
+// "Discount available?" Yes shows the deal details (and makes them
+// required); No hides them, since the page will say "No offer at present".
+const DISCOUNT_FIELDS = ['offerDiscountText', 'offerTitle', 'offerDescription', 'offerRedeemType', 'offerHowToRedeem', 'offerEndDate', 'offerTerms'];
+const DISCOUNT_REQUIRED = ['offerDiscountText', 'offerTitle', 'offerDescription', 'offerRedeemType'];
+function syncHasDiscount() {
+  const yes = document.getElementById('offerHasDiscount').value === 'yes';
+  DISCOUNT_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    el.closest('.lfield').style.display = yes ? '' : 'none';
+    if (DISCOUNT_REQUIRED.includes(id)) el.required = yes;
+  });
+  document.getElementById('offerRedeemGroup').style.display = yes ? '' : 'none';
+  syncRedeemType();
+}
+document.getElementById('offerHasDiscount').addEventListener('change', syncHasDiscount);
+
 function syncRedeemType() {
   const type = document.getElementById('offerRedeemType').value;
   const code = document.getElementById('offerVoucherCode');
-  const needsCode = type === 'code';
+  const hasDiscount = document.getElementById('offerHasDiscount').value === 'yes';
+  const needsCode = hasDiscount && type === 'code';
   code.required = needsCode;
   document.getElementById('offerVoucherReq').style.display = needsCode ? 'inline' : 'none';
-  document.getElementById('offerVoucherField').style.display = (type === 'code' || type === '') ? '' : 'none';
+  document.getElementById('offerVoucherField').style.display = hasDiscount && (type === 'code' || type === '') ? '' : 'none';
   const slug = document.getElementById('offerSlug').value.trim() || (document.getElementById('offerSlugPreview').textContent || '').trim();
   const link = document.getElementById('offerPageLink');
   if (document.getElementById('offerId').value && /^[a-z0-9-]+$/.test(slug)) { link.href = '/' + slug; link.style.display = 'inline'; }

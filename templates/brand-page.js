@@ -9,7 +9,7 @@ function escapeHtml(str) {
 // category, "About") and its live offers as the standard deal cards, each
 // with "Visit <brand> page" (the offer's own Logicard page) and "Get deal"
 // (guests -> sign up, unverified -> verify, members -> straight to the code).
-// If the brand has no live offer yet it shows a "coming soon" panel.
+// If the brand has no live offer it shows a "No offer at present" panel.
 function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
   const name = brand.brandName;
   const title = `${name} — Logicard Member Deals`;
@@ -17,7 +17,7 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
     ? `${brand.aboutBrand.slice(0, 150)} Exclusive discounts for Logicard members.`
     : offers.length
       ? `Exclusive ${name} discounts for Logicard members — the UK's discount card for logistics workers.`
-      : `${name} is a confirmed Logicard partner — their member discount is coming soon.`;
+      : `${name} is a confirmed Logicard partner. No offer at present.`;
   const canonical = `https://logicard.co.uk/deals/${escapeHtml(brand.slug)}`;
   const safeImg = (u) => /^(https:\/\/|\/(?!\/))/i.test(u || '');
   const getHref = (slug) => viewerState === 'member' ? `/${slug}#redeem` : viewerState === 'unverified' ? '/verify' : `/signup.html?src=deal-${slug}`;
@@ -41,8 +41,8 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
       <div class="bp-grid">${cards}
       </div>`
     : `<div class="t-card t-card-gold bp-soon">
-        <h2>Deal <span class="gold">Coming Soon</span></h2>
-        <p>${escapeHtml(name)} is a confirmed Logicard partner — their member discount isn't live yet. Join today (first year free, then £10/year) and it'll be ready for you the moment it lands.</p>
+        <h2>No Offer <span class="gold">At Present</span></h2>
+        <p>${escapeHtml(name)} is a confirmed Logicard partner, but there's no member discount right now. Join today (first year free, then £10/year) and you'll be ready the moment one lands.</p>
         <div class="t-btns"><a href="/signup.html" class="t-btn t-btn-gold">Join Logicard</a></div>
       </div>`;
 

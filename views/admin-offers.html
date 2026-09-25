@@ -121,7 +121,18 @@
             <option>Finance &amp; Insurance</option>
             <option>Sport &amp; Fitness</option>
             <option>Advice</option>
+            <option>Utilities &amp; Mobile</option>
+            <option>Workwear</option>
           </select>
+        </div>
+        <div class="lfield">
+          <label for="offerHasDiscount">Discount available? <span class="adm-req">*</span></label>
+          <select id="offerHasDiscount" required>
+            <option value="">— Choose —</option>
+            <option value="yes">Yes - add the discount details below</option>
+            <option value="no">No - the page says "No offer at present"</option>
+          </select>
+          <p class="adm-hint">No: the brand still gets its page, but it says "No offer at present" and stays out of the deal lists until you change this to Yes.</p>
         </div>
         <div class="lfield">
           <label for="offerDiscountText">Offer headline <span class="adm-req">*</span></label>
@@ -161,7 +172,7 @@
           <img id="offerLogoPreview" alt="" style="display:none;max-height:56px;max-width:180px;margin-top:6px;background:#fff;padding:6px;border-radius:8px;" />
         </div>
 
-        <div class="adm-group">How members redeem</div>
+        <div class="adm-group" id="offerRedeemGroup">How members redeem</div>
         <div class="lfield">
           <label for="offerRedeemType">Redemption type <span class="adm-req">*</span></label>
           <select id="offerRedeemType" required>
@@ -263,6 +274,6 @@
     </div>
   </div>
 
-  <script src="/admin-offers.js"></script>
+  <script src="/admin-offers.js?v=2"></script>
 </body>
 </html>

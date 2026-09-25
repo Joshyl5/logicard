@@ -51,6 +51,21 @@ const UPLOADS_PERSISTENT = !!process.env.UPLOADS_DIR;
 const LOCAL_ROOT  = UPLOADS_ROOT;
 const PUBLIC_ROOT = path.join(UPLOADS_ROOT, 'public');
 
+// Where public uploads (logos, deal images) will genuinely survive a
+// redeploy. On Railway, UPLOADS_DIR alone isn't enough: a Volume must be
+// mounted at (or above) it, which Railway reports as
+// RAILWAY_VOLUME_MOUNT_PATH. Off Railway (local dev) the disk is permanent.
+function publicUploadsPermanent() {
+  if (R2_CONFIGURED) return { ok: true };
+  if (!process.env.RAILWAY_ENVIRONMENT) return { ok: true };
+  if (!UPLOADS_PERSISTENT) return { ok: false, reason: 'UPLOADS_DIR is not set in Railway Variables.' };
+  const mount = process.env.RAILWAY_VOLUME_MOUNT_PATH;
+  if (!mount) return { ok: false, reason: 'No Railway Volume is mounted on this service (or the change has not been deployed yet).' };
+  const rel = path.relative(path.resolve(mount), UPLOADS_ROOT);
+  if (rel.startsWith('..') || path.isAbsolute(rel)) return { ok: false, reason: 'UPLOADS_DIR (' + UPLOADS_ROOT + ') is not inside the Volume mount path (' + mount + ').' };
+  return { ok: true };
+}
+
 let s3Client = null;
 if (R2_CONFIGURED) {
   const { S3Client } = require('@aws-sdk/client-s3');
@@ -165,4 +180,4 @@ async function deleteFile(key) {
   }
 }
 
-module.exports = { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, R2_CONFIGURED, UPLOADS_PERSISTENT, PUBLIC_ROOT };
+module.exports = { uploadVerificationFile, uploadPublicFile, getSignedViewUrl, readLocalFile, deleteFile, R2_CONFIGURED, UPLOADS_PERSISTENT, PUBLIC_ROOT, publicUploadsPermanent };

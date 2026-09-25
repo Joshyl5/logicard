@@ -192,6 +192,9 @@ async function initDb() {
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS terms TEXT`);
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS end_date DATE`);
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS redeem_type TEXT`);
+  // has_discount = false: the brand has a page but no discount yet; the page
+  // says "No offer at present" and the offer stays out of the deal lists.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS has_discount BOOLEAN NOT NULL DEFAULT TRUE`);
   await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS offers_slug_idx ON offers (slug) WHERE slug IS NOT NULL`);
   const unslugged = await pool.query('SELECT id, merchant_name FROM offers WHERE slug IS NULL ORDER BY id ASC');
   for (const row of unslugged.rows) {
@@ -505,6 +508,7 @@ function toOffer(row) {
     terms:         row.terms,
     endDate:       row.end_date ? new Date(row.end_date).toISOString().slice(0, 10) : null,
     redeemType:    row.redeem_type,
+    hasDiscount:   row.has_discount !== false,
     isActive:          row.is_active,
     featuredDashboard: !!row.featured_dashboard,
     featuredPublic:    !!row.featured_public,
@@ -711,7 +715,7 @@ async function createOffer(data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null, logoUrl = null,
-    aboutBrand = null, howToRedeem = null, terms = null, endDate = null, redeemType = null,
+    aboutBrand = null, howToRedeem = null, terms = null, endDate = null, redeemType = null, hasDiscount = true,
     isActive = true, featuredDashboard = false, featuredPublic = false,
     targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
@@ -721,14 +725,14 @@ async function createOffer(data) {
       merchant_name, title, description, category, discount_text,
       voucher_code, affiliate_url, image_url, is_active, is_featured,
       featured_dashboard, featured_public, target_gender, platform, slug, sort_order, logo_url,
-      about_brand, how_to_redeem, terms, end_date, redeem_type
-    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
+      about_brand, how_to_redeem, terms, end_date, redeem_type, has_discount
+    ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23)
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
     targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, logoUrl || null,
-    aboutBrand || null, howToRedeem || null, terms || null, endDate || null, redeemType || null,
+    aboutBrand || null, howToRedeem || null, terms || null, endDate || null, redeemType || null, hasDiscount !== false,
   ]);
 
   return toOffer(r.rows[0]);
@@ -738,7 +742,7 @@ async function updateOffer(id, data) {
   const {
     merchantName, title, description = null, category = null,
     discountText = null, voucherCode = null, affiliateUrl, imageUrl = null, logoUrl = null,
-    aboutBrand = null, howToRedeem = null, terms = null, endDate = null, redeemType = null,
+    aboutBrand = null, howToRedeem = null, terms = null, endDate = null, redeemType = null, hasDiscount = true,
     isActive = true, featuredDashboard = false, featuredPublic = false,
     targetGender = null, platform = 'AWIN', slug = null, sortOrder = 0,
   } = data;
@@ -749,14 +753,14 @@ async function updateOffer(id, data) {
       discount_text = $5, voucher_code = $6, affiliate_url = $7, image_url = $8,
       is_active = $9, is_featured = $10, featured_dashboard = $11, featured_public = $12,
       target_gender = $13, platform = $14, slug = $15, sort_order = $16, logo_url = $18,
-      about_brand = $19, how_to_redeem = $20, terms = $21, end_date = $22, redeem_type = $23, updated_at = NOW()
+      about_brand = $19, how_to_redeem = $20, terms = $21, end_date = $22, redeem_type = $23, has_discount = $24, updated_at = NOW()
     WHERE id = $17
     RETURNING *
   `, [
     merchantName, title, description, category, discountText, voucherCode, affiliateUrl, imageUrl,
     !!isActive, !!(featuredDashboard || featuredPublic), !!featuredDashboard, !!featuredPublic,
     targetGender || null, platform || null, slug || slugify(merchantName), sortOrder, id, logoUrl || null,
-    aboutBrand || null, howToRedeem || null, terms || null, endDate || null, redeemType || null,
+    aboutBrand || null, howToRedeem || null, terms || null, endDate || null, redeemType || null, hasDiscount !== false,
   ]);
 
   return toOffer(r.rows[0]);
@@ -873,6 +877,10 @@ async function updatePartnerBrand(id, data) {
   `, [brandName, logoUrl, slug || null, !!isActive, sortOrder, id, aboutBrand, category, bannerUrl || null, websiteUrl || null]);
 
   return toPartnerBrand(r.rows[0]);
+}
+
+async function setPartnerBrandLogo(id, logoUrl) {
+  await pool.query('UPDATE partner_brands SET logo_url = $1, updated_at = NOW() WHERE id = $2', [logoUrl, id]);
 }
 
 async function deletePartnerBrand(id) {
@@ -1641,7 +1649,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
