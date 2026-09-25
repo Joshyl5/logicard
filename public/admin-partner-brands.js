@@ -536,6 +536,13 @@ async function bulkSetLive(live) {
 }
 (function initBulk() {
   if (!document.getElementById('bulkBar')) return;
+  // Pin the bulk buttons just below the (sticky) admin header
+  const setHeaderHeight = () => {
+    const h = document.querySelector('.admin-header');
+    document.documentElement.style.setProperty('--admin-header-h', (h ? h.offsetHeight : 0) + 'px');
+  };
+  setHeaderHeight();
+  window.addEventListener('resize', setHeaderHeight);
   document.getElementById('bulkSelectLogo').addEventListener('click', () => {
     filterBrands(document.getElementById('searchInput').value.trim()).filter(b => b.logoUrl).forEach(b => selectedIds.add(b.id));
     refreshTable();

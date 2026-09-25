@@ -69,6 +69,8 @@
     <style>
       .brand-tab { padding:10px 16px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer; background:transparent; color:rgba(255,255,255,0.9); border:1px solid rgba(255,255,255,0.2); }
       .brand-tab.active { background:#FFB300; color:#000; border-color:#FFB300; }
+      /* Bulk buttons stay pinned under the admin header while scrolling the list */
+      #bulkBar { position: sticky; top: var(--admin-header-h, 64px); z-index: 90; background: #0a0a0a; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
       .imp-table { width:100%; border-collapse:collapse; font-size:13px; margin:8px 0 16px; }
       .imp-table th, .imp-table td { text-align:left; padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.9); vertical-align:top; }
       .imp-table select { width:100%; padding:6px; border-radius:6px; background:#0a0a0a; color:#fff; border:1px solid rgba(255,255,255,0.2); }
@@ -271,6 +273,6 @@
   </div>
 
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="/admin-partner-brands.js?v=12"></script>
+  <script src="/admin-partner-brands.js?v=13"></script>
 </body>
 </html>
