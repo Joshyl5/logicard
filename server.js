@@ -21,7 +21,7 @@ const {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl,
+  getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
@@ -1494,6 +1494,87 @@ app.post('/api/admin/partner-brands/import', requireAdmin, async (req, res) => {
   }
 });
 
+// Bulk Live / Cold list switch for ticked brands (brands without a logo stay cold)
+app.post('/api/admin/partner-brands/bulk-live', requireAdmin, async (req, res) => {
+  const ids = Array.isArray(req.body && req.body.ids) ? req.body.ids.map(Number).filter(Number.isInteger) : [];
+  if (!ids.length) return res.status(400).json({ error: 'No brands selected.' });
+  if (ids.length > 5000) return res.status(400).json({ error: 'Too many brands selected.' });
+  const live = !!req.body.live;
+  try {
+    const changed = await setPartnerBrandsLive(ids, live);
+    res.json({ changed, skipped: ids.length - changed });
+  } catch (err) {
+    console.error('Bulk live error:', err.message);
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
+  }
+});
+
+// Quick offer: everything except the deal itself (name, category, About,
+// logo, image, tracked link) comes from the partner brand, so the admin only
+// types the headline, how to redeem, code, T&Cs and end date. It goes through
+// the same checks as Manage Offers and can be edited there afterwards.
+const QUICK_REDEEM_TEXT = {
+  code: 'Copy your code and enter it at checkout',
+  unique: 'Get your own unique code and enter it at checkout',
+  link: 'Your discount applies when you shop through the Logicard link',
+  instore: 'Show your digital Logicard in store to claim it',
+};
+app.post('/api/admin/partner-brands/:id/quick-offer', requireAdmin, async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Invalid brand.' });
+  const brand = await getPartnerBrandById(id);
+  if (!brand) return res.status(404).json({ error: 'Brand not found.' });
+  const b = req.body || {};
+  const headline = String(b.headline || '').trim().slice(0, 120);
+  const redeemType = String(b.redeemType || '');
+  if (!headline) return res.status(400).json({ error: 'Please enter the offer headline, e.g. 20% off everything.' });
+  if (!QUICK_REDEEM_TEXT[redeemType]) return res.status(400).json({ error: 'Please choose how members redeem the offer.' });
+  if (!brand.websiteUrl) return res.status(400).json({ error: 'This brand has no website / Awin link yet. Add it on the brand (Edit) first.' });
+  if (!brand.logoUrl) return res.status(400).json({ error: 'This brand has no logo yet. Add one on the brand (Edit) first.' });
+  if (!brand.category) return res.status(400).json({ error: 'This brand has no category yet. Set it on the brand (Edit) first.' });
+  if (!brand.aboutBrand) return res.status(400).json({ error: 'This brand has no "About the brand" text yet. Add it on the brand (Edit) first.' });
+
+  const code = String(b.code || '').trim();
+  const payload = {
+    merchantName: brand.brandName,
+    title: headline,
+    discountText: headline,
+    description: String(b.description || '').trim() || `Logicard members get ${headline} at ${brand.brandName}. ${QUICK_REDEEM_TEXT[redeemType]}.`,
+    category: brand.category,
+    aboutBrand: brand.aboutBrand,
+    imageUrl: String(b.imageUrl || '').trim() || brand.bannerUrl || brand.logoUrl,
+    logoUrl: brand.logoUrl,
+    affiliateUrl: brand.websiteUrl,
+    redeemType,
+    voucherCode: redeemType === 'code' ? code : null,
+    terms: String(b.terms || '').trim() || null,
+    endDate: b.endDate || null,
+    hasDiscount: true,
+    isActive: b.isActive !== false,
+    featuredDashboard: false, featuredPublic: false, targetGender: null, howToRedeem: null, sortOrder: 0,
+    platform: /awin1\.com/i.test(brand.websiteUrl) ? 'AWIN' : 'Direct',
+  };
+  const baseSlug = brand.slug || brandSlug(brand.brandName);
+  payload.slug = baseSlug;
+  const error = validOfferPayload(payload);
+  if (error) return res.status(400).json({ error });
+
+  // Offer page lives at /<slug>: use the brand's slug, or -2, -3 … if taken
+  for (let n = 1; n <= 20; n++) {
+    const slug = n === 1 ? baseSlug : baseSlug + '-' + n;
+    if (RESERVED_ROOT_SLUGS.has(slug)) continue;
+    try {
+      const offer = await createOffer({ ...payload, slug });
+      return res.json({ offer, offerPage: '/' + slug, brandPage: '/deals/' + baseSlug, brandLive: !!brand.isActive });
+    } catch (err) {
+      if (err.code === '23505') continue;
+      console.error('Quick offer error:', err.message);
+      return res.status(500).json({ error: 'Something went wrong. Please try again.' });
+    }
+  }
+  res.status(400).json({ error: 'Could not find a free page address for this offer. Add it in Manage Offers instead.' });
+});
+
 // Uploads a logo image and returns its URL — the admin form then submits
 // that URL as normal via the create/update routes above. Kept as a
 // separate step so "paste a URL" and "upload a file" share the same
@@ -2255,7 +2336,7 @@ app.get('/api/public/logistics-news', publicOffersLimiter, async (_req, res) => 
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
   const brands = await cachedPartnerBrands();
-  res.json(brands.map(({ id, brandName, logoUrl, slug }) => ({ id, brandName, logoUrl, slug })));
+  res.json(brands.map(({ id, brandName, logoUrl, slug, category }) => ({ id, brandName, logoUrl, slug, category })));
 });
 
 // ── Offers (closed-group — verified members only) ───────────────

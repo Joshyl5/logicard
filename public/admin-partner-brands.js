@@ -1,5 +1,6 @@
 let allBrands = [];
 let activeTab = 'all';
+const selectedIds = new Set();
 
 // Cold list = not live yet (imported brands, or anything switched off).
 const isLive = b => !!b.isActive;
@@ -13,7 +14,7 @@ function renderTable(brands) {
   const count = document.getElementById('tableCount');
 
   if (!brands.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">No partner brands found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="table-empty">No partner brands found.</td></tr>';
     count.textContent = '';
     updateTabCounts();
     return;
@@ -21,6 +22,7 @@ function renderTable(brands) {
 
   tbody.innerHTML = brands.map(b => `
     <tr>
+      <td><input type="checkbox" class="bulk-pick" data-id="${b.id}" ${selectedIds.has(b.id) ? 'checked' : ''} style="width:auto;" /></td>
       <td>${b.logoUrl ? `<img src="${escapeHtml(b.logoUrl)}" alt="" loading="lazy" style="width:60px;height:40px;object-fit:contain;background:#fff;border-radius:4px;display:block;" />` : `<span title="No logo yet" style="width:60px;height:40px;border-radius:4px;display:grid;place-items:center;background:#FFB300;color:#000;font-weight:900;">${escapeHtml((b.brandName || '?').charAt(0).toUpperCase())}</span>`}</td>
       <td>${escapeHtml(b.brandName)}</td>
       <td>${b.slug ? `<a href="/deals/${escapeHtml(b.slug)}" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5);font-size:12px;">/deals/${escapeHtml(b.slug)}</a>` : '—'}</td>
@@ -28,6 +30,7 @@ function renderTable(brands) {
       <td>${b.sortOrder || 0}</td>
       <td>${isLive(b) ? '<span style="color:#4ade80;font-weight:700;">Live</span>' : b.logoUrl ? '<span style="color:#FFB300;font-weight:700;">Cold</span> - logo added, tick Live when ready' : '<span style="color:#FFB300;font-weight:700;">Cold</span> - needs a logo'}</td>
       <td>
+        <button type="button" class="table-link brand-offer-btn" data-id="${b.id}" style="margin-right:10px;background:none;border:none;cursor:pointer;color:#FFB300;font-weight:700;">+ Offer</button>
         <button type="button" class="table-link brand-edit-btn" data-id="${b.id}" style="margin-right:10px;background:none;border:none;cursor:pointer;">Edit</button>
         <button type="button" class="table-link brand-delete-btn" data-id="${b.id}" style="background:none;border:none;cursor:pointer;color:#f87171;">Delete</button>
       </td>
@@ -36,6 +39,15 @@ function renderTable(brands) {
   count.textContent = `Showing ${brands.length} of ${allBrands.length} brand${allBrands.length !== 1 ? 's' : ''}`;
   updateTabCounts();
 
+  tbody.querySelectorAll('.bulk-pick').forEach(cb => cb.addEventListener('change', () => {
+    const id = Number(cb.dataset.id);
+    if (cb.checked) selectedIds.add(id); else selectedIds.delete(id);
+    updateBulkCount();
+  }));
+  updateBulkCount();
+  tbody.querySelectorAll('.brand-offer-btn').forEach(btn => {
+    btn.addEventListener('click', () => openQuickOffer(Number(btn.dataset.id)));
+  });
   tbody.querySelectorAll('.brand-edit-btn').forEach(btn => {
     btn.addEventListener('click', () => openModal(Number(btn.dataset.id)));
   });
@@ -431,7 +443,9 @@ function renderImportPreview() {
     renderImportPreview();
   }));
   go.disabled = !fresh.length && !already || unmatched > 0;
-  go.textContent = unmatched ? `Choose ${unmatched} categor${unmatched > 1 ? 'ies' : 'y'} to continue` : `Import ${fresh.length} brand${fresh.length !== 1 ? 's' : ''} to the cold list`;
+  go.textContent = unmatched ? `Choose ${unmatched} categor${unmatched > 1 ? 'ies' : 'y'} to continue`
+    : fresh.length ? `Import ${fresh.length} brand${fresh.length !== 1 ? 's' : ''} to the cold list${already ? ' (and update existing if ticked)' : ''}`
+    : `Update the ${already} existing brand${already !== 1 ? 's' : ''} (tick the box above)`;
 }
 
 function initImport() {
@@ -491,6 +505,135 @@ function initImport() {
     }
   });
 }
+
+// ── Bulk Live / Cold list ──────────────────────────────────────
+function updateBulkCount() {
+  const el = document.getElementById('bulkCount');
+  if (el) el.textContent = selectedIds.size + ' selected';
+  const all = document.getElementById('bulkAllShown');
+  if (all) { const shown = [...document.querySelectorAll('.bulk-pick')]; all.checked = shown.length > 0 && shown.every(c => c.checked); }
+}
+async function bulkSetLive(live) {
+  const msg = document.getElementById('bulkMsg');
+  if (!selectedIds.size) { msg.textContent = 'Tick some brands first.'; return; }
+  const noLogo = live ? allBrands.filter(b => selectedIds.has(b.id) && !b.logoUrl).length : 0;
+  const ok = confirm((live ? 'Make ' : 'Move ') + selectedIds.size + ' brand' + (selectedIds.size !== 1 ? 's' : '') + (live ? ' live on the website' : ' to the cold list (hidden from the website)') + '?' + (noLogo ? '\n\n' + noLogo + ' have no logo and will stay on the cold list.' : ''));
+  if (!ok) return;
+  msg.textContent = 'Saving…';
+  try {
+    const res = await fetch('/api/admin/partner-brands/bulk-live', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: [...selectedIds], live }) });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Could not update the brands.');
+    msg.textContent = json.changed + (live ? ' now live' : ' moved to the cold list') + (json.skipped ? ', ' + json.skipped + ' skipped (no logo)' : '') + '.';
+    selectedIds.clear();
+    await loadBrands();
+  } catch (e) {
+    msg.textContent = e.message;
+  }
+}
+(function initBulk() {
+  if (!document.getElementById('bulkBar')) return;
+  document.getElementById('bulkSelectLogo').addEventListener('click', () => {
+    filterBrands(document.getElementById('searchInput').value.trim()).filter(b => b.logoUrl).forEach(b => selectedIds.add(b.id));
+    refreshTable();
+  });
+  document.getElementById('bulkClear').addEventListener('click', () => { selectedIds.clear(); document.getElementById('bulkMsg').textContent = ''; refreshTable(); });
+  document.getElementById('bulkAllShown').addEventListener('change', e => {
+    document.querySelectorAll('.bulk-pick').forEach(cb => { const id = Number(cb.dataset.id); if (e.target.checked) selectedIds.add(id); else selectedIds.delete(id); });
+    refreshTable();
+  });
+  // Paste a list of brand names (one per line, # lines ignored) to tick them
+  document.getElementById('bulkNamesGo').addEventListener('click', () => {
+    const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    const byName = new Map(allBrands.map(b => [norm(b.brandName), b]));
+    const lines = document.getElementById('bulkNames').value.split(/\r?\n/).map(l => l.trim()).filter(l => l && !l.startsWith('#'));
+    const missing = [];
+    let ticked = 0;
+    lines.forEach(l => { const b = byName.get(norm(l)); if (b) { selectedIds.add(b.id); ticked++; } else missing.push(l); });
+    activeTab = 'all'; document.getElementById('searchInput').value = ''; refreshTable();
+    document.getElementById('bulkNamesMsg').textContent = ticked + ' ticked.' + (missing.length ? ' Not found: ' + missing.join(', ') : '');
+  });
+  document.getElementById('bulkLive').addEventListener('click', () => bulkSetLive(true));
+  document.getElementById('bulkCold').addEventListener('click', () => bulkSetLive(false));
+})();
+
+// ── Quick "Add offer" for a brand ──────────────────────────────
+let qoBrand = null;
+function qoSync() {
+  const type = document.getElementById('qoRedeem').value;
+  document.getElementById('qoCodeField').style.display = type === 'code' ? '' : 'none';
+  const headline = document.getElementById('qoHeadline').value.trim() || '[headline]';
+  const how = { code: 'Copy your code and enter it at checkout', unique: 'Get your own unique code and enter it at checkout', link: 'Your discount applies when you shop through the Logicard link', instore: 'Show your digital Logicard in store to claim it' }[type];
+  document.getElementById('qoDescHint').textContent = 'Blank = "Logicard members get ' + headline + ' at ' + (qoBrand ? qoBrand.brandName : '') + '. ' + how + '."';
+}
+function openQuickOffer(id) {
+  qoBrand = allBrands.find(b => b.id === id);
+  if (!qoBrand) return;
+  document.getElementById('qoForm').reset();
+  document.getElementById('qoForm').style.display = '';
+  document.getElementById('qoDone').style.display = 'none';
+  document.getElementById('qoError').textContent = '';
+  document.getElementById('qoActive').checked = true;
+  document.getElementById('qoTitle').textContent = 'Add offer: ' + qoBrand.brandName;
+  const missing = [!qoBrand.logoUrl && 'a logo', !qoBrand.websiteUrl && 'a website / Awin link', !qoBrand.category && 'a category', !qoBrand.aboutBrand && '"About the brand" text'].filter(Boolean);
+  document.getElementById('qoNote').innerHTML = missing.length
+    ? '<span style="color:#f87171;">This brand still needs ' + missing.join(', ') + '. Add ' + (missing.length > 1 ? 'them' : 'it') + ' with Edit first.</span>'
+    : 'Just the deal. The brand name, category, About text, logo and your tracked link are copied from the brand.' + (qoBrand.isActive ? '' : ' <span style="color:#FFB300;">This brand is still on the cold list: tick Live on the brand too, or its page will not show.</span>');
+  qoSync();
+  document.getElementById('qoModal').style.display = 'flex';
+}
+(function initQuickOffer() {
+  const modal = document.getElementById('qoModal');
+  if (!modal) return;
+  document.getElementById('qoRedeem').addEventListener('change', qoSync);
+  document.getElementById('qoHeadline').addEventListener('input', qoSync);
+  document.getElementById('qoCancel').addEventListener('click', () => { modal.style.display = 'none'; });
+  document.getElementById('qoImageUpload').addEventListener('click', async () => {
+    const file = document.getElementById('qoImageFile').files[0];
+    const err = document.getElementById('qoError');
+    if (!file) { err.textContent = 'Choose an image file first.'; return; }
+    const fd = new FormData(); fd.append('file', file);
+    try {
+      const res = await fetch('/api/admin/partner-brands/upload', { method: 'POST', body: fd });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Upload failed.');
+      document.getElementById('qoImage').value = json.url; err.textContent = '';
+    } catch (e) { err.textContent = e.message; }
+  });
+  document.getElementById('qoForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const err = document.getElementById('qoError');
+    const val = id => document.getElementById(id).value.trim();
+    err.textContent = '';
+    if (!val('qoHeadline')) { err.textContent = 'Please enter the offer headline, e.g. 20% off everything.'; return; }
+    if (val('qoRedeem') === 'code' && !val('qoCode')) { err.textContent = 'Please enter the discount code.'; return; }
+    const btn = document.getElementById('qoSave'); btn.disabled = true; btn.textContent = 'Adding…';
+    try {
+      const res = await fetch('/api/admin/partner-brands/' + qoBrand.id + '/quick-offer', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ headline: val('qoHeadline'), redeemType: val('qoRedeem'), code: val('qoCode'), terms: val('qoTerms'),
+          endDate: document.getElementById('qoEnd').value || null, description: val('qoDesc'), imageUrl: val('qoImage'),
+          isActive: document.getElementById('qoActive').checked }),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Could not add the offer.');
+      document.getElementById('qoForm').style.display = 'none';
+      const done = document.getElementById('qoDone');
+      done.style.display = '';
+      done.innerHTML = '<p class="imp-note" style="color:#4ade80;font-weight:700;">Offer added.</p>' +
+        '<p class="imp-note">Offer page: <a href="' + json.offerPage + '" target="_blank" rel="noopener" style="color:#FFB300;">logicard.co.uk' + escapeHtml(json.offerPage) + '</a><br>' +
+        'Brand page: <a href="' + json.brandPage + '" target="_blank" rel="noopener" style="color:#FFB300;">logicard.co.uk' + escapeHtml(json.brandPage) + '</a>' +
+        (json.brandLive ? '' : ' <span style="color:#FFB300;">(shows once you tick Live on the brand)</span>') + '</p>' +
+        '<p class="imp-note">Need more options (featured, unique codes, how-to steps)? Edit it in Manage Offers.</p>' +
+        '<button type="button" id="qoClose" style="width:100%;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;cursor:pointer;">Done</button>';
+      document.getElementById('qoClose').addEventListener('click', () => { modal.style.display = 'none'; loadBrands(); });
+    } catch (e2) {
+      err.textContent = e2.message;
+    } finally {
+      btn.disabled = false; btn.textContent = 'Add offer';
+    }
+  });
+})();
 
 document.addEventListener('DOMContentLoaded', init);
 

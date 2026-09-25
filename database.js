@@ -947,6 +947,16 @@ async function replaceImageUrl(table, id, field, fromUrl, toUrl) {
   await pool.query(`UPDATE ${table} SET ${field} = $1, updated_at = NOW() WHERE id = $2 AND ${field} = $3`, [toUrl, id, fromUrl]);
 }
 
+// Bulk Live / Cold switch from the brands admin. Going live needs a logo,
+// so brands without one are left on the cold list.
+async function setPartnerBrandsLive(ids, live) {
+  const r = await pool.query(
+    `UPDATE partner_brands SET is_active = $2, updated_at = NOW()
+      WHERE id = ANY($1::int[]) AND ($2 = false OR (logo_url IS NOT NULL AND logo_url <> ''))
+      RETURNING id`, [ids, !!live]);
+  return r.rowCount;
+}
+
 async function setPartnerBrandLogo(id, logoUrl) {
   await pool.query('UPDATE partner_brands SET logo_url = $1, updated_at = NOW() WHERE id = $2', [logoUrl, id]);
 }
@@ -1728,7 +1738,7 @@ module.exports = {
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
-  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl,
+  getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
   upsertNewsItem, hasAutoNewsSince, getRecentNewsItems, getAllNewsItems, createManualNewsItem, updateNewsItem, deleteNewsItem,
   bulkAddCouponCodes, getCouponStatsForOffers, claimCouponCode, getMemberClaimedCodes,
