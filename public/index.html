@@ -123,16 +123,22 @@
   .perks li::before { content: '✓'; display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--gold); color: #111; font-size: 13px; font-weight: 800; }
 
   /* ── Rolling adverts ── */
-  .ticker { background: #000; overflow: hidden; padding: 18px 0; border-top: 1px solid var(--gold-line) !important; border-bottom: 1px solid var(--gold-line); position: relative; }
-  .ticker::before, .ticker::after { content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }
+  .ticker { background: #000; overflow: hidden; padding: 1px 0; border-top: 1px solid var(--gold-line) !important; border-bottom: 1px solid var(--gold-line); position: relative; }
+  .ticker::before, .ticker::after { display: none; content: ''; position: absolute; top: 0; bottom: 0; width: 24px; z-index: 2; pointer-events: none; }
   .ticker::before { left: 0; background: linear-gradient(to right, #000, transparent); }
   .ticker::after { right: 0; background: linear-gradient(to left, #000, transparent); }
-  .ticker-track { display: flex; align-items: center; gap: 18px; width: max-content; padding-right: 18px; animation: scroll 40s linear infinite; }
+  .ticker-track { display: flex; align-items: stretch; gap: 1px; width: max-content; padding-right: 1px; animation: scroll 40s linear infinite; }
   .ticker:hover .ticker-track { animation-play-state: paused; }
   /* Brand logo slot: drop an <img> inside to replace the placeholder text */
-  .brand { flex: 0 0 auto; height: 90px; display: flex; align-items: center; padding: 0 22px; text-decoration: none; color: #fff; font-family: var(--display); font-size: 22px; white-space: nowrap; opacity: .95; transition: opacity .2s; }
-  .brand:hover { opacity: 1; }
-  .brand img { max-height: 64px; max-width: 190px; object-fit: contain; }
+  /* Big clickable advert tiles, 1px apart: the brand's banner image when it has one
+     (logo in the corner), otherwise its logo on a white tile */
+  .brand { position: relative; flex: 0 0 auto; width: 320px; height: 190px; display: flex; align-items: center; justify-content: center; background: #fff; overflow: hidden; text-decoration: none; cursor: pointer; transition: filter .2s; }
+  .brand:hover, .brand:focus-visible { filter: brightness(1.06); }
+  .brand .brand-logo { width: 88%; height: 82%; object-fit: contain; } /* scales small logo files up to fill the tile */
+  .brand .brand-banner { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .brand .brand-badge { position: absolute; left: 10px; bottom: 10px; background: #fff; border-radius: 8px; padding: 6px 8px; height: 56px; max-width: 45%; display: flex; align-items: center; box-shadow: 0 4px 14px rgba(0,0,0,.35); }
+  .brand .brand-badge img { max-height: 44px; max-width: 100%; object-fit: contain; }
+  @media (max-width: 640px) { .brand { width: 220px; height: 130px; } .brand .brand-badge { height: 42px; } .brand .brand-badge img { max-height: 32px; } }
   @keyframes scroll { to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; } }
 
@@ -611,13 +617,20 @@
     brands = (Array.isArray(brands) ? brands : []).filter(function (b) { return b.featuredCarousel && isSafeImageUrl(b.logoUrl); });
     if (!brands.length) return;
     var html = brands.map(function (b) {
-      // If a logo file is missing, drop that brand rather than show text or a broken image
-      var img = '<img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" onerror="this.parentNode.remove()" />';
-      return '<a class="brand" href="' + (isSafeSlug(b.slug) ? '/deals/' + esc(b.slug) : '/partnerships.html') + '">' + img + '</a>';
+      // If an image fails to load, drop that brand rather than show text or a broken image
+      var drop = ' onerror="var t=this.closest(\x27.brand\x27); if (t) t.remove();"';
+      var inner = isSafeImageUrl(b.bannerUrl)
+        ? '<img class="brand-banner" src="' + esc(b.bannerUrl) + '" alt="" loading="lazy"' + drop + ' /><span class="brand-badge"><img src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy" /></span>'
+        : '<img class="brand-logo" src="' + esc(b.logoUrl) + '" alt="' + esc(b.brandName) + '" loading="lazy"' + drop + ' />';
+      return '<a class="brand" href="' + (isSafeSlug(b.slug) ? '/deals/' + esc(b.slug) : '/partnerships.html') + '" aria-label="' + esc(b.brandName) + '" title="' + esc(b.brandName) + '">' + inner + '</a>';
     }).join('');
     // Repeat so one pass is wider than the screen, then double it for a seamless loop
-    var one = new Array(Math.max(1, Math.ceil(12 / brands.length)) + 1).join(html);
-    document.getElementById('ticker').innerHTML = one + one;
+    var repeats = Math.max(1, Math.ceil(8 / brands.length));
+    var one = new Array(repeats + 1).join(html);
+    var track = document.getElementById('ticker');
+    track.innerHTML = one + one;
+    // Keep the scroll speed steady (about 4 seconds per tile) however many brands there are
+    track.style.animationDuration = Math.max(20, brands.length * repeats * 4) + 's';
     document.getElementById('brandTicker').hidden = false;
   }).catch(function () {});
 

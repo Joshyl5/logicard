@@ -2348,7 +2348,7 @@ app.get('/api/public/logistics-news', publicOffersLimiter, async (_req, res) => 
 // no-auth pattern as the deal teasers above.
 app.get('/api/public/partner-brands', publicOffersLimiter, async (_req, res) => {
   const brands = await cachedPartnerBrands();
-  res.json(brands.map(({ id, brandName, logoUrl, slug, category, featuredCarousel }) => ({ id, brandName, logoUrl, slug, category, featuredCarousel })));
+  res.json(brands.map(({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl }) => ({ id, brandName, logoUrl, slug, category, featuredCarousel, bannerUrl })));
 });
 
 // ── Offers (closed-group — verified members only) ───────────────
