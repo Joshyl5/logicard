@@ -141,8 +141,8 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=12" />
-  <link rel="stylesheet" href="/footer.css?v=3" />
-  <link rel="stylesheet" href="/theme.css?v=1" />
+  <link rel="stylesheet" href="/footer.css?v=4" />
+  <link rel="stylesheet" href="/theme.css?v=2" />
   <style>
     .op-wrap { max-width: 1120px; margin: 0 auto; padding: 22px 20px 64px; }
     .op-crumb { font-size: 13px; color: rgba(255,255,255,0.8); margin-bottom: 18px; }
@@ -273,6 +273,7 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
   <!-- SHARED_FOOTER -->
 
   <script src="/deal-links.js?v=2"></script>
+  <script src="/deal-img.js?v=1"></script>
   <script>
     (function () {
       function wireCopy(btn) {

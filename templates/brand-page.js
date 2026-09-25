@@ -71,8 +71,8 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=12" />
-  <link rel="stylesheet" href="/footer.css?v=3" />
-  <link rel="stylesheet" href="/theme.css?v=1" />
+  <link rel="stylesheet" href="/footer.css?v=4" />
+  <link rel="stylesheet" href="/theme.css?v=2" />
   <style>
     .bp-banner { border-radius: 18px; overflow: hidden; background: #111; border: 1px solid var(--line); margin-bottom: 22px; aspect-ratio: 16 / 6; display: grid; place-items: center; }
     .bp-banner img { width: 100%; height: 100%; object-fit: contain; } /* never crop brand artwork */
@@ -131,6 +131,7 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
 
   <!-- SHARED_FOOTER -->
   <script src="/deal-links.js?v=2"></script>
+  <script src="/deal-img.js?v=1"></script>
 </body>
 </html>`;
 }

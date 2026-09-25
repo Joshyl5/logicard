@@ -63,8 +63,8 @@ function head({ title, description, canonical }) {
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/nav.css?v=12" />
-  <link rel="stylesheet" href="/footer.css?v=3" />
-  <link rel="stylesheet" href="/theme.css?v=1" />
+  <link rel="stylesheet" href="/footer.css?v=4" />
+  <link rel="stylesheet" href="/theme.css?v=2" />
   <style>
     .g-cards { display: grid; gap: 18px; }
     .g-card { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; text-decoration: none; color: #fff; transition: border-color .2s; }

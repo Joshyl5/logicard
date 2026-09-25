@@ -113,3 +113,6 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.12; l
 @media (max-width: 759px) {
   .t-split > * + * { margin-top: 28px; }
 }
+
+/* Centred call-to-action bands: the Join button sits in the middle too */
+.t-cta .t-btns { justify-content: center; }

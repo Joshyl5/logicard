@@ -76,7 +76,7 @@ function renderNav({ active = null, activeDropdown = null, loggedIn = false } = 
           <a href="/forum"${cls(active, 'forum')}>Members Forum</a>
           <a href="/logistics-news.html"${cls(active, 'logistics-news')}>Logistics News</a>
           <a href="/things-to-do.html"${cls(active, 'things-to-do')}>Things to Do</a>
-          <a href="/shopping-cards.html"${cls(active, 'shopping-cards')}>Shopping Cards</a>
+          <a href="/shopping-cards.html"${cls(active, 'shopping-cards')}>Shopping / Gift Cards</a>
           <a href="/e-learning.html"${cls(active, 'e-learning')}>E-learning</a>
           <a href="/financial-wellbeing.html"${cls(active, 'financial-wellbeing')}>Financial Wellbeing</a>
           <a href="/mental-wellbeing.html"${cls(active, 'mental-wellbeing')}>Mental Wellbeing</a>
