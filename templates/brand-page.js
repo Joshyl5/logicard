@@ -70,8 +70,8 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=10" />
-  <link rel="stylesheet" href="/footer.css?v=2" />
+  <link rel="stylesheet" href="/nav.css?v=11" />
+  <link rel="stylesheet" href="/footer.css?v=3" />
   <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
     .bp-banner { border-radius: 18px; overflow: hidden; background: #111; border: 1px solid var(--line); margin-bottom: 22px; aspect-ratio: 16 / 6; display: grid; place-items: center; }
@@ -143,7 +143,7 @@ function renderBrandNotFound() {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Brand Not Found — Logicard</title>
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="stylesheet" href="/nav.css?v=10" />
+  <link rel="stylesheet" href="/nav.css?v=11" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }

@@ -57,7 +57,15 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
         <a href="/member-dashboard" class="op-claim-btn">Open my Logicard ${arrowIcon}</a>
         <a href="/api/offers/${escapeHtml(String(viewer.offerId))}/go" class="op-more" target="_blank" rel="noopener">Click here to find out more about ${escapeHtml(brand)}</a>`;
   } else if (viewer.state === 'member') {
-    const codeBox = viewer.code
+    // Unique codes all claimed (or none uploaded yet): offer "Notify me".
+    const soldOut = !viewer.code && ((viewer.hasPool && !viewer.codesLeft) || (viewer.redeemType === 'unique' && !viewer.hasPool));
+    const codeBox = soldOut
+      ? `<div class="op-code-box"><span class="op-code-note">All codes have been claimed for now.</span></div>
+          ${viewer.onWaitlist
+            ? '<button type="button" class="op-claim-btn" disabled>&#10003; We&#39;ll email you when more are added</button>'
+            : `<button type="button" class="op-claim-btn" id="opNotify" data-offer="${escapeHtml(String(viewer.offerId))}">Notify me when more are added</button>`}
+          <p class="op-msg" id="opMsg" role="status"></p>`
+      : viewer.code
       ? `<div class="op-code-box op-code-live">
             <span class="op-code" id="opCode">${escapeHtml(viewer.code)}</span>
             <button type="button" class="op-copy" id="opCopy" data-code="${escapeHtml(viewer.code)}">${copyIcon}<span>Copy</span></button>
@@ -132,7 +140,8 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=10" />
+  <link rel="stylesheet" href="/nav.css?v=11" />
+  <link rel="stylesheet" href="/footer.css?v=3" />
   <link rel="stylesheet" href="/theme.css?v=1" />
   <style>
     .op-wrap { max-width: 1120px; margin: 0 auto; padding: 22px 20px 64px; }
@@ -279,6 +288,15 @@ function renderOfferPage({ offer, viewer = { state: 'guest' }, brandLogo = null,
       }
       wireCopy(document.getElementById('opCopy'));
 
+      // Codes all claimed: join the waitlist, emailed when more are added
+      var notify = document.getElementById('opNotify');
+      if (notify) notify.addEventListener('click', function () {
+        notify.disabled = true;
+        fetch('/api/offers/' + encodeURIComponent(notify.getAttribute('data-offer')) + '/waitlist', { method: 'POST', credentials: 'same-origin' })
+          .then(function (r) { if (!r.ok) throw new Error(); notify.innerHTML = '&#10003; We&#39;ll email you when more are added'; })
+          .catch(function () { notify.disabled = false; document.getElementById('opMsg').textContent = 'Could not sign you up just now. Please try again.'; });
+      });
+
       // Unique-code offers: claim this member's code on demand
       var claim = document.getElementById('opClaim');
       if (claim) claim.addEventListener('click', function () {
@@ -311,7 +329,7 @@ function renderOfferNotFound() {
   <title>Offer Not Found — Logicard</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" href="/favicon.svg?v=3" type="image/svg+xml" />
-  <link rel="stylesheet" href="/nav.css?v=10" />
+  <link rel="stylesheet" href="/nav.css?v=11" />
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif; background: #000000; color: #fff; }

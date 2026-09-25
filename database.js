@@ -1033,6 +1033,17 @@ async function recordOfferRedemption(offerId, membershipNumber) {
   );
 }
 
+// The offers a member has clicked through to the brand from, newest first
+// (the "Deals Opened" list behind the dashboard stat).
+async function getMemberOpenedOffers(membershipNumber) {
+  const r = await pool.query(
+    `SELECT o.*, r.redeemed_at AS opened_at FROM offer_redemptions r JOIN offers o ON o.id = r.offer_id
+      WHERE r.membership_number = $1 ORDER BY r.redeemed_at DESC`,
+    [membershipNumber]
+  );
+  return r.rows.map(row => ({ ...toOffer(row), openedAt: row.opened_at }));
+}
+
 async function getOffersAcceptedCount(membershipNumber) {
   const r = await pool.query(
     'SELECT COUNT(*) AS count FROM offer_redemptions WHERE membership_number = $1',
@@ -1647,7 +1658,7 @@ module.exports = {
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
-  recordOfferRedemption, getOffersAcceptedCount,
+  recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,

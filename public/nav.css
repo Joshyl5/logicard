@@ -109,7 +109,7 @@ body.site-menu-open { overflow: hidden; }
 
 /* ── Back link (optional, placed right after SHARED_NAV — used by
    login/signup/checkout and other narrow-flow pages). ── */
-.site-subbar { display: flex; justify-content: flex-end; padding: 16px 40px 0; }
+.site-subbar { display: flex; justify-content: flex-end; padding: 16px max(20px, calc((100% - 1120px) / 2 + 20px)) 0; } /* same column as the gold bar */
 .site-subbar-back {
   display: inline-flex; align-items: center; gap: 6px;
   font-size: 14px; font-weight: 800; color: var(--white, #ffffff);

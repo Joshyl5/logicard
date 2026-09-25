@@ -14,8 +14,8 @@
   <!-- NEWS_JSONLD -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/nav.css?v=10" />
-  <link rel="stylesheet" href="/footer.css?v=2" />
+  <link rel="stylesheet" href="/nav.css?v=11" />
+  <link rel="stylesheet" href="/footer.css?v=3" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
@@ -32,8 +32,9 @@
        bottom-cta below, matching the homepage's section-banding pattern.
        Headline cards flip to light/navy-text, same inverse-contrast
        convention used on every other gold band on the site. */
-    .news-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; padding: 56px 24px 72px; }
-    .news-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .news-band { background: #000; --navy: #ffffff; --white: #161616; --navy-mid: #2a2a2a; padding: 56px 20px 72px; }
+    /* Two columns across the header's 1080px column */
+    .news-list { max-width: 1080px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(420px, 100%), 1fr)); gap: 16px; align-items: start; }
     .news-card {
       display: block; background: rgba(255,255,255,0.92); border: 1px solid rgba(10,10,10,0.1);
       border-radius: 14px; padding: 22px 24px; transition: transform 0.15s ease, box-shadow 0.15s ease;

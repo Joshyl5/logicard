@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Logicard — My Dashboard</title>
   <meta name="robots" content="noindex, nofollow" />
-  <link rel="stylesheet" href="/styles.css?v=7" />
-  <link rel="stylesheet" href="/nav.css?v=10" />
+  <link rel="stylesheet" href="/styles.css?v=8" />
+  <link rel="stylesheet" href="/nav.css?v=11" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="manifest" href="/manifest.json" />
@@ -50,15 +50,15 @@
     <div class="offers-container">
 
       <div class="member-stats" id="memberStats">
-        <div class="stat-card">
+        <a class="stat-card stat-card--link" href="/member-offers?view=opened" title="See the deals you've opened">
           <div class="stat-icon stat-icon--gold">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           </div>
           <div class="stat-body">
             <div class="stat-value" id="statOffersAccepted">—</div>
-            <div class="stat-label">Offers Accepted</div>
+            <div class="stat-label">Deals Opened <span class="stat-more">See which &rarr;</span></div>
           </div>
-        </div>
+        </a>
         <div class="stat-card">
           <div class="stat-icon stat-icon--blue">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>

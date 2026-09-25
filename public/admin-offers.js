@@ -56,11 +56,11 @@ function renderTable(offers) {
 
   tbody.innerHTML = offers.map(o => `
     <tr>
-      <td>${escapeHtml(o.merchantName)}</td>
+      <td>${escapeHtml(o.merchantName)}${o.slug ? `<br><a href="/${escapeHtml(o.slug)}" target="_blank" rel="noopener" style="font-size:11px;color:#FFB300;">Offer page</a>` : ''}${o.brandSlug ? ` · <a href="/deals/${escapeHtml(o.brandSlug)}" target="_blank" rel="noopener" style="font-size:11px;color:#FFB300;">Brand page</a>` : ''}</td>
       <td>${escapeHtml(o.title)}</td>
       <td>${escapeHtml(o.category) || '—'}</td>
       <td>${escapeHtml(o.platform) || '—'}</td>
-      <td>${escapeHtml(o.discountText) || '—'}</td>
+      <td>${o.hasDiscount === false ? '<span style="color:#f87171;font-weight:700;">No offer at present</span>' : (escapeHtml(o.discountText) || '—')}</td>
       <td>${escapeHtml(o.voucherCode) || '—'}</td>
       <td>${o.codesTotal ? `${o.codesAvailable.toLocaleString()} / ${o.codesTotal.toLocaleString()} left` : '—'}</td>
       <td>${o.isActive ? 'Yes' : 'No'}</td>
@@ -193,9 +193,36 @@ document.getElementById('addOfferBtn').addEventListener('click', () => openModal
 document.getElementById('offerCancelBtn').addEventListener('click', closeModal);
 offerModal.addEventListener('click', e => { if (e.target === offerModal) closeModal(); });
 
+
+// The browser's own "please fill in this field" bubble is easy to miss in
+// the scrolling form, so list every missing or invalid field above Save,
+// outline each one, and scroll to the first.
+function missingFields(form) {
+  const bad = [...form.querySelectorAll('input, select, textarea')].filter(el => {
+    el.style.outline = '';
+    if (el.type === 'hidden' || el.type === 'file' || el.disabled) return false;
+    const field = el.closest('.lfield');
+    if (field && field.style.display === 'none') return false;
+    return !el.checkValidity();
+  });
+  bad.forEach(el => { el.style.outline = '2px solid #f87171'; el.addEventListener('input', () => { el.style.outline = ''; }, { once: true }); });
+  return bad;
+}
+function fieldName(el) {
+  const label = document.querySelector('label[for="' + el.id + '"]');
+  return label ? label.textContent.replace('*', '').replace(/\(optional\)/i, '').trim() : el.id;
+}
+
 offerForm.addEventListener('submit', async e => {
   e.preventDefault();
   offerFormError.textContent = '';
+  const bad = missingFields(offerForm);
+  if (bad.length) {
+    offerFormError.textContent = 'Please fill in or fix: ' + bad.map(fieldName).join(', ') + '.';
+    bad[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    bad[0].focus({ preventScroll: true });
+    return;
+  }
 
   const id      = document.getElementById('offerId').value;
   const hasDiscountVal = document.getElementById('offerHasDiscount').value;

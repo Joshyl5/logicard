@@ -9,7 +9,7 @@ function renderTable(brands) {
   const count = document.getElementById('tableCount');
 
   if (!brands.length) {
-    tbody.innerHTML = '<tr><td colspan="6" class="table-empty">No partner brands found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="table-empty">No partner brands found.</td></tr>';
     count.textContent = '';
     return;
   }
@@ -19,6 +19,7 @@ function renderTable(brands) {
       <td><img src="${escapeHtml(b.logoUrl)}" alt="" style="width:60px;height:40px;object-fit:contain;background:#fff;border-radius:4px;display:block;" /></td>
       <td>${escapeHtml(b.brandName)}</td>
       <td>${b.slug ? `<a href="/deals/${escapeHtml(b.slug)}" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5);font-size:12px;">/deals/${escapeHtml(b.slug)}</a>` : '—'}</td>
+      <td>${b.liveOffers ? `<span style="color:#4ade80;font-weight:700;">Yes</span> (${b.liveOffers})` : '<span style="color:#f87171;font-weight:700;">No</span> - page says "No offer at present"'}</td>
       <td>${b.sortOrder || 0}</td>
       <td>${b.isActive ? 'Yes' : 'No'}</td>
       <td>
@@ -168,9 +169,36 @@ document.getElementById('addBrandBtn').addEventListener('click', () => openModal
 document.getElementById('brandCancelBtn').addEventListener('click', closeModal);
 brandModal.addEventListener('click', e => { if (e.target === brandModal) closeModal(); });
 
+
+// The browser's own "please fill in this field" bubble is easy to miss in
+// the scrolling form, so list every missing or invalid field above Save,
+// outline each one, and scroll to the first.
+function missingFields(form) {
+  const bad = [...form.querySelectorAll('input, select, textarea')].filter(el => {
+    el.style.outline = '';
+    if (el.type === 'hidden' || el.type === 'file' || el.disabled) return false;
+    const field = el.closest('.lfield');
+    if (field && field.style.display === 'none') return false;
+    return !el.checkValidity();
+  });
+  bad.forEach(el => { el.style.outline = '2px solid #f87171'; el.addEventListener('input', () => { el.style.outline = ''; }, { once: true }); });
+  return bad;
+}
+function fieldName(el) {
+  const label = document.querySelector('label[for="' + el.id + '"]');
+  return label ? label.textContent.replace('*', '').replace(/\(optional\)/i, '').trim() : el.id;
+}
+
 brandForm.addEventListener('submit', async e => {
   e.preventDefault();
   brandFormError.textContent = '';
+  const bad = missingFields(brandForm);
+  if (bad.length) {
+    brandFormError.textContent = 'Please fill in or fix: ' + bad.map(fieldName).join(', ') + '.';
+    bad[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    bad[0].focus({ preventScroll: true });
+    return;
+  }
 
   const id      = document.getElementById('brandId').value;
   const payload = {

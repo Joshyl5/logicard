@@ -4,8 +4,10 @@
    The footer sits outside the navy/gold section-alternation rhythm and
    is always navy, per BRAND.md (same rule as the header). */
 
-.sf-footer { background: #000000; border-top: 1px solid rgba(255,179,0,0.12); padding: 64px 40px 0; }
-.sf-inner { max-width: 1200px; margin: 0 auto; }
+/* Same column as the gold header bar (1120px, 20px gutters) so the footer
+   logo and links line up with the header logo and the menu button. */
+.sf-footer { background: #000000; border-top: 1px solid rgba(255,179,0,0.12); padding: 64px 20px 0; }
+.sf-inner { max-width: 1080px; margin: 0 auto; }
 .sf-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 48px; }
 
 .sf-brand-logo { display: inline-flex; align-items: center; font-size: 23px; font-weight: 900; letter-spacing: -1px; text-decoration: none; margin-bottom: 16px; }
@@ -26,7 +28,7 @@
 .sf-bottom-links a:hover { color: rgba(255,255,255,0.9); }
 
 @media (max-width: 900px) {
-  .sf-footer { padding: 48px 24px 0; }
+  .sf-footer { padding: 48px 20px 0; }
   .sf-grid { grid-template-columns: 1fr 1fr; gap: 32px 24px; padding-bottom: 36px; }
   .sf-brand-tagline { max-width: none; }
 }

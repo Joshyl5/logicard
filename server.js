@@ -19,7 +19,7 @@ const {
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
-  recordOfferRedemption, getOffersAcceptedCount,
+  recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo,
   getPartnerBrandBySlug, getActiveOffersByMerchant, getActiveOfferBySlug,
@@ -643,12 +643,29 @@ app.get('/logistics-rewards/:slug', (req, res) => {
 });
 
 // ── Partner brand pages — reached by clicking a logo on Partnerships ──
+// Brand page slug from a merchant name: "Spabreaks.com" -> spabreakscom,
+// "LATE ROOMS" -> late-rooms (matches how partner brand slugs are made).
+function brandSlug(name) {
+  return String(name || '').toLowerCase().replace(/[.'’]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 app.get('/deals/:slug', async (req, res) => {
   try {
-    const brand = await getPartnerBrandBySlug(req.params.slug);
-    if (!brand) return res.status(404).send(renderBrandNotFound().replace('<!-- SHARED_NAV -->', navFor(req, {})));
+    let brand = await getPartnerBrandBySlug(req.params.slug);
+    let merchantOffers;
+    if (brand) {
+      merchantOffers = await getActiveOffersByMerchant(brand.brandName);
+    } else {
+      // No Partner Brands entry: every brand with an offer still gets a
+      // page, built from that offer's logo, category and About text.
+      merchantOffers = (await cachedActiveOffers()).filter(o => brandSlug(o.merchantName) === req.params.slug);
+      const first = merchantOffers[0];
+      if (!first) return res.status(404).send(renderBrandNotFound().replace('<!-- SHARED_NAV -->', navFor(req, {})));
+      brand = { brandName: first.merchantName, slug: req.params.slug, logoUrl: first.logoUrl, category: first.category,
+                aboutBrand: first.aboutBrand, bannerUrl: null, websiteUrl: null };
+    }
 
-    const offers = (await getActiveOffersByMerchant(brand.brandName)).filter(o => !o.targetGender && offerListed(o));
+    const offers = merchantOffers.filter(o => !o.targetGender && offerListed(o));
     const publicOffers = offers.map(({ id, title, category, discountText, merchantName, imageUrl, logoUrl, slug }) =>
       ({ id, title, category, discountText, merchantName, imageUrl, logoUrl: logoUrl || brand.logoUrl, slug }));
     let viewerState = 'guest';
@@ -1011,6 +1028,13 @@ app.post('/api/logout', (req, res) => {
   req.session.destroy(() => res.json({ success: true }));
 });
 
+// "Deals Opened": the offers this member clicked through to the brand from.
+app.get('/api/me/opened-offers', requireAuth, async (req, res) => {
+  const offers = await getMemberOpenedOffers(req.session.membershipNumber);
+  res.json(offers.map(({ id, merchantName, title, category, discountText, imageUrl, logoUrl, slug, openedAt }) =>
+    ({ id, merchantName, title, category, discountText, imageUrl, logoUrl, slug, openedAt })));
+});
+
 app.get('/api/me', requireAuth, async (req, res) => {
   const member = await getMemberByNumber(req.session.membershipNumber);
   if (!member) return res.status(404).json({ error: 'Member not found' });
@@ -1201,6 +1225,7 @@ app.get('/api/admin/offers', requireAdmin, async (_req, res) => {
   const statsMap = await getCouponStatsForOffers(offers.map(o => o.id));
   res.json(offers.map(o => ({
     ...o,
+    brandSlug: brandSlug(o.merchantName),
     codesAvailable: statsMap[o.id] ? statsMap[o.id].available : null,
     codesTotal:     statsMap[o.id] ? statsMap[o.id].total : null,
   })));
@@ -1394,7 +1419,10 @@ function validPartnerBrandPayload(body) {
 }
 
 app.get('/api/admin/partner-brands', requireAdmin, async (_req, res) => {
-  res.json(await getAllPartnerBrands());
+  const [brands, offers] = await Promise.all([getAllPartnerBrands(), getActiveOffers()]);
+  const norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  // "Offers available" column: how many live offers with a discount match the brand
+  res.json(brands.map(b => ({ ...b, liveOffers: offers.filter(o => offerListed(o) && norm(o.merchantName) === norm(b.brandName)).length })));
 });
 
 app.post('/api/admin/partner-brands', requireAdmin, async (req, res) => {
@@ -2687,9 +2715,10 @@ app.get('/:slug', async (req, res, next) => {
     if (memberNo) {
       const member = await getMemberByNumber(memberNo);
       if (member && member.verified) {
-        const [statsMap, myCodes] = await Promise.all([
+        const [statsMap, myCodes, waitlisted] = await Promise.all([
           getCouponStatsForOffers([offer.id]),
           getMemberClaimedCodes(memberNo, [offer.id]),
+          getMemberWaitlistedOfferIds(memberNo, [offer.id]),
         ]);
         const hasPool = !!statsMap[offer.id];
         // Older offers have no redeem type yet: infer it from what they have
@@ -2697,6 +2726,8 @@ app.get('/:slug', async (req, res, next) => {
         viewer = {
           state: 'member', offerId: offer.id, hasPool, redeemType,
           code: hasPool ? (myCodes[offer.id] || null) : (offer.voucherCode || null),
+          codesLeft: hasPool ? statsMap[offer.id].available : 0,
+          onWaitlist: waitlisted.has(offer.id),
         };
       } else if (member) {
         viewer = { state: 'unverified' };

@@ -79,7 +79,24 @@ async function init() {
   initMegaMenuToggle();
   initSearch();
   loadNotifications();
-  loadOffers();
+  if (new URLSearchParams(location.search).get('view') === 'opened') loadOpenedOffers();
+  else loadOffers();
+}
+
+// ?view=opened — the exact deals behind the dashboard's "Deals Opened" stat.
+async function loadOpenedOffers() {
+  const grid = document.getElementById('offersGrid');
+  document.querySelector('.oh-inner h1').textContent = "Deals You've Opened";
+  document.querySelector('.oh-inner p').innerHTML = 'Each deal you clicked through to the brand from, with the date you first opened it. We can\'t see whether you bought anything. <a href="/member-offers" style="color:#FFB300;">See all offers</a>';
+  try {
+    const res = await fetch('/api/me/opened-offers');
+    if (!res.ok) throw new Error();
+    const offers = await res.json();
+    if (!offers.length) { grid.innerHTML = "<p class=\"no-results\">You haven't opened any deals yet.</p>"; return; }
+    renderOffers(offers);
+  } catch {
+    grid.innerHTML = '<p class="no-results">Unable to load your deals right now.</p>';
+  }
 }
 
 async function loadNotifications() {
@@ -245,6 +262,7 @@ function renderOffers(offers) {
         <span class="dc-brand">${escapeHtml(o.merchantName)}</span>
         <h3>${escapeHtml(o.discountText || o.title)}</h3>
         ${o.category ? `<span class="dc-cat">${escapeHtml(o.category)}</span>` : ''}
+        ${o.openedAt ? `<span class="dc-opened">Opened ${new Date(o.openedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span>` : ''}
         <div class="dc-btns">
           <a class="dc-visit" href="${page}">Visit ${escapeHtml(o.merchantName)} page</a>
           <a class="dc-get" href="${get}">Get deal <span aria-hidden="true">&rarr;</span></a>
