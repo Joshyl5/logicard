@@ -4,11 +4,13 @@
 // 2. Logos: if a picture has a plain border (e.g. a square logo file that is
 //    mostly white space) trim it off and show the logo large and centred on
 //    its own background colour, so the brand name is the focal point.
-//    Photos have no plain border and are left exactly as they are.
+//    Photos have no plain border. Landscape photos (4:3 up to about 2.4:1)
+//    fill the box edge to edge; very tall or wide pictures are shown whole.
 (function () {
   var css = document.createElement('style');
   css.textContent =
     '.dc-img > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }' +
+    '.dc-img.dc-img--photo > img { object-fit: cover; }' +
     '.dc-img.dc-img--logo > img { inset: 12% 10%; width: 80%; height: 76%; }';
   document.head.appendChild(css);
 
@@ -17,12 +19,16 @@
     img.dataset.tidied = '1';
     var w = img.naturalWidth, h = img.naturalHeight;
     if (!w || !h) return;
+    function photo() {
+      var box = img.closest('.dc-img'), r = w / h;
+      if (box && r >= 1.3 && r <= 2.4) box.classList.add('dc-img--photo');
+    }
     var scale = Math.min(1, 300 / Math.max(w, h));
     var sw = Math.max(1, Math.round(w * scale)), sh = Math.max(1, Math.round(h * scale));
     var c = document.createElement('canvas'); c.width = sw; c.height = sh;
     var x = c.getContext('2d', { willReadFrequently: true });
     var d;
-    try { x.drawImage(img, 0, 0, sw, sh); d = x.getImageData(0, 0, sw, sh).data; } catch (e) { return; } // other-site image: leave it
+    try { x.drawImage(img, 0, 0, sw, sh); d = x.getImageData(0, 0, sw, sh).data; } catch (e) { photo(); return; } // other-site image: can't check for a border
     function px(i, j) { var k = (j * sw + i) * 4; return [d[k], d[k + 1], d[k + 2], d[k + 3]]; }
     // Background = the colour shared by all four corners
     var cs = [px(0, 0), px(sw - 1, 0), px(0, sh - 1), px(sw - 1, sh - 1)];
@@ -30,7 +36,7 @@
       if (a[3] < 30 && b[3] < 30) return 0; // both transparent
       return Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) + Math.abs(a[3] - b[3]);
     }
-    for (var n = 1; n < 4; n++) if (diff(cs[0], cs[n]) > 40) return; // no plain border: a photo
+    for (var n = 1; n < 4; n++) if (diff(cs[0], cs[n]) > 40) { photo(); return; } // no plain border: a photo
     var bg = cs[0], top = sh, left = sw, right = -1, bottom = -1;
     for (var j = 0; j < sh; j++) for (var i = 0; i < sw; i++) {
       if (diff(px(i, j), bg) > 60) { if (i < left) left = i; if (i > right) right = i; if (j < top) top = j; if (j > bottom) bottom = j; }

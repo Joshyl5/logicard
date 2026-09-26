@@ -48,7 +48,16 @@
         </svg>
         Add Offer
       </button>
+      <button class="export-btn" id="importAwinBtn" type="button">Import Awin vouchers</button>
     </div>
+
+    <!-- Hot Deals order (homepage) -->
+    <details id="hotDeals" class="hot-deals" open>
+      <summary>Hot Deals order <span id="hotDealsCount"></span></summary>
+      <p class="imp-note">Offers ticked "Feature on public homepage". The homepage shows the first 6, in this order. Use ▲ ▼ to move one; it saves straight away.</p>
+      <ol id="hotDealsList" class="hot-list"></ol>
+      <p id="hotDealsMsg" class="imp-note" role="status"></p>
+    </details>
 
     <!-- Table -->
     <div class="table-wrap">
@@ -121,7 +130,7 @@
             <option>Home &amp; Garden</option>
             <option>Mental Wellbeing</option>
             <option>Pets</option>
-            <option>Shopping Cards</option>
+            <option>Shopping / Gift Cards</option>
             <option>Sport &amp; Fitness</option>
             <option>Technology &amp; Office</option>
             <option>Things to Do</option>
@@ -196,8 +205,13 @@
         </div>
         <div class="lfield">
           <label for="offerAffiliateUrl">Brand website / affiliate link <span class="adm-req">*</span></label>
-          <input id="offerAffiliateUrl" type="url" placeholder="https://…" required />
+          <input id="offerAffiliateUrl" type="url" placeholder="https://…" />
           <p class="adm-hint">Where "Click here to find out more about [brand]" takes members.</p>
+        </div>
+        <div class="lfield">
+          <label for="offerAwinMid">Awin advertiser ID (optional)</label>
+          <input id="offerAwinMid" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="9" placeholder="e.g. 12345" />
+          <p class="adm-hint">Fill this in and the link above is turned into a tracked Awin link when you save. Leave the link empty to use the brand's Awin landing page.</p>
         </div>
         <div class="lfield">
           <label for="offerHowToRedeem">How to redeem (optional)</label>
@@ -240,6 +254,7 @@
         <div class="lfield" style="margin-bottom:14px;">
           <label for="offerSortOrder">Sort Order</label>
           <input id="offerSortOrder" type="number" value="0" />
+          <p class="adm-hint">Hot Deals on the homepage use the ▲▼ order above the offers table.</p>
         </div>
         <div class="lfield" style="margin-bottom:12px;display:flex;align-items:center;gap:8px;">
           <input id="offerIsActive" type="checkbox" checked style="width:auto;" />
@@ -280,6 +295,38 @@
     </div>
   </div>
 
-  <script src="/admin-offers.js?v=4"></script>
+  <!-- Import Awin vouchers modal -->
+  <div id="awinModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:1000;align-items:flex-start;justify-content:center;overflow-y:auto;">
+    <div style="background:#121212;border:1px solid rgba(255,179,0,0.3);border-radius:16px;padding:32px;max-width:640px;width:92%;margin:40px auto;">
+      <h2 style="color:#fff;font-size:20px;font-weight:800;margin:0 0 8px;">Import Awin vouchers &amp; promotions</h2>
+      <p class="imp-note">In Awin go to <strong>Toolbox &rarr; Offers</strong> (or "My Offers"), filter to your joined advertisers, and download the CSV. Upload it here.</p>
+      <p class="imp-note">Each voucher or promotion is matched to a partner brand by Awin advertiser ID or name, and uses that brand's logo, category and About text. Importing the same file again updates those offers instead of adding copies. Ended, not-yet-started and non-UK offers are skipped.</p>
+      <input id="awinFile" type="file" accept=".csv,.xlsx,.xls" style="color:#fff;margin:6px 0 12px;" />
+      <label style="display:flex;align-items:center;gap:8px;color:#fff;font-size:14px;margin:0 0 12px;"><input id="awinGoLive" type="checkbox" checked style="width:auto;" /> Switch imported offers live</label>
+      <div id="awinPreview" class="imp-note"></div>
+      <div id="awinError" class="form-error" role="alert" style="margin:10px 0;"></div>
+      <div id="awinResult" class="imp-note"></div>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <button type="button" id="awinCancelBtn" style="flex:1;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.9);font-weight:600;cursor:pointer;">Close</button>
+        <button type="button" id="awinGoBtn" disabled style="flex:2;padding:12px;border-radius:8px;border:none;background:#FFB300;color:#000;font-weight:800;font-size:14px;cursor:pointer;">Import</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .imp-note { font-size:13px; color:rgba(255,255,255,0.85); margin:0 0 10px; }
+    .hot-deals { background:#121212; border:1px solid rgba(255,179,0,0.25); border-radius:12px; padding:14px 16px; margin:0 0 18px; }
+    .hot-deals summary { cursor:pointer; color:#FFB300; font-weight:800; font-size:15px; margin-bottom:8px; }
+    .hot-list { list-style:none; margin:0; padding:0; display:grid; gap:6px; }
+    .hot-list li { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:8px; background:rgba(255,255,255,0.04); color:#fff; font-size:14px; }
+    .hot-list li.hot-off { opacity:.55; }
+    .hot-list .hot-pos { width:26px; font-weight:800; color:#FFB300; text-align:right; flex-shrink:0; }
+    .hot-list .hot-name { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .hot-list button { width:34px; height:34px; border-radius:8px; border:1px solid rgba(255,179,0,0.4); background:transparent; color:#FFB300; font-size:14px; cursor:pointer; flex-shrink:0; }
+    .hot-list button:disabled { opacity:.3; cursor:default; }
+    .awin-skips { max-height:220px; overflow:auto; margin:6px 0 0; padding-left:18px; }
+  </style>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="/admin-offers.js?v=6"></script>
 </body>
 </html>

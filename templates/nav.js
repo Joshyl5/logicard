@@ -93,6 +93,7 @@ function renderNav({ active = null, activeDropdown = null, loggedIn = false } = 
       <a class="site-drawer-join" href="/signup.html">Join Now</a>`}
     </div>
   </aside>
+  <script src="/consent.js?v=1" defer></script>
   <script>
     (function () {
       var b = document.body, open = document.getElementById('siteMenuOpen');

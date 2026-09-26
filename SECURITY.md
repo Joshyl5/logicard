@@ -82,6 +82,10 @@ Every sensitive endpoint has its own tuned limiter — not one generic limiter r
 - `site_events` stores event type, the offer/guide slug or page path, whether the visitor was a guest/unverified/member, and the member number only for logged-in members. No cookies, IP addresses or browser details are stored; known bots are skipped.
 - `/api/track` accepts only `get_deal` and `copy_code` with a valid slug; who clicked comes from the session, never the request body.
 - Sign-up sources travel as `?src=deal-<slug>` / `guide-<slug>` inside the existing sign-up details and are validated server-side (anything else is recorded as "direct").
+
+**Cookie consent (public/consent.js, 2026-09-26)**
+- The banner stores the visitor's choice in a first-party `lc_consent` cookie (12 months, `SameSite=Lax`, `Secure` on HTTPS). It holds only a version, two yes/no flags (`partners`, `profile`) and a timestamp, no personal data, so it is readable by page scripts (not `httpOnly`).
+- Code that shares data with partners or groups members for recommendations must check `LogicardConsent.has('partners')` / `has('profile')` first. Nothing is gated on it yet: `site_events` above still records regardless of the choice.
 - CSV downloads contain aggregate counts only (no member details) and prefix cells starting with `= + - @` to stop spreadsheet formula injection. The per-offer member list is shown in admin only, not exported.
 
 **Secrets**

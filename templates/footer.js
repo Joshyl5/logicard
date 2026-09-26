@@ -54,6 +54,7 @@ function renderFooter() {
         <span class="sf-copy">&copy; 2026 Logicard Ltd. All rights reserved. Registered in England and Wales, company number 17474646. Registered office: 7 Linnet Close, Hinckley, LE10 3FP.</span>
         <ul class="sf-bottom-links">
           <li><a href="/privacy.html">Privacy</a></li>
+          <li><a href="/privacy.html#cookies" data-cookie-settings>Cookie settings</a></li>
           <li><a href="/t&amp;cs">Terms</a></li>
         </ul>
       </div>

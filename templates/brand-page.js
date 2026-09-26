@@ -131,7 +131,7 @@ function renderBrandPage({ brand, offers, viewerState = 'guest' }) {
 
   <!-- SHARED_FOOTER -->
   <script src="/deal-links.js?v=2"></script>
-  <script src="/deal-img.js?v=1"></script>
+  <script src="/deal-img.js?v=2"></script>
 </body>
 </html>`;
 }

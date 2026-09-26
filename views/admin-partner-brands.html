@@ -179,7 +179,7 @@
             <option>Home &amp; Garden</option>
             <option>Mental Wellbeing</option>
             <option>Pets</option>
-            <option>Shopping Cards</option>
+            <option>Shopping / Gift Cards</option>
             <option>Sport &amp; Fitness</option>
             <option>Technology &amp; Office</option>
             <option>Things to Do</option>
@@ -211,6 +211,11 @@
           <label for="brandWebsite">Brand website (optional)</label>
           <input id="brandWebsite" type="url" placeholder="https://…" />
           <p class="adm-hint">Shown to logged-in members on the brand page. Deals still go through each offer's own page.</p>
+        </div>
+        <div class="lfield">
+          <label for="brandAwinMid">Awin advertiser ID (optional)</label>
+          <input id="brandAwinMid" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="9" placeholder="e.g. 12345" />
+          <p class="adm-hint">Fill this in and the website above is turned into a tracked Awin link when you save. Leave the website empty to link to the brand's Awin landing page.</p>
         </div>
         <div class="lfield" style="margin-bottom:14px;">
           <label for="brandSortOrder">Sort Order</label>
@@ -295,6 +300,6 @@
   </div>
 
   <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-  <script src="/admin-partner-brands.js?v=16"></script>
+  <script src="/admin-partner-brands.js?v=17"></script>
 </body>
 </html>

@@ -145,6 +145,7 @@ function openModal(id) {
   document.getElementById('offerTargetGender').value = '';
   document.getElementById('offerPlatform').value = 'AWIN';
   document.getElementById('offerSortOrder').value  = 0;
+  document.getElementById('offerAwinMid').value    = '';
   offerSlugTouched = false;
 
   if (id) {
@@ -159,6 +160,8 @@ function openModal(id) {
       document.getElementById('offerDiscountText').value   = offer.discountText || '';
       document.getElementById('offerVoucherCode').value    = offer.voucherCode || '';
       document.getElementById('offerAffiliateUrl').value   = offer.affiliateUrl || '';
+      const mid = /[?&]awinmid=(\d+)/i.exec(offer.affiliateUrl || '');
+      document.getElementById('offerAwinMid').value        = mid ? mid[1] : '';
       document.getElementById('offerImageUrl').value       = offer.imageUrl || '';
       document.getElementById('offerLogoUrl').value        = offer.logoUrl || '';
       document.getElementById('offerAboutBrand').value     = offer.aboutBrand || '';
@@ -235,6 +238,7 @@ offerForm.addEventListener('submit', async e => {
     discountText: document.getElementById('offerDiscountText').value.trim() || null,
     voucherCode:  document.getElementById('offerVoucherCode').value.trim() || null,
     affiliateUrl: document.getElementById('offerAffiliateUrl').value.trim(),
+    awinMid:      document.getElementById('offerAwinMid').value.trim() || null,
     imageUrl:     document.getElementById('offerImageUrl').value.trim() || null,
     logoUrl:      document.getElementById('offerLogoUrl').value.trim() || null,
     aboutBrand:   document.getElementById('offerAboutBrand').value.trim() || null,
@@ -366,7 +370,158 @@ async function loadOffers() {
   if (!res.ok) { window.location.href = '/admin-login.html'; return; }
   allOffers = await res.json();
   refreshTable();
+  renderHotDeals();
 }
+
+// ── Hot Deals order (homepage) ────────────────────────────────
+// Same order as the homepage: ▲▼ position first, then Sort Order, then newest.
+function hotDealsInOrder() {
+  return allOffers.filter(o => o.featuredPublic).sort((a, b) =>
+    (a.hotOrder ?? Infinity) - (b.hotOrder ?? Infinity) || (a.sortOrder || 0) - (b.sortOrder || 0) ||
+    new Date(b.createdAt) - new Date(a.createdAt) || a.id - b.id);
+}
+
+function renderHotDeals() {
+  const list = hotDealsInOrder();
+  const ol = document.getElementById('hotDealsList');
+  let shown = 0;
+  document.getElementById('hotDealsCount').textContent = '(' + list.length + ')';
+  if (!list.length) { ol.innerHTML = '<li class="hot-off">No offers are ticked "Feature on public homepage" yet.</li>'; return; }
+  ol.innerHTML = list.map((o, i) => {
+    const onPage = o.isActive && shown < 6;
+    if (onPage) shown++;
+    const note = !o.isActive ? ' (not active, hidden)' : onPage ? '' : ' (not shown, homepage has 6)';
+    return `<li class="${onPage ? '' : 'hot-off'}">
+      <span class="hot-pos">${i + 1}</span>
+      <span class="hot-name">${escapeHtml(o.merchantName)}: ${escapeHtml(o.title)}${note}</span>
+      <button type="button" data-move="-1" data-i="${i}" aria-label="Move ${escapeHtml(o.merchantName)} up" ${i === 0 ? 'disabled' : ''}>▲</button>
+      <button type="button" data-move="1" data-i="${i}" aria-label="Move ${escapeHtml(o.merchantName)} down" ${i === list.length - 1 ? 'disabled' : ''}>▼</button>
+    </li>`;
+  }).join('');
+}
+
+document.getElementById('hotDealsList').addEventListener('click', async (e) => {
+  const btn = e.target.closest('button[data-move]');
+  if (!btn) return;
+  const list = hotDealsInOrder();
+  const i = Number(btn.dataset.i), j = i + Number(btn.dataset.move);
+  if (j < 0 || j >= list.length) return;
+  [list[i], list[j]] = [list[j], list[i]];
+  list.forEach((o, n) => { o.hotOrder = n + 1; });
+  renderHotDeals();
+  const msg = document.getElementById('hotDealsMsg');
+  msg.textContent = 'Saving…';
+  try {
+    const res = await fetch('/api/admin/offers/hot-deals-order', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids: list.map(o => o.id) }),
+    });
+    const data = await res.json().catch(() => ({}));
+    msg.textContent = res.ok ? 'Saved. The homepage updates within a minute.' : (data.error || 'Could not save.');
+    if (!res.ok) await loadOffers();
+  } catch {
+    msg.textContent = 'Could not save. Check your connection.';
+    await loadOffers();
+  }
+});
+
+// ── Import Awin vouchers / promotions ─────────────────────────
+const awinModal = document.getElementById('awinModal');
+let awinRows = [];
+
+// A cell as text; real spreadsheet dates become yyyy-mm-dd
+function awinCell(v) {
+  if (v instanceof Date && !isNaN(v)) return v.getFullYear() + '-' + String(v.getMonth() + 1).padStart(2, '0') + '-' + String(v.getDate()).padStart(2, '0');
+  return String(v ?? '').trim();
+}
+
+// Awin's Offers export columns (CSV download or API field names)
+function readAwinRows(sheetRows) {
+  const tests = {
+    promotionId: h => /promotion ?id|promotionid|^id$/.test(h),
+    advertiserId: h => /advertiser ?id|advertiserid|awinmid|merchant ?id|programme ?id/.test(h),
+    advertiser: h => /^advertiser$|advertiser ?name|advertisername|^merchant$|merchant ?name|programme ?name|^brand/.test(h),
+    code: h => /^code$|voucher ?code|vouchercode|^voucher$|promo ?code/.test(h),
+    title: h => /^title$|promotion ?title/.test(h),
+    description: h => /^description$|promotion ?description/.test(h),
+    terms: h => /terms/.test(h),
+    starts: h => /^start|starts|startdate/.test(h),
+    ends: h => /^end|ends|enddate|expir/.test(h),
+    trackingUrl: h => /tracking|urltracking|click ?through/.test(h),
+    url: h => /^deep ?link$|^url$|landing|destination/.test(h),
+    regions: h => /region|countr/.test(h),
+    type: h => /^type$|promotion ?type/.test(h),
+  };
+  const headerIdx = sheetRows.findIndex((r, i) => i < 10 && r.some(c => tests.advertiser(String(c).toLowerCase().trim())));
+  if (headerIdx === -1) return null;
+  const h = sheetRows[headerIdx].map(c => String(c).toLowerCase().trim());
+  const col = {};
+  Object.keys(tests).forEach(k => { col[k] = h.findIndex(tests[k]); });
+  const rows = [];
+  sheetRows.slice(headerIdx + 1).forEach((r, i) => {
+    const row = { line: headerIdx + 2 + i };
+    Object.keys(col).forEach(k => { row[k] = col[k] >= 0 ? awinCell(r[col[k]]) : ''; });
+    if (row.advertiser || row.advertiserId) rows.push(row);
+  });
+  return rows;
+}
+
+document.getElementById('importAwinBtn').addEventListener('click', () => {
+  awinRows = [];
+  document.getElementById('awinFile').value = '';
+  ['awinPreview', 'awinError', 'awinResult'].forEach(id => { document.getElementById(id).textContent = ''; });
+  document.getElementById('awinGoBtn').disabled = true;
+  awinModal.style.display = 'flex';
+});
+document.getElementById('awinCancelBtn').addEventListener('click', () => { awinModal.style.display = 'none'; });
+
+document.getElementById('awinFile').addEventListener('change', async (e) => {
+  const err = document.getElementById('awinError'), prev = document.getElementById('awinPreview');
+  err.textContent = ''; prev.textContent = ''; document.getElementById('awinResult').textContent = '';
+  document.getElementById('awinGoBtn').disabled = true;
+  const file = e.target.files[0];
+  if (!file) return;
+  if (typeof XLSX === 'undefined') { err.textContent = 'The spreadsheet reader did not load. Check your connection and refresh the page.'; return; }
+  try {
+    // CSV cells stay exactly as written (Awin dates are dd/mm/yyyy; don't let them be read as US dates)
+    const isCsv = /\.csv$/i.test(file.name);
+    const wb = isCsv
+      ? XLSX.read(new TextDecoder('utf-8').decode(await file.arrayBuffer()), { type: 'string', raw: true }) // UTF-8, so £ survives
+      : XLSX.read(await file.arrayBuffer(), { type: 'array', cellDates: true });
+    const rows = readAwinRows(XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, defval: '', raw: true }));
+    if (!rows) { err.textContent = 'Could not find an "Advertiser" column. Is this the Awin Offers export?'; return; }
+    if (!rows.length) { err.textContent = 'No offers found in this file.'; return; }
+    awinRows = rows;
+    const codes = rows.filter(r => r.code).length;
+    prev.textContent = rows.length + ' offers found: ' + codes + ' with a voucher code, ' + (rows.length - codes) + ' without (link deals). Press Import.';
+    document.getElementById('awinGoBtn').disabled = false;
+  } catch {
+    err.textContent = 'Could not read that file. Save it as .csv or .xlsx and try again.';
+  }
+});
+
+document.getElementById('awinGoBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('awinGoBtn'), err = document.getElementById('awinError'), out = document.getElementById('awinResult');
+  btn.disabled = true; btn.textContent = 'Importing…'; err.textContent = ''; out.textContent = '';
+  try {
+    const res = await fetch('/api/admin/offers/import-awin', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ rows: awinRows, goLive: document.getElementById('awinGoLive').checked }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) { err.textContent = data.error || 'Import failed.'; btn.disabled = false; return; }
+    out.innerHTML = '<strong>' + data.created + ' added, ' + data.updated + ' updated, ' + data.skipped.length + ' skipped.</strong>' +
+      (data.skipped.length ? '<ul class="awin-skips">' + data.skipped.map(s =>
+        '<li>' + (s.line ? 'Row ' + s.line + ': ' : '') + escapeHtml(s.name) + ': ' + escapeHtml(s.reason) + '</li>').join('') + '</ul>' : '');
+    awinRows = [];
+    await loadOffers();
+  } catch {
+    err.textContent = 'Import failed. Check your connection and try again.';
+    btn.disabled = false;
+  } finally {
+    btn.textContent = 'Import';
+  }
+});
 
 async function init() {
   try {

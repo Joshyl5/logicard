@@ -19,6 +19,7 @@ const {
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  setHotDealsOrder, setOfferAwinPromotionId,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, getPartnerBrandById, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel, fillEmptyBrandTags,
@@ -163,9 +164,16 @@ function escapeHtml(str) {
 const OFFER_CATEGORIES = [
   'Adult', 'Advice', 'Beauty & Wellness', 'Benefits', 'Children & Baby', 'E-learning',
   'Events & Experiences', 'Family, Leisure & Travel', 'Fashion & Lifestyle', 'Financial Wellbeing', 'Food & Drink', 'Gifts & Flowers',
-  'Home & Garden', 'Mental Wellbeing', 'Pets', 'Shopping Cards', 'Sport & Fitness', 'Technology & Office',
+  'Home & Garden', 'Mental Wellbeing', 'Pets', 'Shopping / Gift Cards', 'Sport & Fitness', 'Technology & Office',
   'Things to Do', 'Trade Supplies & Tools', 'Utilities & Mobile', 'Vehicles & Motoring', 'Workwear',
 ];
+// Old category names still sent by cached admin pages, the mobile app or an
+// older import spreadsheet, mapped to the current name.
+const LEGACY_CATEGORIES = { 'Shopping Cards': 'Shopping / Gift Cards' };
+function canonCategory(c) {
+  const v = String(c || '').trim();
+  return LEGACY_CATEGORIES[v] || v;
+}
 
 // ── Verification uploads ────────────────────────────────────────
 const VERIFICATION_MIME_EXT = {
@@ -1247,7 +1255,41 @@ function offerListed(o) {
   return offerLive(o) && o.hasDiscount !== false;
 }
 
+// ── Awin tracked links ──────────────────────────────────────────
+// Logicard's Awin publisher ID. Given an advertiser ID ("awinmid"), a plain
+// website link becomes a tracked link; with no website the link goes to the
+// advertiser's default landing page. The advertiser ID is read back out of
+// the saved link, so it needs no column of its own.
+const AWIN_AFFID = '2884355';
+const AWIN_LINK_RE = /^https:\/\/(www\.)?awin1\.com\//i;
+function awinMidOf(url) {
+  const m = /[?&]awinmid=(\d+)/i.exec(String(url || ''));
+  return m ? m[1] : '';
+}
+function awinTrackedLink(mid, url) {
+  let dest = String(url || '').trim();
+  if (AWIN_LINK_RE.test(dest)) {
+    if (awinMidOf(dest) === mid) return dest; // already tracked for this advertiser: keep any extra params
+    try { dest = new URL(dest).searchParams.get('ued') || ''; } catch { dest = ''; }
+  }
+  return 'https://www.awin1.com/cread.php?awinmid=' + mid + '&awinaffid=' + AWIN_AFFID + (dest ? '&ued=' + encodeURIComponent(dest) : '');
+}
+// Applies body.awinMid to body[field]. Returns an error message or null.
+function applyAwinMid(body, field) {
+  const mid = String(body.awinMid ?? '').trim();
+  delete body.awinMid;
+  if (!mid) return null;
+  if (!/^\d{1,9}$/.test(mid)) return 'Awin advertiser ID must be a number (e.g. 12345).';
+  const dest = String(body[field] || '').trim().replace(/^http:\/\//i, 'https://');
+  if (dest && !/^https:\/\/[^\s]+$/i.test(dest)) return 'The website link must be a full https:// link.';
+  body[field] = awinTrackedLink(mid, dest);
+  return null;
+}
+
 function validOfferPayload(body) {
+  if (body.category) body.category = canonCategory(body.category);
+  const awinErr = applyAwinMid(body, 'affiliateUrl');
+  if (awinErr) return awinErr;
   const { merchantName, title, affiliateUrl, category, targetGender, platform, slug } = body;
   if (!merchantName || !String(merchantName).trim()) return 'Merchant name is required.';
   if (!title || !String(title).trim()) return 'Title is required.';
@@ -1286,6 +1328,144 @@ app.get('/api/admin/offers', requireAdmin, async (_req, res) => {
     codesAvailable: statsMap[o.id] ? statsMap[o.id].available : null,
     codesTotal:     statsMap[o.id] ? statsMap[o.id].total : null,
   })));
+});
+
+// Hot Deals order from the ▲▼ buttons: ids in the order they should show
+app.post('/api/admin/offers/hot-deals-order', requireAdmin, async (req, res) => {
+  const ids = Array.isArray(req.body && req.body.ids) ? req.body.ids.map(Number) : null;
+  if (!ids || ids.length > 200 || !ids.every(Number.isInteger)) return res.status(400).json({ error: 'Invalid order.' });
+  try {
+    await setHotDealsOrder(ids);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Hot Deals order error:', err.message);
+    res.status(500).json({ error: 'Could not save the order. Please try again.' });
+  }
+});
+
+// ── Import Awin vouchers / promotions (Manage Offers) ─────────────
+// Rows come from Awin's "Offers" export (read in the browser). Each row is
+// matched to a partner brand by Awin advertiser ID (inside the brand's
+// tracked link) or by name, and becomes an offer using the brand's logo,
+// category and About text. A re-import updates the same offer; a brand's
+// "No offer at present" placeholder is turned into the offer.
+function awinDate(v) {
+  const s = String(v || '').trim();
+  let m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+  if (m) return m[1] + '-' + m[2] + '-' + m[3];
+  m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(s); // Awin exports dd/mm/yyyy
+  if (m) return m[3] + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
+  return null;
+}
+
+app.post('/api/admin/offers/import-awin', requireAdmin, async (req, res) => {
+  const rows = Array.isArray(req.body && req.body.rows) ? req.body.rows : null;
+  if (!rows || !rows.length) return res.status(400).json({ error: 'No rows to import.' });
+  if (rows.length > 2000) return res.status(400).json({ error: 'Too many rows (max 2,000). Split the file.' });
+  const goLive = req.body.goLive !== false;
+  const today = new Date().toISOString().slice(0, 10);
+  const str = (v, max) => String(v ?? '').trim().slice(0, max);
+
+  let brands, offers;
+  try { [brands, offers] = await Promise.all([getAllPartnerBrands(), getAllOffers()]); }
+  catch (err) { console.error('Awin import load error:', err.message); return res.status(500).json({ error: 'Could not load brands. Please try again.' }); }
+  const byMid = new Map(), byName = new Map();
+  brands.forEach(b => {
+    const mid = awinMidOf(b.websiteUrl);
+    if (mid && !byMid.has(mid)) byMid.set(mid, b);
+    if (!byName.has(brandKey(b.brandName))) byName.set(brandKey(b.brandName), b);
+  });
+  const usedSlugs = new Set(offers.map(o => o.slug).filter(Boolean));
+  const result = { created: 0, updated: 0, skipped: [] };
+  const skip = (r, name, reason) => result.skipped.push({ line: Number(r.line) || null, name: name || '', reason });
+
+  for (const r of rows) {
+    if (!r || typeof r !== 'object') continue;
+    const advertiser = str(r.advertiser, 120);
+    const mid = /^\d{1,9}$/.test(str(r.advertiserId, 12)) ? str(r.advertiserId, 12) : '';
+    const promotionId = str(r.promotionId, 40);
+    const code = str(r.code, 80);
+    const headline = str(r.title, 120) || str(r.description, 120);
+    const regions = str(r.regions, 300);
+    const starts = awinDate(r.starts), ends = awinDate(r.ends);
+
+    const brand = (mid && byMid.get(mid)) || byName.get(brandKey(advertiser));
+    if (!brand) { skip(r, advertiser, 'No partner brand with this name or Awin ID. Import or add the brand first.'); continue; }
+    if (!headline) { skip(r, brand.brandName, 'No title or description.'); continue; }
+    if (ends && ends < today) { skip(r, brand.brandName, 'Already ended (' + ends + ').'); continue; }
+    if (starts && starts > today) { skip(r, brand.brandName, 'Does not start until ' + starts + '. Import it again then.'); continue; }
+    if (regions && !/\b(GB|UK|United Kingdom|Great Britain|All)\b/i.test(regions)) { skip(r, brand.brandName, 'Not for the UK (' + regions + ').'); continue; }
+    const missing = [!brand.logoUrl && 'logo', !brand.category && 'category', !brand.aboutBrand && 'About text'].filter(Boolean);
+    if (missing.length) { skip(r, brand.brandName, 'Brand has no ' + missing.join(', ') + ' yet. Add it on the brand, then import again.'); continue; }
+
+    // Tracked link: Awin's own, else built from the advertiser ID, else the brand's link
+    const tracking = str(r.trackingUrl, 1000).replace(/^http:\/\//i, 'https://');
+    const deeplink = str(r.url, 1000).replace(/^http:\/\//i, 'https://');
+    const brandMid = mid || awinMidOf(brand.websiteUrl);
+    let affiliateUrl = AWIN_LINK_RE.test(tracking) ? tracking
+      : brandMid ? awinTrackedLink(brandMid, /^https:\/\//i.test(deeplink) ? deeplink : brand.websiteUrl)
+      : (brand.websiteUrl || deeplink);
+    if (!/^https:\/\/[^\s]+$/i.test(affiliateUrl || '')) { skip(r, brand.brandName, 'No link to send members to (add the brand website or Awin ID).'); continue; }
+    if (AWIN_LINK_RE.test(affiliateUrl) && !/awinaffid=/i.test(affiliateUrl)) affiliateUrl += '&awinaffid=' + AWIN_AFFID;
+
+    const redeemType = code ? 'code' : 'link';
+    const deal = {
+      merchantName: brand.brandName,
+      title: headline,
+      discountText: headline,
+      description: str(r.description, 2000) || `Logicard members get ${headline} at ${brand.brandName}. ${QUICK_REDEEM_TEXT[redeemType] || ''}.`,
+      voucherCode: code || null,
+      redeemType,
+      terms: str(r.terms, 3000) || 'Cannot be used in conjunction with any other offers',
+      endDate: ends,
+      affiliateUrl,
+      platform: 'AWIN',
+      hasDiscount: true,
+    };
+
+    const existing = (promotionId && offers.find(o => o.awinPromotionId === promotionId))
+      || offers.find(o => o.hasDiscount === false && brandKey(o.merchantName) === brandKey(brand.brandName));
+    try {
+      if (existing) {
+        // Older placeholders may lack brand fields the offer now needs: take them from the brand
+        const payload = {
+          ...existing, ...deal, isActive: existing.isActive || goLive,
+          category: existing.category || brand.category, aboutBrand: existing.aboutBrand || brand.aboutBrand,
+          logoUrl: existing.logoUrl || brand.logoUrl, imageUrl: existing.imageUrl || brand.bannerUrl || brand.logoUrl,
+        };
+        const error = validOfferPayload(payload);
+        if (error) { skip(r, brand.brandName, error); continue; }
+        await updateOffer(existing.id, payload);
+        if (promotionId) { await setOfferAwinPromotionId(existing.id, promotionId); existing.awinPromotionId = promotionId; }
+        existing.hasDiscount = true;
+        result.updated++;
+      } else {
+        const payload = {
+          ...deal, category: brand.category, aboutBrand: brand.aboutBrand,
+          imageUrl: brand.bannerUrl || brand.logoUrl, logoUrl: brand.logoUrl,
+          isActive: goLive, featuredDashboard: false, featuredPublic: false, targetGender: null, howToRedeem: null, sortOrder: 0,
+        };
+        const error = validOfferPayload(payload);
+        if (error) { skip(r, brand.brandName, error); continue; }
+        const base = brand.slug || brandSlug(brand.brandName);
+        let slug = null;
+        for (let n = 1; n <= 50 && !slug; n++) {
+          const s = n === 1 ? base : base + '-' + n;
+          if (!usedSlugs.has(s) && !RESERVED_ROOT_SLUGS.has(s)) slug = s;
+        }
+        if (!slug) { skip(r, brand.brandName, 'No free page address for another offer.'); continue; }
+        const offer = await createOffer({ ...payload, slug });
+        usedSlugs.add(slug);
+        if (promotionId) await setOfferAwinPromotionId(offer.id, promotionId);
+        offers.push({ ...offer, awinPromotionId: promotionId || null });
+        result.created++;
+      }
+    } catch (err) {
+      console.error('Awin import row error:', err.message);
+      skip(r, brand.brandName, err.code === '23505' ? 'Page address already in use.' : 'Could not save this row.');
+    }
+  }
+  res.json(result);
 });
 
 app.post('/api/admin/offers/:id/codes', requireAdmin, async (req, res) => {
@@ -1456,6 +1636,9 @@ app.delete('/api/admin/news-items/:id', requireAdmin, async (req, res) => {
 // fields required. Use this to show a brand is a confirmed partner before
 // there's a live discount to attach; add a proper offer once there is one.
 function validPartnerBrandPayload(body) {
+  if (body.category) body.category = canonCategory(body.category);
+  const awinErr = applyAwinMid(body, 'websiteUrl');
+  if (awinErr) return awinErr;
   const { brandName, logoUrl, slug } = body;
   if (!brandName || !String(brandName).trim()) return 'Brand name is required.';
   // No logo = stays on the cold list: it can't be switched live without one.
@@ -1527,7 +1710,7 @@ app.post('/api/admin/partner-brands/import', requireAdmin, async (req, res) => {
   rows.forEach((r, i) => {
     const line = Number(r && r.line) || i + 2;
     const brandName = String((r && r.brandName) || '').trim().slice(0, 120);
-    const category = String((r && r.category) || '').trim();
+    const category = canonCategory(r && r.category);
     const aboutBrand = String((r && r.aboutBrand) || '').trim();
     const slug = brandSlug(brandName);
     if (!brandName || !slug) return invalid.push({ line, error: 'No brand name' });
@@ -1538,7 +1721,10 @@ app.post('/api/admin/partner-brands/import', requireAdmin, async (req, res) => {
     // Optional website and logo links (e.g. from an Awin export); https only
     const link = v => { const u = String(v || '').trim().replace(/^http:\/\//i, 'https://'); return /^https:\/\/[^\s]+$/i.test(u) && u.length <= 500 ? u : null; };
     const tags = String((r && r.tags) || '').split(',').map(t => t.trim().toLowerCase()).filter(Boolean).slice(0, 25).join(', ').slice(0, 600);
-    clean.push({ brandName, slug, category, aboutBrand: aboutBrand || null, websiteUrl: link(r.websiteUrl), logoUrl: link(r.logoUrl), tags: tags || null });
+    // An Awin advertiser ID column turns the website into a tracked link
+    const awin = { websiteUrl: link(r.websiteUrl), awinMid: r.awinMid };
+    if (applyAwinMid(awin, 'websiteUrl')) return invalid.push({ line, brandName, error: 'Awin advertiser ID "' + r.awinMid + '" is not a number' });
+    clean.push({ brandName, slug, category, aboutBrand: aboutBrand || null, websiteUrl: awin.websiteUrl, logoUrl: link(r.logoUrl), tags: tags || null });
   });
 
   try {

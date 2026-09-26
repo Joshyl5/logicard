@@ -1,7 +1,7 @@
 const CATEGORIES = [
   'Adult', 'Advice', 'Beauty & Wellness', 'Benefits', 'Children & Baby', 'E-learning',
   'Events & Experiences', 'Family, Leisure & Travel', 'Fashion & Lifestyle', 'Financial Wellbeing', 'Food & Drink', 'Gifts & Flowers',
-  'Home & Garden', 'Mental Wellbeing', 'Pets', 'Shopping Cards', 'Sport & Fitness', 'Technology & Office',
+  'Home & Garden', 'Mental Wellbeing', 'Pets', 'Shopping / Gift Cards', 'Sport & Fitness', 'Technology & Office',
   'Things to Do', 'Trade Supplies & Tools', 'Utilities & Mobile', 'Vehicles & Motoring', 'Workwear',
 ];
 
@@ -25,7 +25,7 @@ const CATEGORY_ICONS = {
   'Mental Wellbeing': '<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-11a7 7 0 0114 0c0 6.5-7 11-7 11z"/><path d="M9 10h6M12 7v6"/></svg>',
   'Children & Baby': '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 21v-1a6 6 0 0112 0v1"/></svg>',
   'Pets': '<svg viewBox="0 0 24 24"><circle cx="6" cy="10" r="2"/><circle cx="10" cy="6" r="2"/><circle cx="14" cy="6" r="2"/><circle cx="18" cy="10" r="2"/><path d="M8 17c0-3 2-5 4-5s4 2 4 5a2 2 0 01-2 2h-4a2 2 0 01-2-2z"/></svg>',
-  'Shopping Cards': '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
+  'Shopping / Gift Cards': '<svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
   'Events & Experiences': '<svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 002-2h14a2 2 0 002 2v2a2 2 0 000 4v2a2 2 0 00-2 2H5a2 2 0 00-2-2v-2a2 2 0 000-4z"/></svg>',
   'Adult': '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 9v6M11 9h3a1.5 1.5 0 010 3h-3a1.5 1.5 0 000 3h3"/></svg>',
   'Advice': '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 015 0c0 1.5-2.5 2-2.5 4"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',

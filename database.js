@@ -201,6 +201,11 @@ async function initDb() {
   // has_discount = false: the brand has a page but no discount yet; the page
   // says "No offer at present" and the offer stays out of the deal lists.
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS has_discount BOOLEAN NOT NULL DEFAULT TRUE`);
+  // Hot Deals position set with the ▲▼ buttons in Manage Offers (1 = first).
+  // Empty = after the ordered ones, by Sort Order then newest.
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS hot_order INTEGER`);
+  // Awin promotion this offer was imported from, so a re-import updates it
+  await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS awin_promotion_id TEXT`);
   await pool.query(`CREATE UNIQUE INDEX IF NOT EXISTS offers_slug_idx ON offers (slug) WHERE slug IS NOT NULL`);
   const unslugged = await pool.query('SELECT id, merchant_name FROM offers WHERE slug IS NULL ORDER BY id ASC');
   for (const row of unslugged.rows) {
@@ -305,6 +310,19 @@ async function initDb() {
   // Brand page fields (2026-09): /deals/<slug> shows these.
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS about_brand TEXT`);
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS category TEXT`);
+  // 2026-09-26: the "Shopping Cards" category was renamed. Safe to re-run.
+  await pool.query(`UPDATE partner_brands SET category = 'Shopping / Gift Cards' WHERE category = 'Shopping Cards'`);
+  await pool.query(`UPDATE offers SET category = 'Shopping / Gift Cards' WHERE category = 'Shopping Cards'`);
+  // One-off owner request (2026-09-26): Bulk.com's offer moves to Sport &
+  // Fitness, and House of Grey Wolfe and EV King (links were failing) are
+  // removed with their offers. Runs once, so either can be re-added later.
+  const cleanupOnce = await pool.query(`INSERT INTO app_flags (name) VALUES ('brand_cleanup_2026_09_26') ON CONFLICT DO NOTHING RETURNING name`);
+  if (cleanupOnce.rowCount) {
+    await pool.query(`UPDATE offers SET category = 'Sport & Fitness' WHERE lower(merchant_name) IN ('bulk.com', 'bulk', 'bulk uk')`);
+    await pool.query(`UPDATE partner_brands SET category = 'Sport & Fitness' WHERE lower(brand_name) IN ('bulk.com', 'bulk', 'bulk uk')`);
+    await pool.query(`DELETE FROM offers WHERE lower(merchant_name) IN ('house of grey wolfe', 'ev king')`);
+    await pool.query(`DELETE FROM partner_brands WHERE slug IN ('house-of-grey-wolfe', 'ev-king') OR lower(brand_name) IN ('house of grey wolfe', 'ev king')`);
+  }
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS banner_url TEXT`);
   await pool.query(`ALTER TABLE partner_brands ADD COLUMN IF NOT EXISTS website_url TEXT`);
   // Imported brands start on a "cold list": inactive with no logo yet. A
@@ -539,6 +557,8 @@ function toOffer(row) {
     endDate:       row.end_date ? new Date(row.end_date).toISOString().slice(0, 10) : null,
     redeemType:    row.redeem_type,
     hasDiscount:   row.has_discount !== false,
+    hotOrder:      row.hot_order,
+    awinPromotionId: row.awin_promotion_id,
     isActive:          row.is_active,
     featuredDashboard: !!row.featured_dashboard,
     featuredPublic:    !!row.featured_public,
@@ -733,7 +753,7 @@ async function getFeaturedOffersForDashboard() {
 // Public homepage's + Deals page's "Featured Deals" teasers.
 async function getFeaturedOffersForPublic() {
   const r = await pool.query(
-    'SELECT * FROM offers WHERE is_active = true AND featured_public = true ORDER BY sort_order ASC, created_at DESC, id ASC LIMIT 6'
+    'SELECT * FROM offers WHERE is_active = true AND featured_public = true ORDER BY hot_order ASC NULLS LAST, sort_order ASC, created_at DESC, id ASC LIMIT 6'
   );
   return r.rows.map(toOffer);
 }
@@ -796,6 +816,28 @@ async function updateOffer(id, data) {
   ]);
 
   return toOffer(r.rows[0]);
+}
+
+// Saves the Hot Deals order from Manage Offers: ids[0] shows first.
+async function setHotDealsOrder(ids) {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query('UPDATE offers SET hot_order = NULL WHERE hot_order IS NOT NULL');
+    for (let i = 0; i < ids.length; i++) {
+      await client.query('UPDATE offers SET hot_order = $1 WHERE id = $2', [i + 1, ids[i]]);
+    }
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+async function setOfferAwinPromotionId(id, promotionId) {
+  await pool.query('UPDATE offers SET awin_promotion_id = $1 WHERE id = $2', [promotionId || null, id]);
 }
 
 async function deleteOffer(id) {
@@ -1789,6 +1831,7 @@ module.exports = {
   setResetToken, findMemberByResetToken, clearResetToken,
   resetMonthlyEntries, recordGiveawayWinner, getGiveawayHistory,
   getActiveOffers, getAllOffers, getFeaturedOffersForDashboard, getFeaturedOffersForPublic, getOfferById, createOffer, updateOffer, deleteOffer, incrementOfferClicks,
+  setHotDealsOrder, setOfferAwinPromotionId,
   recordOfferRedemption, getOffersAcceptedCount, getMemberOpenedOffers,
   getActiveAdverts, getAllAdverts, getAdvertById, createAdvert, updateAdvert, deleteAdvert, incrementAdvertClicks,
   getActivePartnerBrands, getAllPartnerBrands, getPartnerBrandById, createPartnerBrand, updatePartnerBrand, deletePartnerBrand, setPartnerBrandLogo, importPartnerBrands, listAwinHostedImages, replaceImageUrl, setPartnerBrandsLive, getPopularityScores, setPartnerBrandsCarousel, fillEmptyBrandTags,

@@ -192,6 +192,7 @@ function openModal(id) {
       document.getElementById('brandAbout').value     = brand.aboutBrand || '';
       document.getElementById('brandBannerUrl').value = brand.bannerUrl || '';
       document.getElementById('brandWebsite').value   = brand.websiteUrl || '';
+      document.getElementById('brandAwinMid').value   = awinMidOf(brand.websiteUrl);
       document.getElementById('brandTags').value      = brand.tags || '';
       document.getElementById('brandIsActive').checked = !!brand.isActive;
       document.getElementById('brandCarousel').checked = !!brand.featuredCarousel;
@@ -254,6 +255,7 @@ brandForm.addEventListener('submit', async e => {
     aboutBrand: document.getElementById('brandAbout').value.trim() || null,
     bannerUrl:  document.getElementById('brandBannerUrl').value.trim() || null,
     websiteUrl: document.getElementById('brandWebsite').value.trim() || null,
+    awinMid:    document.getElementById('brandAwinMid').value.trim() || null,
     tags: document.getElementById('brandTags').value.split(',').map(t => t.trim().toLowerCase()).filter(Boolean).join(', ') || null,
     isActive:  document.getElementById('brandIsActive').checked,
     featuredCarousel: document.getElementById('brandCarousel').checked,
@@ -369,7 +371,7 @@ const CATEGORY_HINTS = {
   'Home & Garden': ['home', 'garden', 'diy', 'furniture', 'homeware', 'homewares', 'kitchen', 'bedding', 'appliances'],
   'Mental Wellbeing': ['mental', 'mindfulness', 'therapy', 'counselling', 'sleep', 'meditation', 'wellbeing'],
   'Pets': ['pet', 'pets', 'dog', 'dogs', 'cat', 'cats', 'vet'],
-  'Shopping Cards': ['giftcard', 'giftcards', 'voucher', 'vouchers', 'shopping'],
+  'Shopping / Gift Cards': ['giftcard', 'giftcards', 'voucher', 'vouchers', 'shopping'],
   'Sport & Fitness': ['sport', 'sports', 'fitness', 'gym', 'supplement', 'supplements', 'nutrition', 'protein', 'outdoor'],
   'Technology & Office': ['tech', 'technology', 'electronic', 'electronics', 'computer', 'computers', 'laptop', 'laptops', 'office', 'gadget', 'gadgets', 'software'],
   'Things to Do': ['days', 'out', 'entertainment', 'attraction', 'attractions', 'activity', 'activities', 'cinema', 'theme', 'park'],
@@ -401,6 +403,12 @@ function suggestCategory(raw) {
   return bestScore && !tie ? best : '';
 }
 
+// The Awin advertiser ID inside a tracked link ("awinmid=12345"), or ''.
+function awinMidOf(url) {
+  const m = /[?&]awinmid=(\d+)/i.exec(String(url || ''));
+  return m ? m[1] : '';
+}
+
 // Find the header row and the name / category / description columns.
 function readImportRows(sheetRows) {
   const isName = h => /brand|company|business|merchant|name/.test(h);
@@ -411,7 +419,8 @@ function readImportRows(sheetRows) {
   if (headerIdx !== -1 && headerIdx < 10) {
     const h = sheetRows[headerIdx].map(c => String(c).toLowerCase().trim());
     const find = (test, fallback) => { const i = h.findIndex(test); return i === -1 ? fallback : i; };
-    col = { cat: find(isCat, 1), desc: find(isDesc, 2), web: find(x => /website|web site|homepage/.test(x), -1), logo: find(x => /logo/.test(x), -1), tags: find(x => /\btags?\b|keywords/.test(x), -1) };
+    col = { cat: find(isCat, 1), desc: find(isDesc, 2), web: find(x => /website|web site|homepage/.test(x), -1), logo: find(x => /logo/.test(x), -1), tags: find(x => /\btags?\b|keywords/.test(x), -1),
+            mid: find(x => /advertiser ?id|awin ?id|awinmid|merchant ?id|programme ?id|program ?id/.test(x), -1) };
     col.name = h.findIndex((x, i) => isName(x) && i !== col.cat && i !== col.desc);
     if (col.name === -1) col.name = 0;
   } else headerIdx = -1;
@@ -423,8 +432,9 @@ function readImportRows(sheetRows) {
     const websiteUrl = col.web >= 0 ? String(r[col.web] ?? '').trim() : '';
     const logoUrl = col.logo >= 0 ? String(r[col.logo] ?? '').trim() : '';
     const tags = col.tags >= 0 ? String(r[col.tags] ?? '').trim() : '';
+    const awinMid = col.mid >= 0 ? String(r[col.mid] ?? '').trim() : '';
     if (!brandName && !rawCategory && !aboutBrand) return; // blank line
-    rows.push({ line: headerIdx + 2 + i, brandName, rawCategory, aboutBrand, websiteUrl, logoUrl, tags });
+    rows.push({ line: headerIdx + 2 + i, brandName, rawCategory, aboutBrand, websiteUrl, logoUrl, tags, awinMid });
   });
   return rows;
 }
@@ -516,7 +526,7 @@ function initImport() {
   go.addEventListener('click', async () => {
     err.textContent = '';
     const rows = importRows.filter(r => r.brandName && r.aboutBrand.length <= 1500)
-      .map(r => ({ line: r.line, brandName: r.brandName, category: importMap[r.rawCategory], aboutBrand: r.aboutBrand, websiteUrl: r.websiteUrl, logoUrl: r.logoUrl, tags: r.tags }));
+      .map(r => ({ line: r.line, brandName: r.brandName, category: importMap[r.rawCategory], aboutBrand: r.aboutBrand, websiteUrl: r.websiteUrl, logoUrl: r.logoUrl, tags: r.tags, awinMid: r.awinMid }));
     const upd = document.getElementById('importUpdate');
     go.disabled = true; go.textContent = 'Importing…';
     try {
