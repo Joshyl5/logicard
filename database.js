@@ -190,6 +190,12 @@ async function initDb() {
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS about_brand TEXT`);
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS how_to_redeem TEXT`);
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS terms TEXT`);
+  // One-off jobs that must run exactly once (so admins can clear a value afterwards)
+  await pool.query(`CREATE TABLE IF NOT EXISTS app_flags (name TEXT PRIMARY KEY, done_at TIMESTAMPTZ DEFAULT NOW())`);
+  const termsOnce = await pool.query(`INSERT INTO app_flags (name) VALUES ('default_offer_terms_v1') ON CONFLICT DO NOTHING RETURNING name`);
+  if (termsOnce.rowCount) {
+    await pool.query(`UPDATE offers SET terms = 'Cannot be used in conjunction with any other offers' WHERE terms IS NULL OR TRIM(terms) = ''`);
+  }
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS end_date DATE`);
   await pool.query(`ALTER TABLE offers ADD COLUMN IF NOT EXISTS redeem_type TEXT`);
   // has_discount = false: the brand has a page but no discount yet; the page
